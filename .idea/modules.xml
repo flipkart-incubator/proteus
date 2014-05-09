@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Layout test app/Layout test app.iml" filepath="$PROJECT_DIR$/Layout test app/Layout test app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LayoutEngine.iml" filepath="$PROJECT_DIR$/LayoutEngine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TestApp/TestApp.iml" filepath="$PROJECT_DIR$/TestApp/TestApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/android-layout-engine.iml" filepath="$PROJECT_DIR$/android-layout-engine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
   </component>
 </project>
