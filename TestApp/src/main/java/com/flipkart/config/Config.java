@@ -34,7 +34,7 @@ public enum Config {
 	}
 
 	private void initApiValues() {
-		values.put(StringKey.ApiBaseUrl, "http://172.17.235.130/layoutengine");
+		values.put(StringKey.ApiBaseUrl, "http://192.168.5.21/layoutengine");
 		values.put(ApiPathKey.HomeRequest, "fetch.php?view=home");
 	}
 

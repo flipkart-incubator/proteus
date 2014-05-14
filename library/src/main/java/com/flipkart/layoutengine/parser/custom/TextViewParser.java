@@ -1,7 +1,10 @@
-package com.flipkart.layoutengine.parser;
+package com.flipkart.layoutengine.parser.custom;
 
+import android.app.Activity;
 import android.view.View;
 import android.widget.TextView;
+
+import com.flipkart.layoutengine.parser.ViewParser;
 
 /**
  * Created by kiran.kumar on 12/05/14.
@@ -16,8 +19,8 @@ public class TextViewParser extends ViewParser<TextView> {
     }
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
+    protected void prepareHandlers(Activity activity) {
+        super.prepareHandlers(activity);
         addHandler("text", new AttributeProcessor<TextView>() {
             @Override
             public void handle(String attributeValue, TextView view) {

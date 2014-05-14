@@ -1,6 +1,9 @@
-package com.flipkart.layoutengine.parser;
+package com.flipkart.layoutengine.parser.custom;
 
+import android.app.Activity;
 import android.widget.LinearLayout;
+
+import com.flipkart.layoutengine.parser.ViewParser;
 
 /**
  * Created by kiran.kumar on 12/05/14.
@@ -17,8 +20,8 @@ public class LinearLayoutParser extends ViewParser<LinearLayout> {
 
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
+    protected void prepareHandlers(Activity activity) {
+        super.prepareHandlers(activity);
         addHandler("orientation",new AttributeProcessor<LinearLayout>() {
             @Override
             public void handle(String attributeValue, LinearLayout view) {

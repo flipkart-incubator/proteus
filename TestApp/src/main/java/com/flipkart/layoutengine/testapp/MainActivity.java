@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.flipkart.layoutengine.builder.LayoutBuilder;
@@ -35,7 +36,7 @@ public class MainActivity extends ActionBarActivity {
         request.setOnErrorListener(new OnRequestErrorListener<HomeResponse>() {
             @Override
             public void onRequestError(BaseRequest<HomeResponse> request, RequestError error) {
-                Toast.makeText(MainActivity.this,"Rquest error "+error.getReason(),Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this,"Request error "+error.getReason(),Toast.LENGTH_LONG).show();
             }
         });
         API.getInstance(this.getApplicationContext()).processAsync(request);
@@ -45,12 +46,21 @@ public class MainActivity extends ActionBarActivity {
     private OnRequestFinishListener<HomeResponse> createOnResponse() {
         return new OnRequestFinishListener<HomeResponse>() {
             @Override
-            public void onRequestFinish(BaseRequest<HomeResponse> request) {
-                HomeResponse response = request.getResponse();
-                JsonObject layout = response.getResponse().getLayout();
-                LayoutBuilder builder = new LayoutBuilder(MainActivity.this);
-                View view = builder.build(layout);
-                MainActivity.this.setContentView(view);
+            public void onRequestFinish(final BaseRequest<HomeResponse> request) {
+
+                MainActivity.this.getWindow().getDecorView().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        HomeResponse response = request.getResponse();
+                        JsonObject layout = response.getResponse().getLayout();
+                        LayoutBuilder builder = new LayoutBuilder(MainActivity.this);
+                        FrameLayout container = new FrameLayout(MainActivity.this);
+                        View view = builder.build(container,layout);
+                        container.addView(view);
+                        MainActivity.this.setContentView(container);
+                    }
+                });
+
             }
         };
     }
