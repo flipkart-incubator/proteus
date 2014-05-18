@@ -4,5 +4,6 @@
     <string name="app_name">Layout test app</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="action_refresh">Refresh</string>
 
 </resources>

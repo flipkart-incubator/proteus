@@ -33,21 +33,30 @@ public class AspectRatioFrameLayout extends FrameLayout {
         @Override protected void onMeasure (int widthMeasureSpec, int heightMeasureSpec)
         {
             if(mAspectRatioHeight>0 && mAspectRatioWidth>0) {
-                int originalWidth = MeasureSpec.getSize(widthMeasureSpec);
+                super.onMeasure(widthMeasureSpec,heightMeasureSpec);
 
-                int originalHeight = MeasureSpec.getSize(heightMeasureSpec);
+                int originalWidth = getMeasuredWidth();
 
-                int calculatedHeight = originalWidth * mAspectRatioHeight / mAspectRatioWidth;
+                int originalHeight = getMeasuredHeight();
 
                 int finalWidth, finalHeight;
 
-                if (calculatedHeight > originalHeight) {
+                if(originalHeight == 0)
+                {
+                    finalHeight = originalWidth * mAspectRatioHeight/mAspectRatioWidth;
+                    finalWidth = originalWidth;
+                }
+                else if(originalWidth == 0)
+                {
                     finalWidth = originalHeight * mAspectRatioWidth / mAspectRatioHeight;
                     finalHeight = originalHeight;
-                } else {
-                    finalWidth = originalWidth;
-                    finalHeight = calculatedHeight;
                 }
+                else
+                {
+                    finalHeight = originalHeight;
+                    finalWidth = originalWidth;
+                }
+
 
                 super.onMeasure(
                         MeasureSpec.makeMeasureSpec(finalWidth, MeasureSpec.EXACTLY),

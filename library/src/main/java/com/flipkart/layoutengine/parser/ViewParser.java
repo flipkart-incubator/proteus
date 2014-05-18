@@ -3,6 +3,7 @@ package com.flipkart.layoutengine.parser;
 import android.app.Activity;
 import android.content.res.XmlResourceParser;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.toolbox.AttributeBundle;
 import com.google.gson.JsonObject;
+import com.nineoldandroids.view.ViewHelper;
 
 import org.xmlpull.v1.XmlPullParser;
 
@@ -32,20 +34,26 @@ public class ViewParser<T extends View> extends Parser<T> {
     protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent, JsonObject object) {
 
         /**
-         * This is hacky way to generate layout params. But no other way exists.
-         * Ref : http://stackoverflow.com/questions/7018267/generating-a-layoutparams-based-on-the-type-of-parent
+         * This whole method is a hack! ... to generate layout params, since no other way exists.
+         * Refer : http://stackoverflow.com/questions/7018267/generating-a-layoutparams-based-on-the-type-of-parent
          */
         XmlResourceParser parser = parent.getResources().getLayout(R.layout.layout_params_hack);
         try {
             while (parser.nextToken() != XmlPullParser.START_TAG) {
                 // Skip everything until the view tag.
             }
-            return parent.generateLayoutParams(parser);
+            ViewGroup.LayoutParams layoutParams = parent.generateLayoutParams(parser);
+            return layoutParams;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
 
+    }
+
+    @Override
+    public void setupView(ViewGroup parent, T view) {
+        // nothing to do here
     }
 
     protected void prepareHandlers(Activity activity) {
@@ -60,7 +68,21 @@ public class ViewParser<T extends View> extends Parser<T> {
             @Override
             public void handle(String attributeValue, T view) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                layoutParams.height = Integer.parseInt(attributeValue);
+                if(TextUtils.isDigitsOnly(attributeValue)) {
+
+                    layoutParams.height = Integer.parseInt(attributeValue);
+                }
+                else
+                {
+                    if("fill".equals(attributeValue))
+                    {
+                        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+                    }
+                    else if("wrap".equals(attributeValue))
+                    {
+                        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    }
+                }
                 view.setLayoutParams(layoutParams);
             }
         });
@@ -68,10 +90,39 @@ public class ViewParser<T extends View> extends Parser<T> {
             @Override
             public void handle(String attributeValue, T view) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                layoutParams.width = Integer.parseInt(attributeValue);
+                if(TextUtils.isDigitsOnly(attributeValue)) {
+
+                    layoutParams.width = Integer.parseInt(attributeValue);
+                }
+                else
+                {
+                    if("fill".equals(attributeValue))
+                    {
+                        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                    }
+                    else if("wrap".equals(attributeValue))
+                    {
+                        layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
+                    }
+                }
                 view.setLayoutParams(layoutParams);
             }
         });
+
+        addHandler("weight",new AttributeProcessor<T>() {
+            @Override
+            public void handle(String attributeValue, T view) {
+                LinearLayout.LayoutParams layoutParams = null;
+                try {
+                    layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
+                } catch (ClassCastException ex) {
+                    throw new IllegalArgumentException("weight is only supported for linear containers");
+                }
+                layoutParams.weight = Float.parseFloat(attributeValue);
+                view.setLayoutParams(layoutParams);
+            }
+        });
+
         addHandler("alignToParent", new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeValue, T view) {
@@ -81,18 +132,7 @@ public class ViewParser<T extends View> extends Parser<T> {
                 } catch (ClassCastException ex) {
                     throw new IllegalArgumentException("alignToParent is only supported for linear containers");
                 }
-
-                if ("center".equals(attributeValue)) {
-                    layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
-                } else if ("center_horizontal".equals(attributeValue)) {
-                    layoutParams.gravity = Gravity.CENTER_HORIZONTAL;
-                } else if ("center_vertical".equals(attributeValue)) {
-                    layoutParams.gravity = Gravity.CENTER_VERTICAL;
-                } else if ("left".equals(attributeValue)) {
-                    layoutParams.gravity = Gravity.LEFT;
-                } else if ("right".equals(attributeValue)) {
-                    layoutParams.gravity = Gravity.RIGHT;
-                }
+                layoutParams.gravity = ParseHelper.parseGravity(attributeValue);
 
             }
         });
@@ -107,17 +147,8 @@ public class ViewParser<T extends View> extends Parser<T> {
                     throw new IllegalArgumentException("alignChildren is only supported for linear containers");
                 }
 
-                if ("center".equals(attributeValue)) {
-                    viewGroup.setGravity(Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL);
-                } else if ("center_horizontal".equals(attributeValue)) {
-                    viewGroup.setGravity(Gravity.CENTER_HORIZONTAL);
-                } else if ("center_vertical".equals(attributeValue)) {
-                    viewGroup.setGravity(Gravity.CENTER_VERTICAL);
-                } else if ("left".equals(attributeValue)) {
-                    viewGroup.setGravity(Gravity.LEFT);
-                } else if ("right".equals(attributeValue)) {
-                    viewGroup.setGravity(Gravity.RIGHT);
-                }
+
+                viewGroup.setGravity(ParseHelper.parseGravity(attributeValue));
 
             }
         });
@@ -129,6 +160,39 @@ public class ViewParser<T extends View> extends Parser<T> {
                 view.setPadding(Integer.parseInt(strings[0]),Integer.parseInt(strings[1]),Integer.parseInt(strings[2]),Integer.parseInt(strings[3]));
             }
         });
-        
+
+        addHandler("margin", new AttributeProcessor<T>() {
+            @Override
+            public void handle(String attributeValue, T view) {
+                String[] strings = attributeValue.split(" ");
+                ViewGroup.MarginLayoutParams layoutParams;
+                try {
+                    layoutParams = (ViewGroup.MarginLayoutParams)view.getLayoutParams();
+                }
+                catch (ClassCastException ex)
+                {
+                    throw new IllegalArgumentException("margins can only be applied for some views");
+                }
+
+
+                layoutParams.setMargins(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]), Integer.parseInt(strings[2]), Integer.parseInt(strings[3]));
+                view.setLayoutParams(layoutParams);
+            }
+        });
+
+        addHandler("opacity",new AttributeProcessor<T>() {
+            @Override
+            public void handle(String attributeValue, T view) {
+                ViewHelper.setAlpha(view,Float.parseFloat(attributeValue));
+            }
+        });
+
+        addHandler("visibility",new AttributeProcessor<T>() {
+            @Override
+            public void handle(String attributeValue, T view) {
+                view.setVisibility(ParseHelper.parseVisibility(attributeValue));
+            }
+        });
+
     }
 }

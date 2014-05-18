@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.parser.custom;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.flipkart.layoutengine.parser.ViewParser;
 import com.android.volley.toolbox.NetworkImageView;
@@ -26,6 +27,32 @@ public class ImageViewParser extends ViewParser<NetworkImageView> {
             @Override
             public void handle(String attributeValue, NetworkImageView view) {
                 view.setImageUrl(attributeValue, VolleySingleton.getInstance(activity.getApplicationContext()).getImageLoader());
+            }
+        });
+
+        addHandler("scaleType",new AttributeProcessor<NetworkImageView>() {
+            @Override
+            public void handle(String attributeValue, NetworkImageView view) {
+                ImageView.ScaleType scaleType = null;
+                if("center".equals(attributeValue))
+                {
+                    scaleType = ImageView.ScaleType.CENTER;
+                }
+
+            }
+        });
+
+        addHandler("aspectRatio", new AttributeProcessor<NetworkImageView>() {
+            @Override
+            public void handle(String attributeValue, NetworkImageView view) {
+                if("preserve".equals(attributeValue))
+                {
+                    view.setAdjustViewBounds(true);
+                }
+                else
+                {
+                    view.setAdjustViewBounds(false);
+                }
             }
         });
     }

@@ -35,7 +35,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     }
 
     @Override
-    public T parse(Activity activity, ViewGroup parent, JsonObject object) {
+    public T createView(Activity activity, ViewGroup parent, JsonObject object) {
         T v = null;
         try {
             v = this.viewClass.getDeclaredConstructor(Context.class).newInstance(activity);
@@ -44,22 +44,23 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-            handleNewAttribute(entry.getKey(), entry.getValue(), v);
-        }
+
         return v;
     }
 
     protected abstract ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent, JsonObject object);
 
+    public abstract void setupView(ViewGroup parent, T view);
 
-    private void handleNewAttribute(String key, JsonElement value, View view) {
-        AttributeProcessor attributeProcessor = handlers.get(key);
+    @Override
+    public boolean handleAttribute(String attribute, JsonElement element, T view) {
+        AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
-            attributeProcessor.handle(value.getAsString(), view);
+            attributeProcessor.handle(element.getAsString(), view);
+            return true;
         }
+        return false;
     }
-
     @Override
     public boolean canAddChild() {
         return false;
