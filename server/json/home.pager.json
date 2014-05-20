@@ -1,0 +1,48 @@
+{
+	"view": "pager",
+	"children": [{
+		"view": "image",
+		"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140520-140332-mobile-extra-large-12.jpg",
+		"action": {
+			"screenType": "productListView",
+			"omnitureData": "BannerWidget",
+			"originalUrl": "/laptops/pr?offer=MultitierLaptop_Offer_Main.&sid=6bo,b5g",
+			"url": "/laptops/pr?offer=MultitierLaptop_Offer_Main.&sid=6bo,b5g",
+			"params": {
+				"store": "6bo/b5g",
+				"filter": "filter=facets.promo%255B%255D%3DMultitierLaptop_Offer_Main.",
+				"valid": true
+			}
+		}
+	}, {
+		"view": "image",
+		"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140519-113337-mobile-extra-large.jpg",
+		"action": {
+			"screenType": "productListView",
+			"omnitureData": "BannerWidget",
+			"originalUrl": "/beauty-and-personal-care/fragrances/perfumes/~flat-50-off/pr?p[]=sort=popularity&sid=t06,r3o,aa1",
+			"url": "/beauty-and-personal-care/fragrances/perfumes/~flat-50-off/pr?p[]=sort=popularity&sid=t06,r3o,aa1",
+			"params": {
+				"store": "t06/r3o/aa1",
+				"tag": "tag=tags%255B%255D%3Dflat-50-off",
+				"sort": "sort=sort%3Dpopularity",
+				"valid": true
+			}
+		}
+	}, {
+		"view": "image",
+		"imageUrl": "http://img5a.flixcart.com/www/promos/new/20140520-160716-mobile-extra-large.jpg",
+
+		"action": {
+			"screenType": "productListView",
+			"omnitureData": "BannerWidget",
+			"originalUrl": "/toys/~minimum-40-percent-off/pr?sid=mgl",
+			"url": "/toys/~minimum-40-percent-off/pr?sid=mgl",
+			"params": {
+				"store": "t06",
+				"filter": "filter=facets.promo%255B%255D%3DFreebieOfferOnInternationalBeautyProduct.",
+				"valid": true
+			}
+		}
+	}]
+}

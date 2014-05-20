@@ -1,0 +1,10 @@
+{
+	"view": "container.linear",
+	"orientation": "vertical",
+	"margin": "10 10 10 10",
+	"backgroundColor": "white",
+	"children": [{
+		"view": "text",
+		"text": "hello"
+	}]
+}

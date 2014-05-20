@@ -1,0 +1,34 @@
+{
+	"RESPONSE": {
+		"layout": {
+			"view": "container.verticalscroll",
+			"width": "fill",
+			"backgroundColor":"gray",
+			"children": [{
+				"view": "container.linear",
+				"width":"fill",
+				"orientation": "vertical",
+				"children": [{
+					"view": "container.absolute",
+					"width": "fill",
+					"height": "0",
+					"heightRatio": "39",
+
+					"widthRatio": "100",
+					"backgroundColor": "red",
+					"children": [{
+						"include": "pager"
+					}]
+
+				}, {
+					"include": "newlaunch"
+				},
+				{
+					"include":"departments"
+				}
+
+				]
+			}]
+		}
+	}
+}
