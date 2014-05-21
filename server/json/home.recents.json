@@ -1,0 +1,150 @@
+{
+	"view": "container.linear",
+	"orientation": "vertical",
+	"width": "fill",
+	"margin": "10 5 10 5",
+	"backgroundColor": "white",
+	"children": [{
+		"view": "text",
+		"text": "Recently viewed",
+		"textSize": "18",
+		"padding": "10 10 10 10"
+	}, {
+		"view": "view",
+		"height": "1",
+		"backgroundColor": "#FF9933"
+	}, {
+		"view": "container.horizontalscroll",
+		"width": "wrap",
+		"height": "wrap",
+		"children": [{
+			"view": "container.linear",
+			"orientation": "horizontal",
+			"width": "wrap",
+			"height": "wrap",
+			"children": [{
+					"view": "container.linear",
+					"orientation": "vertical",
+					"padding": "20 20 20 20",
+					"alignChildren": "center_horizontal",
+
+					"children": [{
+						"view": "text",
+						"text": "Flat"
+					}, {
+						"view": "text",
+						"textColor": "black",
+						"text": "45% off"
+					}, {
+						"view": "image",
+						"imageUrl": "http://img6a.flixcart.com/image/perfume/y/f/y/eau-de-toilette-davidoff-125-cool-water-400x400-imadu5hv35ervsgz.jpeg",
+						"height": "100",
+						"padding": "10 10 10 10"
+					}, {
+						"view": "text",
+						"text": "Perfumes"
+					}]
+				}, {
+					"view": "view",
+					"width": "1",
+					"height": "fill",
+					"backgroundColor": "gray",
+					"opacity": "0.4",
+					"margin": "0 10 0 10"
+
+				},
+
+				{
+
+					"view": "container.linear",
+					"orientation": "vertical",
+					"padding": "20 20 20 20",
+					"alignChildren": "center_horizontal",
+
+					"children": [{
+						"view": "text",
+						"text": "Starting From"
+					}, {
+						"view": "text",
+						"textColor": "blue",
+						"text": "Rs. 10"
+					}, {
+						"view": "image",
+						"imageUrl": "http://img6a.flixcart.com/image/book/0/9/2/be-careful-what-you-wish-for-400x400-imadsm4j66arwurb.jpeg",
+						"height": "100",
+						"padding": "10 10 10 10"
+					}, {
+						"view": "text",
+						"text": "eBooks"
+					}]
+				}, {
+					"view": "view",
+					"width": "1",
+					"height": "fill",
+					"backgroundColor": "gray",
+					"opacity": "0.4",
+					"margin": "0 10 0 10"
+
+				},
+
+				{
+
+					"view": "container.linear",
+					"orientation": "vertical",
+					"padding": "20 20 20 20",
+					"alignChildren": "center_horizontal",
+
+					"children": [{
+						"view": "text",
+						"text": "MOTO G"
+					}, {
+						"view": "text",
+						"textColor": "red",
+						"text": "Only On"
+					}, {
+						"view": "image",
+						"imageUrl": "http://img6a.flixcart.com/image/mobile/n/q/a/motorola-moto-g-400x400-imadsmbwhznhucjj.jpeg",
+						"height": "100",
+						"padding": "10 10 10 10"
+					}, {
+						"view": "text",
+						"text": "FLIPKART"
+					}]
+				}, {
+					"view": "view",
+					"width": "1",
+					"height": "fill",
+					"backgroundColor": "gray",
+					"opacity": "0.4",
+					"margin": "0 10 0 10"
+
+				},
+
+				{
+
+					"view": "container.linear",
+					"orientation": "vertical",
+					"padding": "20 20 20 20",
+					"alignChildren": "center_horizontal",
+
+					"children": [{
+						"view": "text",
+						"text": "Starting From"
+					}, {
+						"view": "text",
+						"textColor": "blue",
+						"text": "Rs. 3700"
+					}, {
+						"view": "image",
+						"imageUrl": "http://img5a.flixcart.com//image/external-hard-drive/t/s/t/transcend-storejet-25m3-400x400-imad72p52gr6xgtv.jpeg",
+						"height": "100",
+						"padding": "10 10 10 10"
+					}, {
+						"view": "text",
+						"text": "1 TB Hard Disks"
+					}]
+				}
+			]
+		}]
+	}]
+}
