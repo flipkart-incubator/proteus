@@ -1,4 +1,4 @@
-package com.flipkart.layoutengine.parser;
+package com.flipkart.layoutengine.builder;
 
 import android.app.Activity;
 import android.content.Context;

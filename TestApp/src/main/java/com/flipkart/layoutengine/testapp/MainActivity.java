@@ -3,6 +3,7 @@ package com.flipkart.layoutengine.testapp;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.flipkart.layoutengine.builder.LayoutBuilder;
+import com.flipkart.layoutengine.builder.LayoutBuilderImpl;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.networking.API;
 import com.flipkart.networking.request.BaseRequest;
@@ -22,8 +23,6 @@ import com.flipkart.networking.response.HomeResponse;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.util.List;
-
 
 public class MainActivity extends ActionBarActivity {
 
@@ -33,8 +32,9 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        fireRequest();
+        if(savedInstanceState==null) {
+            fireRequest();
+        }
 
     }
 
@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity {
                     public void run() {
                         HomeResponse response = request.getResponse();
                         JsonObject layout = response.getResponse().getLayout();
-                        LayoutBuilder builder = new LayoutBuilder(MainActivity.this);
+                        LayoutBuilderImpl builder = new LayoutBuilderImpl(MainActivity.this);
                         builder.setListener(createCallback());
                         FrameLayout container = new FrameLayout(MainActivity.this);
                         long startTimeMillis = System.currentTimeMillis();
@@ -129,4 +129,13 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.d(TAG,"key down "+keyCode);
+        if(keyCode == KeyEvent.KEYCODE_R)
+        {
+            fireRequest();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

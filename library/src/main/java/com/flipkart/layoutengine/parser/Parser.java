@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.layoutengine.builder.LayoutHandler;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -73,6 +74,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
         public abstract void handle(String attributeValue, E view);
 
     }
+
 
     /**
      * This is a base implementation which calls addChild() on the parent.

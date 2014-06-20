@@ -70,7 +70,7 @@ public class ViewParser<T extends View> extends Parser<T> {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
                 if(TextUtils.isDigitsOnly(attributeValue)) {
 
-                    layoutParams.height = Integer.parseInt(attributeValue);
+                    layoutParams.height = ParseHelper.parseDimension(attributeValue);
                 }
                 else
                 {
@@ -92,7 +92,7 @@ public class ViewParser<T extends View> extends Parser<T> {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
                 if(TextUtils.isDigitsOnly(attributeValue)) {
 
-                    layoutParams.width = Integer.parseInt(attributeValue);
+                    layoutParams.width = ParseHelper.parseDimension(attributeValue);
                 }
                 else
                 {
@@ -157,7 +157,7 @@ public class ViewParser<T extends View> extends Parser<T> {
             @Override
             public void handle(String attributeValue, T view) {
                 String[] strings = attributeValue.split(" ");
-                view.setPadding(Integer.parseInt(strings[0]),Integer.parseInt(strings[1]),Integer.parseInt(strings[2]),Integer.parseInt(strings[3]));
+                view.setPadding(ParseHelper.parseDimension(strings[0]),ParseHelper.parseDimension(strings[1]),ParseHelper.parseDimension(strings[2]),ParseHelper.parseDimension(strings[3]));
             }
         });
 
@@ -175,7 +175,7 @@ public class ViewParser<T extends View> extends Parser<T> {
                 }
 
 
-                layoutParams.setMargins(Integer.parseInt(strings[0]), Integer.parseInt(strings[1]), Integer.parseInt(strings[2]), Integer.parseInt(strings[3]));
+                layoutParams.setMargins(ParseHelper.parseDimension(strings[0]), ParseHelper.parseDimension(strings[1]), ParseHelper.parseDimension(strings[2]), ParseHelper.parseDimension(strings[3]));
                 view.setLayoutParams(layoutParams);
             }
         });

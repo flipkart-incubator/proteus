@@ -1,5 +1,6 @@
 package com.flipkart.layoutengine.parser;
 
+import android.content.res.Resources;
 import android.view.Gravity;
 import android.view.View;
 
@@ -47,5 +48,21 @@ public class ParseHelper {
             returnValue = View.GONE;
         }
         return returnValue;
+    }
+
+    public static int parseDimension(String dimension)
+    {
+        int dimensionInPixels = dpToPx(Integer.parseInt(dimension));
+        return dimensionInPixels;
+    }
+
+    public static int dpToPx(int dp)
+    {
+        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static int pxToDp(int px)
+    {
+        return (int) (px / Resources.getSystem().getDisplayMetrics().density);
     }
 }
