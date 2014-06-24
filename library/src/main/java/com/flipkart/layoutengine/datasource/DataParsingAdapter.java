@@ -1,12 +1,14 @@
-package com.flipkart.layoutengine.parser.data;
+package com.flipkart.layoutengine.datasource;
 
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.builder.LayoutHandler;
+import com.flipkart.layoutengine.datasource.DataSource;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.List;
 
@@ -15,9 +17,12 @@ import java.util.List;
  */
 public class DataParsingAdapter<E> implements LayoutHandler<E> {
 
+    private final DataSource dataSource;
     private LayoutHandler<E> handler;
+    private static final String PREFIX = "@";
 
-    public DataParsingAdapter(LayoutHandler<E> enclosingHandler) {
+    public DataParsingAdapter(DataSource dataSource, LayoutHandler<E> enclosingHandler) {
+        this.dataSource = dataSource;
         this.handler = enclosingHandler;
     }
 
@@ -28,6 +33,15 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
 
     @Override
     public boolean handleAttribute(String attribute, JsonElement element, E view) {
+        if(element.isJsonPrimitive())
+        {
+            String dataSourceKey = element.getAsString();
+            if(dataSourceKey.startsWith(PREFIX)) {
+               String data = dataSource.getString(dataSourceKey.substring(PREFIX.length()));
+               element = new JsonPrimitive(data);
+            }
+        }
+
         return handler.handleAttribute(attribute,element,view);
     }
 

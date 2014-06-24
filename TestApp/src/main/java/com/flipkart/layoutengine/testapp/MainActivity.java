@@ -11,8 +11,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.flipkart.layoutengine.builder.LayoutBuilderImpl;
+import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
+import com.flipkart.layoutengine.datasource.GsonDataSource;
 import com.flipkart.networking.API;
 import com.flipkart.networking.request.BaseRequest;
 import com.flipkart.networking.request.HomeRequest;
@@ -58,9 +59,12 @@ public class MainActivity extends ActionBarActivity {
                 MainActivity.this.getWindow().getDecorView().post(new Runnable() {
                     @Override
                     public void run() {
+
+
+
                         HomeResponse response = request.getResponse();
                         JsonObject layout = response.getResponse().getLayout();
-                        LayoutBuilderImpl builder = new LayoutBuilderImpl(MainActivity.this);
+                        LayoutBuilder builder = new LayoutBuilder(MainActivity.this,new GsonDataSource(response.getResponse().getData()));
                         builder.setListener(createCallback());
                         FrameLayout container = new FrameLayout(MainActivity.this);
                         long startTimeMillis = System.currentTimeMillis();

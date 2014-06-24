@@ -4,15 +4,6 @@ import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.layoutengine.parser.ViewParser;
-import com.flipkart.layoutengine.parser.custom.FrameLayoutParser;
-import com.flipkart.layoutengine.parser.custom.HorizontalScrollViewParser;
-import com.flipkart.layoutengine.parser.custom.ImageViewParser;
-import com.flipkart.layoutengine.parser.custom.LinearLayoutParser;
-import com.flipkart.layoutengine.parser.custom.ScrollViewParser;
-import com.flipkart.layoutengine.parser.custom.TextViewParser;
-import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
-import com.flipkart.layoutengine.parser.data.DataParsingAdapter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -54,9 +45,12 @@ import java.util.Map;
         this.activity = activity;
     }
 
-
-
     public View build(ViewGroup parent, JsonObject jsonObject)
+    {
+        return buildImpl(parent,jsonObject);
+    }
+
+    private View buildImpl(ViewGroup parent, JsonObject jsonObject)
     {
         String viewType = jsonObject.get("view").getAsString();
         jsonObject.remove("view");
@@ -94,7 +88,7 @@ import java.util.Map;
             for (int i = 0; i < children.size(); i++) {
 
                 JsonObject childObject = children.get(i).getAsJsonObject();
-                View childView = build(selfViewGroup,childObject);
+                View childView = buildImpl(selfViewGroup,childObject);
                 if(childView!=null) {
                     childrenToAdd.add(childView);
                 }

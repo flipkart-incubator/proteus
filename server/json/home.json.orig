@@ -1,46 +1,45 @@
 {
-<<<<<<< HEAD
+
 	"RESPONSE": {
 		"layout": {
 			"view": "container.verticalscroll",
 			"width": "fill",
-			"backgroundColor":"gray",
+			"backgroundColor": "#CCCCCC",
 			"children": [{
 				"view": "container.linear",
-				"width":"fill",
+				"width": "fill",
 				"orientation": "vertical",
 				"children": [{
-					"view": "container.absolute",
-					"width": "fill",
-					"height": "0",
-					"heightRatio": "39",
+						"include": "search"
+					}, {
+						"view": "container.absolute",
+						"width": "fill",
+						"height": "0",
+						"heightRatio": "39",
 
-					"widthRatio": "100",
-					"backgroundColor": "red",
-					"children": [{
-						"include": "pager"
-					}]
+						"widthRatio": "100",
+						"children": [{
+							"include": "pager"
+						}]
 
-				}, {
-					"include": "newlaunch"
-				},
-				{
-					"include":"departments"
-				}
+					}, {
+						"include": "newlaunch"
+					}, {
+						"include": "departments"
+					}, {
+						"include": "offers"
+					}, {
+						"include": "popular"
+					}, {
+						"include": "recents"
+					}
 
 				]
 			}]
 		}
 	}
-=======
-	"hello": "sdff",
-	"df": "dsf",
-	"sfsdf": [
-	{
-		"fsdfsf":""
-	}
-	
-	]
-	
->>>>>>> f497cab29e8c30fe5a1e798807d205d11fc9cb9f
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 7b6464da8fcb8901ccdfa832afd51173a2fa9cfb

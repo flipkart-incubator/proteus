@@ -36,6 +36,22 @@
 
 				]
 			}]
+		},
+
+		"data": {
+			"data": [{
+				"imageUrl": ""
+			}],
+			"pager1": {
+				"children": [{
+					"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140520-140332-mobile-extra-large-12.jpg"
+				}, {
+					"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140623-115031-mobile-large.jpg"
+
+				}, {
+					"imageUrl": "http://img5a.flixcart.com/www/promos/new/20140520-160716-mobile-extra-large.jpg"
+				}]
+			}
 		}
 	}
 }

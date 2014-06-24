@@ -9,7 +9,7 @@
     tools:context="com.flipkart.layoutengine.testapp.MainActivity">
 
     <TextView
-        android:text="@string/hello_world"
+        android:text="@string/loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
