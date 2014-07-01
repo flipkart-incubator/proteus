@@ -19,6 +19,12 @@ import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
  */
 public class LayoutBuilderFactory {
 
+    /**
+     * Creates a layout builder which can parse @data blocks. See {@link DataParsingLayoutBuilder}
+     * @param activity
+     * @param dataSource
+     * @return
+     */
     static public DataParsingLayoutBuilder createDataParsingLayoutBuilder(Activity activity, DataSource dataSource)
     {
         DataParsingLayoutBuilder builder = new DataParsingLayoutBuilder(activity,dataSource);
@@ -34,6 +40,10 @@ public class LayoutBuilderFactory {
     }
 
 
+    /**
+     * This method will register all the internal layout handlers to the builder specified.
+     * @param layoutBuilder
+     */
     static private void registerBuiltInHandlers(SimpleLayoutBuilder layoutBuilder) {
         layoutBuilder.registerHandler("container.linear", new LinearLayoutParser());
         layoutBuilder.registerHandler("container.absolute", new FrameLayoutParser());

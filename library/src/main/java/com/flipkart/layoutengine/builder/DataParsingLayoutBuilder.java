@@ -17,7 +17,7 @@ import com.flipkart.layoutengine.datasource.DataParsingAdapter;
 import com.google.gson.JsonObject;
 
 /**
- * Created by kirankumar on 19/06/14.
+ * A layout builder which can parse @data blocks before passing it on to {@link SimpleLayoutBuilder}
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     private final DataSource dataSource;

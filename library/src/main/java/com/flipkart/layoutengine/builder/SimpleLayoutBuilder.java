@@ -16,7 +16,7 @@ import java.util.Map;
 
 
 /**
- * Created by kiran.kumar on 09/05/14.
+ * A layout builder which can parse json to construct an android view out of it. It uses the registered handlers to convert the json string to a view and then assign attributes.
  */
 public class SimpleLayoutBuilder {
 
