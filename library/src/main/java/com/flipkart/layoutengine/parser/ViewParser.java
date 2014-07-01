@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.toolbox.AttributeBundle;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.nineoldandroids.view.ViewHelper;
 
@@ -194,5 +196,12 @@ public class ViewParser<T extends View> extends Parser<T> {
             }
         });
 
+
+
+    }
+
+    @Override
+    public JsonArray parseChildren(JsonElement element) {
+        return element.getAsJsonArray();
     }
 }

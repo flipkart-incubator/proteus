@@ -1,6 +1,7 @@
 package com.flipkart.layoutengine.builder;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,21 +18,41 @@ import java.util.Map;
 /**
  * Created by kiran.kumar on 09/05/14.
  */
-/* default */ class LayoutBuilderImpl {
+public class SimpleLayoutBuilder {
 
+    private static final String TAG = SimpleLayoutBuilder.class.getSimpleName();
     private HashMap<String,LayoutHandler> viewClassMap = new HashMap<String, LayoutHandler>();
     private LayoutBuilderCallback listener;
 
+    /**
+     * Package private constructor so that no client can access it without the factory class
+     */
+    SimpleLayoutBuilder() {
+
+    }
+
+    /**
+     * Registers a {@link LayoutHandler} for the specified view type. All the attributes will pass through {@link LayoutHandler#handleAttribute(String, com.google.gson.JsonElement, Object)} and expect to be handled.
+     * @param viewType The string value for "view" attribute.
+     * @param handler The handler which should handle this view.
+     */
     public void registerHandler(String viewType,LayoutHandler handler)
     {
         viewClassMap.put(viewType,handler);
     }
 
+    /**
+     * Unregisters the specified view type.
+     * @param viewType The string value for "view" attribute.
+     */
     public void unregisterHandler(String viewType)
     {
         viewClassMap.remove(viewType);
     }
 
+    /**
+     * Unregisters all handlers.
+     */
     public void unregisterAllHandlers()
     {
         viewClassMap.clear();
@@ -41,7 +62,7 @@ import java.util.Map;
 
     private Activity activity;
 
-    public LayoutBuilderImpl(Activity activity) {
+    public SimpleLayoutBuilder(Activity activity) {
         this.activity = activity;
     }
 
@@ -52,11 +73,17 @@ import java.util.Map;
 
     private View buildImpl(ViewGroup parent, JsonObject jsonObject)
     {
-        String viewType = jsonObject.get("view").getAsString();
-        jsonObject.remove("view");
-
-        JsonArray children = jsonObject.getAsJsonArray("children");
-        jsonObject.remove("children");
+        JsonElement viewTypeElement = jsonObject.get("view");
+        String viewType = null;
+        if(viewTypeElement!=null) {
+            viewType = viewTypeElement.getAsString();
+            jsonObject.remove("view");
+        }
+        else
+        {
+            Log.e(TAG,"view cannot be null");
+            return null;
+        }
 
         LayoutHandler<View> handler = viewClassMap.get(viewType);
         if(handler == null)
@@ -67,6 +94,15 @@ import java.util.Map;
                 return null;
             }
         }
+
+        JsonElement childrenElement = jsonObject.get("children");
+        JsonArray children = null;
+        if(childrenElement!=null) {
+            children = handler.parseChildren(childrenElement);
+            jsonObject.remove("children");
+        }
+
+        JsonElement childViewElement = jsonObject.get("childView");
         handler.prepare(activity);
         View self = createView(parent, handler, jsonObject);
         handler.setupView(parent,self);
@@ -82,13 +118,19 @@ import java.util.Map;
                 }
             }
         }
+
         if(children!=null && children.size()>0) {
             ViewGroup selfViewGroup = (ViewGroup) self;
             List<View> childrenToAdd = new ArrayList<View>();
             for (int i = 0; i < children.size(); i++) {
 
                 JsonObject childObject = children.get(i).getAsJsonObject();
-                View childView = buildImpl(selfViewGroup,childObject);
+                if(childViewElement!=null)
+                {
+                    // propagate the value of 'childView' to the recursive calls
+                    childObject.add("view",childViewElement);
+                }
+                View childView = buildImpl(selfViewGroup, childObject);
                 if(childView!=null) {
                     childrenToAdd.add(childView);
                 }

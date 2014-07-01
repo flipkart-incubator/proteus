@@ -11,8 +11,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.flipkart.layoutengine.builder.LayoutBuilder;
+import com.flipkart.layoutengine.builder.DataParsingLayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
+import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.datasource.GsonDataSource;
 import com.flipkart.networking.API;
 import com.flipkart.networking.request.BaseRequest;
@@ -64,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
 
                         HomeResponse response = request.getResponse();
                         JsonObject layout = response.getResponse().getLayout();
-                        LayoutBuilder builder = new LayoutBuilder(MainActivity.this,new GsonDataSource(response.getResponse().getData()));
+                        DataParsingLayoutBuilder builder = LayoutBuilderFactory.createDataParsingLayoutBuilder(MainActivity.this, new GsonDataSource(response.getResponse().getData()));
                         builder.setListener(createCallback());
                         FrameLayout container = new FrameLayout(MainActivity.this);
                         long startTimeMillis = System.currentTimeMillis();

@@ -37,19 +37,59 @@
 				]
 			}]
 		},
+		"views":
+		{
 
+			"product_cell":{
+
+					"view": "container.linear",
+					"orientation": "vertical",
+					"padding": "20 20 20 20",
+					"alignChildren": "center_horizontal",
+
+					"children": [{
+						"view": "text",
+						"text": "MOTO G"
+					}, {
+						"view": "text",
+						"textColor": "red",
+						"text": "Only On"
+					}, {
+						"view": "image",
+						"imageUrl": "http://img6a.flixcart.com/image/mobile/n/q/a/motorola-moto-g-400x400-imadsmbwhznhucjj.jpeg",
+						"height": "100",
+						"padding": "10 10 10 10"
+					}, {
+						"view": "text",
+						"text": "FLIPKART"
+					}]
+				
+			}
+
+			},
 		"data": {
-			"data": [{
-				"imageUrl": ""
-			}],
-			"pager1": {
+			"pager": {
 				"children": [{
 					"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140520-140332-mobile-extra-large-12.jpg"
 				}, {
+					"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140520-140332-mobile-extra-large-12.jpg"
+				}, {
 					"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140623-115031-mobile-large.jpg"
-
 				}, {
 					"imageUrl": "http://img5a.flixcart.com/www/promos/new/20140520-160716-mobile-extra-large.jpg"
+				}]
+			},
+			"departments": {
+				"title": "Shop by Departments",
+				"sub": [{
+					"title": "Fashion & Lifestyle 2",
+					"image": "http://img6a.flixcart.com/www/promos/new/20140424-195900-xhdpi.jpg"
+				}, {
+					"title": "Electronics",
+					"image": "http://img5a.flixcart.com/www/promos/new/20140424-200057-xhdpi.jpg"
+				}, {
+					"title": "Books & More",
+					"image": "http://img6a.flixcart.com/www/promos/new/20140424-200246-xhdpi.jpg"
 				}]
 			}
 		}

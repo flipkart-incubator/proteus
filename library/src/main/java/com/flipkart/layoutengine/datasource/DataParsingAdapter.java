@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.builder.LayoutHandler;
 import com.flipkart.layoutengine.datasource.DataSource;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -33,16 +34,21 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
 
     @Override
     public boolean handleAttribute(String attribute, JsonElement element, E view) {
+
+        element = getElementFromData(element);
+        return handler.handleAttribute(attribute,element,view);
+    }
+
+    private JsonElement getElementFromData(JsonElement element)
+    {
         if(element.isJsonPrimitive())
         {
             String dataSourceKey = element.getAsString();
             if(dataSourceKey.startsWith(PREFIX)) {
-               String data = dataSource.getString(dataSourceKey.substring(PREFIX.length()));
-               element = new JsonPrimitive(data);
+                element = dataSource.getObject(dataSourceKey.substring(PREFIX.length()));
             }
         }
-
-        return handler.handleAttribute(attribute,element,view);
+        return element;
     }
 
     @Override
@@ -65,5 +71,9 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
         handler.addChildren(activity,parent,children);
     }
 
-
+    @Override
+    public JsonArray parseChildren(JsonElement element) {
+        element = getElementFromData(element);
+        return handler.parseChildren(element);
+    }
 }

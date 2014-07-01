@@ -7,7 +7,7 @@
 	"children": [{
 		"view": "text",
 		"text": "Hot on flipkart",
-		"textSize":"18",
+		"textSize": "18",
 		"padding": "10 10 10 10"
 	}, {
 		"view": "view",
@@ -23,33 +23,13 @@
 			"width": "wrap",
 			"height": "wrap",
 			"children": [{
-					"view": "container.linear",
-					"orientation": "vertical",
-					"padding": "20 20 20 20",
-					"alignChildren": "center_horizontal",
-
-					"children": [{
-						"view": "text",
-						"text": "MOTO G"
-					}, {
-						"view": "text",
-						"textColor": "red",
-						"text": "Only On"
-					}, {
-						"view": "image",
-						"imageUrl": "http://img6a.flixcart.com/image/mobile/n/q/a/motorola-moto-g-400x400-imadsmbwhznhucjj.jpeg",
-						"height": "100",
-						"padding": "10 10 10 10"
-					}, {
-						"view": "text",
-						"text": "FLIPKART"
-					}]
+					"view": "product_cell"
 				}, {
 					"view": "view",
 					"width": "1",
-					"height":"fill",
-					"backgroundColor":"gray",
-					"opacity":"0.4",
+					"height": "fill",
+					"backgroundColor": "gray",
+					"opacity": "0.4",
 					"margin": "0 10 0 10"
 
 				},
@@ -80,9 +60,9 @@
 				}, {
 					"view": "view",
 					"width": "1",
-					"height":"fill",
-					"backgroundColor":"gray",
-					"opacity":"0.4",
+					"height": "fill",
+					"backgroundColor": "gray",
+					"opacity": "0.4",
 					"margin": "0 10 0 10"
 
 				},
@@ -113,9 +93,9 @@
 				}, {
 					"view": "view",
 					"width": "1",
-					"height":"fill",
-					"backgroundColor":"gray",
-					"opacity":"0.4",
+					"height": "fill",
+					"backgroundColor": "gray",
+					"opacity": "0.4",
 					"margin": "0 10 0 10"
 
 				},

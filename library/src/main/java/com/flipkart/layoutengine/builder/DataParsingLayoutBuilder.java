@@ -19,35 +19,22 @@ import com.google.gson.JsonObject;
 /**
  * Created by kirankumar on 19/06/14.
  */
-public class LayoutBuilder extends LayoutBuilderImpl {
+public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     private final DataSource dataSource;
 
-    public LayoutBuilder(Activity activity, DataSource dataSource) {
+    DataParsingLayoutBuilder(Activity activity, DataSource dataSource) {
         super(activity);
         this.dataSource = dataSource;
-        init(activity);
     }
 
-    private void init(Activity activity) {
-        registerHandlers();
+
+    @Override
+    public void registerHandler(String viewType, LayoutHandler handler) {
+        super.registerHandler(viewType, new DataParsingAdapter(dataSource,handler));
     }
 
-    private void registerHandlers() {
-        registerDataParsingHandler("container.linear", new LinearLayoutParser());
-        registerDataParsingHandler("container.absolute", new FrameLayoutParser());
-        registerDataParsingHandler("container.verticalscroll", new ScrollViewParser());
-        registerDataParsingHandler("container.horizontalscroll", new HorizontalScrollViewParser());
-        registerDataParsingHandler("image", new ImageViewParser());
-        registerDataParsingHandler("text", new TextViewParser());
-        registerDataParsingHandler("pager", new ViewPagerParser());
-        registerDataParsingHandler("view", new ViewParser(View.class));
 
-    }
 
-    private void registerDataParsingHandler(String viewType, LayoutHandler handler)
-    {
-        registerHandler(viewType, new DataParsingAdapter(dataSource,handler));
-    }
 
     @Override
     public View build(ViewGroup parent, JsonObject jsonObject) {

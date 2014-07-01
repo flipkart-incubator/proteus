@@ -6,7 +6,7 @@
 	"backgroundColor": "white",
 	"children": [{
 		"view": "text",
-		"text": "Shop by Departments",
+		"text": "@departments.title",
 		"padding": "10 10 10 10"
 	}, {
 		"view": "view",
@@ -19,7 +19,7 @@
 		"onclick":"true",
 		"children": [{
 				"view": "image",
-				"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140424-195900-xhdpi.jpg",
+				"imageUrl": "@departments.sub[0].image",
 				"aspectRatio": "preserve",
 				"width": "fill"
 
@@ -40,7 +40,7 @@
 						"padding": "10 10 10 10",
 						"children": [{
 								"view": "text",
-								"text": "Fashion & Lifestyle",
+								"text": "@departments.sub[0].title",
 								"textColor": "white"
 							}
 
@@ -63,7 +63,7 @@
 			"weight": "1",
 			"children": [{
 					"view": "image",
-					"imageUrl": "http://img5a.flixcart.com/www/promos/new/20140424-200057-xhdpi.jpg",
+					"imageUrl": "@departments.sub[1].image",
 					"aspectRatio": "preserve",
 					"width": "fill"
 
@@ -84,7 +84,7 @@
 							"padding": "10 10 10 10",
 							"children": [{
 									"view": "text",
-									"text": "Electronics",
+									"text": "@departments.sub[1].title",
 									"textColor": "white"
 								}
 
@@ -104,7 +104,7 @@
 			"weight": "1",
 			"children": [{
 					"view": "image",
-					"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140424-200246-xhdpi.jpg",
+					"imageUrl": "@departments.sub[2].image",
 					"aspectRatio": "preserve",
 					"width": "fill"
 
@@ -125,7 +125,7 @@
 							"padding": "10 10 10 10",
 							"children": [{
 									"view": "text",
-									"text": "Books & More",
+									"text": "@departments.sub[2].title",
 									"textColor": "white"
 								}
 

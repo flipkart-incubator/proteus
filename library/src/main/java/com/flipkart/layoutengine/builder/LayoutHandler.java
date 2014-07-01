@@ -5,8 +5,11 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import org.json.JSONArray;
 
 import java.util.List;
 import java.util.Map;
@@ -21,6 +24,10 @@ public interface LayoutHandler<E> {
 
     //ask the handler to handle the attributes of the view it created
     public boolean handleAttribute(String attribute, JsonElement element, E view);
+
+    //ask the handler to parse the value of 'children' and return an array of children elements.
+    public JsonArray parseChildren(JsonElement element);
+
 
     public boolean canAddChild();
     public void setupView(ViewGroup parent, E view);

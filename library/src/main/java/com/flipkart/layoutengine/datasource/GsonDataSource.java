@@ -17,9 +17,8 @@ public class GsonDataSource implements DataSource {
 
 
     @Override
-    public String getString(String path) {
-        String asString = getFromObject(path).getAsString();
-        return asString;
+    public JsonElement getObject(String key) {
+        return getFromObject(key);
     }
 
     private JsonElement getFromObject(String path) {
