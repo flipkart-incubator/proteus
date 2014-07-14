@@ -26,27 +26,27 @@ public class TextViewParser extends ViewParser<TextView> {
         super.prepareHandlers(activity);
         addHandler("text", new AttributeProcessor<TextView>() {
             @Override
-            public void handle(String attributeValue, TextView view) {
+            public void handle(String attributeKey, String attributeValue, TextView view) {
                 view.setText(attributeValue);
             }
         });
 
         addHandler("textSize",new AttributeProcessor<TextView>() {
             @Override
-            public void handle(String attributeValue, TextView view) {
+            public void handle(String attributeKey, String attributeValue, TextView view) {
                 view.setTextSize(Float.parseFloat(attributeValue));
             }
         });
         addHandler("textAlign",new AttributeProcessor<TextView>() {
             @Override
-            public void handle(String attributeValue, TextView view) {
+            public void handle(String attributeKey, String attributeValue, TextView view) {
                 view.setGravity(ParseHelper.parseGravity(attributeValue));
             }
         });
 
         addHandler("textColor",new AttributeProcessor<TextView>() {
             @Override
-            public void handle(String attributeValue, TextView view) {
+            public void handle(String attributeKey, String attributeValue, TextView view) {
                 view.setTextColor(Color.parseColor(attributeValue));
             }
         });

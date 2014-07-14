@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.layoutengine.ParserContext;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,13 +21,13 @@ import java.util.Map;
 public interface LayoutHandler<E> {
 
     //create the view and return it.
-    public E createView(Activity activity, ViewGroup parent, JsonObject object);
+    public E createView(ParserContext context, Activity activity, ViewGroup parent, JsonObject object);
 
     //ask the handler to handle the attributes of the view it created
-    public boolean handleAttribute(String attribute, JsonElement element, E view);
+    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, E view);
 
     //ask the handler to parse the value of 'children' and return an array of children elements.
-    public JsonArray parseChildren(JsonElement element);
+    public JsonArray parseChildren(ParserContext context, JsonElement element);
 
 
     public boolean canAddChild();

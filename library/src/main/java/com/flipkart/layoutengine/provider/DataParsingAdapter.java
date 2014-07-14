@@ -1,15 +1,14 @@
-package com.flipkart.layoutengine.datasource;
+package com.flipkart.layoutengine.provider;
 
 import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.LayoutHandler;
-import com.flipkart.layoutengine.datasource.DataSource;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.util.List;
 
@@ -18,25 +17,24 @@ import java.util.List;
  */
 public class DataParsingAdapter<E> implements LayoutHandler<E> {
 
-    private final DataSource dataSource;
+    private final Provider dataProvider;
     private LayoutHandler<E> handler;
-    private static final String PREFIX = "@";
+    private static final Character PREFIX = '@';
 
-    public DataParsingAdapter(DataSource dataSource, LayoutHandler<E> enclosingHandler) {
-        this.dataSource = dataSource;
+    public DataParsingAdapter(Provider dataProvider, LayoutHandler<E> enclosingHandler) {
+        this.dataProvider = dataProvider;
         this.handler = enclosingHandler;
     }
 
     @Override
-    public E createView(Activity activity, ViewGroup parent, JsonObject object) {
-        return handler.createView(activity,parent,object);
+    public E createView(ParserContext context, Activity activity, ViewGroup parent, JsonObject object) {
+        return handler.createView(context, activity,parent,object);
     }
 
     @Override
-    public boolean handleAttribute(String attribute, JsonElement element, E view) {
-
+    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, E view) {
         element = getElementFromData(element);
-        return handler.handleAttribute(attribute,element,view);
+        return handler.handleAttribute(context,attribute,element,view);
     }
 
     private JsonElement getElementFromData(JsonElement element)
@@ -44,8 +42,8 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
         if(element.isJsonPrimitive())
         {
             String dataSourceKey = element.getAsString();
-            if(dataSourceKey.startsWith(PREFIX)) {
-                element = dataSource.getObject(dataSourceKey.substring(PREFIX.length()));
+            if(dataSourceKey.charAt(0) == PREFIX) {
+                element = dataProvider.getObject(dataSourceKey.substring(1));
             }
         }
         return element;
@@ -72,8 +70,8 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
     }
 
     @Override
-    public JsonArray parseChildren(JsonElement element) {
+    public JsonArray parseChildren(ParserContext context, JsonElement element) {
         element = getElementFromData(element);
-        return handler.parseChildren(element);
+        return handler.parseChildren(context, element);
     }
 }

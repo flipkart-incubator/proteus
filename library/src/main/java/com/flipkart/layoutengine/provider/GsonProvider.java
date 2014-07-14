@@ -1,20 +1,23 @@
-package com.flipkart.layoutengine.datasource;
+package com.flipkart.layoutengine.provider;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * Created by kirankumar on 24/06/14.
  */
-public class GsonDataSource implements DataSource {
+public class GsonProvider implements Provider {
 
 
-    private final JsonElement obj;
+    private JsonElement obj;
 
-    public GsonDataSource(JsonElement jsonElement) {
+    public GsonProvider(JsonElement jsonElement) {
         this.obj = jsonElement;
     }
 
+    @Override
+    public void setRoot(JsonElement rootElement) {
+        this.obj = rootElement;
+    }
 
     @Override
     public JsonElement getObject(String key) {
@@ -91,4 +94,14 @@ public class GsonDataSource implements DataSource {
     }
 
 
+    @Override
+    public Provider clone(){
+
+        try {
+            return (Provider)super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

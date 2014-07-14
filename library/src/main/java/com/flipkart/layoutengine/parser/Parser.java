@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.LayoutHandler;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,7 +37,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     }
 
     @Override
-    public T createView(Activity activity, ViewGroup parent, JsonObject object) {
+    public T createView(ParserContext context, Activity activity, ViewGroup parent, JsonObject object) {
         T v = null;
         try {
             v = this.viewClass.getDeclaredConstructor(Context.class).newInstance(activity);
@@ -54,10 +55,10 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     public abstract void setupView(ViewGroup parent, T view);
 
     @Override
-    public boolean handleAttribute(String attribute, JsonElement element, T view) {
+    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, T view) {
         AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
-            attributeProcessor.handle(element.getAsString(), view);
+            attributeProcessor.handle(attribute, element.getAsString(), view);
             return true;
         }
         return false;
@@ -71,7 +72,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
 
 
     protected static abstract class AttributeProcessor<E> {
-        public abstract void handle(String attributeValue, E view);
+        public abstract void handle(String attributeKey,String attributeValue, E view);
 
     }
 

@@ -11,10 +11,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DataParsingLayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
-import com.flipkart.layoutengine.datasource.GsonDataSource;
+import com.flipkart.layoutengine.provider.GsonProvider;
 import com.flipkart.networking.API;
 import com.flipkart.networking.request.BaseRequest;
 import com.flipkart.networking.request.HomeRequest;
@@ -65,7 +66,7 @@ public class MainActivity extends ActionBarActivity {
 
                         HomeResponse response = request.getResponse();
                         JsonObject layout = response.getResponse().getLayout();
-                        DataParsingLayoutBuilder builder = LayoutBuilderFactory.createDataParsingLayoutBuilder(MainActivity.this, new GsonDataSource(response.getResponse().getData()));
+                        DataParsingLayoutBuilder builder = LayoutBuilderFactory.createDataAndViewParsingLayoutBuilder(MainActivity.this, new GsonProvider(response.getResponse().getData()),new GsonProvider(response.getResponse().getViews()));
                         builder.setListener(createCallback());
                         FrameLayout container = new FrameLayout(MainActivity.this);
                         long startTimeMillis = System.currentTimeMillis();
@@ -90,7 +91,7 @@ public class MainActivity extends ActionBarActivity {
     {
         return new LayoutBuilderCallback() {
             @Override
-            public void onUnknownAttribute(String attribute, final JsonElement element, final JsonObject object, View view) {
+            public void onUnknownAttribute(ParserContext context, String attribute, final JsonElement element, final JsonObject object, View view) {
                 Log.d(TAG,"Unknown attribute "+attribute+" encountered for "+object);
                 if("onclick".equals(attribute))
                 {
@@ -104,10 +105,10 @@ public class MainActivity extends ActionBarActivity {
             }
 
             @Override
-            public void onUnknownViewType(String viewType, JsonObject object, ViewGroup parent) {
+            public View onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent) {
 
                 Log.e(TAG,"Unknown View "+viewType+" encountered. "+object);
-
+                return null;
             }
         };
     }

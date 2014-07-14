@@ -25,14 +25,14 @@ public class ImageViewParser extends ViewParser<NetworkImageView> {
         super.prepareHandlers(activity);
         addHandler("imageUrl", new AttributeProcessor<NetworkImageView>() {
             @Override
-            public void handle(String attributeValue, NetworkImageView view) {
+            public void handle(String attributeKey, String attributeValue, NetworkImageView view) {
                 view.setImageUrl(attributeValue, VolleySingleton.getInstance(activity.getApplicationContext()).getImageLoader());
             }
         });
 
         addHandler("scaleType",new AttributeProcessor<NetworkImageView>() {
             @Override
-            public void handle(String attributeValue, NetworkImageView view) {
+            public void handle(String attributeKey, String attributeValue, NetworkImageView view) {
                 ImageView.ScaleType scaleType = null;
                 if("center".equals(attributeValue))
                 {
@@ -44,7 +44,7 @@ public class ImageViewParser extends ViewParser<NetworkImageView> {
 
         addHandler("aspectRatio", new AttributeProcessor<NetworkImageView>() {
             @Override
-            public void handle(String attributeValue, NetworkImageView view) {
+            public void handle(String attributeKey, String attributeValue, NetworkImageView view) {
                 if("preserve".equals(attributeValue))
                 {
                     view.setAdjustViewBounds(true);

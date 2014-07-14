@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.layoutengine.ParserContext;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,19 +21,17 @@ import java.util.Map;
  */
 public class SimpleLayoutBuilder {
 
-    private static final String TAG = SimpleLayoutBuilder.class.getSimpleName();
+    protected static final String TAG = SimpleLayoutBuilder.class.getSimpleName();
     private HashMap<String,LayoutHandler> viewClassMap = new HashMap<String, LayoutHandler>();
     private LayoutBuilderCallback listener;
 
     /**
      * Package private constructor so that no client can access it without the factory class
      */
-    SimpleLayoutBuilder() {
-
-    }
+    SimpleLayoutBuilder() {}
 
     /**
-     * Registers a {@link LayoutHandler} for the specified view type. All the attributes will pass through {@link LayoutHandler#handleAttribute(String, com.google.gson.JsonElement, Object)} and expect to be handled.
+     * Registers a {@link LayoutHandler} for the specified view type. All the attributes will pass through {@link LayoutHandler#handleAttribute(com.flipkart.layoutengine.ParserContext, String, com.google.gson.JsonElement, Object)} and expect to be handled.
      * @param viewType The string value for "view" attribute.
      * @param handler The handler which should handle this view.
      */
@@ -68,10 +67,15 @@ public class SimpleLayoutBuilder {
 
     public View build(ViewGroup parent, JsonObject jsonObject)
     {
-        return buildImpl(parent,jsonObject);
+        return buildImpl(createParserContext(), parent,jsonObject);
     }
 
-    private View buildImpl(ViewGroup parent, JsonObject jsonObject)
+    protected ParserContext createParserContext()
+    {
+        return new ParserContext();
+    }
+
+    protected View buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject)
     {
         JsonElement viewTypeElement = jsonObject.get("view");
         String viewType = null;
@@ -81,6 +85,7 @@ public class SimpleLayoutBuilder {
         }
         else
         {
+
             Log.e(TAG,"view cannot be null");
             return null;
         }
@@ -88,36 +93,31 @@ public class SimpleLayoutBuilder {
         LayoutHandler<View> handler = viewClassMap.get(viewType);
         if(handler == null)
         {
-            if(listener!=null)
-            {
-                listener.onUnknownViewType(viewType,jsonObject,parent);
-                return null;
-            }
+            return onUnknownViewEncountered(context,viewType,parent,jsonObject);
         }
 
         JsonElement childrenElement = jsonObject.get("children");
         JsonArray children = null;
         if(childrenElement!=null) {
-            children = handler.parseChildren(childrenElement);
+            children = parseChildren(handler,context,childrenElement);
             jsonObject.remove("children");
         }
 
         JsonElement childViewElement = jsonObject.get("childView");
         handler.prepare(activity);
-        View self = createView(parent, handler, jsonObject);
+        View self = createView(context, parent, handler, jsonObject);
         handler.setupView(parent,self);
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 
-            boolean handled = handler.handleAttribute(entry.getKey(), entry.getValue(),self);
+            boolean handled = handleAttribute(handler,context,entry.getKey(),entry.getValue(),self);
 
             if(!handled)
             {
-                if(listener!=null)
-                {
-                    listener.onUnknownAttribute(entry.getKey(),entry.getValue(),jsonObject,self);
-                }
+                onUnknownAttributeEncountered(context, entry.getKey(), entry.getValue(), jsonObject, self);
             }
         }
+
+        onAllAttributesProcessed(context,jsonObject);
 
         if(children!=null && children.size()>0) {
             ViewGroup selfViewGroup = (ViewGroup) self;
@@ -130,7 +130,7 @@ public class SimpleLayoutBuilder {
                     // propagate the value of 'childView' to the recursive calls
                     childObject.add("view",childViewElement);
                 }
-                View childView = buildImpl(selfViewGroup, childObject);
+                View childView = buildImpl(context, selfViewGroup, childObject);
                 if(childView!=null) {
                     childrenToAdd.add(childView);
                 }
@@ -140,16 +140,58 @@ public class SimpleLayoutBuilder {
                 handler.addChildren(activity, selfViewGroup, childrenToAdd);
             }
         }
+
+        onChildrenProcessed(context,jsonObject);
         return self;
 
 
     }
 
-    public View createView(ViewGroup parent, LayoutHandler<View> handler, JsonObject object)
+    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement)
     {
-        View view = handler.createView(activity, parent, object);
+        return handler.parseChildren(context,childrenElement);
+    }
+
+    protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attribute, JsonElement element, View view)
+    {
+        return handler.handleAttribute(context, attribute, element, view);
+    }
+
+    protected void onUnknownAttributeEncountered(ParserContext context, String attribute, JsonElement element, JsonObject object, View view)
+    {
+        if(listener!=null)
+        {
+            listener.onUnknownAttribute(context,attribute,element, object, view);
+        }
+    }
+
+    protected View onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject) {
+
+        if(listener!=null)
+        {
+            return listener.onUnknownViewType(context,viewType,jsonObject,parent);
+        }
+        return null;
+    }
+
+
+
+    protected View createView(ParserContext context, ViewGroup parent, LayoutHandler<View> handler, JsonObject object)
+    {
+        View view = handler.createView(context, activity, parent, object);
         return view;
     }
+
+    protected void onAllAttributesProcessed(ParserContext context,JsonObject jsonObject)
+    {
+
+    }
+
+    protected void onChildrenProcessed(ParserContext context,JsonObject jsonObject)
+    {
+
+    }
+
 
 
     public LayoutBuilderCallback getListener() {

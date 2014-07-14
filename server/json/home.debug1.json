@@ -1,0 +1,25 @@
+{
+	"view": "container.relative",
+	"width": "fill",
+	"height": "100",
+	"margin": "10 5 10 5",
+	"backgroundColor": "white",
+	"children": [{
+		"view": "text",
+		"text": "below",
+		"width": "wrap",
+		"height": "wrap",
+		"id": "1233",
+		"alignParentRight":"true"
+	}, {
+		"view": "text",
+		"text": "above",
+		"width": "wrap",
+		"centerInParent":"false",
+		"height": "wrap",
+		"id": "1234",
+		"toLeftOf": "1233"
+
+	}]
+
+}

@@ -24,14 +24,14 @@ public class FrameLayoutParser extends ViewParser<AspectRatioFrameLayout> {
         super.prepareHandlers(activity);
         addHandler("heightRatio",new AttributeProcessor<AspectRatioFrameLayout>() {
             @Override
-            public void handle(String attributeValue, AspectRatioFrameLayout view) {
+            public void handle(String attributeKey, String attributeValue, AspectRatioFrameLayout view) {
                 view.setAspectRatioHeight(Integer.parseInt(attributeValue));
 
             }
         });
         addHandler("widthRatio",new AttributeProcessor<AspectRatioFrameLayout>() {
             @Override
-            public void handle(String attributeValue, AspectRatioFrameLayout view) {
+            public void handle(String attributeKey, String attributeValue, AspectRatioFrameLayout view) {
                 view.setAspectRatioWidth(Integer.parseInt(attributeValue));
 
             }

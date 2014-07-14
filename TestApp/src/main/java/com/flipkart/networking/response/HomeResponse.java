@@ -25,6 +25,12 @@ public class HomeResponse extends BaseResponse {
         private JsonObject layout;
         private JsonObject data;
 
+        public JsonObject getViews() {
+            return views;
+        }
+
+        private JsonObject views;
+
         public JsonObject getLayout() {
             return layout;
         }

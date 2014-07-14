@@ -3,7 +3,8 @@ package com.flipkart.layoutengine.builder;
 import android.app.Activity;
 import android.view.View;
 
-import com.flipkart.layoutengine.datasource.DataSource;
+import com.flipkart.layoutengine.parser.custom.RelativeLayoutParser;
+import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.parser.ViewParser;
 import com.flipkart.layoutengine.parser.custom.FrameLayoutParser;
 import com.flipkart.layoutengine.parser.custom.HorizontalScrollViewParser;
@@ -20,18 +21,36 @@ import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
 public class LayoutBuilderFactory {
 
     /**
-     * Creates a layout builder which can parse @data blocks. See {@link DataParsingLayoutBuilder}
+     * Creates & returns a layout builder which can parse @data blocks as well as custom view blocks. See {@link DataParsingLayoutBuilder}
      * @param activity
-     * @param dataSource
+     * @param dataProvider
      * @return
      */
-    static public DataParsingLayoutBuilder createDataParsingLayoutBuilder(Activity activity, DataSource dataSource)
+    static public DataParsingLayoutBuilder createDataAndViewParsingLayoutBuilder(Activity activity, Provider dataProvider, Provider viewProvider)
     {
-        DataParsingLayoutBuilder builder = new DataParsingLayoutBuilder(activity,dataSource);
+        DataParsingLayoutBuilder builder = new DataAndViewParsingLayoutBuilder(activity, dataProvider, viewProvider);
         registerBuiltInHandlers(builder);
         return builder;
     }
 
+    /**
+     * Creates & returns a layout builder which can parse @data blocks. See {@link DataParsingLayoutBuilder}
+     * @param activity
+     * @param dataProvider
+     * @return
+     */
+    static public DataParsingLayoutBuilder createDataParsingLayoutBuilder(Activity activity, Provider dataProvider)
+    {
+        DataParsingLayoutBuilder builder = new DataParsingLayoutBuilder(activity, dataProvider);
+        registerBuiltInHandlers(builder);
+        return builder;
+    }
+
+    /**
+     * Creates & returns a simple layout builder. See {@link SimpleLayoutBuilder}
+     * @param activity
+     * @return
+     */
     static public SimpleLayoutBuilder createSimpleLayoutBuilder(Activity activity)
     {
         SimpleLayoutBuilder builder = new SimpleLayoutBuilder(activity);
@@ -45,6 +64,7 @@ public class LayoutBuilderFactory {
      * @param layoutBuilder
      */
     static private void registerBuiltInHandlers(SimpleLayoutBuilder layoutBuilder) {
+        layoutBuilder.registerHandler("container.relative",new RelativeLayoutParser());
         layoutBuilder.registerHandler("container.linear", new LinearLayoutParser());
         layoutBuilder.registerHandler("container.absolute", new FrameLayoutParser());
         layoutBuilder.registerHandler("container.verticalscroll", new ScrollViewParser());

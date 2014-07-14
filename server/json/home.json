@@ -32,7 +32,11 @@
 						"include": "popular"
 					}, {
 						"include": "recents"
+					},
+					{
+						"include":"debug1"
 					}
+
 
 				]
 			}]
@@ -49,14 +53,14 @@
 
 					"children": [{
 						"view": "text",
-						"text": "MOTO G"
+						"text": "MOTO G 2"
 					}, {
 						"view": "text",
 						"textColor": "red",
 						"text": "Only On"
 					}, {
 						"view": "image",
-						"imageUrl": "http://img6a.flixcart.com/image/mobile/n/q/a/motorola-moto-g-400x400-imadsmbwhznhucjj.jpeg",
+						"imageUrl": "@image",
 						"height": "100",
 						"padding": "10 10 10 10"
 					}, {
@@ -78,6 +82,10 @@
 				}, {
 					"imageUrl": "http://img5a.flixcart.com/www/promos/new/20140520-160716-mobile-extra-large.jpg"
 				}]
+			},
+			"motog":
+			{
+				"image":"http://img6a.flixcart.com/image/mobile/n/q/a/motorola-moto-g-400x400-imadsmbwhznhucjj.jpeg"
 			},
 			"departments": {
 				"title": "Shop by Departments",

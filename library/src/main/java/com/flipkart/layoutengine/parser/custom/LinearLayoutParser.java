@@ -24,7 +24,7 @@ public class LinearLayoutParser extends ViewParser<LinearLayout> {
         super.prepareHandlers(activity);
         addHandler("orientation",new AttributeProcessor<LinearLayout>() {
             @Override
-            public void handle(String attributeValue, LinearLayout view) {
+            public void handle(String attributeKey, String attributeValue, LinearLayout view) {
                 if("horizontal".equals(attributeValue)) {
                     view.setOrientation(LinearLayout.HORIZONTAL);
                 }

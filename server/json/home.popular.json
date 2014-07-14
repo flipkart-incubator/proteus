@@ -23,7 +23,8 @@
 			"width": "wrap",
 			"height": "wrap",
 			"children": [{
-					"view": "product_cell"
+					"view": "product_cell",
+					"dataContext":"@data.motog"
 				}, {
 					"view": "view",
 					"width": "1",
