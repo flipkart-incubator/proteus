@@ -3,6 +3,7 @@ package com.flipkart.layoutengine.builder;
 import android.app.Activity;
 import android.view.View;
 
+import com.flipkart.layoutengine.parser.custom.NetworkImageViewParser;
 import com.flipkart.layoutengine.parser.custom.RelativeLayoutParser;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.parser.ViewParser;
@@ -67,8 +68,9 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("container.relative",new RelativeLayoutParser());
         layoutBuilder.registerHandler("container.linear", new LinearLayoutParser());
         layoutBuilder.registerHandler("container.absolute", new FrameLayoutParser());
-        layoutBuilder.registerHandler("container.verticalscroll", new ScrollViewParser());
-        layoutBuilder.registerHandler("container.horizontalscroll", new HorizontalScrollViewParser());
+        layoutBuilder.registerHandler("container.verticalScroll", new ScrollViewParser());
+        layoutBuilder.registerHandler("container.horizontalScroll", new HorizontalScrollViewParser());
+        layoutBuilder.registerHandler("networkImage", new NetworkImageViewParser());
         layoutBuilder.registerHandler("image", new ImageViewParser());
         layoutBuilder.registerHandler("text", new TextViewParser());
         layoutBuilder.registerHandler("pager", new ViewPagerParser());

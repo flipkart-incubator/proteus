@@ -12,7 +12,7 @@
 			"backgroundColor": "#FF9900",
 			"width": "fill",
 			"children": [{
-				"view": "image",
+				"view": "networkImage",
 				"padding": "10 0 0 0",
 
 				"imageUrl": "http://img1a.flixcart.com//www/promos/new/20130711-202226-offer-icon-720.png"

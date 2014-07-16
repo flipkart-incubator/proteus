@@ -2,7 +2,7 @@
 
 	"RESPONSE": {
 		"layout": {
-			"view": "container.verticalscroll",
+			"view": "container.verticalScroll",
 			"width": "fill",
 			"backgroundColor": "#CCCCCC",
 			"children": [{
@@ -59,7 +59,7 @@
 						"textColor": "red",
 						"text": "Only On"
 					}, {
-						"view": "image",
+						"view": "networkImage",
 						"imageUrl": "@image",
 						"height": "100",
 						"padding": "10 10 10 10"
@@ -76,7 +76,8 @@
 				"children": [{
 					"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140520-140332-mobile-extra-large-12.jpg"
 				}, {
-					"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140520-140332-mobile-extra-large-12.jpg"
+					"image":"dart",
+					"width":"fill"
 				}, {
 					"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140623-115031-mobile-large.jpg"
 				}, {

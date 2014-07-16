@@ -18,7 +18,7 @@
 		"width": "fill",
 		"onclick":"true",
 		"children": [{
-				"view": "image",
+				"view": "networkImage",
 				"imageUrl": "@departments.sub[0].image",
 				"aspectRatio": "preserve",
 				"width": "fill"
@@ -62,7 +62,7 @@
 			"width": "0",
 			"weight": "1",
 			"children": [{
-					"view": "image",
+					"view": "networkImage",
 					"imageUrl": "@departments.sub[1].image",
 					"aspectRatio": "preserve",
 					"width": "fill"
@@ -103,7 +103,7 @@
 			"width": "0",
 			"weight": "1",
 			"children": [{
-					"view": "image",
+					"view": "networkImage",
 					"imageUrl": "@departments.sub[2].image",
 					"aspectRatio": "preserve",
 					"width": "fill"

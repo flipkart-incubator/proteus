@@ -58,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onRequestFinish(final BaseRequest<HomeResponse> request) {
 
-                MainActivity.this.getWindow().getDecorView().post(new Runnable() {
+                MainActivity.this.getWindow().getDecorView().postDelayed(new Runnable() {
                     @Override
                     public void run() {
 
@@ -81,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
                         container.addView(view,layoutParams);
                         MainActivity.this.setContentView(container);
                     }
-                });
+                },10000);
 
             }
         };

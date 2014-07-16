@@ -7,8 +7,15 @@ import com.google.gson.JsonElement;
  */
 public class GsonProvider implements Provider {
 
+    private static class ObjectHolder
+    {
+        public String path;
+        public JsonElement object;
+    }
+
 
     private JsonElement obj;
+    private ObjectHolder previousObj = new ObjectHolder();
 
     public GsonProvider(JsonElement jsonElement) {
         this.obj = jsonElement;
@@ -24,8 +31,17 @@ public class GsonProvider implements Provider {
         return getFromObject(key);
     }
 
+    // TODO : Fix this method for performance.
     private JsonElement getFromObject(String path) {
         JsonElement jObj = this.obj;
+        if(previousObj.path!=null)
+        {
+            if(path.startsWith(previousObj.path))
+            {
+                jObj = previousObj.object;
+                path = path.substring(previousObj.path.length());
+            }
+        }
         String[] split = path.split("\\.");
         JsonElement el = null;
 
@@ -90,6 +106,9 @@ public class GsonProvider implements Provider {
             }
 
         }
+
+        previousObj.path = path;
+        previousObj.object = el;
         return el;
     }
 

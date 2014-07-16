@@ -1,6 +1,6 @@
 {
 	"view": "pager",
-	"childView":"image",
+	"childView":"networkImage",
 	"children": "@pager.children"
 
 }
