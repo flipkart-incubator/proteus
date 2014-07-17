@@ -5,23 +5,23 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 
+import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.ViewParser;
+import com.flipkart.layoutengine.parser.WrappableParser;
 
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class ImageViewParser<T extends ImageView> extends ViewParser<T> {
+public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
     private static final String TAG = ImageViewParser.class.getSimpleName();
 
-    public ImageViewParser(Class viewClass) {
-        super(viewClass);
-    }
-
-    public ImageViewParser() {
-        super(ImageView.class);
+    public ImageViewParser(Parser<T> parentParser)
+    {
+        super(ImageView.class,parentParser);
     }
 
     @Override

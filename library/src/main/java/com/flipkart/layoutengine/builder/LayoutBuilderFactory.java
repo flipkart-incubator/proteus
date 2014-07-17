@@ -3,6 +3,7 @@ package com.flipkart.layoutengine.builder;
 import android.app.Activity;
 import android.view.View;
 
+import com.android.volley.toolbox.NetworkImageView;
 import com.flipkart.layoutengine.parser.custom.NetworkImageViewParser;
 import com.flipkart.layoutengine.parser.custom.RelativeLayoutParser;
 import com.flipkart.layoutengine.provider.Provider;
@@ -65,16 +66,27 @@ public class LayoutBuilderFactory {
      * @param layoutBuilder
      */
     static private void registerBuiltInHandlers(SimpleLayoutBuilder layoutBuilder) {
-        layoutBuilder.registerHandler("container.relative",new RelativeLayoutParser());
-        layoutBuilder.registerHandler("container.linear", new LinearLayoutParser());
-        layoutBuilder.registerHandler("container.absolute", new FrameLayoutParser());
-        layoutBuilder.registerHandler("container.verticalScroll", new ScrollViewParser());
-        layoutBuilder.registerHandler("container.horizontalScroll", new HorizontalScrollViewParser());
-        layoutBuilder.registerHandler("networkImage", new NetworkImageViewParser());
-        layoutBuilder.registerHandler("image", new ImageViewParser());
-        layoutBuilder.registerHandler("text", new TextViewParser());
-        layoutBuilder.registerHandler("pager", new ViewPagerParser());
-        layoutBuilder.registerHandler("view", new ViewParser(View.class));
+        ViewParser viewParser = new ViewParser(View.class);
+        ImageViewParser imageViewParser = new ImageViewParser(viewParser);
+        NetworkImageViewParser networkImageViewParser = new NetworkImageViewParser(imageViewParser);
+        RelativeLayoutParser relativeLayoutParser = new RelativeLayoutParser(viewParser);
+        LinearLayoutParser linearLayoutParser = new LinearLayoutParser(viewParser);
+        FrameLayoutParser frameLayoutParser = new FrameLayoutParser(viewParser);
+        ScrollViewParser scrollViewParser = new ScrollViewParser(viewParser);
+        HorizontalScrollViewParser horizontalScrollViewParser = new HorizontalScrollViewParser(viewParser);
+        TextViewParser textViewParser = new TextViewParser(viewParser);
+        ViewPagerParser viewPagerParser = new ViewPagerParser(viewParser);
+
+
+        layoutBuilder.registerHandler("container.relative",relativeLayoutParser);
+        layoutBuilder.registerHandler("container.linear",linearLayoutParser);
+        layoutBuilder.registerHandler("container.absolute",frameLayoutParser);
+        layoutBuilder.registerHandler("container.verticalScroll",scrollViewParser);
+        layoutBuilder.registerHandler("container.horizontalScroll",horizontalScrollViewParser);
+        layoutBuilder.registerHandler("networkImage",networkImageViewParser);
+        layoutBuilder.registerHandler("text",textViewParser);
+        layoutBuilder.registerHandler("pager",viewPagerParser);
+        layoutBuilder.registerHandler("view",viewParser);
 
     }
 

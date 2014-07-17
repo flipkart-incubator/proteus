@@ -6,21 +6,19 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.ViewParser;
+import com.flipkart.layoutengine.parser.WrappableParser;
 
 import java.util.List;
 
 /**
  * Created by kiran.kumar on 13/05/14.
  */
-public class ViewPagerParser extends ViewParser<ViewPager> {
-    public ViewPagerParser(Class<ViewPager> viewClass) {
-        super(viewClass);
-    }
+public class ViewPagerParser extends WrappableParser<ViewPager> {
 
-    public ViewPagerParser()
-    {
-        super(ViewPager.class);
+    public ViewPagerParser(Parser<ViewPager> wrappedParser) {
+        super(ViewPager.class, wrappedParser);
     }
 
     @Override

@@ -81,7 +81,7 @@ public class MainActivity extends ActionBarActivity {
                         container.addView(view,layoutParams);
                         MainActivity.this.setContentView(container);
                     }
-                },10000);
+                },0);
 
             }
         };
@@ -92,22 +92,22 @@ public class MainActivity extends ActionBarActivity {
         return new LayoutBuilderCallback() {
             @Override
             public void onUnknownAttribute(ParserContext context, String attribute, final JsonElement element, final JsonObject object, View view) {
-                Log.d(TAG,"Unknown attribute "+attribute+" encountered for "+object);
-                if("onclick".equals(attribute))
-                {
-                    view.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                           Toast.makeText(MainActivity.this,"View "+object+" clicked.",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+//                Log.d(TAG,"Unknown attribute "+attribute+" encountered for "+object);
+//                if("onclick".equals(attribute))
+//                {
+//                    view.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                           Toast.makeText(MainActivity.this,"View "+object+" clicked.",Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
+//                }
             }
 
             @Override
             public View onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent) {
 
-                Log.e(TAG,"Unknown View "+viewType+" encountered. "+object);
+                //Log.e(TAG,"Unknown View "+viewType+" encountered. "+object);
                 return null;
             }
         };

@@ -37,7 +37,9 @@ public class SimpleLayoutBuilder {
      */
     public void registerHandler(String viewType,LayoutHandler handler)
     {
+        handler.prepare(activity);
         viewClassMap.put(viewType,handler);
+
     }
 
     /**
@@ -69,6 +71,7 @@ public class SimpleLayoutBuilder {
     {
         return buildImpl(createParserContext(), parent,jsonObject);
     }
+
 
     protected ParserContext createParserContext()
     {
@@ -104,7 +107,6 @@ public class SimpleLayoutBuilder {
         }
 
         JsonElement childViewElement = jsonObject.get("childView");
-        handler.prepare(activity);
         View self = createView(context, parent, handler, jsonObject);
         handler.setupView(parent,self);
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
@@ -116,8 +118,6 @@ public class SimpleLayoutBuilder {
                 onUnknownAttributeEncountered(context, entry.getKey(), entry.getValue(), jsonObject, self);
             }
         }
-
-        onAllAttributesProcessed(context,jsonObject);
 
         if(children!=null && children.size()>0) {
             ViewGroup selfViewGroup = (ViewGroup) self;
@@ -141,7 +141,6 @@ public class SimpleLayoutBuilder {
             }
         }
 
-        onChildrenProcessed(context,jsonObject);
         return self;
 
 
@@ -182,15 +181,6 @@ public class SimpleLayoutBuilder {
         return view;
     }
 
-    protected void onAllAttributesProcessed(ParserContext context,JsonObject jsonObject)
-    {
-
-    }
-
-    protected void onChildrenProcessed(ParserContext context,JsonObject jsonObject)
-    {
-
-    }
 
 
 

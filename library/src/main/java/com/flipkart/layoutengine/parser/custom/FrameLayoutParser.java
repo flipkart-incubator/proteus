@@ -2,22 +2,20 @@ package com.flipkart.layoutengine.parser.custom;
 
 import android.app.Activity;
 
+import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.ViewParser;
+import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.widgets.AspectRatioFrameLayout;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class FrameLayoutParser extends ViewParser<AspectRatioFrameLayout> {
-    public FrameLayoutParser(Class viewClass) {
-        super(viewClass);
-    }
+public class FrameLayoutParser extends WrappableParser<AspectRatioFrameLayout>{
 
-    public FrameLayoutParser()
+    public FrameLayoutParser(Parser<AspectRatioFrameLayout> parentParser)
     {
-        super(AspectRatioFrameLayout.class);
+        super(AspectRatioFrameLayout.class,parentParser);
     }
-
 
     @Override
     protected void prepareHandlers(Activity activity) {

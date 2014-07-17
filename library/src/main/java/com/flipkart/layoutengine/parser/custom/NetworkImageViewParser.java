@@ -7,21 +7,20 @@ import android.util.Log;
 import android.widget.ImageView;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.ViewParser;
+import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.toolbox.VolleySingleton;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class NetworkImageViewParser<T extends NetworkImageView> extends ImageViewParser<T> {
+public class NetworkImageViewParser<T extends NetworkImageView> extends WrappableParser<T> {
     private static final String TAG = NetworkImageViewParser.class.getSimpleName();
 
-    public NetworkImageViewParser(Class viewClass) {
-        super(viewClass);
-    }
 
-    public NetworkImageViewParser() {
-        super(NetworkImageView.class);
+    public NetworkImageViewParser(Parser<T> wrappedParser) {
+        super(NetworkImageView.class, wrappedParser);
     }
 
     @Override

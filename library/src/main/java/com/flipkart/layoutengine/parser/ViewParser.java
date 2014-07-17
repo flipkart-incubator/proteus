@@ -38,33 +38,11 @@ public class ViewParser<T extends View> extends Parser<T> {
         super(viewClass);
     }
 
-    @Override
-    protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent, JsonObject object) {
 
-        /**
-         * This whole method is a hack! ... to generate layout params, since no other way exists.
-         * Refer : http://stackoverflow.com/questions/7018267/generating-a-layoutparams-based-on-the-type-of-parent
-         */
-        XmlResourceParser parser = parent.getResources().getLayout(R.layout.layout_params_hack);
-        try {
-            while (parser.nextToken() != XmlPullParser.START_TAG) {
-                // Skip everything until the view tag.
-            }
-            ViewGroup.LayoutParams layoutParams = parent.generateLayoutParams(parser);
-            return layoutParams;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
 
-    }
-
-    @Override
-    public void setupView(ViewGroup parent, T view) {
-        // nothing to do here
-    }
 
     protected void prepareHandlers(Activity activity) {
+
 
         addHandler("backgroundColor", new AttributeProcessor<T>() {
             @Override
@@ -296,10 +274,6 @@ public class ViewParser<T extends View> extends Parser<T> {
 
 
 
-    }
-
-    @Override
-    public JsonArray parseChildren(ParserContext context, JsonElement element) {
-        return element.getAsJsonArray();
+;
     }
 }

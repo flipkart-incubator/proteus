@@ -3,21 +3,17 @@ package com.flipkart.layoutengine.parser.custom;
 import android.app.Activity;
 import android.widget.LinearLayout;
 
+import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.ViewParser;
+import com.flipkart.layoutengine.parser.WrappableParser;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class LinearLayoutParser extends ViewParser<LinearLayout> {
-    public LinearLayoutParser(Class viewClass) {
-        super(viewClass);
+public class LinearLayoutParser extends WrappableParser<LinearLayout> {
+    public LinearLayoutParser(Parser<LinearLayout> wrappedParser) {
+        super(LinearLayout.class, wrappedParser);
     }
-
-    public LinearLayoutParser()
-    {
-        super(LinearLayout.class);
-    }
-
 
     @Override
     protected void prepareHandlers(Activity activity) {

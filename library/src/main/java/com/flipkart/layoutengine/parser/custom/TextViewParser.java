@@ -7,18 +7,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.flipkart.layoutengine.parser.ParseHelper;
+import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.ViewParser;
+import com.flipkart.layoutengine.parser.WrappableParser;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class TextViewParser extends ViewParser<TextView> {
-    public TextViewParser(Class<View> viewClass) {
-        super(viewClass);
-    }
+public class TextViewParser extends WrappableParser<TextView> {
 
-    public TextViewParser() {
-        super(TextView.class);
+    public TextViewParser(Parser<TextView> wrappedParser) {
+        super(TextView.class, wrappedParser);
     }
 
     @Override
