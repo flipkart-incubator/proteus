@@ -9,7 +9,11 @@
 				"view": "container.linear",
 				"width": "fill",
 				"orientation": "vertical",
-				"children": [{
+				"children": [
+					{
+						"include": "productpage"
+					},
+					{
 						"include": "search"
 					}, {
 						"view": "container.absolute",
@@ -32,9 +36,6 @@
 						"include": "popular"
 					}, {
 						"include": "recents"
-					},
-					{
-						"include":"debug1"
 					}
 
 

@@ -1,13 +1,13 @@
 package com.flipkart.layoutengine.parser;
 
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
-import com.flipkart.layoutengine.parser.custom.RelativeLayoutParser;
 
 /**
  * Created by kiran.kumar on 17/05/14.
@@ -59,8 +59,28 @@ public class ParseHelper {
 
     public static int parseDimension(String dimension)
     {
-        int dimensionInPixels = dpToPx(Integer.parseInt(dimension));
+
+        int dimensionInPixels = 0;
+        if(dimension.endsWith("dp")) {
+            dimension = dimension.substring(0,dimension.length()-2);
+            dimensionInPixels = dpToPx(Integer.parseInt(dimension));
+        }
+        else if(dimension.endsWith("px") || dimension.endsWith("sp"))
+        {
+            dimension = dimension.substring(0,dimension.length()-2);
+            dimensionInPixels = Integer.parseInt(dimension);
+        }
+
         return dimensionInPixels;
+    }
+
+    public static int parseColor(String color)
+    {
+        if(color.startsWith("#"))
+        {
+            return Color.parseColor(color);
+        }
+        return 0;
     }
 
     public static Integer parseId(String id)
@@ -113,5 +133,22 @@ public class ParseHelper {
     public static int pxToDp(int px)
     {
         return (int) (px / Resources.getSystem().getDisplayMetrics().density);
+    }
+
+    public static int parseTextStyle(String attributeValue) {
+        if(attributeValue!=null)
+        {
+            Typeface typeface = Typeface.DEFAULT;
+            attributeValue = attributeValue.toLowerCase();
+            if("bold".equals(attributeValue))
+            {
+                typeface = Typeface.DEFAULT_BOLD;
+            }
+            else if("italic".equals(attributeValue))
+            {
+                //typeface = Typ
+            }
+        }
+        return 0;
     }
 }

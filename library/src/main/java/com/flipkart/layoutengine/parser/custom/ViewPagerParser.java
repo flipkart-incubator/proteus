@@ -1,13 +1,12 @@
 package com.flipkart.layoutengine.parser.custom;
 
-import android.app.Activity;
+import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.parser.Parser;
-import com.flipkart.layoutengine.parser.ViewParser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public class ViewPagerParser extends WrappableParser<ViewPager> {
     }
 
     @Override
-    public void addChildren(Activity activity, ViewPager parent, final List<View> children) {
+    public void addChildren(Context context, ViewPager parent, final List<View> children) {
         //not calling super since it calls addChild(). Addchild() on viewpager wont work.
 
         PagerAdapter adapter = new PagerAdapter() {

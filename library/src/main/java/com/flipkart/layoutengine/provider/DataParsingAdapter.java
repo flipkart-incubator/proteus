@@ -1,6 +1,6 @@
 package com.flipkart.layoutengine.provider;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -27,8 +27,8 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
     }
 
     @Override
-    public E createView(ParserContext context, Activity activity, ViewGroup parent, JsonObject object) {
-        return handler.createView(context, activity,parent,object);
+    public E createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject object) {
+        return handler.createView(parserContext, context,parent,object);
     }
 
     @Override
@@ -60,13 +60,13 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
     }
 
     @Override
-    public void prepare(Activity activity) {
-        handler.prepare(activity);
+    public void prepare(Context context) {
+        handler.prepare(context);
     }
 
     @Override
-    public void addChildren(Activity activity, E parent, List<View> children) {
-        handler.addChildren(activity,parent,children);
+    public void addChildren(Context context, E parent, List<View> children) {
+        handler.addChildren(context,parent,children);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
         JsonElement jsonElement = viewProvider.getObject(viewType);
         if(jsonElement!=null)
         {
-            return buildImpl(context, parent,jsonElement.getAsJsonObject());
+            return buildImpl(context, parent,jsonElement.getAsJsonObject(), null);
         }
         else {
             return super.onUnknownViewEncountered(context, viewType, parent, jsonObject);

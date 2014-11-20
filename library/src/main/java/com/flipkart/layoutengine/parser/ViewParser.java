@@ -1,33 +1,21 @@
 package com.flipkart.layoutengine.parser;
 
-import android.app.Activity;
-import android.content.res.XmlResourceParser;
-import android.graphics.Color;
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Pair;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.library.R;
-import com.flipkart.layoutengine.toolbox.AttributeBundle;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.flipkart.layoutengine.processor.AttributeProcessor;
 import com.nineoldandroids.view.ViewHelper;
 
-import org.xmlpull.v1.XmlPullParser;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by kiran.kumar on 12/05/14.
+ * @attr Tests
  */
 public class ViewParser<T extends View> extends Parser<T> {
 
@@ -41,16 +29,17 @@ public class ViewParser<T extends View> extends Parser<T> {
 
 
 
-    protected void prepareHandlers(Activity activity) {
+    protected void prepareHandlers(Context context) {
 
 
-        addHandler("backgroundColor", new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Background, new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, View view) {
-                view.setBackgroundColor(Color.parseColor(attributeValue));
+                 view.setBackgroundColor(ParseHelper.parseColor(attributeValue));
+
             }
         });
-        addHandler("height", new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Height, new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
@@ -60,11 +49,11 @@ public class ViewParser<T extends View> extends Parser<T> {
                 }
                 else
                 {
-                    if("fill".equals(attributeValue))
+                    if("match_parent".equals(attributeValue) || "fill_parent".equals(attributeValue))
                     {
                         layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
                     }
-                    else if("wrap".equals(attributeValue))
+                    else if("wrap_content".equals(attributeValue))
                     {
                         layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
                     }
@@ -72,7 +61,7 @@ public class ViewParser<T extends View> extends Parser<T> {
                 view.setLayoutParams(layoutParams);
             }
         });
-        addHandler("width", new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Width, new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
@@ -82,11 +71,11 @@ public class ViewParser<T extends View> extends Parser<T> {
                 }
                 else
                 {
-                    if("fill".equals(attributeValue))
+                    if("match_parent".equals(attributeValue) || "fill_parent".equals(attributeValue))
                     {
                         layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
                     }
-                    else if("wrap".equals(attributeValue))
+                    else if("wrap_content".equals(attributeValue))
                     {
                         layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
                     }
@@ -95,21 +84,21 @@ public class ViewParser<T extends View> extends Parser<T> {
             }
         });
 
-        addHandler("weight",new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Weight,new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 LinearLayout.LayoutParams layoutParams = null;
                 try {
                     layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
                 } catch (ClassCastException ex) {
-                    throw new IllegalArgumentException("weight is only supported for linear containers");
+                    throw new IllegalArgumentException(attributeKey+" is only supported for linear containers");
                 }
                 layoutParams.weight = Float.parseFloat(attributeValue);
                 view.setLayoutParams(layoutParams);
             }
         });
 
-        addHandler("alignToParent", new AttributeProcessor<T>() {
+        addHandler(Attributes.View.LayoutGravity, new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 LinearLayout.LayoutParams layoutParams = null;
@@ -123,31 +112,61 @@ public class ViewParser<T extends View> extends Parser<T> {
             }
         });
 
-        addHandler("alignChildren", new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Gravity, new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
-                LinearLayout viewGroup = null;
-                try {
-                    viewGroup = (LinearLayout) view;
-                } catch (ClassCastException ex) {
-                    throw new IllegalArgumentException("alignChildren is only supported for linear containers");
+                if(view instanceof ViewGroup) {
+                    LinearLayout viewGroup = null;
+                    try {
+                        viewGroup = (LinearLayout) view;
+                    } catch (ClassCastException ex) {
+                        throw new IllegalArgumentException(attributeKey + " is only supported for linear containers");
+                    }
+
+
+                    viewGroup.setGravity(ParseHelper.parseGravity(attributeValue));
                 }
 
-
-                viewGroup.setGravity(ParseHelper.parseGravity(attributeValue));
-
             }
         });
 
-        addHandler("padding", new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Padding, new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
-                String[] strings = attributeValue.split(" ");
-                view.setPadding(ParseHelper.parseDimension(strings[0]),ParseHelper.parseDimension(strings[1]),ParseHelper.parseDimension(strings[2]),ParseHelper.parseDimension(strings[3]));
+                int dimension = ParseHelper.parseDimension(attributeValue);
+                view.setPadding(dimension,dimension,dimension,dimension);
+            }
+        });
+        addHandler(Attributes.View.PaddingLeft, new AttributeProcessor<T>() {
+            @Override
+            public void handle(String attributeKey, String attributeValue, T view) {
+                int dimension = ParseHelper.parseDimension(attributeValue);
+                view.setPadding(dimension,view.getPaddingTop(),view.getPaddingRight(),view.getPaddingBottom());
+            }
+        });
+        addHandler(Attributes.View.PaddingTop, new AttributeProcessor<T>() {
+            @Override
+            public void handle(String attributeKey, String attributeValue, T view) {
+                int dimension = ParseHelper.parseDimension(attributeValue);
+                view.setPadding(view.getPaddingLeft(),dimension,view.getPaddingRight(),view.getPaddingBottom());
+            }
+        });
+        addHandler(Attributes.View.PaddingRight, new AttributeProcessor<T>() {
+            @Override
+            public void handle(String attributeKey, String attributeValue, T view) {
+                int dimension = ParseHelper.parseDimension(attributeValue);
+                view.setPadding(view.getPaddingLeft(),view.getPaddingTop(),dimension,view.getPaddingBottom());
+            }
+        });
+        addHandler(Attributes.View.PaddingBottom, new AttributeProcessor<T>() {
+            @Override
+            public void handle(String attributeKey, String attributeValue, T view) {
+                int dimension = ParseHelper.parseDimension(attributeValue);
+                view.setPadding(view.getPaddingLeft(),view.getPaddingTop(),view.getPaddingRight(),dimension);
             }
         });
 
-        addHandler("margin", new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Margin, new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 String[] strings = attributeValue.split(" ");
@@ -166,21 +185,22 @@ public class ViewParser<T extends View> extends Parser<T> {
             }
         });
 
-        addHandler("opacity",new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Alpha,new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 ViewHelper.setAlpha(view,Float.parseFloat(attributeValue));
             }
         });
 
-        addHandler("visibility",new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Visibility,new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
+                //noinspection ResourceType
                 view.setVisibility(ParseHelper.parseVisibility(attributeValue));
             }
         });
 
-        addHandler("id",new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Id,new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 if(TextUtils.isDigitsOnly(attributeValue))
@@ -193,7 +213,7 @@ public class ViewParser<T extends View> extends Parser<T> {
             }
         });
 
-        addHandler("tag",new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Tag,new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setTag(attributeValue);
@@ -242,32 +262,32 @@ public class ViewParser<T extends View> extends Parser<T> {
             }
         };
 
-        addHandler("above",relativeLayoutProcessor);
-        addHandler("alignBaseline",relativeLayoutProcessor);
-        addHandler("alignBottom",relativeLayoutProcessor);
-        addHandler("alignEnd",relativeLayoutProcessor);
-        addHandler("alignLeft",relativeLayoutProcessor);
-        addHandler("alignRight",relativeLayoutProcessor);
-        addHandler("alignStart",relativeLayoutProcessor);
-        addHandler("alignTop",relativeLayoutProcessor);
-        addHandler("below",relativeLayoutProcessor);
-        addHandler("toEndOf",relativeLayoutProcessor);
-        addHandler("toLeftOf",relativeLayoutProcessor);
-        addHandler("toRightOf",relativeLayoutProcessor);
-        addHandler("toStartOf",relativeLayoutProcessor);
+        addHandler(Attributes.View.Above,relativeLayoutProcessor);
+        addHandler(Attributes.View.AlignBaseline,relativeLayoutProcessor);
+        addHandler(Attributes.View.AlignBottom,relativeLayoutProcessor);
+        addHandler(Attributes.View.AlignEnd,relativeLayoutProcessor);
+        addHandler(Attributes.View.AlignLeft,relativeLayoutProcessor);
+        addHandler(Attributes.View.AlignRight,relativeLayoutProcessor);
+        addHandler(Attributes.View.AlignStart,relativeLayoutProcessor);
+        addHandler(Attributes.View.AlignTop,relativeLayoutProcessor);
+        addHandler(Attributes.View.Below,relativeLayoutProcessor);
+        addHandler(Attributes.View.ToEndOf,relativeLayoutProcessor);
+        addHandler(Attributes.View.ToLeftOf,relativeLayoutProcessor);
+        addHandler(Attributes.View.ToRightOf,relativeLayoutProcessor);
+        addHandler(Attributes.View.ToStartOf,relativeLayoutProcessor);
 
 
 
 
-        addHandler("alignParentBottom",relativeLayoutBooleanProcessor);
-        addHandler("alignParentEnd",relativeLayoutBooleanProcessor);
-        addHandler("alignParentLeft",relativeLayoutBooleanProcessor);
-        addHandler("alignParentRight",relativeLayoutBooleanProcessor);
-        addHandler("alignParentStart",relativeLayoutBooleanProcessor);
-        addHandler("alignParentTop",relativeLayoutBooleanProcessor);
-        addHandler("centerHorizontal",relativeLayoutBooleanProcessor);
-        addHandler("centerInParent",relativeLayoutBooleanProcessor);
-        addHandler("centerVertical",relativeLayoutBooleanProcessor);
+        addHandler(Attributes.View.AlignParentBottom,relativeLayoutBooleanProcessor);
+        addHandler(Attributes.View.AlignParentEnd,relativeLayoutBooleanProcessor);
+        addHandler(Attributes.View.AlignParentLeft,relativeLayoutBooleanProcessor);
+        addHandler(Attributes.View.AlignParentRight,relativeLayoutBooleanProcessor);
+        addHandler(Attributes.View.AlignParentStart,relativeLayoutBooleanProcessor);
+        addHandler(Attributes.View.AlignParentTop,relativeLayoutBooleanProcessor);
+        addHandler(Attributes.View.CenterHorizontal,relativeLayoutBooleanProcessor);
+        addHandler(Attributes.View.CenterInParent,relativeLayoutBooleanProcessor);
+        addHandler(Attributes.View.CenterVertical,relativeLayoutBooleanProcessor);
 
 
 

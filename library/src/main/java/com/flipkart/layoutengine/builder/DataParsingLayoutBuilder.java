@@ -1,15 +1,19 @@
 package com.flipkart.layoutengine.builder;
 
-import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.provider.Provider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A layout builder which can parse @data blocks before passing it on to {@link SimpleLayoutBuilder}
@@ -17,17 +21,29 @@ import com.google.gson.JsonObject;
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     private final Provider dataProvider;
     private static final Character PREFIX = '@';
+    private Map<String,Binding> bindings = new HashMap<String,Binding>();
 
 
-    DataParsingLayoutBuilder(Activity activity, Provider dataProvider) {
-        super(activity);
+    DataParsingLayoutBuilder(Context context, Provider dataProvider) {
+        super(context);
         this.dataProvider = dataProvider;
     }
 
+
+
     @Override
-    protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attribute, JsonElement element, View view) {
-        element = getElementFromData(element, context.getDataProvider());
-        return super.handleAttribute(handler, context, attribute, element, view);
+    protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attributeKey, JsonElement element, View view, ViewGroup parent) {
+        if(element.isJsonPrimitive()) {
+            String attributeValue = element.getAsString();
+            JsonElement elementFromData = getElementFromData(element, context.getDataProvider());
+            if (elementFromData != null) {
+                Binding binding = new Binding(context, attributeKey, attributeValue, view, parent);
+                element = elementFromData;
+                bindings.put(attributeValue, binding);
+            }
+        }
+        return super.handleAttribute(handler, context, attributeKey, element, view, parent);
+
     }
 
     @Override
@@ -49,7 +65,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected View buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject) {
+    protected View buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject, View existingView) {
         JsonElement dataContextElement = jsonObject.get("dataContext");
         if(dataContextElement!=null)
         {
@@ -68,9 +84,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             }
 
         }
-        View view = super.buildImpl(context, parent, jsonObject);
+        View view = super.buildImpl(context, parent, jsonObject, existingView);
         return view;
     }
+
 
     private JsonElement getElementFromData(JsonElement element, Provider dataProvider)
     {
@@ -78,7 +95,15 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         {
             String dataSourceKey = element.getAsString();
             if(dataSourceKey.charAt(0) == PREFIX) {
-                element = dataProvider.getObject(dataSourceKey.substring(1));
+                JsonElement tempElement = dataProvider.getObject(dataSourceKey.substring(1));
+                if(tempElement !=null)
+                {
+                    element = tempElement;
+                }
+                else
+                {
+                    Log.e(TAG,"Got null element for "+dataSourceKey);
+                }
             }
         }
         return element;

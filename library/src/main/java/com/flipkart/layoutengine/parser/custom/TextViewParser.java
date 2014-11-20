@@ -1,15 +1,13 @@
 package com.flipkart.layoutengine.parser.custom;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.view.Gravity;
-import android.view.View;
+import android.content.Context;
 import android.widget.TextView;
 
+import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
-import com.flipkart.layoutengine.parser.ViewParser;
 import com.flipkart.layoutengine.parser.WrappableParser;
+import com.flipkart.layoutengine.processor.AttributeProcessor;
 
 /**
  * Created by kiran.kumar on 12/05/14.
@@ -21,33 +19,36 @@ public class TextViewParser extends WrappableParser<TextView> {
     }
 
     @Override
-    protected void prepareHandlers(Activity activity) {
-        super.prepareHandlers(activity);
-        addHandler("text", new AttributeProcessor<TextView>() {
+    protected void prepareHandlers(Context context) {
+        super.prepareHandlers(context);
+        addHandler(Attributes.TextView.Text, new AttributeProcessor<TextView>() {
             @Override
             public void handle(String attributeKey, String attributeValue, TextView view) {
                 view.setText(attributeValue);
             }
         });
 
-        addHandler("textSize",new AttributeProcessor<TextView>() {
+        addHandler(Attributes.TextView.TextSize,new AttributeProcessor<TextView>() {
             @Override
             public void handle(String attributeKey, String attributeValue, TextView view) {
-                view.setTextSize(Float.parseFloat(attributeValue));
+                view.setTextSize(ParseHelper.parseDimension(attributeValue));
             }
         });
-        addHandler("textAlign",new AttributeProcessor<TextView>() {
+        addHandler(Attributes.TextView.Gravity,new AttributeProcessor<TextView>() {
             @Override
             public void handle(String attributeKey, String attributeValue, TextView view) {
                 view.setGravity(ParseHelper.parseGravity(attributeValue));
             }
         });
 
-        addHandler("textColor",new AttributeProcessor<TextView>() {
+        addHandler(Attributes.TextView.TextColor,new AttributeProcessor<TextView>() {
             @Override
             public void handle(String attributeKey, String attributeValue, TextView view) {
-                view.setTextColor(Color.parseColor(attributeValue));
+                view.setTextColor(ParseHelper.parseColor(attributeValue));
             }
         });
+
+
+
     }
 }

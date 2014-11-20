@@ -9,7 +9,7 @@ public enum Config {
 	instance;
 
 	public enum ApiPathKey {
-		HomeRequest;
+		HomeRequest,RemoteRenderingRequest,BitmapUploadRequest;
 	}
 
 	public enum StringKey {
@@ -34,9 +34,12 @@ public enum Config {
 	}
 
 	private void initApiValues() {
-		values.put(StringKey.ApiBaseUrl, "http://192.168.56.1/layoutengine");
+		values.put(StringKey.ApiBaseUrl, "http://10.0.3.2/layoutengine");
 		values.put(ApiPathKey.HomeRequest, "fetch.php?view=home");
-	}
+        values.put(ApiPathKey.RemoteRenderingRequest, "renderQueue.php");
+        values.put(ApiPathKey.BitmapUploadRequest, "renderQueue.php?action=upload");
+
+    }
 
 	private void initCommonValues() {
 		values.put(StringKey.AppName, "Layout engine demo");

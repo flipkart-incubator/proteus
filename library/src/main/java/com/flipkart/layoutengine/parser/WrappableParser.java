@@ -1,13 +1,10 @@
 package com.flipkart.layoutengine.parser;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * Created by kirankumar on 16/07/14.
@@ -22,9 +19,9 @@ public class WrappableParser<T extends View> extends Parser<T> {
     }
 
     @Override
-    protected void prepareHandlers(Activity activity) {
+    protected void prepareHandlers(Context context) {
         if(wrappedParser!=null) {
-            wrappedParser.prepareHandlers(activity);
+            wrappedParser.prepareHandlers(context);
         }
     }
 

@@ -1,16 +1,18 @@
 package com.flipkart.networking.request;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import com.flipkart.networking.request.components.OnRequestErrorListener;
 import com.flipkart.networking.request.components.OnRequestFinishListener;
 import com.flipkart.networking.request.components.OnRequestStartListener;
 import com.flipkart.networking.request.components.RequestError;
 import com.google.gson.Gson;
+
+import org.apache.http.entity.mime.MultipartEntity;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
 public abstract class BaseRequest<T> {
@@ -82,6 +84,12 @@ public abstract class BaseRequest<T> {
 	public void setOnResponseListener(OnRequestFinishListener<T> listener) {
 		this.onRequestFinishListener = listener;
 	}
+
+    public MultipartEntity getMultiPartEntity()
+    {
+        //override this for multi part requests, e.g file upload
+        return null;
+    }
 
 	public void onResponse(String response) {
 		this.rawResponse = response;

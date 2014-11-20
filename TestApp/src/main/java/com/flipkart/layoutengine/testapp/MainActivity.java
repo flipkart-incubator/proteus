@@ -1,7 +1,8 @@
 package com.flipkart.layoutengine.testapp;
 
-import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -23,6 +24,7 @@ import com.flipkart.networking.request.components.OnRequestErrorListener;
 import com.flipkart.networking.request.components.OnRequestFinishListener;
 import com.flipkart.networking.request.components.RequestError;
 import com.flipkart.networking.response.HomeResponse;
+import com.flipkart.preview.ImageGeneratorService;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -38,6 +40,8 @@ public class MainActivity extends ActionBarActivity {
         if(savedInstanceState==null) {
             fireRequest();
         }
+        Intent i=new Intent(this, ImageGeneratorService.class);
+        startService(i);
 
     }
 
@@ -78,7 +82,11 @@ public class MainActivity extends ActionBarActivity {
                         Log.d(TAG,"time taken "+timeTaken+" ms");
                         Toast.makeText(MainActivity.this,"Time taken to render "+timeTaken+" ms",Toast.LENGTH_SHORT).show();
                         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                        container.addView(view,layoutParams);
+
+                        if(view!=null)
+                        {
+                            container.addView(view,layoutParams);
+                        }
                         MainActivity.this.setContentView(container);
                     }
                 },0);

@@ -1,9 +1,8 @@
 package com.flipkart.networking;
 
-import java.io.UnsupportedEncodingException;
-
 import android.content.Context;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
@@ -11,6 +10,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.flipkart.networking.request.BaseRequest;
+import com.flipkart.networking.internal.MultipartRequest;
+
+import org.apache.http.entity.mime.MultipartEntity;
 
 public class API {
 	private static API instance;
@@ -36,10 +38,23 @@ public class API {
 		request.onStart();
 		Listener<String> listener = getSuccessListener(request);
 		ErrorListener errorListener = getErrorListener(request);
-		StringRequest volleyRequest = new StringRequest(
-				request.getGeneratedUrl(), listener, errorListener);
-		process(volleyRequest);
+        MultipartEntity multiPartEntity = request.getMultiPartEntity();
+        if(multiPartEntity==null) {
+            StringRequest volleyRequest = new StringRequest(
+                    request.getGeneratedUrl(), listener, errorListener);
+            process(volleyRequest);
+        }
+        else
+        {
+            MultipartRequest multipartRequest = new MultipartRequest(request.getGeneratedUrl(),listener, errorListener, multiPartEntity);
+            process(multipartRequest);
+        }
 	}
+
+    public void processAsync(Request request)
+    {
+        process(request);
+    }
 
 	private <T> ErrorListener getErrorListener(final BaseRequest<T> request) {
 		return new ErrorListener() {
@@ -65,7 +80,8 @@ public class API {
 		};
 	}
 
-	private void process(StringRequest req) {
+	private void process(Request req) {
 		queue.add(req);
 	}
+
 }

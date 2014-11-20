@@ -1,16 +1,15 @@
 package com.flipkart.layoutengine.parser.custom;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
-import android.view.View;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 
+import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
-import com.flipkart.layoutengine.parser.ViewParser;
 import com.flipkart.layoutengine.parser.WrappableParser;
+import com.flipkart.layoutengine.processor.AttributeProcessor;
 
 
 /**
@@ -25,16 +24,16 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
     }
 
     @Override
-    protected void prepareHandlers(final Activity activity) {
-        super.prepareHandlers(activity);
+    protected void prepareHandlers(final Context context) {
+        super.prepareHandlers(context);
 
 
-        addHandler("image", new AttributeProcessor<T>() {
+        addHandler(Attributes.ImageView.Src, new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 try {
-                    Resources r = activity.getResources();
-                    int drawableId = r.getIdentifier(attributeValue, "drawable", activity.getPackageName());
+                    Resources r = context.getResources();
+                    int drawableId = r.getIdentifier(attributeValue, "drawable", context.getPackageName());
                     Drawable drawable = r.getDrawable(drawableId);
                     view.setImageDrawable(drawable);
                 }
@@ -45,7 +44,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
             }
         });
 
-        addHandler("scaleType",new AttributeProcessor<T>() {
+        addHandler(Attributes.ImageView.ScaleType,new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 ImageView.ScaleType scaleType = null;
@@ -57,10 +56,10 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
             }
         });
 
-        addHandler("aspectRatio", new AttributeProcessor<T>() {
+        addHandler(Attributes.ImageView.AdjustViewBounds, new AttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
-                if("preserve".equals(attributeValue))
+                if("true".equals(attributeValue))
                 {
                     view.setAdjustViewBounds(true);
                 }

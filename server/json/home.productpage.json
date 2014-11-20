@@ -1,0 +1,26 @@
+{
+	"view": "container.linear",
+	"orientation": "vertical",
+	"width": "wrap",
+	"height": "wrap",
+	"backgroundColor":"black",
+	"children": [
+	{
+		"view": "text",
+		"textColor": "#c12929",
+		"textSize": "20",
+		"text": "Rs. 12000"
+	},
+	{
+		"view":"container.linear",
+		"orientation":"horizontal",
+		"width":"wrap",
+		"height":"wrap",
+		"children":[
+			{
+				
+			}
+		]
+	}
+	]
+}

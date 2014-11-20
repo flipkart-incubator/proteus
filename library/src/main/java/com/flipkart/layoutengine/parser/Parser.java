@@ -1,6 +1,5 @@
 package com.flipkart.layoutengine.parser;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.util.Log;
@@ -10,6 +9,7 @@ import android.view.ViewGroup;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.LayoutHandler;
 import com.flipkart.layoutengine.library.R;
+import com.flipkart.layoutengine.processor.AttributeProcessor;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -37,23 +37,23 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     protected static final Map<Class<?>,Constructor<? extends View>> constructorCache = new HashMap<Class<?>, Constructor<? extends View>>();
 
     @Override
-    public void prepare(Activity activity) {
+    public void prepare(Context context) {
         if(handlers.size() == 0) {
-            prepareHandlers(activity);
+            prepareHandlers(context);
         }
     }
 
-    protected void addHandler(String key, AttributeProcessor<T> handler) {
-        handlers.put(key, handler);
+    protected void addHandler(Attributes.Attribute key, AttributeProcessor<T> handler) {
+        handlers.put(key.getName(), handler);
     }
 
     @Override
-    public T createView(ParserContext context, Activity activity, ViewGroup parent, JsonObject object) {
+    public T createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject object) {
         View v = null;
         try {
             Constructor<? extends View> constructor = getContextConstructor(viewClass);
             if(constructor!=null) {
-                v = constructor.newInstance(activity);
+                v = constructor.newInstance(context);
                 ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent, object);
                 v.setLayoutParams(layoutParams);
             }
@@ -118,24 +118,18 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
         return false;
     }
 
-    protected abstract void prepareHandlers(Activity activity);
+    protected abstract void prepareHandlers(Context context);
 
-
-    protected static abstract class AttributeProcessor<E> {
-        public abstract void handle(String attributeKey,String attributeValue, E view);
-
-    }
 
 
     /**
      * This is a base implementation which calls addChild() on the parent.
-     *
-     * @param activity Android context
+     *  @param context Android context
      * @param parent   The view group into which the child will be added.
      * @param children The List of child views which have to be added.
      */
     @Override
-    public void addChildren(Activity activity, T parent, List<View> children) {
+    public void addChildren(Context context, T parent, List<View> children) {
         for (View child : children) {
             ((ViewGroup) parent).addView(child);
         }

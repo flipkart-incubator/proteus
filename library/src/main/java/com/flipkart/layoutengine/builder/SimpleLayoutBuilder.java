@@ -1,6 +1,6 @@
 package com.flipkart.layoutengine.builder;
 
-import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +22,7 @@ import java.util.Map;
 public class SimpleLayoutBuilder {
 
     protected static final String TAG = SimpleLayoutBuilder.class.getSimpleName();
-    private HashMap<String,LayoutHandler> viewClassMap = new HashMap<String, LayoutHandler>();
+    private HashMap<String,LayoutHandler> layoutHandlers = new HashMap<String, LayoutHandler>();
     private LayoutBuilderCallback listener;
 
     /**
@@ -37,8 +37,8 @@ public class SimpleLayoutBuilder {
      */
     public void registerHandler(String viewType,LayoutHandler handler)
     {
-        handler.prepare(activity);
-        viewClassMap.put(viewType,handler);
+        handler.prepare(context);
+        layoutHandlers.put(viewType, handler);
 
     }
 
@@ -48,7 +48,7 @@ public class SimpleLayoutBuilder {
      */
     public void unregisterHandler(String viewType)
     {
-        viewClassMap.remove(viewType);
+        layoutHandlers.remove(viewType);
     }
 
     /**
@@ -56,20 +56,20 @@ public class SimpleLayoutBuilder {
      */
     public void unregisterAllHandlers()
     {
-        viewClassMap.clear();
+        layoutHandlers.clear();
     }
 
 
 
-    private Activity activity;
+    private Context context;
 
-    public SimpleLayoutBuilder(Activity activity) {
-        this.activity = activity;
+    public SimpleLayoutBuilder(Context context) {
+        this.context = context;
     }
 
     public View build(ViewGroup parent, JsonObject jsonObject)
     {
-        return buildImpl(createParserContext(), parent,jsonObject);
+        return buildImpl(createParserContext(), parent, jsonObject, null);
     }
 
 
@@ -78,7 +78,15 @@ public class SimpleLayoutBuilder {
         return new ParserContext();
     }
 
-    protected View buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject)
+    /**
+     * Starts recursively parsing the given jsonObject.
+     * @param context Represents the context of the parsing.
+     * @param parent The parent view group under which the view being created has to be added as a child.
+     * @param jsonObject The jsonObject which represents the current node which is getting parsed.
+     * @param existingView A view which needs to be used instead of creating a new one. Pass null for first pass.
+     * @return
+     */
+    protected View buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject, View existingView)
     {
         JsonElement viewTypeElement = jsonObject.get("view");
         String viewType = null;
@@ -93,12 +101,15 @@ public class SimpleLayoutBuilder {
             return null;
         }
 
-        LayoutHandler<View> handler = viewClassMap.get(viewType);
+        LayoutHandler<View> handler = layoutHandlers.get(viewType);
         if(handler == null)
         {
             return onUnknownViewEncountered(context,viewType,parent,jsonObject);
         }
 
+
+
+        JsonElement childViewElement = jsonObject.get("childView");
         JsonElement childrenElement = jsonObject.get("children");
         JsonArray children = null;
         if(childrenElement!=null) {
@@ -106,18 +117,35 @@ public class SimpleLayoutBuilder {
             jsonObject.remove("children");
         }
 
-        JsonElement childViewElement = jsonObject.get("childView");
-        View self = createView(context, parent, handler, jsonObject);
-        handler.setupView(parent,self);
+        /**
+         * View creation.
+         */
+        View self;
+        if(existingView == null) {
+            self = createView(context, parent, handler, jsonObject);
+            handler.setupView(parent,self);
+        }
+        else
+        {
+            self = existingView;
+        }
+
+        /**
+         * Parsing each attribute and setting it on the view.
+         */
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 
-            boolean handled = handleAttribute(handler,context,entry.getKey(),entry.getValue(),self);
+            boolean handled = handleAttribute(handler,context,entry.getKey(),entry.getValue(),self,parent);
 
             if(!handled)
             {
                 onUnknownAttributeEncountered(context, entry.getKey(), entry.getValue(), jsonObject, self);
             }
         }
+
+        /**
+         * Processing the children.
+         */
 
         if(children!=null && children.size()>0) {
             ViewGroup selfViewGroup = (ViewGroup) self;
@@ -130,14 +158,14 @@ public class SimpleLayoutBuilder {
                     // propagate the value of 'childView' to the recursive calls
                     childObject.add("view",childViewElement);
                 }
-                View childView = buildImpl(context, selfViewGroup, childObject);
+                View childView = buildImpl(context, selfViewGroup, childObject, null);
                 if(childView!=null) {
                     childrenToAdd.add(childView);
                 }
 
             }
             if(childrenToAdd.size()>0) {
-                handler.addChildren(activity, selfViewGroup, childrenToAdd);
+                handler.addChildren(this.context, selfViewGroup, childrenToAdd);
             }
         }
 
@@ -151,7 +179,7 @@ public class SimpleLayoutBuilder {
         return handler.parseChildren(context,childrenElement);
     }
 
-    protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attribute, JsonElement element, View view)
+    protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attribute, JsonElement element, View view, ViewGroup parent)
     {
         return handler.handleAttribute(context, attribute, element, view);
     }
@@ -177,7 +205,7 @@ public class SimpleLayoutBuilder {
 
     protected View createView(ParserContext context, ViewGroup parent, LayoutHandler<View> handler, JsonObject object)
     {
-        View view = handler.createView(context, activity, parent, object);
+        View view = handler.createView(context, this.context, parent, object);
         return view;
     }
 

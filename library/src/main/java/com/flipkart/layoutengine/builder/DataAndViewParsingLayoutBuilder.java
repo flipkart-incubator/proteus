@@ -1,11 +1,10 @@
 package com.flipkart.layoutengine.builder;
 
-import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.Provider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,8 +15,8 @@ import com.google.gson.JsonObject;
 public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
     private final Provider viewProvider;
 
-    DataAndViewParsingLayoutBuilder(Activity activity, Provider dataProvider, Provider viewProvider) {
-        super(activity,dataProvider);
+    DataAndViewParsingLayoutBuilder(Context context, Provider dataProvider, Provider viewProvider) {
+        super(context,dataProvider);
         this.viewProvider = viewProvider;
     }
 
@@ -27,7 +26,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
         JsonElement jsonElement = viewProvider.getObject(viewType);
         if(jsonElement!=null)
         {
-            return buildImpl(context, parent,jsonElement.getAsJsonObject());
+            return buildImpl(context, parent,jsonElement.getAsJsonObject(), null);
         }
         else {
             return super.onUnknownViewEncountered(context, viewType, parent, jsonObject);
