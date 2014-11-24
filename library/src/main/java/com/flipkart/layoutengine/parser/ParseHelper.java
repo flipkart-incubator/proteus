@@ -74,13 +74,16 @@ public class ParseHelper {
         return dimensionInPixels;
     }
 
+    public static boolean isColor(String color)
+    {
+        return color.startsWith("#");
+    }
+
     public static int parseColor(String color)
     {
-        if(color.startsWith("#"))
-        {
-            return Color.parseColor(color);
-        }
-        return 0;
+
+        return Color.parseColor(color);
+
     }
 
     public static Integer parseId(String id)

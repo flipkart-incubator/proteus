@@ -5,11 +5,32 @@ package com.flipkart.layoutengine.parser;
  */
 public class Attributes {
 
+
     public static class View {
+
+        /**
+         * @origAttr weight
+         * @newAttr weight
+         */
         public static Attribute Weight = new Attribute("weight");
-        public static Attribute Width = new Attribute("width");
+
+        /**
+         * @origAttr width
+         * @newAttr width
+         */
+        public static Attribute Width = new Attribute("layout_width");
+
+        /**
+         * @origAttr background
+         * @newAttr background
+         */
         public static Attribute Background = new Attribute("background");
-        public static Attribute Height = new Attribute("height");
+
+        /**
+         * @origAttr height
+         * @newAttr height
+         */
+        public static Attribute Height = new Attribute("layout_height");
         public static Attribute LayoutGravity = new Attribute("layout_gravity");
         public static Attribute Gravity = new Attribute("gravity");
         public static Attribute Padding = new Attribute("padding");

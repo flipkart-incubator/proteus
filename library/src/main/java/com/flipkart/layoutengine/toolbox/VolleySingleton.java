@@ -24,6 +24,8 @@ public class VolleySingleton {
                 return mCache.get(url);
             }
         });
+        mImageLoader.setBatchedResponseDelay(0);
+
     }
  
     public static VolleySingleton getInstance(Context context){

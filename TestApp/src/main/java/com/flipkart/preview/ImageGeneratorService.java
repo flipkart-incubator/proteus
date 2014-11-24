@@ -47,6 +47,7 @@ public class ImageGeneratorService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         handler = new Handler();
         builder = LayoutBuilderFactory.createSimpleLayoutBuilder(getBaseContext());
+        builder.setSynchronousRendering(true);
         startPollingServer(intent);
         return Service.START_STICKY;
     }
@@ -59,11 +60,20 @@ public class ImageGeneratorService extends Service {
         RemoteRenderingRequest request = new RemoteRenderingRequest();
         request.setOnResponseListener(new OnRequestFinishListener<RemoteRenderingResponse>() {
             @Override
-            public void onRequestFinish(BaseRequest<RemoteRenderingResponse> request) {
-                int id = request.getResponse().getResponse().getId();
+            public void onRequestFinish(final BaseRequest<RemoteRenderingResponse> request) {
+                final int id = request.getResponse().getResponse().getId();
                 if(request.getResponse().getResponse().getLayout()!=null) {
-                    Bitmap bitmap = generateBitmap(request);
-                    upload(bitmap,id);
+
+                    Runnable r = new Runnable() {
+                        @Override
+                        public void run() {
+                            Bitmap bitmap = generateBitmap(request);
+                            upload(bitmap,id);
+                        }
+                    };
+                    // do not move this to main thread. Image handling breaks, causes thread block.
+                    new Thread(r).start();
+
 
                 }
                 onRequestFinished();
@@ -88,13 +98,15 @@ public class ImageGeneratorService extends Service {
         RemoteRenderingResponse response = request.getResponse();
         JsonObject layout = response.getResponse().getLayout();
         FrameLayout frameLayout = new FrameLayout(getBaseContext());
+        frameLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         frameLayout.setBackgroundColor(Color.WHITE);
+
+
         View view = null;
         try {
             view = builder.build(frameLayout, layout);
         }catch (Exception e)
         {
-            Log.e("error",e.getMessage());
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);

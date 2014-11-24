@@ -3,6 +3,7 @@ package com.flipkart.layoutengine.parser.custom;
 import android.content.Context;
 
 import com.android.volley.toolbox.NetworkImageView;
+import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
@@ -25,7 +26,7 @@ public class NetworkImageViewParser<T extends NetworkImageView> extends Wrappabl
         super.prepareHandlers(context);
         addHandler(Attributes.NetworkImageView.ImageUrl, new AttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 view.setImageUrl(attributeValue, VolleySingleton.getInstance(context).getImageLoader());
             }
         });

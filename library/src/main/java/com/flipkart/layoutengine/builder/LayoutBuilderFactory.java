@@ -89,6 +89,11 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("TextView",textViewParser);
         layoutBuilder.registerHandler("Button",buttonParser);
         layoutBuilder.registerHandler("ViewPager",viewPagerParser);
+
+        /**
+         * @origView View
+         * @newView View
+         */
         layoutBuilder.registerHandler("View",viewParser);
 
     }

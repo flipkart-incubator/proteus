@@ -25,6 +25,10 @@ public class SimpleLayoutBuilder {
     private HashMap<String,LayoutHandler> layoutHandlers = new HashMap<String, LayoutHandler>();
     private LayoutBuilderCallback listener;
 
+    // see the getter for doc
+    private boolean isSynchronousRendering = false;
+
+
     /**
      * Package private constructor so that no client can access it without the factory class
      */
@@ -75,7 +79,9 @@ public class SimpleLayoutBuilder {
 
     protected ParserContext createParserContext()
     {
-        return new ParserContext();
+        ParserContext parserContext = new ParserContext();
+        parserContext.setLayoutBuilder(this);
+        return parserContext;
     }
 
     /**
@@ -218,5 +224,19 @@ public class SimpleLayoutBuilder {
 
     public void setListener(LayoutBuilderCallback listener) {
         this.listener = listener;
+    }
+
+    /**
+     *
+     * Set this to true for rendering preview immediately. This is to be used to decide whether remote resources like remote images are to be downloaded synchronously or not
+     * @return true if the all views should be rendered immediately.
+     *
+     */
+    public boolean isSynchronousRendering() {
+        return isSynchronousRendering;
+    }
+
+    public void setSynchronousRendering(boolean isSynchronousRendering) {
+        this.isSynchronousRendering = isSynchronousRendering;
     }
 }

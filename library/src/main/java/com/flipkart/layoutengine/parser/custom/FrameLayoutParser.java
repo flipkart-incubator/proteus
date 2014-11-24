@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.parser.custom;
 
 import android.content.Context;
 
+import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
@@ -23,14 +24,14 @@ public class FrameLayoutParser extends WrappableParser<AspectRatioFrameLayout>{
         super.prepareHandlers(context);
         addHandler(Attributes.FrameLayout.HeightRatio,new AttributeProcessor<AspectRatioFrameLayout>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, AspectRatioFrameLayout view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, AspectRatioFrameLayout view) {
                 view.setAspectRatioHeight(Integer.parseInt(attributeValue));
 
             }
         });
         addHandler(Attributes.FrameLayout.WidthRatio,new AttributeProcessor<AspectRatioFrameLayout>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, AspectRatioFrameLayout view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, AspectRatioFrameLayout view) {
                 view.setAspectRatioWidth(Integer.parseInt(attributeValue));
 
             }

@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
@@ -30,7 +31,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
 
         addHandler(Attributes.ImageView.Src, new AttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 try {
                     Resources r = context.getResources();
                     int drawableId = r.getIdentifier(attributeValue, "drawable", context.getPackageName());
@@ -46,7 +47,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
 
         addHandler(Attributes.ImageView.ScaleType,new AttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 ImageView.ScaleType scaleType = null;
                 if("center".equals(attributeValue))
                 {
@@ -58,7 +59,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
 
         addHandler(Attributes.ImageView.AdjustViewBounds, new AttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 if("true".equals(attributeValue))
                 {
                     view.setAdjustViewBounds(true);
