@@ -5,7 +5,7 @@ connect();
 $table = "render_queue";
 
 $layout = mysql_escape_string(json_encode(json_decode($_POST['layout'])));
-$timeout = 5000000; //micro seconds
+$timeout = 20000000; //micro seconds
 $sleepTime = 100000; //micro seconds
 
 if ($layout != null) {
@@ -29,8 +29,8 @@ if ($layout != null) {
 			header('Content-Type: image/png');
 			$src = $selectedRows[0]['output'];
 			readfile($src); // output image to browser
-			//unlink($src); // delete image file
-			//deleteFromDB($table,"id=$id"); // delete db row
+			unlink($src); // delete image file
+			deleteFromDB($table,"id=$id"); // delete db row
 		}
 		else
 		{
