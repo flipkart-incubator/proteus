@@ -12,17 +12,17 @@ import com.flipkart.layoutengine.processor.AttributeProcessor;
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class LinearLayoutParser extends WrappableParser<LinearLayout> {
-    public LinearLayoutParser(Parser<LinearLayout> wrappedParser) {
+public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<T> {
+    public LinearLayoutParser(Parser<T> wrappedParser) {
         super(LinearLayout.class, wrappedParser);
     }
 
     @Override
     protected void prepareHandlers(Context context) {
         super.prepareHandlers(context);
-        addHandler(Attributes.LinearLayout.Orientation,new AttributeProcessor<LinearLayout>() {
+        addHandler(Attributes.LinearLayout.Orientation,new AttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, LinearLayout view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 if("horizontal".equals(attributeValue)) {
                     view.setOrientation(LinearLayout.HORIZONTAL);
                 }

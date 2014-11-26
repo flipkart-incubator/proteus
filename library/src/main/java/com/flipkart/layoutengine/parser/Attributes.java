@@ -12,7 +12,7 @@ public class Attributes {
          * @origAttr weight
          * @newAttr weight
          */
-        public static Attribute Weight = new Attribute("weight");
+        public static Attribute Weight = new Attribute("layout_weight");
 
         /**
          * @origAttr width
@@ -38,7 +38,11 @@ public class Attributes {
         public static Attribute PaddingTop = new Attribute("paddingTop");
         public static Attribute PaddingRight = new Attribute("paddingRight");
         public static Attribute PaddingBottom = new Attribute("paddingBottom");
-        public static Attribute Margin = new Attribute("margin");
+        public static Attribute Margin = new Attribute("layout_margin");
+        public static Attribute MarginLeft = new Attribute("layout_marginLeft");
+        public static Attribute MarginTop = new Attribute("layout_marginTop");
+        public static Attribute MarginRight = new Attribute("layout_marginRight");
+        public static Attribute MarginBottom = new Attribute("layout_marginBottom");
         public static Attribute Alpha = new Attribute("alpha");
         public static Attribute Visibility = new Attribute("visibility");
         public static Attribute Id = new Attribute("id");
@@ -56,15 +60,18 @@ public class Attributes {
         public static Attribute ToLeftOf = new Attribute("toLeftOf");
         public static Attribute ToRightOf = new Attribute("toRightOf");
         public static Attribute ToStartOf = new Attribute("toStartOf");
-        public static Attribute AlignParentBottom = new Attribute("alignParentBottom");
-        public static Attribute AlignParentEnd = new Attribute("alignParentEnd");
-        public static Attribute AlignParentLeft = new Attribute("alignParentLeft");
-        public static Attribute AlignParentRight = new Attribute("alignParentRight");
-        public static Attribute AlignParentStart = new Attribute("alignParentStart");
-        public static Attribute AlignParentTop = new Attribute("alignParentTop");
-        public static Attribute CenterHorizontal = new Attribute("centerHorizontal");
-        public static Attribute CenterInParent = new Attribute("centerInParent");
-        public static Attribute CenterVertical = new Attribute("centerVertical");
+        public static Attribute AlignParentBottom = new Attribute("layout_alignParentBottom");
+        public static Attribute AlignParentEnd = new Attribute("layout_alignParentEnd");
+        public static Attribute AlignParentLeft = new Attribute("layout_alignParentLeft");
+        public static Attribute AlignParentRight = new Attribute("layout_alignParentRight");
+        public static Attribute AlignParentStart = new Attribute("layout_alignParentStart");
+        public static Attribute AlignParentTop = new Attribute("layout_alignParentTop");
+        public static Attribute CenterHorizontal = new Attribute("layout_centerHorizontal");
+        public static Attribute CenterInParent = new Attribute("layout_centerInParent");
+        public static Attribute CenterVertical = new Attribute("layout_centerVertical");
+        public static Attribute ContentDescription = new Attribute("contentDescription");
+        public static Attribute Clickable = new Attribute("clickable");
+
     }
 
     public static class TextView {
@@ -72,6 +79,11 @@ public class Attributes {
         public static Attribute Text = new Attribute("text");
         public static Attribute TextSize = new Attribute("textSize");
         public static Attribute TextColor = new Attribute("textColor");
+        public static Attribute DrawableLeft = new Attribute("drawableLeft");
+        public static Attribute DrawableRight = new Attribute("drawableRight");
+        public static Attribute DrawableTop = new Attribute("drawableTop");
+        public static Attribute DrawableBottom = new Attribute("drawableBottom");
+        public static Attribute DrawablePadding = new Attribute("drawablePadding");
     }
 
     public static class FrameLayout {

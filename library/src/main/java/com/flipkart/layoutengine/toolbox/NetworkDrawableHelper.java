@@ -3,9 +3,11 @@ package com.flipkart.layoutengine.toolbox;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.android.volley.RequestQueue;
@@ -29,6 +31,7 @@ public class NetworkDrawableHelper {
     private final View view;
     private final DrawableCallback callback;
     private final RequestQueue requestQueue;
+    private final Context context;
     private ImageLoader.ImageContainer imageContainer;
 
 
@@ -45,7 +48,7 @@ public class NetworkDrawableHelper {
         this.view = view;
         this.callback = callback;
         this.requestQueue = requestQueue;
-
+        this.context = context;
         init(url, loadImmediately);
 
     }
@@ -92,10 +95,27 @@ public class NetworkDrawableHelper {
         requestQueue.add(request);
         try {
             Bitmap bitmap = future.get(10, TimeUnit.SECONDS );
-            callback.onDrawableLoad(url,new BitmapDrawable(bitmap));
+            callback.onDrawableLoad(url,convertBitmapToDrawable(bitmap));
         } catch (Exception e) {
+            e.printStackTrace();
             callback.onDrawableError(url,e.getLocalizedMessage());
         }
+    }
+
+    private Drawable convertBitmapToDrawable(Bitmap bitmapOriginal) {
+
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int width = bitmapOriginal.getWidth();
+        int height = bitmapOriginal.getHeight();
+
+        float scaleWidth = displayMetrics.scaledDensity;
+        float scaleHeight = displayMetrics.scaledDensity;
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmapOriginal, 0, 0, width, height, matrix, true);
+
+        return new BitmapDrawable(context.getResources(),resizedBitmap);
     }
 
 
@@ -114,9 +134,10 @@ public class NetworkDrawableHelper {
             @Override
             public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
                 Bitmap bitmap = response.getBitmap();
+
                 if(bitmap == null) return;
                 if (callback != null) {
-                    callback.onDrawableLoad(url, new BitmapDrawable(bitmap));
+                    callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap));
                 }
 
             }

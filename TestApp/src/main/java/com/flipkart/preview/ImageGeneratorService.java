@@ -16,6 +16,8 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.builder.SimpleLayoutBuilder;
 import com.flipkart.networking.API;
@@ -26,6 +28,7 @@ import com.flipkart.networking.request.components.OnRequestErrorListener;
 import com.flipkart.networking.request.components.OnRequestFinishListener;
 import com.flipkart.networking.request.components.RequestError;
 import com.flipkart.networking.response.RemoteRenderingResponse;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.PrintWriter;
@@ -101,7 +104,18 @@ public class ImageGeneratorService extends Service {
         frameLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         frameLayout.setBackgroundColor(Color.WHITE);
 
+        builder.setListener(new LayoutBuilderCallback() {
+            @Override
+            public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element, JsonObject object, View view) {
+                System.out.println("onUnknownAttribute: context = [" + context + "], attribute = [" + attribute + "], element = [" + element + "], object = [" + object + "], view = [" + view + "]");
+            }
 
+            @Override
+            public View onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent) {
+                System.out.println("onUnknownViewType: context = [" + context + "], viewType = [" + viewType + "], object = [" + object + "], parent = [" + parent + "]");
+                return null;
+            }
+        });
         View view = null;
         try {
             view = builder.build(frameLayout, layout);

@@ -113,6 +113,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
                 try {
                     attributeProcessor.handle(context, attribute, element.getAsString(), view);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     //ignoring
                 }
             }

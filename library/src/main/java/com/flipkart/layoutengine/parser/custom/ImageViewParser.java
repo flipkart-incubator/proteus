@@ -1,9 +1,7 @@
 package com.flipkart.layoutengine.parser.custom;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -11,6 +9,7 @@ import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.AttributeProcessor;
+import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 
 
 /**
@@ -28,22 +27,14 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
     protected void prepareHandlers(final Context context) {
         super.prepareHandlers(context);
 
-
-        addHandler(Attributes.ImageView.Src, new AttributeProcessor<T>() {
+        addHandler(Attributes.ImageView.Src, new ResourceReferenceProcessor<T>(context) {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                try {
-                    Resources r = context.getResources();
-                    int drawableId = r.getIdentifier(attributeValue, "drawable", context.getPackageName());
-                    Drawable drawable = r.getDrawable(drawableId);
-                    view.setImageDrawable(drawable);
-                }
-                catch (Exception ex)
-                {
-                    Log.e(TAG,"exception while parsing image attribute. "+ex);
-                }
+            public void setDrawable(T view, Drawable drawable) {
+                view.setImageDrawable(drawable);
             }
         });
+
+
 
         addHandler(Attributes.ImageView.ScaleType,new AttributeProcessor<T>() {
             @Override
@@ -53,6 +44,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
                 {
                     scaleType = ImageView.ScaleType.CENTER;
                 }
+
 
             }
         });

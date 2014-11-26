@@ -14,14 +14,14 @@ import java.util.List;
 /**
  * Created by kiran.kumar on 13/05/14.
  */
-public class ViewPagerParser extends WrappableParser<ViewPager> {
+public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
 
-    public ViewPagerParser(Parser<ViewPager> wrappedParser) {
+    public ViewPagerParser(Parser<T> wrappedParser) {
         super(ViewPager.class, wrappedParser);
     }
 
     @Override
-    public void addChildren(Context context, ViewPager parent, final List<View> children) {
+    public void addChildren(Context context, T parent, final List<View> children) {
         //not calling super since it calls addChild(). Addchild() on viewpager wont work.
 
         PagerAdapter adapter = new PagerAdapter() {

@@ -5,8 +5,10 @@ import android.view.View;
 
 import com.flipkart.layoutengine.parser.ViewParser;
 import com.flipkart.layoutengine.parser.custom.ButtonParser;
+import com.flipkart.layoutengine.parser.custom.EditTextParser;
 import com.flipkart.layoutengine.parser.custom.FrameLayoutParser;
 import com.flipkart.layoutengine.parser.custom.HorizontalScrollViewParser;
+import com.flipkart.layoutengine.parser.custom.ImageButtonParser;
 import com.flipkart.layoutengine.parser.custom.ImageViewParser;
 import com.flipkart.layoutengine.parser.custom.LinearLayoutParser;
 import com.flipkart.layoutengine.parser.custom.NetworkImageViewParser;
@@ -68,6 +70,7 @@ public class LayoutBuilderFactory {
     static private void registerBuiltInHandlers(SimpleLayoutBuilder layoutBuilder) {
         ViewParser viewParser = new ViewParser(View.class);
         ImageViewParser imageViewParser = new ImageViewParser(viewParser);
+        ImageButtonParser imageButtonParser = new ImageButtonParser(imageViewParser);
         NetworkImageViewParser networkImageViewParser = new NetworkImageViewParser(imageViewParser);
         RelativeLayoutParser relativeLayoutParser = new RelativeLayoutParser(viewParser);
         LinearLayoutParser linearLayoutParser = new LinearLayoutParser(viewParser);
@@ -75,19 +78,23 @@ public class LayoutBuilderFactory {
         ScrollViewParser scrollViewParser = new ScrollViewParser(viewParser);
         HorizontalScrollViewParser horizontalScrollViewParser = new HorizontalScrollViewParser(viewParser);
         TextViewParser textViewParser = new TextViewParser(viewParser);
+        EditTextParser editTextParser = new EditTextParser(textViewParser);
         ButtonParser buttonParser = new ButtonParser(textViewParser);
         ViewPagerParser viewPagerParser = new ViewPagerParser(viewParser);
 
 
-
+        layoutBuilder.registerHandler("View",viewParser);
         layoutBuilder.registerHandler("RelativeLayout",relativeLayoutParser);
         layoutBuilder.registerHandler("LinearLayout",linearLayoutParser);
         layoutBuilder.registerHandler("FrameLayout",frameLayoutParser);
         layoutBuilder.registerHandler("ScrollView",scrollViewParser);
         layoutBuilder.registerHandler("HorizontalScrollView",horizontalScrollViewParser);
         layoutBuilder.registerHandler("NetworkImageView",networkImageViewParser);
+        layoutBuilder.registerHandler("ImageView",imageViewParser);
         layoutBuilder.registerHandler("TextView",textViewParser);
+        layoutBuilder.registerHandler("EditText",editTextParser);
         layoutBuilder.registerHandler("Button",buttonParser);
+        layoutBuilder.registerHandler("ImageButton",imageButtonParser);
         layoutBuilder.registerHandler("ViewPager",viewPagerParser);
 
         /**

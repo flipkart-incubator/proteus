@@ -3,19 +3,16 @@ package com.flipkart.layoutengine.parser;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.processor.AttributeProcessor;
-import com.flipkart.layoutengine.toolbox.NetworkDrawableHelper;
-import com.flipkart.layoutengine.toolbox.VolleySingleton;
+import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
+import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.HashMap;
@@ -38,53 +35,22 @@ public class ViewParser<T extends View> extends Parser<T> {
     protected void prepareHandlers(final Context context) {
 
 
-        addHandler(Attributes.View.Background, new AttributeProcessor<T>() {
+        addHandler(Attributes.View.Background, new ResourceReferenceProcessor<T>(context) {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, final String attributeValue, final View view) {
-                boolean synchronousRendering = parserContext.getLayoutBuilder().isSynchronousRendering();
-                ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
-                RequestQueue requestQueue = VolleySingleton.getInstance(context).getRequestQueue();
-                if (ParseHelper.isColor(attributeValue)) {
-                    view.setBackgroundColor(ParseHelper.parseColor(attributeValue));
+            public void setDrawable(T view, Drawable drawable) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    view.setBackgroundDrawable(drawable);
                 } else {
-                    NetworkDrawableHelper.DrawableCallback callback = new NetworkDrawableHelper.DrawableCallback() {
-                        @Override
-                        public void onDrawableLoad(String url, final Drawable drawable) {
-                            System.out.println("Loaded " + url + " : " + drawable);
-
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
-                                view.setBackgroundDrawable(drawable);
-                            } else {
-                                view.setBackground(drawable);
-                            }
-
-
-                        }
-
-                        @Override
-                        public void onDrawableError(String url, String reason) {
-                            System.out.println("Could not load " + url + " : " + reason);
-                        }
-                    };
-                    new NetworkDrawableHelper(context, view, imageLoader,requestQueue, attributeValue, synchronousRendering, callback);
+                    view.setBackground(drawable);
                 }
-
             }
         });
+
         addHandler(Attributes.View.Height, new AttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                if (TextUtils.isDigitsOnly(attributeValue)) {
-
-                    layoutParams.height = ParseHelper.parseDimension(attributeValue);
-                } else {
-                    if ("match_parent".equals(attributeValue) || "fill_parent".equals(attributeValue)) {
-                        layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-                    } else if ("wrap_content".equals(attributeValue)) {
-                        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    }
-                }
+                layoutParams.height = ParseHelper.parseDimension(attributeValue);
                 view.setLayoutParams(layoutParams);
             }
         });
@@ -92,16 +58,7 @@ public class ViewParser<T extends View> extends Parser<T> {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                if (TextUtils.isDigitsOnly(attributeValue)) {
-
-                    layoutParams.width = ParseHelper.parseDimension(attributeValue);
-                } else {
-                    if ("match_parent".equals(attributeValue) || "fill_parent".equals(attributeValue)) {
-                        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-                    } else if ("wrap_content".equals(attributeValue)) {
-                        layoutParams.width = ViewGroup.LayoutParams.WRAP_CONTENT;
-                    }
-                }
+                layoutParams.width = ParseHelper.parseDimension(attributeValue);
                 view.setLayoutParams(layoutParams);
             }
         });
@@ -112,23 +69,33 @@ public class ViewParser<T extends View> extends Parser<T> {
                 LinearLayout.LayoutParams layoutParams = null;
                 try {
                     layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
+                    layoutParams.weight = Float.parseFloat(attributeValue);
+                    view.setLayoutParams(layoutParams);
+
                 } catch (ClassCastException ex) {
                     throw new IllegalArgumentException(attributeKey + " is only supported for linear containers");
                 }
-                layoutParams.weight = Float.parseFloat(attributeValue);
-                view.setLayoutParams(layoutParams);
+
             }
         });
 
         addHandler(Attributes.View.LayoutGravity, new AttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                LinearLayout.LayoutParams layoutParams = null;
-                try {
-                    layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
-                } catch (ClassCastException ex) {
-                    throw new IllegalArgumentException(attributeKey + " is only supported for linear containers");
+                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+
+                if (layoutParams instanceof LinearLayout.LayoutParams) {
+                    LinearLayout.LayoutParams linearLayoutParams = (LinearLayout.LayoutParams) layoutParams;
+                    linearLayoutParams.gravity = ParseHelper.parseGravity(attributeValue);
+                    view.setLayoutParams(layoutParams);
+                } else if (layoutParams instanceof FrameLayout.LayoutParams) {
+                    FrameLayout.LayoutParams linearLayoutParams = (FrameLayout.LayoutParams) layoutParams;
+                    linearLayoutParams.gravity = ParseHelper.parseGravity(attributeValue);
+                    view.setLayoutParams(layoutParams);
+                } else {
+                    throw new IllegalArgumentException(attributeKey + " is only supported for linearlayout and framelayout containers");
                 }
+
 
             }
         });
@@ -140,12 +107,12 @@ public class ViewParser<T extends View> extends Parser<T> {
                     LinearLayout viewGroup = null;
                     try {
                         viewGroup = (LinearLayout) view;
+                        viewGroup.setGravity(ParseHelper.parseGravity(attributeValue));
                     } catch (ClassCastException ex) {
                         throw new IllegalArgumentException(attributeKey + " is only supported for linear containers");
                     }
 
 
-                    viewGroup.setGravity(ParseHelper.parseGravity(attributeValue));
                 }
 
             }
@@ -190,16 +157,70 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.Margin, new AttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                String[] strings = attributeValue.split(" ");
+                int dimension = ParseHelper.parseDimension(attributeValue);
                 ViewGroup.MarginLayoutParams layoutParams;
                 try {
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
                 } catch (ClassCastException ex) {
-                    throw new IllegalArgumentException("margins can only be applied for some views");
+                    throw new IllegalArgumentException("margins can only be applied to views with parent viewgroups");
                 }
-
-
-                layoutParams.setMargins(ParseHelper.parseDimension(strings[0]), ParseHelper.parseDimension(strings[1]), ParseHelper.parseDimension(strings[2]), ParseHelper.parseDimension(strings[3]));
+                layoutParams.setMargins(dimension, dimension, dimension, dimension);
+                view.setLayoutParams(layoutParams);
+            }
+        });
+        addHandler(Attributes.View.MarginLeft, new AttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                int dimension = ParseHelper.parseDimension(attributeValue);
+                ViewGroup.MarginLayoutParams layoutParams;
+                try {
+                    layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+                } catch (ClassCastException ex) {
+                    throw new IllegalArgumentException("margins can only be applied to views with parent viewgroups");
+                }
+                layoutParams.setMargins(dimension, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
+                view.setLayoutParams(layoutParams);
+            }
+        });
+        addHandler(Attributes.View.MarginTop, new AttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                int dimension = ParseHelper.parseDimension(attributeValue);
+                ViewGroup.MarginLayoutParams layoutParams;
+                try {
+                    layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+                } catch (ClassCastException ex) {
+                    throw new IllegalArgumentException("margins can only be applied to views with parent viewgroups");
+                }
+                layoutParams.setMargins(layoutParams.leftMargin, dimension, layoutParams.rightMargin, layoutParams.bottomMargin);
+                view.setLayoutParams(layoutParams);
+            }
+        });
+        addHandler(Attributes.View.MarginRight, new AttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                int dimension = ParseHelper.parseDimension(attributeValue);
+                ViewGroup.MarginLayoutParams layoutParams;
+                try {
+                    layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+                } catch (ClassCastException ex) {
+                    throw new IllegalArgumentException("margins can only be applied to views with parent viewgroups");
+                }
+                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, dimension, layoutParams.bottomMargin);
+                view.setLayoutParams(layoutParams);
+            }
+        });
+        addHandler(Attributes.View.MarginBottom, new AttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                int dimension = ParseHelper.parseDimension(attributeValue);
+                ViewGroup.MarginLayoutParams layoutParams;
+                try {
+                    layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+                } catch (ClassCastException ex) {
+                    throw new IllegalArgumentException("margins can only be applied to views with parent viewgroups");
+                }
+                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, dimension);
                 view.setLayoutParams(layoutParams);
             }
         });
@@ -222,11 +243,24 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.Id, new AttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                if (TextUtils.isDigitsOnly(attributeValue)) {
-                    view.setId(Integer.valueOf(attributeValue));
-                } else {
-                    Log.d(TAG, "id attribute should be an integer");
-                }
+
+                    view.setId(IdGenerator.getInstance().getUnique(attributeValue));
+
+            }
+        });
+
+        addHandler(Attributes.View.ContentDescription, new AttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                view.setContentDescription(attributeValue);
+            }
+        });
+
+        addHandler(Attributes.View.Clickable, new AttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                boolean clickable = ParseHelper.parseBoolean(attributeValue);
+                view.setClickable(clickable);
             }
         });
 
@@ -243,20 +277,20 @@ public class ViewParser<T extends View> extends Parser<T> {
         relativeLayoutParams.put("alignBottom", RelativeLayout.ALIGN_BOTTOM);
         relativeLayoutParams.put("alignEnd", RelativeLayout.ALIGN_END);
         relativeLayoutParams.put("alignLeft", RelativeLayout.ALIGN_LEFT);
-        relativeLayoutParams.put("alignParentBottom", RelativeLayout.ALIGN_PARENT_BOTTOM);
-        relativeLayoutParams.put("alignParentEnd", RelativeLayout.ALIGN_PARENT_END);
-        relativeLayoutParams.put("alignParentLeft", RelativeLayout.ALIGN_PARENT_LEFT);
-        relativeLayoutParams.put("alignParentRight", RelativeLayout.ALIGN_PARENT_RIGHT);
-        relativeLayoutParams.put("alignParentStart", RelativeLayout.ALIGN_PARENT_START);
-        relativeLayoutParams.put("alignParentTop", RelativeLayout.ALIGN_PARENT_TOP);
+        relativeLayoutParams.put("layout_alignParentBottom", RelativeLayout.ALIGN_PARENT_BOTTOM);
+        relativeLayoutParams.put("layout_alignParentEnd", RelativeLayout.ALIGN_PARENT_END);
+        relativeLayoutParams.put("layout_alignParentLeft", RelativeLayout.ALIGN_PARENT_LEFT);
+        relativeLayoutParams.put("layout_alignParentRight", RelativeLayout.ALIGN_PARENT_RIGHT);
+        relativeLayoutParams.put("layout_alignParentStart", RelativeLayout.ALIGN_PARENT_START);
+        relativeLayoutParams.put("layout_alignParentTop", RelativeLayout.ALIGN_PARENT_TOP);
         relativeLayoutParams.put("alignRight", RelativeLayout.ALIGN_RIGHT);
         relativeLayoutParams.put("alignStart", RelativeLayout.ALIGN_START);
         relativeLayoutParams.put("alignTop", RelativeLayout.ALIGN_TOP);
         //relativeLayoutParams.put("alignWithParentIfMissing",RelativeLayout.ALIGN_PARENT_IF_MISSING); // not supported as rule
         relativeLayoutParams.put("below", RelativeLayout.BELOW);
-        relativeLayoutParams.put("centerHorizontal", RelativeLayout.CENTER_HORIZONTAL);
-        relativeLayoutParams.put("centerInParent", RelativeLayout.CENTER_IN_PARENT);
-        relativeLayoutParams.put("centerVertical", RelativeLayout.CENTER_VERTICAL);
+        relativeLayoutParams.put("layout_centerHorizontal", RelativeLayout.CENTER_HORIZONTAL);
+        relativeLayoutParams.put("layout_centerInParent", RelativeLayout.CENTER_IN_PARENT);
+        relativeLayoutParams.put("layout_centerVertical", RelativeLayout.CENTER_VERTICAL);
         relativeLayoutParams.put("toEndOf", RelativeLayout.END_OF);
         relativeLayoutParams.put("toLeftOf", RelativeLayout.LEFT_OF);
         relativeLayoutParams.put("toRightOf", RelativeLayout.RIGHT_OF);
@@ -305,6 +339,5 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.CenterVertical, relativeLayoutBooleanProcessor);
 
 
-        ;
     }
 }

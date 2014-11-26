@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
+import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.Provider;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -20,7 +21,7 @@ import java.util.Map;
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     private final Provider dataProvider;
-    private static final Character PREFIX = '@';
+    private static final Character PREFIX = DataParsingAdapter.PREFIX;
     private Map<String,Binding> bindings = new HashMap<String,Binding>();
 
 

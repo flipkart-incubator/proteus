@@ -12,9 +12,9 @@ import com.flipkart.layoutengine.widgets.AspectRatioFrameLayout;
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class FrameLayoutParser extends WrappableParser<AspectRatioFrameLayout>{
+public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends WrappableParser<T>{
 
-    public FrameLayoutParser(Parser<AspectRatioFrameLayout> parentParser)
+    public FrameLayoutParser(Parser<T> parentParser)
     {
         super(AspectRatioFrameLayout.class,parentParser);
     }
@@ -22,16 +22,16 @@ public class FrameLayoutParser extends WrappableParser<AspectRatioFrameLayout>{
     @Override
     protected void prepareHandlers(Context context) {
         super.prepareHandlers(context);
-        addHandler(Attributes.FrameLayout.HeightRatio,new AttributeProcessor<AspectRatioFrameLayout>() {
+        addHandler(Attributes.FrameLayout.HeightRatio,new AttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, AspectRatioFrameLayout view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 view.setAspectRatioHeight(Integer.parseInt(attributeValue));
 
             }
         });
-        addHandler(Attributes.FrameLayout.WidthRatio,new AttributeProcessor<AspectRatioFrameLayout>() {
+        addHandler(Attributes.FrameLayout.WidthRatio,new AttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, AspectRatioFrameLayout view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 view.setAspectRatioWidth(Integer.parseInt(attributeValue));
 
             }

@@ -19,7 +19,7 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
 
     private final Provider dataProvider;
     private LayoutHandler<E> handler;
-    private static final Character PREFIX = '@';
+    public static final Character PREFIX = '$';
 
     public DataParsingAdapter(Provider dataProvider, LayoutHandler<E> enclosingHandler) {
         this.dataProvider = dataProvider;

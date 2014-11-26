@@ -16,28 +16,35 @@ public class ParseHelper {
 
     private static final String TAG = ParseHelper.class.getSimpleName();
 
-    public static int parseGravity(String gravity)
+    public static int parseGravity(String attributeValue)
     {
-        String attributeValue = gravity;
-        int gravityValue = Gravity.NO_GRAVITY;
-        if ("center".equals(attributeValue)) {
-            gravityValue = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
-        } else if ("center_horizontal".equals(attributeValue)) {
-            gravityValue = Gravity.CENTER_HORIZONTAL;
-        } else if ("center_vertical".equals(attributeValue)) {
-            gravityValue = Gravity.CENTER_VERTICAL;
-        } else if ("left".equals(attributeValue)) {
-            gravityValue = Gravity.LEFT;
-        } else if ("right".equals(attributeValue)) {
-            gravityValue = Gravity.RIGHT;
-        } else if("top".equals(attributeValue))
-        {
-            gravityValue = Gravity.TOP;
-        }else if("bottom".equals(attributeValue))
-        {
-            gravityValue = Gravity.BOTTOM;
+        String[] gravities = attributeValue.split("\\|");
+        int returnGravity = Gravity.NO_GRAVITY;
+        for (String gravity : gravities) {
+            gravity = gravity.trim().toLowerCase();
+            int gravityValue = Gravity.NO_GRAVITY;
+            if ("center".equals(gravity)) {
+                gravityValue = Gravity.CENTER;
+            } else if ("center_horizontal".equals(gravity)) {
+                gravityValue = Gravity.CENTER_HORIZONTAL;
+            } else if ("center_vertical".equals(gravity)) {
+                gravityValue = Gravity.CENTER_VERTICAL;
+            } else if ("left".equals(gravity)) {
+                gravityValue = Gravity.LEFT;
+            } else if ("right".equals(gravity)) {
+                gravityValue = Gravity.RIGHT;
+            } else if("top".equals(gravity))
+            {
+                gravityValue = Gravity.TOP;
+            }else if("bottom".equals(gravity))
+            {
+                gravityValue = Gravity.BOTTOM;
+            }
+            returnGravity|=gravityValue;
         }
-        return gravityValue;
+
+
+        return returnGravity;
     }
 
     public static int parseVisibility(String attributeValue) {
@@ -61,7 +68,12 @@ public class ParseHelper {
     {
 
         int dimensionInPixels = 0;
-        if(dimension.endsWith("dp")) {
+        if ("match_parent".equals(dimension) || "fill_parent".equals(dimension)) {
+            dimensionInPixels = ViewGroup.LayoutParams.MATCH_PARENT;
+        } else if ("wrap_content".equals(dimension)) {
+            dimensionInPixels = ViewGroup.LayoutParams.WRAP_CONTENT;
+        }
+        else if(dimension.endsWith("dp")) {
             dimension = dimension.substring(0,dimension.length()-2);
             dimensionInPixels = dpToPx(Integer.parseInt(dimension));
         }
@@ -99,6 +111,18 @@ public class ParseHelper {
 
         return null;
 
+    }
+
+    public static boolean parseBoolean(String trueOrFalse)
+    {
+        if(trueOrFalse.equals("true"))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public static int parseRelativeLayoutBoolean(String trueOrFalse)
@@ -154,4 +178,9 @@ public class ParseHelper {
         }
         return 0;
     }
+
+    public static boolean isLocalResource(String attributeValue) {
+        return attributeValue.startsWith("@drawable/");
+    }
+
 }
