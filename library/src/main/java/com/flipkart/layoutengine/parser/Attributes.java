@@ -6,6 +6,12 @@ package com.flipkart.layoutengine.parser;
 public class Attributes {
 
 
+    public static class Webview
+    {
+        public static Attribute Url = new Attribute("url");
+
+    }
+
     public static class View {
 
         /**
@@ -74,7 +80,16 @@ public class Attributes {
 
     }
 
-    public static class TextView {
+    public static class RatingBar {
+        public static Attribute NumStars = new Attribute("numStars");
+        public static Attribute Rating = new Attribute("rating");
+        public static Attribute IsIndicator = new Attribute("isIndicator");
+        public static Attribute StepSize = new Attribute("stepSize");
+        public static Attribute ProgressDrawable = new Attribute("progressDrawable");
+        public static Attribute MinHeight = new Attribute("minHeight");
+        public static Attribute MaxHeight = new Attribute("maxHeight");
+    }
+        public static class TextView {
         public static Attribute Gravity = new Attribute("gravity");
         public static Attribute Text = new Attribute("text");
         public static Attribute TextSize = new Attribute("textSize");

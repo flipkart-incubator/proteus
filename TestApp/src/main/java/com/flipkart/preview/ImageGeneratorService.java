@@ -159,7 +159,7 @@ public class ImageGeneratorService extends Service {
         view.draw(canvas);
 
         float density = getBaseContext().getResources().getDisplayMetrics().density;
-        bitmap = Bitmap.createScaledBitmap(bitmap,(int)(width/density),(int)(height/density),false);
+        bitmap = Bitmap.createScaledBitmap(bitmap,(int)(width/density),(int)(height/density),true);
 
         return bitmap;
     }

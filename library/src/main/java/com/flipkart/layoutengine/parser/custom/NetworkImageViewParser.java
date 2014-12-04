@@ -7,7 +7,8 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
-import com.flipkart.layoutengine.processor.AttributeProcessor;
+import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.toolbox.VolleySingleton;
 
 /**
@@ -24,7 +25,7 @@ public class NetworkImageViewParser<T extends NetworkImageView> extends Wrappabl
     @Override
     protected void prepareHandlers(final Context context) {
         super.prepareHandlers(context);
-        addHandler(Attributes.NetworkImageView.ImageUrl, new AttributeProcessor<T>() {
+        addHandler(Attributes.NetworkImageView.ImageUrl, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 view.setImageUrl(attributeValue, VolleySingleton.getInstance(context).getImageLoader());

@@ -7,7 +7,7 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
-import com.flipkart.layoutengine.processor.AttributeProcessor;
+import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 
 /**
  * Created by kiran.kumar on 12/05/14.
@@ -20,7 +20,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
     @Override
     protected void prepareHandlers(Context context) {
         super.prepareHandlers(context);
-        addHandler(Attributes.LinearLayout.Orientation,new AttributeProcessor<T>() {
+        addHandler(Attributes.LinearLayout.Orientation,new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 if("horizontal".equals(attributeValue)) {

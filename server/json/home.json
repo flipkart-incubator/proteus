@@ -1,107 +1,160 @@
 {
 
 	"RESPONSE": {
-		"layout": {
-			"view": "container.verticalScroll",
-			"width": "fill",
-			"backgroundColor": "#CCCCCC",
-			"children": [{
-				"view": "container.linear",
-				"width": "fill",
-				"orientation": "vertical",
-				"children": [
-					{
-						"include": "productpage"
-					},
-					{
-						"include": "search"
-					}, {
-						"view": "container.absolute",
-						"width": "fill",
-						"height": "0",
-						"heightRatio": "39",
-
-						"widthRatio": "100",
-						"children": [{
-							"include": "pager"
-						}]
-
-					}, {
-						"include": "newlaunch"
-					}, {
-						"include": "departments"
-					}, {
-						"include": "offers"
-					}, {
-						"include": "popular"
-					}, {
-						"include": "recents"
-					}
-
-
-				]
-			}]
-		},
-		"views":
-		{
-
-			"product_cell":{
-
-					"view": "container.linear",
-					"orientation": "vertical",
-					"padding": "20 20 20 20",
-					"alignChildren": "center_horizontal",
-
-					"children": [{
-						"view": "text",
-						"text": "MOTO G 2"
-					}, {
-						"view": "text",
-						"textColor": "red",
-						"text": "Only On"
-					}, {
-						"view": "networkImage",
-						"imageUrl": "@image",
-						"height": "100",
-						"padding": "10 10 10 10"
-					}, {
-						"view": "text",
-						"text": "FLIPKART"
-					}]
-				
-			}
-
-			},
-		"data": {
-			"pager": {
-				"children": [{
-					"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140520-140332-mobile-extra-large-12.jpg"
-				}, {
-					"image":"dart",
-					"width":"fill"
-				}, {
-					"imageUrl": "http://img6a.flixcart.com/www/promos/new/20140623-115031-mobile-large.jpg"
-				}, {
-					"imageUrl": "http://img5a.flixcart.com/www/promos/new/20140520-160716-mobile-extra-large.jpg"
-				}]
-			},
-			"motog":
-			{
-				"image":"http://img6a.flixcart.com/image/mobile/n/q/a/motorola-moto-g-400x400-imadsmbwhznhucjj.jpeg"
-			},
-			"departments": {
-				"title": "Shop by Departments",
-				"sub": [{
-					"title": "Fashion & Lifestyle 2",
-					"image": "http://img6a.flixcart.com/www/promos/new/20140424-195900-xhdpi.jpg"
-				}, {
-					"title": "Electronics",
-					"image": "http://img5a.flixcart.com/www/promos/new/20140424-200057-xhdpi.jpg"
-				}, {
-					"title": "Books & More",
-					"image": "http://img6a.flixcart.com/www/promos/new/20140424-200246-xhdpi.jpg"
-				}]
-			}
-		}
+		"layout":{
+  "type": "LinearLayout",
+  "android": "http://schemas.android.com/apk/res/android",
+  "id": "@+id/product_page_price_ratings_layout",
+  "layout_width": "fill_parent",
+  "layout_height": "wrap_content",
+  "layout_margin": "9dp",
+  "orientation": "horizontal",
+  "children": [
+    {
+      "type": "LinearLayout",
+      "layout_width": "wrap_content",
+      "layout_height": "wrap_content",
+      "layout_marginRight": "9dp",
+      "orientation": "vertical",
+      "children": [
+        {
+          "type": "TextView",
+          "id": "@+id/product_page_price_ratings_sp_text",
+          "layout_width": "wrap_content",
+          "layout_height": "wrap_content",
+          "text": "Rs. 12,000",
+          "textColor": "#c12929",
+          "textSize": "20sp"
+        },
+        {
+          "type": "LinearLayout",
+          "layout_width": "wrap_content",
+          "layout_height": "wrap_content",
+          "orientation": "horizontal",
+          "children": [
+            {
+              "type": "TextView",
+              "id": "@+id/product_page_price_ratings_mrp",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "paddingRight": "5dp",
+              "text": "Rs. 12,000",
+              "textColor": "#565656",
+              "textSize": "13sp"
+            },
+            {
+              "type": "TextView",
+              "id": "@+id/product_page_price_off_text",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "paddingRight": "5dp",
+              "text": "Rs. 12,000",
+              "textColor": "#565656",
+              "textSize": "13sp"
+            }
+          ]
+        },
+        {
+          "type": "TextView",
+          "id": "@+id/product_page_emi_text",
+          "layout_width": "wrap_content",
+          "layout_height": "wrap_content",
+          "drawablePadding": "5dp",
+          "drawableRight": "http://192.168.0.103/layoutengine/resources/storage/33533916b072bb4648b642f79d3e24ba8c1e1c3c_question_mark.png",
+          "singleLine": "true",
+          "text": "EMI Rs.1200 Per Month",
+          "textColor": "#565656",
+          "textSize": "14sp",
+          "visibility": "gone"
+        }
+      ]
+    },
+    {
+      "type": "View",
+      "id": "@+id/view_left_to_ratings",
+      "layout_width": "1dp",
+      "layout_height": "fill_parent",
+      "background": "#EBEBEB"
+    },
+    {
+      "type": "LinearLayout",
+      "id": "@+id/product_page_reviews_and_ratings_layout",
+      "layout_width": "fill_parent",
+      "layout_height": "wrap_content",
+      "layout_marginLeft": "9dp",
+      "orientation": "horizontal",
+      "tag": "open_review_page",
+      "children": [
+        {
+          "type": "LinearLayout",
+          "layout_width": "0dp",
+          "layout_height": "wrap_content",
+          "layout_weight": "92",
+          "orientation": "vertical",
+          "children": [
+            {
+              "type": "RatingBar",
+              "progressDrawable": {
+                "type": "layer-list",
+                "android": "http://schemas.android.com/apk/res/android",
+                "children": [
+                  {
+                    "type": "item",
+                    "id": "@android:id/background",
+                    "drawable": "http://192.168.0.103/layoutengine/resources/storage/c9b147a577e1f033aec7755e17ce21b410b889a9_rating_star_grey.png"
+                  },
+                  {
+                    "type": "item",
+                    "id": "@android:id/secondaryProgress",
+                    "drawable": "http://192.168.0.103/layoutengine/resources/storage/c9b147a577e1f033aec7755e17ce21b410b889a9_rating_star_grey.png"
+                  },
+                  {
+                    "type": "item",
+                    "id": "@android:id/progress",
+                    "drawable": "http://192.168.0.103/layoutengine/resources/storage/8182fa037934e8fbb62b582cd22283e61809cf4c_rating_star.png"
+                  }
+                ]
+              },
+              "maxHeight": "22dip",
+              "minHeight": "22dip",
+              "id": "@+id/product_page_product_item_rating",
+              "layout_width": "wrap_content",
+              "layout_height": "12dp",
+              "layout_gravity": "center_vertical",
+              "layout_marginLeft": "4dp",
+              "layout_marginTop": "4dp",
+              "clickable": "false",
+              "focusable": "false",
+              "rating": "3",
+              "focusableInTouchMode": "false",
+              "isIndicator": "true",
+              "numStars": "5"
+            },
+            {
+              "type": "TextView",
+              "id": "@+id/product_page_reviews_count_text",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "layout_gravity": "center_vertical",
+              "layout_marginTop": "4dp",
+              "text": "0 Ratings and 0 Reviews",
+              "textColor": "#565656",
+              "textSize": "14sp"
+            }
+          ]
+        },
+        {
+          "type": "ImageView",
+          "id": "@+id/product_page_reviews_and_ratings_arrow_image",
+          "layout_width": "0dp",
+          "layout_height": "wrap_content",
+          "layout_gravity": "center_vertical",
+          "layout_weight": "8",
+          "src": "http://192.168.0.103/layoutengine/resources/storage/04258f3648d7da88b21d18f3e2214d78a575f107_arrow.png"
+        }
+      ]
+    }
+  ]
+}
 	}
 }

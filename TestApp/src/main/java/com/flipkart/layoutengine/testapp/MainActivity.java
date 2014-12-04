@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.testapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -29,6 +30,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 
+
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -37,8 +39,10 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Handler handler = new Handler();
         if(savedInstanceState==null) {
-            fireRequest();
+
+           fireRequest();
         }
         Intent i=new Intent(this, ImageGeneratorService.class);
         startService(i);
@@ -70,11 +74,13 @@ public class MainActivity extends ActionBarActivity {
 
                         HomeResponse response = request.getResponse();
                         JsonObject layout = response.getResponse().getLayout();
+                        long startTimeMillis = System.currentTimeMillis();
+
+                        Log.d(TAG,"layout build start "+startTimeMillis);
+
                         DataParsingLayoutBuilder builder = LayoutBuilderFactory.createDataAndViewParsingLayoutBuilder(MainActivity.this, new GsonProvider(response.getResponse().getData()),new GsonProvider(response.getResponse().getViews()));
                         builder.setListener(createCallback());
                         FrameLayout container = new FrameLayout(MainActivity.this);
-                        long startTimeMillis = System.currentTimeMillis();
-                        Log.d(TAG,"layout build start "+startTimeMillis);
                         View view = builder.build((ViewGroup)MainActivity.this.getWindow().getDecorView(),layout);
                         long endTimeMillis = System.currentTimeMillis();
                         Log.d(TAG,"layout build end "+endTimeMillis);
@@ -148,6 +154,7 @@ public class MainActivity extends ActionBarActivity {
         Log.d(TAG,"key down "+keyCode);
         if(keyCode == KeyEvent.KEYCODE_R)
         {
+            MainActivity.this.setContentView(new FrameLayout(this));
             fireRequest();
         }
         return super.onKeyDown(keyCode, event);

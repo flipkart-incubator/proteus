@@ -94,11 +94,11 @@ public class SimpleLayoutBuilder {
      */
     protected View buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject, View existingView)
     {
-        JsonElement viewTypeElement = jsonObject.get("view");
+        JsonElement viewTypeElement = jsonObject.get("type");
         String viewType = null;
         if(viewTypeElement!=null) {
             viewType = viewTypeElement.getAsString();
-            jsonObject.remove("view");
+            jsonObject.remove("type");
         }
         else
         {
@@ -162,7 +162,7 @@ public class SimpleLayoutBuilder {
                 if(childViewElement!=null)
                 {
                     // propagate the value of 'childView' to the recursive calls
-                    childObject.add("view",childViewElement);
+                    childObject.add("type",childViewElement);
                 }
                 View childView = buildImpl(context, selfViewGroup, childObject, null);
                 if(childView!=null) {

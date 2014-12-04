@@ -12,10 +12,12 @@ import com.flipkart.layoutengine.parser.custom.ImageButtonParser;
 import com.flipkart.layoutengine.parser.custom.ImageViewParser;
 import com.flipkart.layoutengine.parser.custom.LinearLayoutParser;
 import com.flipkart.layoutengine.parser.custom.NetworkImageViewParser;
+import com.flipkart.layoutengine.parser.custom.RatingBarParser;
 import com.flipkart.layoutengine.parser.custom.RelativeLayoutParser;
 import com.flipkart.layoutengine.parser.custom.ScrollViewParser;
 import com.flipkart.layoutengine.parser.custom.TextViewParser;
 import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
+import com.flipkart.layoutengine.parser.custom.WebViewParser;
 import com.flipkart.layoutengine.provider.Provider;
 
 /**
@@ -67,7 +69,7 @@ public class LayoutBuilderFactory {
      * This method will register all the internal layout handlers to the builder specified.
      * @param layoutBuilder
      */
-    static private void registerBuiltInHandlers(SimpleLayoutBuilder layoutBuilder) {
+    static protected void registerBuiltInHandlers(SimpleLayoutBuilder layoutBuilder) {
         ViewParser viewParser = new ViewParser(View.class);
         ImageViewParser imageViewParser = new ImageViewParser(viewParser);
         ImageButtonParser imageButtonParser = new ImageButtonParser(imageViewParser);
@@ -81,6 +83,9 @@ public class LayoutBuilderFactory {
         EditTextParser editTextParser = new EditTextParser(textViewParser);
         ButtonParser buttonParser = new ButtonParser(textViewParser);
         ViewPagerParser viewPagerParser = new ViewPagerParser(viewParser);
+        WebViewParser webViewParser = new WebViewParser(viewParser);
+        RatingBarParser ratingBarParser = new RatingBarParser(viewParser);
+
 
 
         layoutBuilder.registerHandler("View",viewParser);
@@ -96,12 +101,9 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("Button",buttonParser);
         layoutBuilder.registerHandler("ImageButton",imageButtonParser);
         layoutBuilder.registerHandler("ViewPager",viewPagerParser);
+        layoutBuilder.registerHandler("WebView",webViewParser);
+        layoutBuilder.registerHandler("RatingBar",ratingBarParser);
 
-        /**
-         * @origView View
-         * @newView View
-         */
-        layoutBuilder.registerHandler("View",viewParser);
 
     }
 

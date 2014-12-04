@@ -35,7 +35,6 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
         this.viewClass = viewClass;
     }
     protected static final Map<Class<?>,Constructor<? extends View>> constructorCache = new HashMap<Class<?>, Constructor<? extends View>>();
-    private boolean ignoreErrors = true;
 
     @Override
     public void prepare(Context context) {
@@ -109,18 +108,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, T view) {
         AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
-            if(ignoreErrors) {
-                try {
-                    attributeProcessor.handle(context, attribute, element.getAsString(), view);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    //ignoring
-                }
-            }
-            else
-            {
-                attributeProcessor.handle(context, attribute, element.getAsString(), view);
-            }
+            attributeProcessor.handle(context, attribute, element, view);
             return true;
         }
         return false;

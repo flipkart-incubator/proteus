@@ -8,8 +8,8 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
-import com.flipkart.layoutengine.processor.AttributeProcessor;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
+import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 
 
 /**
@@ -36,7 +36,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
 
 
 
-        addHandler(Attributes.ImageView.ScaleType,new AttributeProcessor<T>() {
+        addHandler(Attributes.ImageView.ScaleType,new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 ImageView.ScaleType scaleType = null;
@@ -49,7 +49,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.ImageView.AdjustViewBounds, new AttributeProcessor<T>() {
+        addHandler(Attributes.ImageView.AdjustViewBounds, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 if("true".equals(attributeValue))
