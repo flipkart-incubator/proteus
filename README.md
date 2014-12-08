@@ -7,8 +7,7 @@ Usage:
 
 If you need to build a simple layout,
 
-
                         JsonObject layout = new JsonObject(); // this layout is the layout sent from server
-                        SimpleLayoutBuild builder = LayoutBuilderFactory.createSimpleLayoutBuild(this);
+                        SimpleLayoutBuild builder = LayoutBuilderFactory.createSimpleLayoutBuilder(this);
                         View view = builder.build((ViewGroup)this.getWindow().getDecorView(),layout);
                         // now you have a dynamic view
