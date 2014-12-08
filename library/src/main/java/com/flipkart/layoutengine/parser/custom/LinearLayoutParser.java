@@ -5,6 +5,7 @@ import android.widget.LinearLayout;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
+import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
@@ -31,6 +32,18 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
                     view.setOrientation(LinearLayout.VERTICAL);
                 }
             }
+        });
+
+        addHandler(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+
+                        view.setGravity(ParseHelper.parseGravity(attributeValue));
+
+
+                }
+
+
         });
     }
 }

@@ -100,23 +100,7 @@ public class ViewParser<T extends View> extends Parser<T> {
             }
         });
 
-        addHandler(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
-            @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                if (view instanceof ViewGroup) {
-                    LinearLayout viewGroup = null;
-                    try {
-                        viewGroup = (LinearLayout) view;
-                        viewGroup.setGravity(ParseHelper.parseGravity(attributeValue));
-                    } catch (ClassCastException ex) {
-                        throw new IllegalArgumentException(attributeKey + " is only supported for linear containers");
-                    }
 
-
-                }
-
-            }
-        });
 
         addHandler(Attributes.View.Padding, new StringAttributeProcessor<T>() {
             @Override
