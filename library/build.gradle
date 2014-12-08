@@ -1,4 +1,27 @@
 apply plugin: 'android-library'
+apply plugin: 'artifactory'
+apply plugin: 'android-maven'
+
+buildscript {
+    repositories {
+        jcenter()
+        maven { url 'http://repo1.maven.org/maven2' }
+        maven { url 'http://artifactory.nm.flipkart.com:8081/artifactory/libs-release-local' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.14.0'
+        classpath 'com.github.dcendents:android-maven-plugin:1.+'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.3'
+    }
+}
+
+group = ARTIFACTORY_GROUP
+version = VERSION_NAME
+status = STATUS
+
+repositories {
+    maven { url 'http://artifactory.nm.flipkart.com:8081/artifactory/libs-release-local' }
+}
 
 android {
     compileSdkVersion 21
@@ -32,12 +55,64 @@ android.libraryVariants.all { variant ->
         exclude '**/R.java'
     }
 }
+
+configurations {
+    published
+}
+
+task sourceJar(type: Jar) {
+    from 'src/java'
+    classifier "sources"
+}
+
+artifactoryPublish {
+    dependsOn sourceJar
+}
+
+artifacts {
+    published sourceJar
+}
+
+configure(install.repositories.mavenInstaller) {
+    pom.project {
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+    }
+}
+
+artifactory {
+    contextUrl = ARTIFACTORY_REPO_URL
+    publish {
+        repository {
+            repoKey = REPO_KEY //The Artifactory repository key to publish to
+            //username = artifactory_user //The publisher user name, property taken from gradle.properties
+            //password = artifactory_password //The publisher password, property taken from gradle.properties
+        }
+        defaults {
+            publishConfigs('archives', 'published')
+            properties = ['build.status': "$it.project.status".toString()]
+            publishPom = true //Publish generated POM files to Artifactory (true by default)
+            publishIvy = false //Publish generated Ivy descriptor files to Artifactory (true by default)
+        }
+    }
+    resolve {
+        repository {
+            repoKey = REPO_KEY //The Artifactory (preferably virtual) repository key to resolve from
+            //username = artifactory_user //Optional resolver user name (leave out to use anonymous resolution), property taken from gradle.properties
+            //password = artifactory_password //The resolver password, property taken from gradle.properties
+        }
+    }
+}
+
 dependencies {
     compile 'com.android.support:appcompat-v7:20.+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.code.gson:gson:2.2.+'
     compile 'com.mcxiaoke.volley:library:1.0.+'
     compile 'com.nineoldandroids:library:2.4.0+'
-
-
 }
