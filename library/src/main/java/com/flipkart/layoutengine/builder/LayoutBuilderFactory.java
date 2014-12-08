@@ -32,9 +32,9 @@ public class LayoutBuilderFactory {
      * @param dataProvider
      * @return
      */
-    static public DataParsingLayoutBuilder createDataAndViewParsingLayoutBuilder(Context context, Provider dataProvider, Provider viewProvider)
+    static public DataAndViewParsingLayoutBuilder createDataAndViewParsingLayoutBuilder(Context context, Provider dataProvider, Provider viewProvider)
     {
-        DataParsingLayoutBuilder builder = new DataAndViewParsingLayoutBuilder(context, dataProvider, viewProvider);
+        DataAndViewParsingLayoutBuilder builder = new DataAndViewParsingLayoutBuilder(context, dataProvider, viewProvider);
         registerBuiltInHandlers(builder);
         return builder;
     }
