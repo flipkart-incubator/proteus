@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
+import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
@@ -40,11 +41,11 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 ImageView.ScaleType scaleType = null;
-                if("center".equals(attributeValue))
+                scaleType = ParseHelper.parseScaleType(attributeValue);
+                if(scaleType!=null)
                 {
-                    scaleType = ImageView.ScaleType.CENTER;
+                    view.setScaleType(scaleType);
                 }
-
 
             }
         });

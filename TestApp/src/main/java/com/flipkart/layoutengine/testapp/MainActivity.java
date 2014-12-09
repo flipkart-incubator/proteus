@@ -75,9 +75,7 @@ public class MainActivity extends ActionBarActivity {
                         HomeResponse response = request.getResponse();
                         JsonObject layout = response.getResponse().getLayout();
                         long startTimeMillis = System.currentTimeMillis();
-
                         Log.d(TAG,"layout build start "+startTimeMillis);
-
                         DataParsingLayoutBuilder builder = LayoutBuilderFactory.createDataAndViewParsingLayoutBuilder(MainActivity.this, new GsonProvider(response.getResponse().getData()),new GsonProvider(response.getResponse().getViews()));
                         builder.setListener(createCallback());
                         FrameLayout container = new FrameLayout(MainActivity.this);

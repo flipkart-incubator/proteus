@@ -47,6 +47,15 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
         }
     }
 
+    /**
+     * This block handles different drawables.
+     * Selector and LayerListDrawable are handled here.
+     * Override this to handle more types of drawables
+     * @param parserContext
+     * @param attributeKey
+     * @param attributeValue
+     * @param view
+     */
     protected void handleElement(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view)
     {
         JsonObject jsonObject = attributeValue.getAsJsonObject();
@@ -129,6 +138,13 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
         setDrawable(view,layerDrawable);
     }
 
+    /**
+     * Any string based drawables are handled here. Color, local resource and remote image urls.
+     * @param parserContext
+     * @param attributeKey
+     * @param attributeValue
+     * @param view
+     */
     protected void handleString(ParserContext parserContext, String attributeKey, final String attributeValue, final T view) {
         boolean synchronousRendering = parserContext.getLayoutBuilder().isSynchronousRendering();
         ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();

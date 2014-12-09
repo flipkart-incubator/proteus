@@ -8,6 +8,7 @@ import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.google.gson.JsonElement;
@@ -338,5 +339,38 @@ public class ParseHelper {
         }
 
         return new Pair<Integer, String>(androidResIdByXmlResId,drawable);
+    }
+
+    public static ImageView.ScaleType parseScaleType(String attributeValue) {
+        ImageView.ScaleType type = null;
+        if(attributeValue!=null)
+        {
+            attributeValue = attributeValue.toLowerCase();
+            if("center".equals(attributeValue))
+            {
+                type = ImageView.ScaleType.CENTER;
+            }
+            else if("center_crop".equals(attributeValue))
+            {
+                type = ImageView.ScaleType.CENTER_CROP;
+            }
+            else if("center_inside".equals(attributeValue))
+            {
+                type = ImageView.ScaleType.CENTER_INSIDE;
+            }
+            else if("fit_center".equals(attributeValue))
+            {
+                type = ImageView.ScaleType.FIT_CENTER;
+            }
+            else if("fit_xy".equals(attributeValue))
+            {
+                type = ImageView.ScaleType.FIT_XY;
+            }
+            else if("matrix".equals(attributeValue))
+            {
+                type = ImageView.ScaleType.MATRIX;
+            }
+        }
+        return type;
     }
 }

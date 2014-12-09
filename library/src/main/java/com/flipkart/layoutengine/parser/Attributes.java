@@ -1,7 +1,8 @@
 package com.flipkart.layoutengine.parser;
 
 /**
- * Created by kirankumar on 20/11/14.
+ * A placeholder for all attributes supported by the engine.
+ * When implementing a custom parser, create a class which extends this class and add them there.
  */
 public class Attributes {
 
@@ -19,23 +20,8 @@ public class Attributes {
          * @newAttr weight
          */
         public static Attribute Weight = new Attribute("layout_weight");
-
-        /**
-         * @origAttr width
-         * @newAttr width
-         */
         public static Attribute Width = new Attribute("layout_width");
-
-        /**
-         * @origAttr background
-         * @newAttr background
-         */
         public static Attribute Background = new Attribute("background");
-
-        /**
-         * @origAttr height
-         * @newAttr height
-         */
         public static Attribute Height = new Attribute("layout_height");
         public static Attribute LayoutGravity = new Attribute("layout_gravity");
         public static Attribute Gravity = new Attribute("gravity");
@@ -77,7 +63,6 @@ public class Attributes {
         public static Attribute CenterVertical = new Attribute("layout_centerVertical");
         public static Attribute ContentDescription = new Attribute("contentDescription");
         public static Attribute Clickable = new Attribute("clickable");
-
     }
 
     public static class RatingBar {
@@ -87,7 +72,6 @@ public class Attributes {
         public static Attribute StepSize = new Attribute("stepSize");
         public static Attribute ProgressDrawable = new Attribute("progressDrawable");
         public static Attribute MinHeight = new Attribute("minHeight");
-        public static Attribute MaxHeight = new Attribute("maxHeight");
     }
         public static class TextView {
         public static Attribute Gravity = new Attribute("gravity");

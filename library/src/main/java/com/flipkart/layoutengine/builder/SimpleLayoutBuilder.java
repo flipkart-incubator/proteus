@@ -63,6 +63,15 @@ public class SimpleLayoutBuilder {
         layoutHandlers.clear();
     }
 
+    /**
+     * Get the handler registered with the supplied view type
+     * @param viewType
+     * @return
+     */
+    public LayoutHandler getHandler(String viewType)
+    {
+        return layoutHandlers.get(viewType);
+    }
 
 
     private Context context;

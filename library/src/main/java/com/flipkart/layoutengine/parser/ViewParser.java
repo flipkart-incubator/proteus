@@ -216,6 +216,8 @@ public class ViewParser<T extends View> extends Parser<T> {
             }
         });
 
+
+
         addHandler(Attributes.View.Visibility, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
