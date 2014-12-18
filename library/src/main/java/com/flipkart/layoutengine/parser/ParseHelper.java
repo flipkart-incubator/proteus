@@ -28,8 +28,7 @@ public class ParseHelper {
 
     private static final String TAG = ParseHelper.class.getSimpleName();
 
-    public static int parseGravity(String attributeValue)
-    {
+    public static int parseGravity(String attributeValue) {
         String[] gravities = attributeValue.split("\\|");
         int returnGravity = Gravity.NO_GRAVITY;
         for (String gravity : gravities) {
@@ -45,17 +44,17 @@ public class ParseHelper {
                 gravityValue = Gravity.LEFT;
             } else if ("right".equals(gravity)) {
                 gravityValue = Gravity.RIGHT;
-            } else if("top".equals(gravity))
-            {
+            } else if ("top".equals(gravity)) {
                 gravityValue = Gravity.TOP;
-            }else if("bottom".equals(gravity))
-            {
+            } else if ("bottom".equals(gravity)) {
                 gravityValue = Gravity.BOTTOM;
+            } else if ("start".equals(gravity)) {
+                gravityValue = Gravity.START;
+            } else if ("end".equals(gravity)) {
+                gravityValue = Gravity.END;
             }
-            returnGravity|=gravityValue;
+            returnGravity |= gravityValue;
         }
-
-
         return returnGravity;
     }
 
