@@ -99,6 +99,9 @@ public class Attributes {
 
     public static class LinearLayout {
         public static Attribute Orientation = new Attribute("orientation");
+        public static Attribute Divider     = new Attribute("divider");
+        public static Attribute DividerPadding = new Attribute("dividerPadding");
+        public static Attribute ShowDividers = new Attribute("showDividers");
     }
 
     public static class NetworkImageView {
