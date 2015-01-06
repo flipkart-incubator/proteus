@@ -8,7 +8,7 @@ Usage:
 	
 
     JsonObject layout = new JsonObject(); // this layout is the layout sent from server
-    LayoutBuilder builder = new DefaultLayoutBuilderFactory().createSimpleLayoutBuilder(this);
+    LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
 	View view = builder.build((ViewGroup)this.getWindow().getDecorView(),layout); 	// now you have a dynamic view which can be added to decorview
 
 
@@ -47,11 +47,16 @@ Example :
     LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataParsingLayoutBuilder(MainActivity.this, new GsonProvider(getResponse().getData()),new GsonProvider(getResponse().getViews()));
     builder.build((ViewGroup)MainActivity.this.getWindow().getDecorView(),layout);
 
+One click XML to JSON conversion
+--------------------------------
+Download [this plugin](https://github.com/Flipkart/android-studio-layoutengine-plugin/blob/master/Plugin/Plugin.jar) for android studio and enable it. Once enabled, you can select any android XML layout file and go to **Tools > Convert XML to JSON**
 
-TODO :
+Readme TODO :
+-------------
 
  1. Example JSON for each builder
  2. Example for Callback usage, unknown view handling
  3. Example use cases with screenshots of views
  4. Primary purpose of the library
  5. Sample project compiling
+
