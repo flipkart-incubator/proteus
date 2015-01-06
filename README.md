@@ -8,7 +8,7 @@ Usage:
 	
 
     JsonObject layout = new JsonObject(); // this layout is the layout sent from server
-    LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
+    LayoutBuilder builder = new DefaultLayoutBuilderFactory().createSimpleLayoutBuilder(this);
 	View view = builder.build((ViewGroup)this.getWindow().getDecorView(),layout); 	// now you have a dynamic view which can be added to decorview
 
 
