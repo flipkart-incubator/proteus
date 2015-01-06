@@ -1,40 +1,15 @@
-android-layout-engine
+Proteus : Android Layout Engine
 =====================
 
-[Experimental project] An engine for achieving granular control over the visual appearance and data persistence over views/widgets displayed in any mobile app.
+An android library for achieving granular control over the visual appearance and data persistence over views/widgets displayed in any mobile app. Meant to be a drop in replacement for androids LayoutInflater which allows usage of layouts sent from server instead of using the bundled xml layouts.
 
 Usage:
-
-If you need to build a simple layout,
 
 	
 
     JsonObject layout = new JsonObject(); // this layout is the layout sent from server
     LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
-    LayoutBuilderCallback callback = new LayoutBuilderCallback() {
-	    @Override
-    	public void onUnknownAttribute(ParserContext context, String attribute, final JsonElement element, final JsonObject object, View view) {
-    	//                Log.d(TAG,"Unknown attribute "+attribute+" encountered for "+object);
-    	//                if("onclick".equals(attribute))
-    	//                {
-    	//                    view.setOnClickListener(new View.OnClickListener() {
-    	//                        @Override
-    	//                        public void onClick(View v) {
-    	//                           Toast.makeText(MainActivity.this,"View "+object+" clicked.",Toast.LENGTH_SHORT).show();
-    	//                        }
-    	//                    });
-    	//                }
-    	            }
-    	
-    	@Override
-    	public View onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent) {
-    	
-    	                //Log.e(TAG,"Unknown View "+viewType+" encountered. "+object);
-    	                return null;
-    	            }
-    	        };
-    	builder.setListener(callback);
-    	View view = builder.build((ViewGroup)this.getWindow().getDecorView(),layout); 	// now you have a dynamic view which can be added to decorview
+	View view = builder.build((ViewGroup)this.getWindow().getDecorView(),layout); 	// now you have a dynamic view which can be added to decorview
 
 
 Builder types
@@ -72,3 +47,11 @@ Example :
     LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataParsingLayoutBuilder(MainActivity.this, new GsonProvider(getResponse().getData()),new GsonProvider(getResponse().getViews()));
     builder.build((ViewGroup)MainActivity.this.getWindow().getDecorView(),layout);
 
+
+TODO :
+
+ 1. Example JSON for each builder
+ 2. Example for Callback usage, unknown view handling
+ 3. Example use cases with screenshots of views
+ 4. Primary purpose of the library
+ 5. Sample project compiling
