@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
- * A layout builder which can parse @data and @view blocks before passing it on to {@link com.flipkart.layoutengine.builder.SimpleLayoutBuilder}
+ * A layout builder which can parse @data and @view blocks before passing it on to {@link SimpleLayoutBuilder}
  */
 public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
     private final Provider viewProvider;
