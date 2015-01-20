@@ -74,12 +74,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             Provider oldProvider = context.getDataProvider();
             if(oldProvider!=null) {
                 Provider newProvider = oldProvider.clone();
-                try {
-                    JsonElement newRoot = getElementFromData(dataContextElement,oldProvider, childIndex);
-                    newProvider.setRoot(newRoot);
-                    newContext.setDataProvider(newProvider);
-                    context = newContext;
-                }catch (Exception e){}
+                JsonElement newRoot = getElementFromData(dataContextElement,oldProvider, childIndex);
+                newProvider.setRoot(newRoot);
+                newContext.setDataProvider(newProvider);
+                context = newContext;
 
             }
             else
