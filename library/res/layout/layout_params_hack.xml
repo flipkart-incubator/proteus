@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<view xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/><!-- From: file:/Users/prateek.dixit/Downloads/android-layout-engine/library/src/main/res/layout/layout_params_hack.xml -->

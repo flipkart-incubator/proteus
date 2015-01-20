@@ -41,9 +41,9 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
 
-                        view.setGravity(ParseHelper.parseGravity(attributeValue));
+                view.setGravity(ParseHelper.parseGravity(attributeValue));
 
-                }
+            }
         });
 
         addHandler(Attributes.LinearLayout.Divider , new ResourceReferenceProcessor<T>(context) {

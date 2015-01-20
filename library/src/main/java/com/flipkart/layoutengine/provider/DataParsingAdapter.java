@@ -32,18 +32,18 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, E view) {
-        element = getElementFromData(element);
-        return handler.handleAttribute(context,attribute,element,view);
+    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, E view, int index) {
+        element = getElementFromData(element, index);
+        return handler.handleAttribute(context,attribute, jsonObject, element, view, index);
     }
 
-    private JsonElement getElementFromData(JsonElement element)
+    private JsonElement getElementFromData(JsonElement element, int index)
     {
         if(element.isJsonPrimitive())
         {
             String dataSourceKey = element.getAsString();
             if(dataSourceKey.charAt(0) == PREFIX) {
-                element = dataProvider.getObject(dataSourceKey.substring(1));
+                element = dataProvider.getObject(dataSourceKey.substring(1),index);
             }
         }
         return element;
@@ -70,8 +70,8 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
     }
 
     @Override
-    public JsonArray parseChildren(ParserContext context, JsonElement element) {
-        element = getElementFromData(element);
-        return handler.parseChildren(context, element);
+    public JsonArray parseChildren(ParserContext context, JsonElement element, int index) {
+        element = getElementFromData(element, index);
+        return handler.parseChildren(context, element, index);
     }
 }

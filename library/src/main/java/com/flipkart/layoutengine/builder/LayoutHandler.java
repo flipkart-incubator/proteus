@@ -20,10 +20,10 @@ public interface LayoutHandler<E> {
     public E createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject object);
 
     //ask the handler to handle the attributes of the view it created
-    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, E view);
+    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, E view, int index);
 
     //ask the handler to parse the value of 'children' and return an array of children elements.
-    public JsonArray parseChildren(ParserContext context, JsonElement element);
+    public JsonArray parseChildren(ParserContext context, JsonElement element, int index);
 
 
     public boolean canAddChild();

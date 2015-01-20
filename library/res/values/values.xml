@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/Users/prateek.dixit/Downloads/android-layout-engine/library/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="app_name">Library</string>
+</resources>

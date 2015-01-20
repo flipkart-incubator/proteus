@@ -42,11 +42,8 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 ImageView.ScaleType scaleType = null;
                 scaleType = ParseHelper.parseScaleType(attributeValue);
-                if(scaleType!=null)
-                {
+                if(scaleType != null)
                     view.setScaleType(scaleType);
-                }
-
             }
         });
 

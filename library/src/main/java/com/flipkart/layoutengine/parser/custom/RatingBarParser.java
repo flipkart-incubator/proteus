@@ -2,7 +2,6 @@ package com.flipkart.layoutengine.parser.custom;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;

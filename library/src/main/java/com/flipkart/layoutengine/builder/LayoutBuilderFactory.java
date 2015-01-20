@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.flipkart.layoutengine.parser.ViewParser;
 import com.flipkart.layoutengine.parser.custom.ButtonParser;
+import com.flipkart.layoutengine.parser.custom.CheckBoxParser;
 import com.flipkart.layoutengine.parser.custom.EditTextParser;
 import com.flipkart.layoutengine.parser.custom.FrameLayoutParser;
 import com.flipkart.layoutengine.parser.custom.HorizontalScrollViewParser;
@@ -85,8 +86,7 @@ public class LayoutBuilderFactory {
         ViewPagerParser viewPagerParser = new ViewPagerParser(viewParser);
         WebViewParser webViewParser = new WebViewParser(viewParser);
         RatingBarParser ratingBarParser = new RatingBarParser(viewParser);
-
-
+        CheckBoxParser checkBoxParser = new CheckBoxParser(viewParser);
 
         layoutBuilder.registerHandler("View",viewParser);
         layoutBuilder.registerHandler("RelativeLayout",relativeLayoutParser);
@@ -103,7 +103,7 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("ViewPager",viewPagerParser);
         layoutBuilder.registerHandler("WebView",webViewParser);
         layoutBuilder.registerHandler("RatingBar",ratingBarParser);
-
+        layoutBuilder.registerHandler("CheckBox", checkBoxParser);
 
     }
 

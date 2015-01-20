@@ -1,7 +1,9 @@
 package com.flipkart.layoutengine.parser.custom;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -27,7 +29,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         addHandler(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setText(attributeValue);
+               view.setText(attributeValue);
             }
         });
 
@@ -87,8 +89,48 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
+        addHandler(Attributes.TextView.MaxLines,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                view.setMaxLines(Integer.valueOf(attributeValue));
+            }
+        });
 
+        addHandler(Attributes.TextView.Ellipsize,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                if(attributeValue.equals("end"))
+                    view.setEllipsize(TextUtils.TruncateAt.END);
+                else if(attributeValue.equals("start"))
+                    view.setEllipsize(TextUtils.TruncateAt.START);
+                else if(attributeValue.equals("marquee"))
+                    view.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+                else if(attributeValue.equals("middle"))
+                    view.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+            }
+        });
 
+        addHandler(Attributes.TextView.PaintFlags,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                if(attributeValue.equals("strike"))
+                    view.setPaintFlags(view.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+        });
+
+        addHandler(Attributes.TextView.Prefix,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                    view.setText(attributeValue + view.getText());
+            }
+        });
+
+        addHandler(Attributes.TextView.Suffix,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                view.setText(view.getText() + attributeValue);
+            }
+        });
 
     }
 }

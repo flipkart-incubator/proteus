@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kirankumar on 16/07/14.
@@ -26,11 +27,11 @@ public class WrappableParser<T extends View> extends Parser<T> {
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, T view) {
-        boolean handled = super.handleAttribute(context, attribute, element, view);
+    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, T view, int index) {
+        boolean handled = super.handleAttribute(context, attribute, jsonObject, element, view,index );
         if(wrappedParser!=null && !handled)
         {
-            handled = handled || wrappedParser.handleAttribute(context,attribute,element,view);
+            handled = handled || wrappedParser.handleAttribute(context, attribute, jsonObject, element, view, index);
         }
 
         return handled;

@@ -105,7 +105,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, T view) {
+    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, T view, int index) {
         AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
             attributeProcessor.handle(context, attribute, element, view);
@@ -136,7 +136,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     }
 
     @Override
-    public JsonArray parseChildren(ParserContext context, JsonElement element) {
+    public JsonArray parseChildren(ParserContext context, JsonElement element, int index) {
         return element.getAsJsonArray();
     }
 

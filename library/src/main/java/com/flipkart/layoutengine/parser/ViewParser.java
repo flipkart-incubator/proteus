@@ -216,8 +216,6 @@ public class ViewParser<T extends View> extends Parser<T> {
             }
         });
 
-
-
         addHandler(Attributes.View.Visibility, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
@@ -258,36 +256,37 @@ public class ViewParser<T extends View> extends Parser<T> {
         });
 
         final HashMap<String, Integer> relativeLayoutParams = new HashMap<String, Integer>();
-        relativeLayoutParams.put("above", RelativeLayout.ABOVE);
-        relativeLayoutParams.put("alignBaseline", RelativeLayout.ALIGN_BASELINE);
-        relativeLayoutParams.put("alignBottom", RelativeLayout.ALIGN_BOTTOM);
-        relativeLayoutParams.put("alignEnd", RelativeLayout.ALIGN_END);
-        relativeLayoutParams.put("alignLeft", RelativeLayout.ALIGN_LEFT);
-        relativeLayoutParams.put("layout_alignParentBottom", RelativeLayout.ALIGN_PARENT_BOTTOM);
-        relativeLayoutParams.put("layout_alignParentEnd", RelativeLayout.ALIGN_PARENT_END);
-        relativeLayoutParams.put("layout_alignParentLeft", RelativeLayout.ALIGN_PARENT_LEFT);
-        relativeLayoutParams.put("layout_alignParentRight", RelativeLayout.ALIGN_PARENT_RIGHT);
-        relativeLayoutParams.put("layout_alignParentStart", RelativeLayout.ALIGN_PARENT_START);
-        relativeLayoutParams.put("layout_alignParentTop", RelativeLayout.ALIGN_PARENT_TOP);
-        relativeLayoutParams.put("alignRight", RelativeLayout.ALIGN_RIGHT);
-        relativeLayoutParams.put("alignStart", RelativeLayout.ALIGN_START);
-        relativeLayoutParams.put("alignTop", RelativeLayout.ALIGN_TOP);
+        relativeLayoutParams.put(Attributes.View.Above.getName(), RelativeLayout.ABOVE);
+        relativeLayoutParams.put(Attributes.View.AlignBaseline.getName(), RelativeLayout.ALIGN_BASELINE);
+        relativeLayoutParams.put(Attributes.View.AlignBottom.getName(), RelativeLayout.ALIGN_BOTTOM);
+        relativeLayoutParams.put(Attributes.View.AlignEnd.getName(), RelativeLayout.ALIGN_END);
+        relativeLayoutParams.put(Attributes.View.AlignLeft.getName(), RelativeLayout.ALIGN_LEFT);
+        relativeLayoutParams.put(Attributes.View.AlignParentBottom.getName(), RelativeLayout.ALIGN_PARENT_BOTTOM);
+        relativeLayoutParams.put(Attributes.View.AlignParentEnd.getName(), RelativeLayout.ALIGN_PARENT_END);
+        relativeLayoutParams.put(Attributes.View.AlignParentLeft.getName(), RelativeLayout.ALIGN_PARENT_LEFT);
+        relativeLayoutParams.put(Attributes.View.AlignParentRight.getName(), RelativeLayout.ALIGN_PARENT_RIGHT);
+        relativeLayoutParams.put(Attributes.View.AlignParentStart.getName(), RelativeLayout.ALIGN_PARENT_START);
+        relativeLayoutParams.put(Attributes.View.AlignParentTop.getName(), RelativeLayout.ALIGN_PARENT_TOP);
+        relativeLayoutParams.put(Attributes.View.AlignRight.getName(), RelativeLayout.ALIGN_RIGHT);
+        relativeLayoutParams.put(Attributes.View.AlignStart.getName(), RelativeLayout.ALIGN_START);
+        relativeLayoutParams.put(Attributes.View.AlignTop.getName(), RelativeLayout.ALIGN_TOP);
         //relativeLayoutParams.put("alignWithParentIfMissing",RelativeLayout.ALIGN_PARENT_IF_MISSING); // not supported as rule
-        relativeLayoutParams.put("below", RelativeLayout.BELOW);
-        relativeLayoutParams.put("layout_centerHorizontal", RelativeLayout.CENTER_HORIZONTAL);
-        relativeLayoutParams.put("layout_centerInParent", RelativeLayout.CENTER_IN_PARENT);
-        relativeLayoutParams.put("layout_centerVertical", RelativeLayout.CENTER_VERTICAL);
-        relativeLayoutParams.put("toEndOf", RelativeLayout.END_OF);
-        relativeLayoutParams.put("toLeftOf", RelativeLayout.LEFT_OF);
-        relativeLayoutParams.put("toRightOf", RelativeLayout.RIGHT_OF);
-        relativeLayoutParams.put("toStartOf", RelativeLayout.START_OF);
+        relativeLayoutParams.put(Attributes.View.Below.getName(), RelativeLayout.BELOW);
+        relativeLayoutParams.put(Attributes.View.CenterHorizontal.getName(), RelativeLayout.CENTER_HORIZONTAL);
+        relativeLayoutParams.put(Attributes.View.CenterInParent.getName(), RelativeLayout.CENTER_IN_PARENT);
+        relativeLayoutParams.put(Attributes.View.CenterVertical.getName(), RelativeLayout.CENTER_VERTICAL);
+        relativeLayoutParams.put(Attributes.View.ToEndOf.getName(), RelativeLayout.END_OF);
+        relativeLayoutParams.put(Attributes.View.ToLeftOf.getName(), RelativeLayout.LEFT_OF);
+        relativeLayoutParams.put(Attributes.View.ToRightOf.getName(), RelativeLayout.RIGHT_OF);
+        relativeLayoutParams.put(Attributes.View.ToStartOf.getName(), RelativeLayout.START_OF);
 
 
         StringAttributeProcessor<T> relativeLayoutProcessor = new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                Integer id = ParseHelper.parseId(attributeValue);
-                ParseHelper.addRelativeLayoutRule(view, relativeLayoutParams.get(attributeKey), id);
+                int id = IdGenerator.getInstance().getUnique(attributeValue);
+                Integer rule = relativeLayoutParams.get(attributeKey);
+                ParseHelper.addRelativeLayoutRule(view, rule, id);
             }
         };
 

@@ -27,21 +27,14 @@ public class GsonProvider implements Provider {
     }
 
     @Override
-    public JsonElement getObject(String key) {
-        return getFromObject(key);
+    public JsonElement getObject(String key, int index) {
+        return getFromObject(key, index);
     }
 
     // TODO : Fix this method for performance.
-    private JsonElement getFromObject(String path) {
+    private JsonElement getFromObject(String path, int ind) {
         JsonElement jObj = this.obj;
-        if(previousObj.path!=null)
-        {
-            if(path.startsWith(previousObj.path))
-            {
-                jObj = previousObj.object;
-                path = path.substring(previousObj.path.length());
-            }
-        }
+
         String[] split = path.split("\\.");
         JsonElement el = null;
 
@@ -51,6 +44,7 @@ public class GsonProvider implements Provider {
             if(']'==lastChar){
                 while (']'==lastChar) {
                     String index = e.substring(e.lastIndexOf('[')+1, e.length()-1);
+                    if(index.equals(""))index = String.valueOf(ind);
                     Integer iindex = Integer.valueOf(index);
                     e = e.substring(0,e.lastIndexOf('['));
                     if("".equals(e)){
@@ -67,6 +61,7 @@ public class GsonProvider implements Provider {
                         // if next is object
                         if(lastChar!=']'){
                             if(el==null){
+                                if(jObj.getAsJsonObject().get(e) == null)return jObj.getAsJsonObject();
                                 el = jObj.getAsJsonObject().get(e).getAsJsonArray().get(iindex);
                             } else {
                                 if(el.isJsonObject()){

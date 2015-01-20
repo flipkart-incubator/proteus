@@ -1,8 +1,7 @@
 package com.flipkart.layoutengine.parser;
 
 /**
- * A placeholder for all attributes supported by the engine.
- * When implementing a custom parser, create a class which extends this class and add them there.
+ * Created by kirankumar on 20/11/14.
  */
 public class Attributes {
 
@@ -20,8 +19,23 @@ public class Attributes {
          * @newAttr weight
          */
         public static Attribute Weight = new Attribute("layout_weight");
+
+        /**
+         * @origAttr width
+         * @newAttr width
+         */
         public static Attribute Width = new Attribute("layout_width");
+
+        /**
+         * @origAttr background
+         * @newAttr background
+         */
         public static Attribute Background = new Attribute("background");
+
+        /**
+         * @origAttr height
+         * @newAttr height
+         */
         public static Attribute Height = new Attribute("layout_height");
         public static Attribute LayoutGravity = new Attribute("layout_gravity");
         public static Attribute Gravity = new Attribute("gravity");
@@ -39,19 +53,19 @@ public class Attributes {
         public static Attribute Visibility = new Attribute("visibility");
         public static Attribute Id = new Attribute("id");
         public static Attribute Tag = new Attribute("tag");
-        public static Attribute Above = new Attribute("above");
-        public static Attribute AlignBaseline = new Attribute("alignBaseline");
-        public static Attribute AlignBottom = new Attribute("alignBottom");
-        public static Attribute AlignEnd = new Attribute("alignEnd");
-        public static Attribute AlignLeft = new Attribute("alignLeft");
-        public static Attribute AlignRight = new Attribute("alignRight");
-        public static Attribute AlignStart = new Attribute("alignStart");
-        public static Attribute AlignTop = new Attribute("alignTop");
-        public static Attribute Below = new Attribute("below");
-        public static Attribute ToEndOf = new Attribute("toEndOf");
-        public static Attribute ToLeftOf = new Attribute("toLeftOf");
-        public static Attribute ToRightOf = new Attribute("toRightOf");
-        public static Attribute ToStartOf = new Attribute("toStartOf");
+        public static Attribute Above = new Attribute("layout_above");
+        public static Attribute AlignBaseline = new Attribute("layout_alignBaseline");
+        public static Attribute AlignBottom = new Attribute("layout_alignBottom");
+        public static Attribute AlignEnd = new Attribute("layout_alignEnd");
+        public static Attribute AlignLeft = new Attribute("layout_alignLeft");
+        public static Attribute AlignRight = new Attribute("layout_alignRight");
+        public static Attribute AlignStart = new Attribute("layout_alignStart");
+        public static Attribute AlignTop = new Attribute("layout_alignTop");
+        public static Attribute Below = new Attribute("layout_below");
+        public static Attribute ToEndOf = new Attribute("layout_toEndOf");
+        public static Attribute ToLeftOf = new Attribute("layout_toLeftOf");
+        public static Attribute ToRightOf = new Attribute("layout_toRightOf");
+        public static Attribute ToStartOf = new Attribute("layout_toStartOf");
         public static Attribute AlignParentBottom = new Attribute("layout_alignParentBottom");
         public static Attribute AlignParentEnd = new Attribute("layout_alignParentEnd");
         public static Attribute AlignParentLeft = new Attribute("layout_alignParentLeft");
@@ -63,6 +77,7 @@ public class Attributes {
         public static Attribute CenterVertical = new Attribute("layout_centerVertical");
         public static Attribute ContentDescription = new Attribute("contentDescription");
         public static Attribute Clickable = new Attribute("clickable");
+
     }
 
     public static class RatingBar {
@@ -72,6 +87,7 @@ public class Attributes {
         public static Attribute StepSize = new Attribute("stepSize");
         public static Attribute ProgressDrawable = new Attribute("progressDrawable");
         public static Attribute MinHeight = new Attribute("minHeight");
+        public static Attribute MaxHeight = new Attribute("maxHeight");
     }
         public static class TextView {
         public static Attribute Gravity = new Attribute("gravity");
@@ -83,6 +99,19 @@ public class Attributes {
         public static Attribute DrawableTop = new Attribute("drawableTop");
         public static Attribute DrawableBottom = new Attribute("drawableBottom");
         public static Attribute DrawablePadding = new Attribute("drawablePadding");
+        public static Attribute MaxLines = new Attribute("maxLines");
+        public static Attribute Ellipsize = new Attribute("ellipsize");
+        public static Attribute PaintFlags = new Attribute("paintFlags");
+        public static Attribute Prefix = new Attribute("prefix");
+        public static Attribute Suffix = new Attribute("suffix");
+
+    }
+
+    public static class CheckBox {
+        public static Attribute Text = new Attribute("text");
+        public static Attribute TextColor = new Attribute("textColor");
+        public static Attribute Button = new Attribute("button");
+        public static Attribute Checked = new Attribute("checked");
     }
 
     public static class FrameLayout {
@@ -108,6 +137,9 @@ public class Attributes {
         public static Attribute ImageUrl = new Attribute("imageUrl");
     }
 
+    public static class HorizontalScrollView {
+        public static Attribute FillViewPort = new Attribute("fillViewPort");
+    }
 
     public static class Attribute {
         private String name;
