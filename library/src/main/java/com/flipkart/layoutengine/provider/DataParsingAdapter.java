@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.builder.LayoutHandler;
+import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

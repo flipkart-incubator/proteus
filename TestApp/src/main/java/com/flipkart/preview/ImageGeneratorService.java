@@ -17,9 +17,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
+import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
-import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
-import com.flipkart.layoutengine.builder.SimpleLayoutBuilder;
 import com.flipkart.networking.API;
 import com.flipkart.networking.request.BaseRequest;
 import com.flipkart.networking.request.BitmapUploadRequest;
@@ -39,7 +39,7 @@ import java.io.StringWriter;
  */
 public class ImageGeneratorService extends Service {
     private Handler handler;
-    private SimpleLayoutBuilder builder;
+    private LayoutBuilder builder;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -49,7 +49,7 @@ public class ImageGeneratorService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handler = new Handler();
-        builder = LayoutBuilderFactory.createSimpleLayoutBuilder(getBaseContext());
+        builder = new DefaultLayoutBuilderFactory().createSimpleLayoutBuilder(getBaseContext());
         builder.setSynchronousRendering(true);
         startPollingServer(intent);
         return Service.START_STICKY;

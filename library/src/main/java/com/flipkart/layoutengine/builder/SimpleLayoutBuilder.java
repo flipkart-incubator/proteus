@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,7 +20,7 @@ import java.util.Map;
 /**
  * A layout builder which can parse json to construct an android view out of it. It uses the registered handlers to convert the json string to a view and then assign attributes.
  */
-public class SimpleLayoutBuilder {
+public class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected static final String TAG = SimpleLayoutBuilder.class.getSimpleName();
 
@@ -44,7 +45,8 @@ public class SimpleLayoutBuilder {
      * @param viewType The string value for "view" attribute.
      * @param handler The handler which should handle this view.
      */
-    public void registerHandler(String viewType,LayoutHandler handler)
+    @Override
+    public void registerHandler(String viewType, LayoutHandler handler)
     {
         handler.prepare(context);
         layoutHandlers.put(viewType, handler);
@@ -55,6 +57,7 @@ public class SimpleLayoutBuilder {
      * Unregisters the specified view type.
      * @param viewType The string value for "view" attribute.
      */
+    @Override
     public void unregisterHandler(String viewType)
     {
         layoutHandlers.remove(viewType);
@@ -63,12 +66,22 @@ public class SimpleLayoutBuilder {
     /**
      * Unregisters all handlers.
      */
+    @Override
     public void unregisterAllHandlers()
     {
         layoutHandlers.clear();
     }
 
-
+    /**
+     * Get the handler registered with the supplied view type
+     * @param viewType
+     * @return
+     */
+    @Override
+    public LayoutHandler getHandler(String viewType)
+    {
+        return layoutHandlers.get(viewType);
+    }
 
     private Context context;
 
@@ -76,6 +89,7 @@ public class SimpleLayoutBuilder {
         this.context = context;
     }
 
+    @Override
     public View build(ViewGroup parent, JsonObject jsonObject)
     {
         return buildImpl(createParserContext(), parent, jsonObject, null , 0);
@@ -234,10 +248,12 @@ public class SimpleLayoutBuilder {
 
 
 
+    @Override
     public LayoutBuilderCallback getListener() {
         return listener;
     }
 
+    @Override
     public void setListener(LayoutBuilderCallback listener) {
         this.listener = listener;
     }
@@ -248,10 +264,12 @@ public class SimpleLayoutBuilder {
      * @return true if the all views should be rendered immediately.
      *
      */
+    @Override
     public boolean isSynchronousRendering() {
         return isSynchronousRendering;
     }
 
+    @Override
     public void setSynchronousRendering(boolean isSynchronousRendering) {
         this.isSynchronousRendering = isSynchronousRendering;
     }
