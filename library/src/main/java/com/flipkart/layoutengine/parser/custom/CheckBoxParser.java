@@ -6,7 +6,6 @@ import android.widget.CheckBox;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
-import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
@@ -24,19 +23,6 @@ public class CheckBoxParser <T extends CheckBox> extends WrappableParser<T> {
     @Override
     protected void prepareHandlers(Context context) {
         super.prepareHandlers(context);
-        addHandler(Attributes.CheckBox.Text, new StringAttributeProcessor<T>() {
-            @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setText(attributeValue);
-            }
-        });
-
-        addHandler(Attributes.TextView.TextColor, new StringAttributeProcessor<T>() {
-            @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setTextColor(ParseHelper.parseColor(attributeValue));
-            }
-        });
 
         addHandler(Attributes.CheckBox.Button , new ResourceReferenceProcessor<T>(context) {
             @Override

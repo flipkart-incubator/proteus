@@ -109,9 +109,10 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
      * @param parent The parent view group under which the view being created has to be added as a child.
      * @param jsonObject The jsonObject which represents the current node which is getting parsed.
      * @param existingView A view which needs to be used instead of creating a new one. Pass null for first pass.
+     * @param childIndex index of child inside its parent view
      * @return
      */
-    protected View buildImpl(final ParserContext context, final ViewGroup parent, final JsonObject jsonObject, View existingView , final int index)
+    protected View buildImpl(final ParserContext context, final ViewGroup parent, final JsonObject jsonObject, View existingView , final int childIndex)
     {
         JsonElement viewTypeElement = jsonObject.get(TYPE);
         //System.out.println("ViewType "+ viewTypeElement.getAsString());
@@ -129,7 +130,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         LayoutHandler<View> handler = layoutHandlers.get(viewType);
         if(handler == null)
         {
-            return onUnknownViewEncountered(context,viewType,parent,jsonObject,index);
+            return onUnknownViewEncountered(context,viewType,parent,jsonObject,childIndex);
         }
 
 
@@ -138,7 +139,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         JsonElement childrenElement = jsonObject.get(CHILDREN);
         JsonArray children = null;
         if(childrenElement!=null) {
-            children = parseChildren(handler,context,childrenElement,index);
+            children = parseChildren(handler,context,childrenElement,childIndex);
         }
 
         /**
@@ -163,11 +164,11 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             {
                 continue;
             }
-            boolean handled = handleAttribute(handler,context,entry.getKey(),jsonObject,entry.getValue(),self,parent, index);
+            boolean handled = handleAttribute(handler,context,entry.getKey(),jsonObject,entry.getValue(),self,parent, childIndex);
 
             if(!handled)
             {
-                onUnknownAttributeEncountered(context, entry.getKey(), entry.getValue(), jsonObject, self , index);
+                onUnknownAttributeEncountered(context, entry.getKey(), entry.getValue(), jsonObject, self , childIndex);
             }
         }
 
@@ -201,7 +202,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             self.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onClickView(context, finalViewType, jsonObject, self, parent, index);
+                    listener.onClickView(context, finalViewType, jsonObject, self, parent, childIndex);
                 }
             });
         }
@@ -210,9 +211,9 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     }
 
-    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int index)
+    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex)
     {
-        return handler.parseChildren(context,childrenElement,index);
+        return handler.parseChildren(context,childrenElement,childIndex);
     }
 
     protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int index)
@@ -220,19 +221,19 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         return handler.handleAttribute(context, attribute, jsonObject , element, view, index);
     }
 
-    protected void onUnknownAttributeEncountered(ParserContext context, String attribute, JsonElement element, JsonObject object, View view , int index)
+    protected void onUnknownAttributeEncountered(ParserContext context, String attribute, JsonElement element, JsonObject object, View view , int childIndex)
     {
         if(listener!=null)
         {
-            listener.onUnknownAttribute(context,attribute,element, object, view, index);
+            listener.onUnknownAttribute(context,attribute,element, object, view, childIndex);
         }
     }
 
-    protected View onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject, int index) {
+    protected View onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject, int childIndex) {
 
         if(listener!=null)
         {
-            return listener.onUnknownViewType(context,viewType,jsonObject,parent,index);
+            return listener.onUnknownViewType(context,viewType,jsonObject,parent,childIndex);
         }
         return null;
     }

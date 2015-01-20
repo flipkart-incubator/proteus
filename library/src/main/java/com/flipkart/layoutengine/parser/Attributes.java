@@ -108,10 +108,8 @@ public class Attributes {
     }
 
     public static class CheckBox {
-        public static Attribute Text = new Attribute("text");
-        public static Attribute TextColor = new Attribute("textColor");
-        public static Attribute Button = new Attribute("button");
         public static Attribute Checked = new Attribute("checked");
+        public static Attribute Button = new Attribute("button");
     }
 
     public static class FrameLayout {

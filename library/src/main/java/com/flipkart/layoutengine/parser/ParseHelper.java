@@ -3,12 +3,14 @@ package com.flipkart.layoutengine.parser;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.google.gson.JsonElement;
@@ -48,12 +50,48 @@ public class ParseHelper {
                 gravityValue = Gravity.TOP;
             } else if ("bottom".equals(gravity)) {
                 gravityValue = Gravity.BOTTOM;
+            }else if ("start".equals(gravity)) {
+                gravityValue = Gravity.START;
+            }else if ("end".equals(gravity)) {
+                gravityValue = Gravity.END;
             }
+
             returnGravity |= gravityValue;
         }
 
 
         return returnGravity;
+    }
+
+    public static int parseDividerMode(String attributeValue){
+
+        int returnValue = LinearLayout.SHOW_DIVIDER_NONE;
+        if(attributeValue.equals("end")){
+            returnValue = LinearLayout.SHOW_DIVIDER_END;
+        }else if(attributeValue.equals("middle")){
+            returnValue = LinearLayout.SHOW_DIVIDER_MIDDLE;
+        }else if(attributeValue.equals("beginning")){
+            returnValue = LinearLayout.SHOW_DIVIDER_BEGINNING;
+        }else{
+            returnValue = LinearLayout.SHOW_DIVIDER_NONE;
+        }
+
+        return returnValue;
+    }
+
+    public static Enum parseEllipsize(String attributeValue){
+        Enum returnValue = TextUtils.TruncateAt.END;
+
+        if(attributeValue.equals("end"))
+           returnValue = TextUtils.TruncateAt.END;
+        else if(attributeValue.equals("start"))
+           returnValue = TextUtils.TruncateAt.START;
+        else if(attributeValue.equals("marquee"))
+            returnValue = TextUtils.TruncateAt.MARQUEE;
+        else if(attributeValue.equals("middle"))
+            returnValue = TextUtils.TruncateAt.MIDDLE;
+
+        return returnValue;
     }
 
     public static int parseVisibility(String attributeValue) {

@@ -66,15 +66,9 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             @SuppressLint("NewApi")
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                if(attributeValue.equals("end")){
-                    view.setShowDividers(LinearLayout.SHOW_DIVIDER_END);
-                }else if(attributeValue.equals("middle")){
-                    view.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-                }else if(attributeValue.equals("beginning")){
-                    view.setShowDividers(LinearLayout.SHOW_DIVIDER_BEGINNING);
-                }else{
-                    view.setShowDividers(LinearLayout.SHOW_DIVIDER_NONE);
-                }
+
+                int dividerMode = ParseHelper.parseDividerMode(attributeValue);
+                view.setShowDividers(dividerMode);
             }
         });
     }

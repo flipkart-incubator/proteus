@@ -3,7 +3,6 @@ package com.flipkart.layoutengine.parser.custom;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -99,14 +98,8 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         addHandler(Attributes.TextView.Ellipsize,new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                if(attributeValue.equals("end"))
-                    view.setEllipsize(TextUtils.TruncateAt.END);
-                else if(attributeValue.equals("start"))
-                    view.setEllipsize(TextUtils.TruncateAt.START);
-                else if(attributeValue.equals("marquee"))
-                    view.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-                else if(attributeValue.equals("middle"))
-                    view.setEllipsize(TextUtils.TruncateAt.MIDDLE);
+                Enum ellipsize = ParseHelper.parseEllipsize(attributeValue);
+                view.setEllipsize((android.text.TextUtils.TruncateAt) ellipsize);
             }
         });
 

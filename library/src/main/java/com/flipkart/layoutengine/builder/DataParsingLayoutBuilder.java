@@ -32,10 +32,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attributeKey, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int index) {
+    protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attributeKey, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int childIndex) {
         if(element.isJsonPrimitive()) {
             String attributeValue = element.getAsString();
-            JsonElement elementFromData = getElementFromData(element, context.getDataProvider(), index);
+            JsonElement elementFromData = getElementFromData(element, context.getDataProvider(), childIndex);
             if (elementFromData != null) {
                 Binding binding = new Binding(context, attributeKey, attributeValue, view, parent);
                 element = elementFromData;
@@ -43,14 +43,14 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 bindings.put(attributeValue, binding);
             }
         }
-        return super.handleAttribute(handler, context, attributeKey, jsonObject, element, view, parent, index);
+        return super.handleAttribute(handler, context, attributeKey, jsonObject, element, view, parent, childIndex);
 
     }
 
     @Override
-    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int index) {
-        childrenElement = getElementFromData(childrenElement, context.getDataProvider(), index);
-        return super.parseChildren(handler, context, childrenElement, index);
+    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
+        childrenElement = getElementFromData(childrenElement, context.getDataProvider(), childIndex);
+        return super.parseChildren(handler, context, childrenElement, childIndex);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected View buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject, View existingView, int index) {
+    protected View buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject, View existingView, int childIndex) {
         JsonElement dataContextElement = jsonObject.get("dataContext");
         if(dataContextElement!=null)
         {
@@ -75,7 +75,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             if(oldProvider!=null) {
                 Provider newProvider = oldProvider.clone();
                 try {
-                    JsonElement newRoot = getElementFromData(dataContextElement,oldProvider, index);
+                    JsonElement newRoot = getElementFromData(dataContextElement,oldProvider, childIndex);
                     newProvider.setRoot(newRoot);
                     newContext.setDataProvider(newProvider);
                     context = newContext;
@@ -88,18 +88,18 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             }
 
         }
-        View view = super.buildImpl(context, parent, jsonObject, existingView, index);
+        View view = super.buildImpl(context, parent, jsonObject, existingView, childIndex);
         return view;
     }
 
 
-    private JsonElement getElementFromData(JsonElement element, Provider dataProvider, int index)
+    private JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex)
     {
         if(element.isJsonPrimitive())
         {
             String dataSourceKey = element.getAsString();
             if(dataSourceKey.length()>0 && dataSourceKey.charAt(0) == PREFIX) {
-                JsonElement tempElement = dataProvider.getObject(dataSourceKey.substring(1), index);
+                JsonElement tempElement = dataProvider.getObject(dataSourceKey.substring(1), childIndex);
                 if(tempElement !=null)
                 {
                     element = tempElement;
