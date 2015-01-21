@@ -27,12 +27,12 @@ public class GsonProvider implements Provider {
     }
 
     @Override
-    public JsonElement getObject(String key, int index) {
-        return getFromObject(key, index);
+    public JsonElement getObject(String key, int childIndex) {
+        return getFromObject(key, childIndex);
     }
 
     // TODO : Fix this method for performance.
-    private JsonElement getFromObject(String path, int ind) {
+    private JsonElement getFromObject(String path, int childIndex) {
         JsonElement jObj = this.obj;
 
         String[] split = path.split("\\.");
@@ -44,7 +44,7 @@ public class GsonProvider implements Provider {
             if(']'==lastChar){
                 while (']'==lastChar) {
                     String index = e.substring(e.lastIndexOf('[')+1, e.length()-1);
-                    if(index.equals(""))index = String.valueOf(ind);
+                    if(index.equals(""))index = String.valueOf(childIndex);
                     Integer iindex = Integer.valueOf(index);
                     e = e.substring(0,e.lastIndexOf('['));
                     if("".equals(e)){
