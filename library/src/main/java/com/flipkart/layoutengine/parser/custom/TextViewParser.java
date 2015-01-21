@@ -1,6 +1,7 @@
 package com.flipkart.layoutengine.parser.custom;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.widget.TextView;
 
@@ -27,7 +28,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         addHandler(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setText(attributeValue);
+               view.setText(attributeValue);
             }
         });
 
@@ -87,8 +88,42 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
+        addHandler(Attributes.TextView.MaxLines,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                view.setMaxLines(Integer.valueOf(attributeValue));
+            }
+        });
 
+        addHandler(Attributes.TextView.Ellipsize,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                Enum ellipsize = ParseHelper.parseEllipsize(attributeValue);
+                view.setEllipsize((android.text.TextUtils.TruncateAt) ellipsize);
+            }
+        });
 
+        addHandler(Attributes.TextView.PaintFlags,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                if(attributeValue.equals("strike"))
+                    view.setPaintFlags(view.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+        });
+
+        addHandler(Attributes.TextView.Prefix,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                    view.setText(attributeValue + view.getText());
+            }
+        });
+
+        addHandler(Attributes.TextView.Suffix,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                view.setText(view.getText() + attributeValue);
+            }
+        });
 
     }
 }

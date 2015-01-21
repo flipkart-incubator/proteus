@@ -22,14 +22,14 @@ public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected View onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject) {
-        JsonElement jsonElement = viewProvider.getObject(viewType);
+    protected View onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject, int childIndex) {
+        JsonElement jsonElement = viewProvider.getObject(viewType, childIndex);
         if(jsonElement!=null)
         {
-            return buildImpl(context, parent,jsonElement.getAsJsonObject(), null);
+            return buildImpl(context, parent,jsonElement.getAsJsonObject(), null , childIndex);
         }
         else {
-            return super.onUnknownViewEncountered(context, viewType, parent, jsonObject);
+            return super.onUnknownViewEncountered(context, viewType, parent, jsonObject, childIndex);
         }
     }
 }

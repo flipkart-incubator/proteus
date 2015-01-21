@@ -1,6 +1,8 @@
 package com.flipkart.layoutengine.parser.custom;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.widget.LinearLayout;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -8,6 +10,7 @@ import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
+import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 
 /**
@@ -38,12 +41,35 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
 
-                        view.setGravity(ParseHelper.parseGravity(attributeValue));
+                view.setGravity(ParseHelper.parseGravity(attributeValue));
 
+            }
+        });
 
-                }
+        addHandler(Attributes.LinearLayout.Divider , new ResourceReferenceProcessor<T>(context) {
+            @SuppressLint("NewApi")
+            @Override
+            public void setDrawable(T view, Drawable drawable) {
+                view.setDividerDrawable(drawable);
+            }
+        });
 
+        addHandler(Attributes.LinearLayout.DividerPadding,new StringAttributeProcessor<T>() {
+            @SuppressLint("NewApi")
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                view.setDividerPadding(Integer.parseInt(attributeValue));
+            }
+        });
 
+        addHandler(Attributes.LinearLayout.ShowDividers,new StringAttributeProcessor<T>() 	{
+            @SuppressLint("NewApi")
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+
+                int dividerMode = ParseHelper.parseDividerMode(attributeValue);
+                view.setShowDividers(dividerMode);
+            }
         });
     }
 }
