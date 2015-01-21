@@ -106,7 +106,7 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element, JsonObject object, View view, int childIndex) {
-                
+
             }
 
             @Override
