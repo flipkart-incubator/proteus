@@ -197,17 +197,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             }
         }
 
-        final String finalViewType = viewType;
-        if(self.isClickable()) {
-            self.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onClickView(context, finalViewType, jsonObject, self, parent, childIndex);
-                }
-            });
-        }
         return self;
-
 
     }
 

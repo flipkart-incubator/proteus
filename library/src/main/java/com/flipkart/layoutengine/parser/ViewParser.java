@@ -9,10 +9,13 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
+import com.google.gson.JsonElement;
 import com.nineoldandroids.view.ViewHelper;
 
 import java.util.HashMap;
@@ -31,9 +34,19 @@ public class ViewParser<T extends View> extends Parser<T> {
         super(viewClass);
     }
 
-
     protected void prepareHandlers(final Context context) {
 
+        addHandler(Attributes.View.OnClick , new EventProcessor<T>(context) {
+            @Override
+            public void setOnEventListener(final T view, final ParserContext parserContext, final JsonElement attribueValue) {
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                          fireEvent(view, parserContext, EventType.OnClick, attribueValue);
+                    }
+                });
+            }
+        });
 
         addHandler(Attributes.View.Background, new ResourceReferenceProcessor<T>(context) {
             @Override
@@ -99,8 +112,6 @@ public class ViewParser<T extends View> extends Parser<T> {
 
             }
         });
-
-
 
         addHandler(Attributes.View.Padding, new StringAttributeProcessor<T>() {
             @Override

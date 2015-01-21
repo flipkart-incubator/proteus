@@ -77,6 +77,7 @@ public class Attributes {
         public static Attribute CenterVertical = new Attribute("layout_centerVertical");
         public static Attribute ContentDescription = new Attribute("contentDescription");
         public static Attribute Clickable = new Attribute("clickable");
+        public static Attribute OnClick = new Attribute("onClick");
 
     }
 

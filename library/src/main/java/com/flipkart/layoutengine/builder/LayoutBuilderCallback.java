@@ -3,6 +3,7 @@ package com.flipkart.layoutengine.builder;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,10 +37,8 @@ public interface LayoutBuilderCallback {
     /**
       called when any click occurs on views
     * @param context ParserContext for current parsed view
-    *@param viewType type of view that is being parsed
-    * @param object corresponding JsonObject for the parsed attribute
-    * @param childIndex child index
+    *@param view
     */
-    public View onClickView(ParserContext context, String viewType, JsonObject object,View view , ViewGroup parent, int childIndex);
+    public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType);
 
 }
