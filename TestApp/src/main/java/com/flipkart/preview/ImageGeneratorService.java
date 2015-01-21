@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
@@ -105,14 +106,19 @@ public class ImageGeneratorService extends Service {
         frameLayout.setBackgroundColor(Color.WHITE);
 
         builder.setListener(new LayoutBuilderCallback() {
+
             @Override
-            public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element, JsonObject object, View view) {
-                System.out.println("onUnknownAttribute: context = [" + context + "], attribute = [" + attribute + "], element = [" + element + "], object = [" + object + "], view = [" + view + "]");
+            public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element, JsonObject object, View view, int childIndex) {
+
             }
 
             @Override
-            public View onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent) {
-                System.out.println("onUnknownViewType: context = [" + context + "], viewType = [" + viewType + "], object = [" + object + "], parent = [" + parent + "]");
+            public View onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent, int childIndex) {
+                return null;
+            }
+
+            @Override
+            public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType) {
                 return null;
             }
         });
