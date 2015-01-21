@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
@@ -102,24 +103,19 @@ public class MainActivity extends ActionBarActivity {
     private LayoutBuilderCallback createCallback()
     {
         return new LayoutBuilderCallback() {
+
             @Override
-            public void onUnknownAttribute(ParserContext context, String attribute, final JsonElement element, final JsonObject object, View view) {
-//                Log.d(TAG,"Unknown attribute "+attribute+" encountered for "+object);
-//                if("onclick".equals(attribute))
-//                {
-//                    view.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                           Toast.makeText(MainActivity.this,"View "+object+" clicked.",Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
-//                }
+            public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element, JsonObject object, View view, int childIndex) {
+                
             }
 
             @Override
-            public View onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent) {
+            public View onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent, int childIndex) {
+                return null;
+            }
 
-                //Log.e(TAG,"Unknown View "+viewType+" encountered. "+object);
+            @Override
+            public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType) {
                 return null;
             }
         };
