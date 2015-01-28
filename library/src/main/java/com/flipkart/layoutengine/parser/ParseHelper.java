@@ -314,10 +314,9 @@ public class ParseHelper {
 
     /**
      * Parses a single layer item (represented by {@param child) inside a layer list and gives a pair of android:id and a string for the drawable path
-     *
      * @param child
      * @return
-     */
+     **/
     public static Pair<Integer, String> parseLayer(JsonObject child) {
 
         JsonElement id = child.get("id");
@@ -338,6 +337,11 @@ public class ParseHelper {
         return new Pair<Integer, String>(androidResIdByXmlResId, drawable);
     }
 
+    /**
+     * Parses a image view scale type
+     * @param attributeValue
+     * @return
+     */
     public static ImageView.ScaleType parseScaleType(String attributeValue) {
         ImageView.ScaleType type = null;
         if (attributeValue != null) {
@@ -359,5 +363,19 @@ public class ParseHelper {
         return type;
     }
 
+    /**
+     * parses textview typeface
+     * @param attributeValue
+     * @return
+     */
+    public static int parseTypeFace(String attributeValue) {
+        int typeface = 0;
+        if (attributeValue != null) {
+            if ("bold".equals(attributeValue)) {
+                typeface = Typeface.BOLD;
+            }
+        }
+        return typeface;
+    }
 
 }
