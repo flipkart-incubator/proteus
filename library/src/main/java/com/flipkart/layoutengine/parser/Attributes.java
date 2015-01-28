@@ -105,6 +105,7 @@ public class Attributes {
         public static Attribute PaintFlags = new Attribute("paintFlags");
         public static Attribute Prefix = new Attribute("prefix");
         public static Attribute Suffix = new Attribute("suffix");
+        public static Attribute TextStyle = new Attribute("textStyle");
 
     }
 

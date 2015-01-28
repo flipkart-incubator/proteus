@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.parser.custom;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.widget.TextView;
 
@@ -125,5 +126,12 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
+        addHandler(Attributes.TextView.TextStyle,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                int typeface = ParseHelper.parseTypeFace(attributeValue);
+                view.setTypeface(Typeface.defaultFromStyle(typeface));
+            }
+        });
     }
 }
