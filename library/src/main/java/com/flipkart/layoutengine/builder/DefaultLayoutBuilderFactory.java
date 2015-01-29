@@ -99,13 +99,13 @@ public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
         layoutBuilder.registerHandler("FrameLayout",frameLayoutParser);
         layoutBuilder.registerHandler("ScrollView",scrollViewParser);
         layoutBuilder.registerHandler("HorizontalScrollView",horizontalScrollViewParser);
-        layoutBuilder.registerHandler("NetworkImageView",networkImageViewParser);
         layoutBuilder.registerHandler("ImageView",imageViewParser);
         layoutBuilder.registerHandler("TextView",textViewParser);
         layoutBuilder.registerHandler("EditText",editTextParser);
         layoutBuilder.registerHandler("Button",buttonParser);
         layoutBuilder.registerHandler("ImageButton",imageButtonParser);
         layoutBuilder.registerHandler("ViewPager",viewPagerParser);
+        layoutBuilder.registerHandler("NetworkImageView",networkImageViewParser);
         layoutBuilder.registerHandler("WebView",webViewParser);
         layoutBuilder.registerHandler("RatingBar",ratingBarParser);
         layoutBuilder.registerHandler("CheckBox",checkBoxParser);

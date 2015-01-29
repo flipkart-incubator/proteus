@@ -38,6 +38,7 @@ dependencies {
     compile 'com.google.code.gson:gson:2.2.+'
     compile project(':library')
     compile 'org.apache.httpcomponents:httpmime:4.2.3'
+    compile 'com.mcxiaoke.volley:library:1.0.+'
 }
 
 

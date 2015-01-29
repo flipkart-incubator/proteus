@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -30,6 +31,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     private HashMap<String,LayoutHandler> layoutHandlers = new HashMap<String, LayoutHandler>();
     private LayoutBuilderCallback listener;
+    private BitmapLoader bitmapLoader;
 
     // see the getter for doc
     private boolean isSynchronousRendering = false;
@@ -247,6 +249,20 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     @Override
     public void setListener(LayoutBuilderCallback listener) {
         this.listener = listener;
+    }
+
+    @Override
+    public BitmapLoader getNetworkDrawableHelper(){
+        return bitmapLoader;
+    }
+
+    /**
+     * All network bitmap calls will be handed over to this loader.
+     * @param bitmapLoader
+     */
+    @Override
+    public void setBitmapLoader(BitmapLoader bitmapLoader){
+        this.bitmapLoader = bitmapLoader;
     }
 
     /**

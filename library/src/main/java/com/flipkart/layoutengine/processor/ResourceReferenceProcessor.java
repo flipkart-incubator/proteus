@@ -10,12 +10,9 @@ import android.util.Pair;
 import android.view.View;
 import android.webkit.URLUtil;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.ImageLoader;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.toolbox.NetworkDrawableHelper;
-import com.flipkart.layoutengine.toolbox.VolleySingleton;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -147,8 +144,6 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
      */
     protected void handleString(ParserContext parserContext, String attributeKey, final String attributeValue, final T view) {
         boolean synchronousRendering = parserContext.getLayoutBuilder().isSynchronousRendering();
-        ImageLoader imageLoader = VolleySingleton.getInstance(context).getImageLoader();
-        RequestQueue requestQueue = VolleySingleton.getInstance(context).getRequestQueue();
         if (ParseHelper.isColor(attributeValue)) {
             setDrawable(view, new ColorDrawable(ParseHelper.parseColor(attributeValue)));
         }
@@ -176,7 +171,7 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
                     System.out.println("Could not load " + url + " : " + reason);
                 }
             };
-            new NetworkDrawableHelper(context, view, imageLoader,requestQueue, attributeValue, synchronousRendering, callback);
+            new NetworkDrawableHelper(context, view, attributeValue, synchronousRendering, callback, parserContext.getLayoutBuilder().getNetworkDrawableHelper());
         }
 
     }
