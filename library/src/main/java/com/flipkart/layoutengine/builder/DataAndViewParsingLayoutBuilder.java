@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.provider.Provider;
-import com.flipkart.layoutengine.toolbox.NetworkDrawableDownloadHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 

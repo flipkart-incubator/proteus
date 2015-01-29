@@ -10,10 +10,10 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import com.android.volley.toolbox.RequestFuture;
 import com.flipkart.layoutengine.ImageLoaderCallBack;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,7 +27,7 @@ public class NetworkDrawableHelper {
     private final View view;
     private final DrawableCallback callback;
     private final Context context;
-    private final NetworkDrawableDownloadHelper networkDrawableDownloadHelper;
+    private final BitmapLoader bitmapLoader;
 
     /**
      * @param context         Android Context
@@ -36,11 +36,11 @@ public class NetworkDrawableHelper {
      * @param loadImmediately Set this to true to load the image on the calling thread (synchronous). If false, volley's thread will be used.
      * @param callback        Implement this to get a hold of the loaded bitmap or the error reason.
      */
-    public NetworkDrawableHelper(final Context context, final View view, final String url, boolean loadImmediately, DrawableCallback callback, NetworkDrawableDownloadHelper networkDrawableDownloadHelper) {
+    public NetworkDrawableHelper(final Context context, final View view, final String url, boolean loadImmediately, DrawableCallback callback, BitmapLoader bitmapLoader) {
         this.view = view;
         this.callback = callback;
         this.context = context;
-        this.networkDrawableDownloadHelper = networkDrawableDownloadHelper;
+        this.bitmapLoader = bitmapLoader;
         init(url, loadImmediately);
 
     }
@@ -82,7 +82,7 @@ public class NetworkDrawableHelper {
      * @param url
      */
     private void startSyncLoad(String url) {
-        RequestFuture<Bitmap> future = networkDrawableDownloadHelper.getDrawableFuture(url);
+        Future<Bitmap> future = bitmapLoader.getBitmap(url);
         try {
             Bitmap bitmap = future.get(10, TimeUnit.SECONDS );
             callback.onDrawableLoad(url,convertBitmapToDrawable(bitmap));
@@ -114,10 +114,10 @@ public class NetworkDrawableHelper {
 
     private void startAsyncLoad(final String url) {
 
-        networkDrawableDownloadHelper.setBitmap(url, new ImageLoaderCallBack() {
+        bitmapLoader.getBitmap(url, new ImageLoaderCallBack() {
             @Override
             public void onResponse(Bitmap bitmap) {
-                if(bitmap == null) return;
+                if (bitmap == null) return;
                 if (callback != null) {
                     callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap));
                 }

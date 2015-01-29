@@ -12,6 +12,7 @@ import com.flipkart.layoutengine.parser.custom.HorizontalScrollViewParser;
 import com.flipkart.layoutengine.parser.custom.ImageButtonParser;
 import com.flipkart.layoutengine.parser.custom.ImageViewParser;
 import com.flipkart.layoutengine.parser.custom.LinearLayoutParser;
+import com.flipkart.layoutengine.parser.custom.NetworkImageViewParser;
 import com.flipkart.layoutengine.parser.custom.RatingBarParser;
 import com.flipkart.layoutengine.parser.custom.RelativeLayoutParser;
 import com.flipkart.layoutengine.parser.custom.ScrollViewParser;
@@ -76,6 +77,7 @@ public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
         ViewParser viewParser = new ViewParser(View.class);
         ImageViewParser imageViewParser = new ImageViewParser(viewParser);
         ImageButtonParser imageButtonParser = new ImageButtonParser(imageViewParser);
+        NetworkImageViewParser networkImageViewParser = new NetworkImageViewParser(imageViewParser);
         RelativeLayoutParser relativeLayoutParser = new RelativeLayoutParser(viewParser);
         LinearLayoutParser linearLayoutParser = new LinearLayoutParser(viewParser);
         FrameLayoutParser frameLayoutParser = new FrameLayoutParser(viewParser);
@@ -103,6 +105,7 @@ public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
         layoutBuilder.registerHandler("Button",buttonParser);
         layoutBuilder.registerHandler("ImageButton",imageButtonParser);
         layoutBuilder.registerHandler("ViewPager",viewPagerParser);
+        layoutBuilder.registerHandler("NetworkImageView",networkImageViewParser);
         layoutBuilder.registerHandler("WebView",webViewParser);
         layoutBuilder.registerHandler("RatingBar",ratingBarParser);
         layoutBuilder.registerHandler("CheckBox",checkBoxParser);
