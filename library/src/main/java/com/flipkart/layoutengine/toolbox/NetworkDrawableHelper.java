@@ -10,11 +10,8 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
-import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.RequestFuture;
+import com.flipkart.layoutengine.ImageLoaderCallBack;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -27,28 +24,23 @@ import java.util.concurrent.TimeUnit;
  */
 public class NetworkDrawableHelper {
 
-    private final ImageLoader imageLoader;
     private final View view;
     private final DrawableCallback callback;
-    private final RequestQueue requestQueue;
     private final Context context;
-    private ImageLoader.ImageContainer imageContainer;
-
+    private final NetworkDrawableDownloadHelper networkDrawableDownloadHelper;
 
     /**
      * @param context         Android Context
      * @param view            The view which is going to show the drawable. This view will be used to start and stop image loading when view is added and removed from window. Only used when <code>loadImmediately</code> is set to false. Will also work if view is set to null.
-     * @param imageLoader     The volley loader used to fetch the image from network
      * @param url             The url to load
      * @param loadImmediately Set this to true to load the image on the calling thread (synchronous). If false, volley's thread will be used.
      * @param callback        Implement this to get a hold of the loaded bitmap or the error reason.
      */
-    public NetworkDrawableHelper(final Context context, final View view, final ImageLoader imageLoader, final RequestQueue requestQueue, final String url, boolean loadImmediately, DrawableCallback callback) {
-        this.imageLoader = imageLoader;
+    public NetworkDrawableHelper(final Context context, final View view, final String url, boolean loadImmediately, DrawableCallback callback, NetworkDrawableDownloadHelper networkDrawableDownloadHelper) {
         this.view = view;
         this.callback = callback;
-        this.requestQueue = requestQueue;
         this.context = context;
+        this.networkDrawableDownloadHelper = networkDrawableDownloadHelper;
         init(url, loadImmediately);
 
     }
@@ -90,9 +82,7 @@ public class NetworkDrawableHelper {
      * @param url
      */
     private void startSyncLoad(String url) {
-        RequestFuture<Bitmap> future = RequestFuture.newFuture();
-        ImageRequest request = new ImageRequest(url,future,0,0, Bitmap.Config.RGB_565,future);
-        requestQueue.add(request);
+        RequestFuture<Bitmap> future = networkDrawableDownloadHelper.getDrawableFuture(url);
         try {
             Bitmap bitmap = future.get(10, TimeUnit.SECONDS );
             callback.onDrawableLoad(url,convertBitmapToDrawable(bitmap));
@@ -120,42 +110,31 @@ public class NetworkDrawableHelper {
 
 
     private void cancelLoad() {
-        if (imageContainer != null) {
-            imageContainer.cancelRequest();
-            imageContainer = null;
-
-        }
-
     }
 
     private void startAsyncLoad(final String url) {
 
-        this.imageContainer = imageLoader.get(url, new ImageLoader.ImageListener() {
+        networkDrawableDownloadHelper.setBitmap(url, new ImageLoaderCallBack() {
             @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-                Bitmap bitmap = response.getBitmap();
-
+            public void onResponse(Bitmap bitmap) {
                 if(bitmap == null) return;
                 if (callback != null) {
                     callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap));
                 }
-
             }
 
             @Override
-            public void onErrorResponse(VolleyError error) {
-
-
+            public void onErrorReceived(String errorMessage) {
                 if (callback != null) {
-                    callback.onDrawableError(url, error.getLocalizedMessage());
+                    callback.onDrawableError(url, errorMessage);
                 }
-
 
             }
         });
+
     }
 
-public interface DrawableCallback {
+    public interface DrawableCallback {
     public void onDrawableLoad(String url, Drawable drawable);
 
     public void onDrawableError(String url, String reason);

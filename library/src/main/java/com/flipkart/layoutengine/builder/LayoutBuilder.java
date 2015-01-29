@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.toolbox.NetworkDrawableDownloadHelper;
 import com.google.gson.JsonObject;
 
 /**
@@ -23,6 +24,10 @@ public interface LayoutBuilder {
     LayoutBuilderCallback getListener();
 
     void setListener(LayoutBuilderCallback listener);
+
+    NetworkDrawableDownloadHelper getNetworkDrawableHelper();
+
+    void setNetworkDrawableHelper(NetworkDrawableDownloadHelper listener);
 
     boolean isSynchronousRendering();
 
