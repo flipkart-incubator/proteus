@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.view.View;
 import android.widget.TextView;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -29,7 +30,8 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         addHandler(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-               view.setText(attributeValue);
+                if(attributeValue == null || attributeValue.length() == 0)view.setVisibility(View.GONE);
+                else view.setText(attributeValue);
             }
         });
 
@@ -100,8 +102,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 Enum ellipsize = ParseHelper.parseEllipsize(attributeValue);
-                /** TODO problem in 2.3**/
-                    view.setEllipsize((android.text.TextUtils.TruncateAt) ellipsize);
+                view.setEllipsize((android.text.TextUtils.TruncateAt) ellipsize);
                }
         });
 
