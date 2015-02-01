@@ -106,6 +106,7 @@ public class Attributes {
         public static Attribute Prefix = new Attribute("prefix");
         public static Attribute Suffix = new Attribute("suffix");
         public static Attribute TextStyle = new Attribute("textStyle");
+        public static Attribute SingleLine = new Attribute("singleLine");
 
     }
 

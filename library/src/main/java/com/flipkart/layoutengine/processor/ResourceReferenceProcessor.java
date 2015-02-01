@@ -167,8 +167,10 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
                 }
 
                 @Override
-                public void onDrawableError(String url, String reason) {
+                public void onDrawableError(String url, String reason, Drawable errorDrawable) {
                     System.out.println("Could not load " + url + " : " + reason);
+                    if(errorDrawable != null)
+                        setDrawable(view, errorDrawable);
                 }
             };
             new NetworkDrawableHelper(context, view, attributeValue, synchronousRendering, callback, parserContext.getLayoutBuilder().getNetworkDrawableHelper());
