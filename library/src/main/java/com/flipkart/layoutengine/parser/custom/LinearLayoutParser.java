@@ -3,6 +3,7 @@ package com.flipkart.layoutengine.parser.custom;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.widget.LinearLayout;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -50,7 +51,10 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             @SuppressLint("NewApi")
             @Override
             public void setDrawable(T view, Drawable drawable) {
-                view.setDividerDrawable(drawable);
+
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+                    view.setDividerDrawable(drawable);
+                }
             }
         });
 
@@ -58,7 +62,10 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             @SuppressLint("NewApi")
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setDividerPadding(Integer.parseInt(attributeValue));
+
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+                    view.setDividerPadding(Integer.parseInt(attributeValue));
+                }
             }
         });
 
@@ -67,8 +74,10 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
 
-                int dividerMode = ParseHelper.parseDividerMode(attributeValue);
-                view.setShowDividers(dividerMode);
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+                    int dividerMode = ParseHelper.parseDividerMode(attributeValue);
+                    view.setShowDividers(dividerMode);
+                }
             }
         });
     }

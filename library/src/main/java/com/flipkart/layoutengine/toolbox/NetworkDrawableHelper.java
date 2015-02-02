@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Useful for asynchronous/synchronous loading of network images.
- * This is different from {@link com.android.volley.toolbox.NetworkImageView} in a way that this helper can be used for any view.
+ * This is different in a way that this helper can be used for any view.
  * All you have to do is implement the callback to set any property which accepts drawable as a param.
  * Pass the drawable callback to get the loaded drawable.
  */
@@ -52,8 +52,7 @@ public class NetworkDrawableHelper {
         // Since ImageLoader doesnt support synchronous loading, we use CountDownLatch to simulate it.
         final CountDownLatch lock;
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1 || view == null) {
-            // older androids dont support addOnAttachStateChangeListener
+        if (view == null) {
             loadImmediately = true;
         }
 
@@ -62,17 +61,22 @@ public class NetworkDrawableHelper {
 
         } else {
             lock = null;
-            view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-                @Override
-                public void onViewAttachedToWindow(final View view) {
-                    startAsyncLoad(url);
-                }
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
+                startAsyncLoad(url);
+            }
+            else {
+                view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                    @Override
+                    public void onViewAttachedToWindow(final View view) {
+                        startAsyncLoad(url);
+                    }
 
-                @Override
-                public void onViewDetachedFromWindow(View view) {
-                    cancelLoad();
-                }
-            });
+                    @Override
+                    public void onViewDetachedFromWindow(View view) {
+                        cancelLoad();
+                    }
+                });
+            }
         }
 
     }
@@ -88,7 +92,7 @@ public class NetworkDrawableHelper {
             callback.onDrawableLoad(url,convertBitmapToDrawable(bitmap));
         } catch (Exception e) {
             e.printStackTrace();
-            callback.onDrawableError(url,e.getLocalizedMessage());
+            callback.onDrawableError(url,e.getLocalizedMessage(), null);
         }
     }
 
@@ -124,9 +128,9 @@ public class NetworkDrawableHelper {
             }
 
             @Override
-            public void onErrorReceived(String errorMessage) {
+            public void onErrorReceived(String errorMessage, Drawable errorDrawable) {
                 if (callback != null) {
-                    callback.onDrawableError(url, errorMessage);
+                    callback.onDrawableError(url, errorMessage, errorDrawable);
                 }
 
             }
@@ -137,6 +141,6 @@ public class NetworkDrawableHelper {
     public interface DrawableCallback {
     public void onDrawableLoad(String url, Drawable drawable);
 
-    public void onDrawableError(String url, String reason);
+    public void onDrawableError(String url, String reason, Drawable errorDrawable);
 }
 }

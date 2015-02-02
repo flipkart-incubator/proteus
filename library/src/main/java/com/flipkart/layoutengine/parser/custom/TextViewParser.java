@@ -29,7 +29,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         addHandler(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-               view.setText(attributeValue);
+                view.setText(attributeValue);
             }
         });
 
@@ -101,7 +101,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 Enum ellipsize = ParseHelper.parseEllipsize(attributeValue);
                 view.setEllipsize((android.text.TextUtils.TruncateAt) ellipsize);
-            }
+               }
         });
 
         addHandler(Attributes.TextView.PaintFlags,new StringAttributeProcessor<T>() {
@@ -131,6 +131,13 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 int typeface = ParseHelper.parseTypeFace(attributeValue);
                 view.setTypeface(Typeface.defaultFromStyle(typeface));
+            }
+        });
+
+        addHandler(Attributes.TextView.SingleLine,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                view.setSingleLine(ParseHelper.parseBoolean(attributeValue));
             }
         });
     }
