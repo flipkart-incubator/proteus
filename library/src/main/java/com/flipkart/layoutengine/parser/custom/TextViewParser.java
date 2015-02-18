@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.widget.TextView;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -138,6 +139,15 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 view.setSingleLine(ParseHelper.parseBoolean(attributeValue));
+            }
+        });
+
+        addHandler(Attributes.TextView.TextAllCaps,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                    view.setAllCaps(ParseHelper.parseBoolean(attributeValue));
+                }
             }
         });
     }
