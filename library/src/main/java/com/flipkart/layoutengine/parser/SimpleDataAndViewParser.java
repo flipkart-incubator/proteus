@@ -5,7 +5,6 @@ import android.view.View;
 import org.json.JSONObject;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * A {@link com.flipkart.layoutengine.parser.DataAndViewParser} implementation to update the data
@@ -15,12 +14,14 @@ import java.util.Objects;
  */
 public class SimpleDataAndViewParser implements DataAndViewParser {
 
+    private LayoutHandler layoutHandler;
     private Map<String, Object> dataModelToViewModelTree;
     private View view;
 
-    public SimpleDataAndViewParser (View view, Map<String, Object> dataModelToViewModelTree) {
+    public SimpleDataAndViewParser(View view, Map<String, Object> dataModelToViewModelTree, LayoutHandler layoutHandler) {
         this.view = view;
         this.dataModelToViewModelTree = dataModelToViewModelTree;
+        this.layoutHandler = layoutHandler;
     }
 
     @Override
@@ -30,6 +31,7 @@ public class SimpleDataAndViewParser implements DataAndViewParser {
 
     @Override
     public View updateView(JSONObject data) {
+
         return this.view;
     }
 }
