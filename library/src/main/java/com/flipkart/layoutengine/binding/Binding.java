@@ -16,14 +16,13 @@ public class Binding {
     private View view;
     private ViewGroup parentView;
 
-    public Binding(ParserContext parserContext, String attributeKey, String attributeValue, View view, ViewGroup parentView)
-    {
+    public Binding(ParserContext parserContext, String attributeKey, String attributeValue, View view, ViewGroup parentView, int index) {
         this.parserContext = parserContext;
         this.attributeKey = attributeKey;
         this.attributeValue = attributeValue;
         this.view = view;
         this.parentView = parentView;
-        this.index = ((ViewGroup)this.parentView).indexOfChild(this.view);
+        this.index = index;
     }
 
     public ParserContext getParserContext() {
@@ -34,7 +33,7 @@ public class Binding {
         this.parserContext = parserContext;
     }
 
-    public int getIndex () {
+    public int getIndex() {
         return this.index;
     }
 

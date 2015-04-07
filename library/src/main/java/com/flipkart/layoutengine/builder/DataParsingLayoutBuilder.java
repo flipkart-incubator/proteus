@@ -23,7 +23,7 @@ import java.util.Map;
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     private final Provider dataProvider;
     private static final Character PREFIX = DataParsingAdapter.PREFIX;
-    private Map<String,Binding> bindings = new HashMap<String,Binding>();
+    private Map<String, Binding> bindings = new HashMap<String, Binding>();
 
 
     DataParsingLayoutBuilder(Context context, Provider dataProvider) {
@@ -33,11 +33,11 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Override
     protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attributeKey, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int childIndex) {
-        if(element.isJsonPrimitive()) {
+        if (element.isJsonPrimitive()) {
             String attributeValue = element.getAsString();
             JsonElement elementFromData = getElementFromData(element, context.getDataProvider(), childIndex);
             if (elementFromData != null) {
-                Binding binding = new Binding(context, attributeKey, attributeValue, view, parent);
+                Binding binding = new Binding(context, attributeKey, attributeValue, view, parent, childIndex);
                 element = elementFromData;
                 //jsonObject.add(attributeKey,element);
                 bindings.put(attributeValue, binding);
@@ -68,21 +68,18 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     @Override
     protected View buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject, View existingView, int childIndex) {
         JsonElement dataContextElement = jsonObject.get("dataContext");
-        if(dataContextElement!=null)
-        {
+        if (dataContextElement != null) {
             ParserContext newContext = context.clone();
             Provider oldProvider = context.getDataProvider();
-            if(oldProvider!=null) {
+            if (oldProvider != null) {
                 Provider newProvider = oldProvider.clone();
-                JsonElement newRoot = getElementFromData(dataContextElement,oldProvider, childIndex);
+                JsonElement newRoot = getElementFromData(dataContextElement, oldProvider, childIndex);
                 newProvider.setRoot(newRoot);
                 newContext.setDataProvider(newProvider);
                 context = newContext;
 
-            }
-            else
-            {
-                Log.e(TAG,"When dataContext is specified, data provider cannot be null");
+            } else {
+                Log.e(TAG, "When dataContext is specified, data provider cannot be null");
             }
 
         }
@@ -91,20 +88,15 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
 
-    private JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex)
-    {
-        if(element.isJsonPrimitive())
-        {
+    private JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
+        if (element.isJsonPrimitive()) {
             String dataSourceKey = element.getAsString();
-            if(dataSourceKey.length()>0 && dataSourceKey.charAt(0) == PREFIX) {
+            if (dataSourceKey.length() > 0 && dataSourceKey.charAt(0) == PREFIX) {
                 JsonElement tempElement = dataProvider.getObject(dataSourceKey.substring(1), childIndex);
-                if(tempElement !=null)
-                {
+                if (tempElement != null) {
                     element = tempElement;
-                }
-                else
-                {
-                    Log.e(TAG,"Got null element for "+dataSourceKey);
+                } else {
+                    Log.e(TAG, "Got null element for " + dataSourceKey);
                 }
             }
         }
