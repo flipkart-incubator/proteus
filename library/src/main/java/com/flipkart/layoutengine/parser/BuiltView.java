@@ -2,7 +2,7 @@ package com.flipkart.layoutengine.parser;
 
 import android.view.View;
 
-import org.json.JSONObject;
+import com.google.gson.JsonElement;
 
 /**
  * A wrapper class to update the views build by a {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
@@ -11,22 +11,22 @@ import org.json.JSONObject;
  *
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
-public interface DataAndViewParser {
+public interface BuiltView {
 
     /**
-     * Returns the reference to the view wrapped by the {@link DataAndViewParser}
+     * Returns the reference to the view wrapped by the {@link BuiltView}
      *
-     * @return reference to the view {@link android.view.View} wrapped by the {@link DataAndViewParser}
+     * @return reference to the view {@link android.view.View} wrapped by the {@link BuiltView}
      */
     public View getView();
 
     /**
-     * Updates the data associated with view wrapped by the {@link DataAndViewParser}
+     * Updates the data associated with view wrapped by the {@link BuiltView}
      * with new {@link org.json.JSONObject} object.
      *
      * @param data new {@link org.json.JSONObject} object which will used to update the view.
      * @return reference to the updated view {@link android.view.View} wrapped by the
-     * {@link DataAndViewParser}
+     * {@link BuiltView}
      */
-    public View updateView(JSONObject data);
+    public View updateView(JsonElement data);
 }
