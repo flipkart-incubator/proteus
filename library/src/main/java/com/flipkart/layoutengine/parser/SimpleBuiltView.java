@@ -34,9 +34,7 @@ public class SimpleBuiltView implements BuiltView {
     public View updateView(JsonElement data) {
 
         for (Map.Entry<String, Binding> bindingEntry : this.mapOfBindings.entrySet()) {
-            System.out.println(bindingEntry.getKey() + "/" + bindingEntry.getValue());
             this.handleBinding(bindingEntry, data);
-
         }
 
         return this.getView();
@@ -46,6 +44,11 @@ public class SimpleBuiltView implements BuiltView {
         String dataAttribute = bindingEntry.getKey();
         Binding binding = bindingEntry.getValue();
 
-        this.layoutHandler.handleAttribute(binding.getParserContext(), binding.getAttributeKey(), null, data, binding.getParentView(), 0);
+        this.layoutHandler.handleAttribute(binding.getParserContext(),
+                binding.getAttributeKey(),
+                null,
+                data,
+                binding.getParentView(),
+                binding.getIndex());
     }
 }

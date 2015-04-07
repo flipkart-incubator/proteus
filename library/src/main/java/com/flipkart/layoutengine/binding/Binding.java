@@ -9,6 +9,7 @@ import com.flipkart.layoutengine.ParserContext;
  * Created by kirankumar on 23/07/14.
  */
 public class Binding {
+    private int index;
     private ParserContext parserContext;
     private String attributeKey;
     private String attributeValue;
@@ -22,6 +23,7 @@ public class Binding {
         this.attributeValue = attributeValue;
         this.view = view;
         this.parentView = parentView;
+        this.index = ((ViewGroup)this.parentView).indexOfChild(this.view);
     }
 
     public ParserContext getParserContext() {
@@ -30,6 +32,10 @@ public class Binding {
 
     public void setParserContext(ParserContext parserContext) {
         this.parserContext = parserContext;
+    }
+
+    public int getIndex () {
+        return this.index;
     }
 
     public String getAttributeKey() {
