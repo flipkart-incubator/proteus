@@ -1,6 +1,5 @@
 package com.flipkart.layoutengine.testapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -11,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
@@ -19,17 +17,9 @@ import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.provider.GsonProvider;
-import com.flipkart.networking.API;
-import com.flipkart.networking.request.BaseRequest;
-import com.flipkart.networking.request.HomeRequest;
-import com.flipkart.networking.request.components.OnRequestErrorListener;
-import com.flipkart.networking.request.components.OnRequestFinishListener;
-import com.flipkart.networking.request.components.RequestError;
-import com.flipkart.networking.response.HomeResponse;
-import com.flipkart.preview.ImageGeneratorService;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
 
 
 public class MainActivity extends ActionBarActivity {
@@ -41,67 +31,40 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Handler handler = new Handler();
-        if(savedInstanceState==null) {
-
-           fireRequest();
+        if (savedInstanceState == null) {
+            setupView();
         }
-        Intent i=new Intent(this, ImageGeneratorService.class);
-        startService(i);
-
     }
 
-    private void fireRequest() {
-        HomeRequest request = new HomeRequest();
-        request.setOnResponseListener(createOnResponse());
-        request.setOnErrorListener(new OnRequestErrorListener<HomeResponse>() {
-            @Override
-            public void onRequestError(BaseRequest<HomeResponse> request, RequestError error) {
-                Toast.makeText(MainActivity.this,"Request error "+error.getReason(),Toast.LENGTH_LONG).show();
-            }
-        });
-        API.getInstance(this.getApplicationContext()).processAsync(request);
+    private void setupView() {
+        String layout = "";
+        String data = "";
+        createView();
     }
 
-    private OnRequestFinishListener<HomeResponse> createOnResponse() {
-        return new OnRequestFinishListener<HomeResponse>() {
-            @Override
-            public void onRequestFinish(final BaseRequest<HomeResponse> request) {
+    private void createView() {
+        Gson gson = new Gson();
 
-                MainActivity.this.getWindow().getDecorView().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
+        JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.name\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.price\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.rating\"}]}", JsonObject.class);
+        JsonElement data = gson.fromJson("{\"product\":{\"name\":\"Gaming Mouse\",\"price\":\"1350\",\"rating\":\"****\"}}", JsonElement.class);
 
+        LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataAndViewParsingLayoutBuilder(this, new GsonProvider(data), new GsonProvider(layoutData));
 
+        builder.setListener(createCallback());
 
-                        HomeResponse response = request.getResponse();
-                        JsonObject layout = response.getResponse().getLayout();
-                        long startTimeMillis = System.currentTimeMillis();
-                        Log.d(TAG,"layout build start "+startTimeMillis);
-                        LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataParsingLayoutBuilder(MainActivity.this, new GsonProvider(response.getResponse().getData()));
-                        builder.setListener(createCallback());
-                        FrameLayout container = new FrameLayout(MainActivity.this);
-                        View view = builder.build((ViewGroup)MainActivity.this.getWindow().getDecorView(),layout);
-                        long endTimeMillis = System.currentTimeMillis();
-                        Log.d(TAG,"layout build end "+endTimeMillis);
-                        long timeTaken = endTimeMillis - startTimeMillis;
-                        Log.d(TAG,"time taken "+timeTaken+" ms");
-                        Toast.makeText(MainActivity.this,"Time taken to render "+timeTaken+" ms",Toast.LENGTH_SHORT).show();
-                        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        FrameLayout container = new FrameLayout(MainActivity.this);
 
-                        if(view!=null)
-                        {
-                            container.addView(view,layoutParams);
-                        }
-                        MainActivity.this.setContentView(container);
-                    }
-                },0);
+        View view = builder.build((ViewGroup) MainActivity.this.getWindow().getDecorView(), layoutData);
 
-            }
-        };
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+
+        if (view != null) {
+            container.addView(view, layoutParams);
+        }
+        MainActivity.this.setContentView(container);
     }
 
-    private LayoutBuilderCallback createCallback()
-    {
+    private LayoutBuilderCallback createCallback() {
         return new LayoutBuilderCallback() {
 
             @Override
@@ -124,7 +87,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -137,7 +100,6 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            fireRequest();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -145,11 +107,9 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.d(TAG,"key down "+keyCode);
-        if(keyCode == KeyEvent.KEYCODE_R)
-        {
+        Log.d(TAG, "key down " + keyCode);
+        if (keyCode == KeyEvent.KEYCODE_R) {
             MainActivity.this.setContentView(new FrameLayout(this));
-            fireRequest();
         }
         return super.onKeyDown(keyCode, event);
     }

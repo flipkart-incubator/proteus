@@ -1,5 +1,6 @@
 package com.flipkart.layoutengine.parser;
 
+import android.util.Log;
 import android.view.View;
 
 import com.flipkart.layoutengine.binding.Binding;
@@ -34,9 +35,9 @@ public class SimpleBuiltView implements BuiltView {
     public View updateView(JsonElement data) {
 
         for (Map.Entry<String, Binding> bindingEntry : this.mapOfBindings.entrySet()) {
+            Log.d("bindings", bindingEntry.getKey() + "/" + bindingEntry.getValue());
             this.handleBinding(bindingEntry, data);
         }
-
         return this.getView();
     }
 
