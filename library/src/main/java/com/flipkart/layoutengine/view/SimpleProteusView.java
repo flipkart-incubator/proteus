@@ -25,7 +25,12 @@ public class SimpleProteusView implements ProteusView {
     //private static final String TAG = SimpleProteusView.class.getSimpleName();
 
     /**
-     * Holds a map of Strings to {@link com.flipkart.layoutengine.binding.Binding}
+     * This Map holds a references to the {@link com.flipkart.layoutengine.binding.Binding} between
+     * the view and data. This map is used to update the data associated with the {@link android.view.View}
+     * example:
+     * <pre>
+     * {@literal <}"$product.name", bindingObjectOfThisProperty{@literal >}
+     * </pre>
      */
     private Map<String, Binding> bindings;
     private View view;
