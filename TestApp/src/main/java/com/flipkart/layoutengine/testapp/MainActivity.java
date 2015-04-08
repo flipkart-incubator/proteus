@@ -17,6 +17,7 @@ import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.provider.GsonProvider;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -25,28 +26,32 @@ import com.google.gson.JsonObject;
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private ProteusView proteusView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Handler handler = new Handler();
         if (savedInstanceState == null) {
-            setupView();
+            setupView(null);
         }
     }
 
-    private void setupView() {
-        String layout = "";
-        String data = "";
-        createView();
+    private void setupView(String newData) {
+        createView(newData);
     }
 
-    private void createView() {
+    private void createView(String newData) {
         Gson gson = new Gson();
 
         JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.name\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.price\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.rating\"}]}", JsonObject.class);
-        JsonElement data = gson.fromJson("{\"product\":{\"name\":\"Gaming Mouse\",\"price\":\"1350\",\"rating\":\"****\"}}", JsonElement.class);
+
+        JsonElement data;
+        if (newData != null) {
+            data = gson.fromJson(newData, JsonElement.class);
+        } else {
+            data = gson.fromJson("{\"product\":{\"name\":\"Gaming Mouse\",\"price\":\"1350\",\"rating\":\"****\"}}", JsonElement.class);
+        }
 
         LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataAndViewParsingLayoutBuilder(this, new GsonProvider(data), new GsonProvider(layoutData));
 
@@ -54,7 +59,8 @@ public class MainActivity extends ActionBarActivity {
 
         FrameLayout container = new FrameLayout(MainActivity.this);
 
-        View view = builder.build((ViewGroup) container, layoutData);
+        this.proteusView = builder.build(container, layoutData);
+        View view = proteusView.getView();
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 
@@ -73,7 +79,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
             @Override
-            public View onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent, int childIndex) {
+            public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent, int childIndex) {
                 return null;
             }
 
@@ -87,7 +93,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -95,11 +100,15 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
+        Log.d("menuoption", "here");
+
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
+            //createView();
+            Gson gson = new Gson();
+            JsonObject data = gson.fromJson("{\"product\":{\"name\":\"Intel Core i7\",\"price\":\"19500\",\"rating\":\"*****\"}}", JsonObject.class);
+            this.proteusView.updateView(data);
             return true;
         }
         return super.onOptionsItemSelected(item);
