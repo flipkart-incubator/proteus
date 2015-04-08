@@ -2,7 +2,11 @@ package com.flipkart.layoutengine.view;
 
 import android.view.View;
 
+import com.flipkart.layoutengine.binding.Binding;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.util.Map;
 
 /**
  * A wrapper class to update the views build by a {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
@@ -21,6 +25,13 @@ public interface ProteusView {
     public View getView();
 
     /**
+     * Returns the reference to the map of bindings inside the {@link ProteusView}
+     *
+     * @return reference to the map of bindings inside the {@link ProteusView}
+     */
+    public Map<String, Binding> getBindings();
+
+    /**
      * Updates the data associated with view wrapped by the {@link ProteusView}
      * with new {@link org.json.JSONObject} object.
      *
@@ -28,5 +39,5 @@ public interface ProteusView {
      * @return reference to the updated view {@link android.view.View} wrapped by the
      * {@link ProteusView}
      */
-    public View updateView(JsonElement data);
+    public View updateView(JsonObject data);
 }
