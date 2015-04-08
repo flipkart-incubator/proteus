@@ -1,29 +1,29 @@
-package com.flipkart.layoutengine.parser;
+package com.flipkart.layoutengine.view;
 
 import android.util.Log;
 import android.view.View;
 
+import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
+import com.flipkart.layoutengine.provider.GsonProvider;
 import com.google.gson.JsonElement;
 
 import java.util.Map;
 
 /**
- * A {@link BuiltView} implementation to update the data
+ * A {@link ProteusView} implementation to update the data
  * associated with a {@link android.view.View} built using a {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
  *
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
-public class SimpleBuiltView implements BuiltView {
+public class SimpleProteusView implements ProteusView {
 
-    private LayoutHandler layoutHandler;
     private Map<String, Binding> mapOfBindings;
     private View view;
 
-    public SimpleBuiltView(View view, Map<String, Binding> mapOfBindings, LayoutHandler layoutHandler) {
+    public SimpleProteusView(View view, Map<String, Binding> mapOfBindings) {
         this.view = view;
         this.mapOfBindings = mapOfBindings;
-        this.layoutHandler = layoutHandler;
     }
 
     @Override
@@ -44,11 +44,17 @@ public class SimpleBuiltView implements BuiltView {
     private void handleBinding(Map.Entry<String, Binding> bindingEntry, JsonElement data) {
         String dataAttribute = bindingEntry.getKey();
         Binding binding = bindingEntry.getValue();
+        ParserContext context = binding.getParserContext();
 
-        this.layoutHandler.handleAttribute(binding.getParserContext(),
+        context.setDataProvider(new GsonProvider(data));
+
+        binding.getParserContext().getLayoutBuilder().handleAttribute(
+                binding.getLayoutHandler(),
+                context,
                 binding.getAttributeKey(),
                 null,
                 data,
+                binding.getView(),
                 binding.getParentView(),
                 binding.getIndex());
     }

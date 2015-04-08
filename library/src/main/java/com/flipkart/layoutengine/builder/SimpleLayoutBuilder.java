@@ -6,7 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.provider.DataParsingAdapter;
+import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -25,11 +28,13 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected static final String TAG = SimpleLayoutBuilder.class.getSimpleName();
 
+    private static final Character PREFIX = DataParsingAdapter.PREFIX;
+
     public static final String TYPE = "type";
     public static final String CHILDREN = "children";
     public static final String CHILD_TYPE = "childType";
 
-    private HashMap<String,LayoutHandler> layoutHandlers = new HashMap<String, LayoutHandler>();
+    private HashMap<String, LayoutHandler> layoutHandlers = new HashMap<String, LayoutHandler>();
     private LayoutBuilderCallback listener;
     private BitmapLoader bitmapLoader;
 
@@ -40,16 +45,17 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     /**
      * Package private constructor so that no client can access it without the factory class
      */
-    SimpleLayoutBuilder() {}
+    SimpleLayoutBuilder() {
+    }
 
     /**
-     * Registers a {@link LayoutHandler} for the specified view type. All the attributes will pass through {@link LayoutHandler#handleAttribute(com.flipkart.layoutengine.ParserContext, String, com.google.gson.JsonObject, com.google.gson.JsonElement, Object)} and expect to be handled.
+     * Registers a {@link LayoutHandler} for the specified view type. All the attributes will pass through {@link LayoutHandler#handleAttribute} and expect to be handled.
+     *
      * @param viewType The string value for "view" attribute.
-     * @param handler The handler which should handle this view.
+     * @param handler  The handler which should handle this view.
      */
     @Override
-    public void registerHandler(String viewType, LayoutHandler handler)
-    {
+    public void registerHandler(String viewType, LayoutHandler handler) {
         handler.prepare(context);
         layoutHandlers.put(viewType, handler);
 
@@ -57,11 +63,11 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     /**
      * Unregisters the specified view type.
+     *
      * @param viewType The string value for "view" attribute.
      */
     @Override
-    public void unregisterHandler(String viewType)
-    {
+    public void unregisterHandler(String viewType) {
         layoutHandlers.remove(viewType);
     }
 
@@ -69,19 +75,18 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
      * Unregisters all handlers.
      */
     @Override
-    public void unregisterAllHandlers()
-    {
+    public void unregisterAllHandlers() {
         layoutHandlers.clear();
     }
 
     /**
      * Get the handler registered with the supplied view type
+     *
      * @param viewType
      * @return
      */
     @Override
-    public LayoutHandler getHandler(String viewType)
-    {
+    public LayoutHandler getHandler(String viewType) {
         return layoutHandlers.get(viewType);
     }
 
@@ -92,14 +97,12 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     @Override
-    public View build(ViewGroup parent, JsonObject jsonObject)
-    {
-        return buildImpl(createParserContext(), parent, jsonObject, null , 0);
+    public View build(ViewGroup parent, JsonObject jsonObject) {
+        return buildImpl(createParserContext(), parent, jsonObject, null, 0);
     }
 
 
-    protected ParserContext createParserContext()
-    {
+    protected ParserContext createParserContext() {
         ParserContext parserContext = new ParserContext();
         parserContext.setLayoutBuilder(this);
         return parserContext;
@@ -107,139 +110,147 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     /**
      * Starts recursively parsing the given jsonObject.
-     * @param context Represents the context of the parsing.
-     * @param parent The parent view group under which the view being created has to be added as a child.
-     * @param jsonObject The jsonObject which represents the current node which is getting parsed.
+     *
+     * @param context      Represents the context of the parsing.
+     * @param parent       The parent view group under which the view being created has to be added as a child.
+     * @param jsonObject   The jsonObject which represents the current node which is getting parsed.
      * @param existingView A view which needs to be used instead of creating a new one. Pass null for first pass.
-     * @param childIndex index of child inside its parent view
+     * @param childIndex   index of child inside its parent view
      * @return
      */
-    protected View buildImpl(final ParserContext context, final ViewGroup parent, final JsonObject jsonObject, View existingView , final int childIndex)
-    {
+    protected View buildImpl(final ParserContext context, final ViewGroup parent, final JsonObject jsonObject, View existingView, final int childIndex) {
         JsonElement viewTypeElement = jsonObject.get(TYPE);
         //System.out.println("ViewType "+ viewTypeElement.getAsString());
         String viewType = null;
-        if(viewTypeElement!=null) {
+        if (viewTypeElement != null) {
             viewType = viewTypeElement.getAsString();
-        }
-        else
-        {
+        } else {
 
-            Log.e(TAG,"view cannot be null");
+            Log.e(TAG, "view cannot be null");
             return null;
         }
 
         LayoutHandler<View> handler = layoutHandlers.get(viewType);
-        if(handler == null)
-        {
-            return onUnknownViewEncountered(context,viewType,parent,jsonObject,childIndex);
-        }
-
-
-
-        JsonElement childViewElement = jsonObject.get(CHILD_TYPE);
-        JsonElement childrenElement = jsonObject.get(CHILDREN);
-        JsonArray children = null;
-        if(childrenElement!=null) {
-            children = parseChildren(handler,context,childrenElement,childIndex);
+        if (handler == null) {
+            return onUnknownViewEncountered(context, viewType, parent, jsonObject, childIndex);
         }
 
         /**
          * View creation.
          */
-        final View self;
-        if(existingView == null) {
-            self = createView(context, parent, handler, jsonObject);
-            handler.setupView(parent,self);
-        }
-        else
-        {
-            self = existingView;
+        final View createdView;
+        if (existingView == null) {
+            createdView = createView(context, parent, handler, jsonObject);
+            handler.setupView(parent, createdView);
+        } else {
+            createdView = existingView;
         }
 
         /**
          * Parsing each attribute and setting it on the view.
          */
+        Map<String, Binding> bindings = new HashMap<String, Binding>();
+
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 
-            if(TYPE.equals(entry.getKey()) || CHILDREN.equals(entry.getKey()) || CHILD_TYPE.equals(entry.getKey()))
-            {
+            if (TYPE.equals(entry.getKey()) || CHILDREN.equals(entry.getKey()) || CHILD_TYPE.equals(entry.getKey())) {
                 continue;
             }
-            boolean handled = handleAttribute(handler,context,entry.getKey(),jsonObject,entry.getValue(),self,parent, childIndex);
+            JsonElement jsonDataValue = entry.getValue();
+            String attributeName = entry.getKey();
 
-            if(!handled)
-            {
-                onUnknownAttributeEncountered(context, entry.getKey(), entry.getValue(), jsonObject, self , childIndex);
+            if (jsonDataValue.isJsonPrimitive()) {
+                String attributeValue = jsonDataValue.getAsString();
+                JsonElement elementFromData = getElementFromData(jsonDataValue, context.getDataProvider(), childIndex);
+                if (elementFromData != null) {
+                    Binding binding = new Binding(context, handler, attributeName, attributeValue, createdView, parent, childIndex);
+                    jsonDataValue = elementFromData;
+                    bindings.put(attributeValue, binding);
+                }
+            }
+            boolean handled = handleAttribute(handler, context, attributeName, jsonObject, jsonDataValue, createdView, parent, childIndex);
+
+            if (!handled) {
+                onUnknownAttributeEncountered(context, attributeName, jsonDataValue, jsonObject, createdView, childIndex);
             }
         }
 
         /**
          * Processing the children.
          */
+        JsonElement childViewElement = jsonObject.get(CHILD_TYPE);
+        JsonElement childrenElement = jsonObject.get(CHILDREN);
+        JsonArray children = null;
+        if (childrenElement != null) {
+            children = parseChildren(handler, context, childrenElement, childIndex);
+        }
 
-        if(children!=null && children.size()>0) {
-            ViewGroup selfViewGroup = (ViewGroup) self;
+        if (children != null && children.size() > 0) {
+            ViewGroup selfViewGroup = (ViewGroup) createdView;
             List<View> childrenToAdd = new ArrayList<View>();
             for (int i = 0; i < children.size(); i++) {
                 JsonObject childObject = children.get(i).getAsJsonObject();
-                if(childViewElement!=null)
-                {
+                if (childViewElement != null) {
                     // propagate the value of 'childView' to the recursive calls
-                    childObject.add(TYPE,childViewElement);
+                    childObject.add(TYPE, childViewElement);
                 }
                 View childView = buildImpl(context, selfViewGroup, childObject, null, i);
-                if(childView!=null) {
+                if (childView != null) {
                     childrenToAdd.add(childView);
                 }
 
             }
-            if(childrenToAdd.size()>0) {
+            if (childrenToAdd.size() > 0) {
                 handler.addChildren(this.context, selfViewGroup, childrenToAdd);
             }
         }
 
-        return self;
+        return createdView;
 
     }
 
-    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex)
-    {
-        return handler.parseChildren(context,childrenElement,childIndex);
+    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
+        return handler.parseChildren(context, childrenElement, childIndex);
     }
 
-    protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int index)
-    {
-        return handler.handleAttribute(context, attribute, jsonObject , element, view, index);
+    public boolean handleAttribute(LayoutHandler handler, ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int index) {
+        return handler.handleAttribute(context, attribute, jsonObject, element, view, index);
     }
 
-    protected void onUnknownAttributeEncountered(ParserContext context, String attribute, JsonElement element, JsonObject object, View view , int childIndex)
-    {
-        if(listener!=null)
-        {
-            listener.onUnknownAttribute(context,attribute,element, object, view, childIndex);
+    protected void onUnknownAttributeEncountered(ParserContext context, String attribute, JsonElement element, JsonObject object, View view, int childIndex) {
+        if (listener != null) {
+            listener.onUnknownAttribute(context, attribute, element, object, view, childIndex);
         }
     }
 
     protected View onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject, int childIndex) {
 
-        if(listener!=null)
-        {
-            return listener.onUnknownViewType(context,viewType,jsonObject,parent,childIndex);
+        if (listener != null) {
+            return listener.onUnknownViewType(context, viewType, jsonObject, parent, childIndex);
         }
         return null;
     }
 
 
-
-    protected View createView(ParserContext context, ViewGroup parent, LayoutHandler<View> handler, JsonObject object)
-    {
+    protected View createView(ParserContext context, ViewGroup parent, LayoutHandler<View> handler, JsonObject object) {
         View view = handler.createView(context, this.context, parent, object);
         return view;
     }
 
-
-
+    protected JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
+        if (element.isJsonPrimitive()) {
+            String dataSourceKey = element.getAsString();
+            if (dataSourceKey.length() > 0 && dataSourceKey.charAt(0) == PREFIX) {
+                JsonElement tempElement = dataProvider.getObject(dataSourceKey.substring(1), childIndex);
+                if (tempElement != null) {
+                    element = tempElement;
+                } else {
+                    Log.e(TAG, "Got null element for " + dataSourceKey);
+                }
+            }
+        }
+        return element;
+    }
 
     @Override
     public LayoutBuilderCallback getListener() {
@@ -252,24 +263,24 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     @Override
-    public BitmapLoader getNetworkDrawableHelper(){
+    public BitmapLoader getNetworkDrawableHelper() {
         return bitmapLoader;
     }
 
     /**
      * All network bitmap calls will be handed over to this loader.
+     *
      * @param bitmapLoader
      */
     @Override
-    public void setBitmapLoader(BitmapLoader bitmapLoader){
+    public void setBitmapLoader(BitmapLoader bitmapLoader) {
         this.bitmapLoader = bitmapLoader;
     }
 
     /**
-     *
      * Set this to true for rendering preview immediately. This is to be used to decide whether remote resources like remote images are to be downloaded synchronously or not
-     * @return true if the all views should be rendered immediately.
      *
+     * @return true if the all views should be rendered immediately.
      */
     @Override
     public boolean isSynchronousRendering() {

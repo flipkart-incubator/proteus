@@ -54,7 +54,7 @@ public class MainActivity extends ActionBarActivity {
 
         FrameLayout container = new FrameLayout(MainActivity.this);
 
-        View view = builder.build((ViewGroup) MainActivity.this.getWindow().getDecorView(), layoutData);
+        View view = builder.build((ViewGroup) container, layoutData);
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
 

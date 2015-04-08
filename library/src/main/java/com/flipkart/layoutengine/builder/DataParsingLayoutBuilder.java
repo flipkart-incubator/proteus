@@ -22,7 +22,6 @@ import java.util.Map;
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     private final Provider dataProvider;
-    private static final Character PREFIX = DataParsingAdapter.PREFIX;
     private Map<String, Binding> bindings = new HashMap<String, Binding>();
 
 
@@ -31,21 +30,20 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         this.dataProvider = dataProvider;
     }
 
-    @Override
-    protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attributeKey, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int childIndex) {
+    /*@Override
+    public boolean handleAttribute(LayoutHandler handler, ParserContext context, String attributeKey, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int childIndex) {
         if (element.isJsonPrimitive()) {
             String attributeValue = element.getAsString();
             JsonElement elementFromData = getElementFromData(element, context.getDataProvider(), childIndex);
             if (elementFromData != null) {
-                Binding binding = new Binding(context, attributeKey, attributeValue, view, parent, childIndex);
+                Binding binding = new Binding(context, handler, attributeKey, attributeValue, view, parent, childIndex);
                 element = elementFromData;
-                //jsonObject.add(attributeKey,element);
                 bindings.put(attributeValue, binding);
             }
         }
         return super.handleAttribute(handler, context, attributeKey, jsonObject, element, view, parent, childIndex);
 
-    }
+    }*/
 
     @Override
     protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
@@ -88,7 +86,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
 
-    private JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
+    /*private JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
         if (element.isJsonPrimitive()) {
             String dataSourceKey = element.getAsString();
             if (dataSourceKey.length() > 0 && dataSourceKey.charAt(0) == PREFIX) {
@@ -101,5 +99,5 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             }
         }
         return element;
-    }
+    }*/
 }

@@ -1,4 +1,4 @@
-package com.flipkart.layoutengine.parser;
+package com.flipkart.layoutengine.view;
 
 import android.view.View;
 
@@ -11,22 +11,22 @@ import com.google.gson.JsonElement;
  *
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
-public interface BuiltView {
+public interface ProteusView {
 
     /**
-     * Returns the reference to the view wrapped by the {@link BuiltView}
+     * Returns the reference to the view wrapped by the {@link ProteusView}
      *
-     * @return reference to the view {@link android.view.View} wrapped by the {@link BuiltView}
+     * @return reference to the view {@link android.view.View} wrapped by the {@link ProteusView}
      */
     public View getView();
 
     /**
-     * Updates the data associated with view wrapped by the {@link BuiltView}
+     * Updates the data associated with view wrapped by the {@link ProteusView}
      * with new {@link org.json.JSONObject} object.
      *
      * @param data new {@link org.json.JSONObject} object which will used to update the view.
      * @return reference to the updated view {@link android.view.View} wrapped by the
-     * {@link BuiltView}
+     * {@link ProteusView}
      */
     public View updateView(JsonElement data);
 }
