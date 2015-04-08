@@ -59,6 +59,14 @@ public class SimpleProteusView implements ProteusView {
         return this.getView();
     }
 
+    /**
+     * Updates the Binding with new data. It uses a {@link com.flipkart.layoutengine.binding.Binding}
+     * to get the associated {@link android.view.View}, {@link com.flipkart.layoutengine.builder.LayoutBuilder},
+     * and {@link com.flipkart.layoutengine.parser.LayoutHandler} to update the value of the bound attribute with
+     * the new value fetched from the new data object passed.
+     *
+     * @param bindingEntry The property name to update mapped to its {@link com.flipkart.layoutengine.binding.Binding}
+     */
     private void handleBinding(Map.Entry<String, Binding> bindingEntry, JsonObject data) {
         JsonObject temp = new JsonObject();
         temp.addProperty("value", bindingEntry.getKey());
