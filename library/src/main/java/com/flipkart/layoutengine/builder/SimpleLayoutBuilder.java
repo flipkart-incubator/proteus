@@ -11,6 +11,7 @@ import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.view.SimpleProteusView;
 import com.google.gson.JsonArray;
@@ -245,18 +246,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     protected JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
-        if (element.isJsonPrimitive()) {
-            String dataSourceKey = element.getAsString();
-            if (dataSourceKey.length() > 0 && dataSourceKey.charAt(0) == PREFIX) {
-                JsonElement tempElement = dataProvider.getObject(dataSourceKey.substring(1), childIndex);
-                if (tempElement != null) {
-                    element = tempElement;
-                } else {
-                    Log.e(TAG, "Got null element for " + dataSourceKey);
-                }
-            }
-        }
-        return element;
+        return Utils.getElementFromData(PREFIX, element, dataProvider, childIndex);
     }
 
     @Override

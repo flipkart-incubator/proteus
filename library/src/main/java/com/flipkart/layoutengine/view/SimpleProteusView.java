@@ -1,6 +1,5 @@
 package com.flipkart.layoutengine.view;
 
-import android.util.Log;
 import android.view.View;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -8,11 +7,10 @@ import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.GsonProvider;
 import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -25,7 +23,7 @@ import java.util.Map;
 public class SimpleProteusView implements ProteusView {
 
     private static final Character PREFIX = DataParsingAdapter.PREFIX;
-    private static final String TAG = SimpleProteusView.class.getSimpleName();
+    //private static final String TAG = SimpleProteusView.class.getSimpleName();
 
     private Map<String, Binding> mapOfBindings;
     private View view;
@@ -68,34 +66,18 @@ public class SimpleProteusView implements ProteusView {
 
         JsonElement dataValue = getElementFromData(dataAttribute, context.getDataProvider(), index);
 
-        try {
-            binding.getParserContext().getLayoutBuilder().handleAttribute(
-                    binding.getLayoutHandler(),
-                    context,
-                    binding.getAttributeKey(),
-                    null,
-                    dataValue,
-                    binding.getView(),
-                    binding.getParentView(),
-                    index);
-        } catch (Exception e) {
-            Log.d("data", binding.getAttributeKey() + " " +
-                    dataValue.toString() + " ");
-        }
+        binding.getParserContext().getLayoutBuilder().handleAttribute(
+                binding.getLayoutHandler(),
+                context,
+                binding.getAttributeKey(),
+                null,
+                dataValue,
+                binding.getView(),
+                binding.getParentView(),
+                index);
     }
 
-    public static JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
-        if (element.isJsonPrimitive()) {
-            String dataSourceKey = element.getAsString();
-            if (dataSourceKey.length() > 0 && dataSourceKey.charAt(0) == PREFIX) {
-                JsonElement tempElement = dataProvider.getObject(dataSourceKey.substring(1), childIndex);
-                if (tempElement != null) {
-                    element = tempElement;
-                } else {
-                    Log.e(TAG, "Got null element for " + dataSourceKey);
-                }
-            }
-        }
-        return element;
+    public JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
+        return Utils.getElementFromData(PREFIX, element, dataProvider, childIndex);
     }
 }

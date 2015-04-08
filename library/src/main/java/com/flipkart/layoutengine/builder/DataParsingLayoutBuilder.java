@@ -32,21 +32,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    public boolean handleAttribute(LayoutHandler handler, ParserContext context, String attributeKey, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int childIndex) {
-        if (element.isJsonPrimitive()) {
-            String attributeValue = element.getAsString();
-            JsonElement elementFromData = getElementFromData(element, context.getDataProvider(), childIndex);
-            if (elementFromData != null) {
-                Binding binding = new Binding(context, handler, attributeKey, attributeValue, view, parent, childIndex);
-                element = elementFromData;
-                bindings.put(attributeValue, binding);
-            }
-        }
-        return super.handleAttribute(handler, context, attributeKey, jsonObject, element, view, parent, childIndex);
-
-    }
-
-    @Override
     protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
         childrenElement = getElementFromData(childrenElement, context.getDataProvider(), childIndex);
         return super.parseChildren(handler, context, childrenElement, childIndex);
@@ -86,19 +71,4 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         return view;
     }
 
-
-    /*private JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
-        if (element.isJsonPrimitive()) {
-            String dataSourceKey = element.getAsString();
-            if (dataSourceKey.length() > 0 && dataSourceKey.charAt(0) == PREFIX) {
-                JsonElement tempElement = dataProvider.getObject(dataSourceKey.substring(1), childIndex);
-                if (tempElement != null) {
-                    element = tempElement;
-                } else {
-                    Log.e(TAG, "Got null element for " + dataSourceKey);
-                }
-            }
-        }
-        return element;
-    }*/
 }
