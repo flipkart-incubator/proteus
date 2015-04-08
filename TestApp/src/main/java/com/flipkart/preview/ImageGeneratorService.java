@@ -21,6 +21,7 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.networking.API;
 import com.flipkart.networking.request.BaseRequest;
 import com.flipkart.networking.request.BitmapUploadRequest;
@@ -57,7 +58,7 @@ public class ImageGeneratorService extends Service {
     }
 
     private void startPollingServer(Intent intent) {
-       checkServer();
+        checkServer();
     }
 
     private void checkServer() {
@@ -66,13 +67,13 @@ public class ImageGeneratorService extends Service {
             @Override
             public void onRequestFinish(final BaseRequest<RemoteRenderingResponse> request) {
                 final int id = request.getResponse().getResponse().getId();
-                if(request.getResponse().getResponse().getLayout()!=null) {
+                if (request.getResponse().getResponse().getLayout() != null) {
 
                     Runnable r = new Runnable() {
                         @Override
                         public void run() {
                             Bitmap bitmap = generateBitmap(request);
-                            upload(bitmap,id);
+                            upload(bitmap, id);
                         }
                     };
                     // do not move this to main thread. Image handling breaks, causes thread block.
@@ -86,7 +87,7 @@ public class ImageGeneratorService extends Service {
         request.setOnErrorListener(new OnRequestErrorListener<RemoteRenderingResponse>() {
             @Override
             public void onRequestError(BaseRequest<RemoteRenderingResponse> request, RequestError error) {
-                Log.e("Error","Could not fetch rendering request");
+                Log.e("Error", "Could not fetch rendering request");
                 onRequestFinished();
             }
         });
@@ -94,7 +95,7 @@ public class ImageGeneratorService extends Service {
     }
 
     private void upload(Bitmap bitmap, int id) {
-        BitmapUploadRequest bitmapUploadRequest = new BitmapUploadRequest(bitmap,id);
+        BitmapUploadRequest bitmapUploadRequest = new BitmapUploadRequest(bitmap, id);
         API.getInstance(this.getApplicationContext()).processAsync(bitmapUploadRequest);
     }
 
@@ -113,7 +114,7 @@ public class ImageGeneratorService extends Service {
             }
 
             @Override
-            public View onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent, int childIndex) {
+            public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent, int childIndex) {
                 return null;
             }
 
@@ -124,26 +125,25 @@ public class ImageGeneratorService extends Service {
         });
         View view = null;
         try {
-            view = builder.build(frameLayout, layout);
-        }catch (Exception e)
-        {
+            view = builder.build(frameLayout, layout).getView();
+        } catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
             String stackTrace = sw.toString();
             TextView tv = new TextView(getBaseContext());
-            tv.setText(e.getMessage()+"\n\n"+stackTrace);
+            tv.setText(e.getMessage() + "\n\n" + stackTrace);
             tv.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             tv.setTextSize(8);
             tv.setTextColor(Color.BLACK);
             view = tv;
             // do nothing
         }
-            if(view!=null) {
+        if (view != null) {
             frameLayout.addView(view);
         }
         Bitmap b = null;
-        if(view!=null) {
+        if (view != null) {
             b = loadBitmapFromView(frameLayout);
             Log.d("view", String.valueOf(b.getRowBytes()));
         }
@@ -165,19 +165,18 @@ public class ImageGeneratorService extends Service {
         view.draw(canvas);
 
         float density = getBaseContext().getResources().getDisplayMetrics().density;
-        bitmap = Bitmap.createScaledBitmap(bitmap,(int)(width/density),(int)(height/density),true);
+        bitmap = Bitmap.createScaledBitmap(bitmap, (int) (width / density), (int) (height / density), true);
 
         return bitmap;
     }
 
-    private void onRequestFinished()
-    {
-       handler.postDelayed(new Runnable() {
-           @Override
-           public void run() {
-             checkServer();
-           }
-       },1000);
+    private void onRequestFinished() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkServer();
+            }
+        }, 1000);
 
     }
 

@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -65,7 +66,7 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
     }
 
     @Override
-    public void addChildren(Context context, E parent, List<View> children) {
+    public void addChildren(Context context, E parent, List<ProteusView> children) {
         handler.addChildren(context,parent,children);
     }
 
