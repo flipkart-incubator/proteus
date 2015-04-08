@@ -10,6 +10,7 @@ import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -30,7 +31,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         this.dataProvider = dataProvider;
     }
 
-    /*@Override
+    @Override
     public boolean handleAttribute(LayoutHandler handler, ParserContext context, String attributeKey, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int childIndex) {
         if (element.isJsonPrimitive()) {
             String attributeValue = element.getAsString();
@@ -43,7 +44,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         }
         return super.handleAttribute(handler, context, attributeKey, jsonObject, element, view, parent, childIndex);
 
-    }*/
+    }
 
     @Override
     protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
@@ -52,7 +53,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    public View build(ViewGroup parent, JsonObject jsonObject) {
+    public ProteusView build(ViewGroup parent, JsonObject jsonObject) {
         return super.build(parent, jsonObject);
     }
 
@@ -64,7 +65,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected View buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject, View existingView, int childIndex) {
+    protected ProteusView buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject, View existingView, int childIndex) {
         JsonElement dataContextElement = jsonObject.get("dataContext");
         if (dataContextElement != null) {
             ParserContext newContext = context.clone();
@@ -81,7 +82,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             }
 
         }
-        View view = super.buildImpl(context, parent, jsonObject, existingView, childIndex);
+        ProteusView view = super.buildImpl(context, parent, jsonObject, existingView, childIndex);
         return view;
     }
 

@@ -11,6 +11,8 @@ import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.view.ProteusView;
+import com.flipkart.layoutengine.view.SimpleProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -97,7 +99,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     @Override
-    public View build(ViewGroup parent, JsonObject jsonObject) {
+    public ProteusView build(ViewGroup parent, JsonObject jsonObject) {
         return buildImpl(createParserContext(), parent, jsonObject, null, 0);
     }
 
@@ -118,7 +120,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
      * @param childIndex   index of child inside its parent view
      * @return
      */
-    protected View buildImpl(final ParserContext context, final ViewGroup parent, final JsonObject jsonObject, View existingView, final int childIndex) {
+    protected ProteusView buildImpl(final ParserContext context, final ViewGroup parent, final JsonObject jsonObject, View existingView, final int childIndex) {
         JsonElement viewTypeElement = jsonObject.get(TYPE);
         //System.out.println("ViewType "+ viewTypeElement.getAsString());
         String viewType = null;
@@ -187,14 +189,18 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
         if (children != null && children.size() > 0) {
             ViewGroup selfViewGroup = (ViewGroup) createdView;
-            List<View> childrenToAdd = new ArrayList<View>();
+            List<ProteusView> childrenToAdd = new ArrayList<ProteusView>();
             for (int i = 0; i < children.size(); i++) {
                 JsonObject childObject = children.get(i).getAsJsonObject();
                 if (childViewElement != null) {
                     // propagate the value of 'childView' to the recursive calls
                     childObject.add(TYPE, childViewElement);
                 }
-                View childView = buildImpl(context, selfViewGroup, childObject, null, i);
+
+                ProteusView childView = buildImpl(context, selfViewGroup, childObject, null, i);
+
+                bindings.putAll(childView.getBindings());
+
                 if (childView != null) {
                     childrenToAdd.add(childView);
                 }
@@ -205,8 +211,9 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             }
         }
 
-        return createdView;
+        ProteusView finalProteusVIew = new SimpleProteusView(createdView, bindings);
 
+        return finalProteusVIew;
     }
 
     protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
@@ -223,7 +230,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         }
     }
 
-    protected View onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject, int childIndex) {
+    protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject, int childIndex) {
 
         if (listener != null) {
             return listener.onUnknownViewType(context, viewType, jsonObject, parent, childIndex);

@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -23,7 +24,7 @@ public interface LayoutBuilder {
 
     boolean handleAttribute(LayoutHandler handler, ParserContext context, String attribute, JsonObject layoutJsonObject, JsonElement modelData, View view, ViewGroup parent, int index);
 
-    View build(ViewGroup parent, JsonObject jsonObject);
+    ProteusView build(ViewGroup parent, JsonObject jsonObject);
 
     LayoutBuilderCallback getListener();
 
