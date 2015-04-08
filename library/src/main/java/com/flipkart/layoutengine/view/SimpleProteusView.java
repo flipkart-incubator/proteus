@@ -8,7 +8,6 @@ import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.GsonProvider;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.Utils;
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -25,13 +24,15 @@ public class SimpleProteusView implements ProteusView {
     private static final Character PREFIX = DataParsingAdapter.PREFIX;
     //private static final String TAG = SimpleProteusView.class.getSimpleName();
 
-    private Map<String, Binding> mapOfBindings;
+    /**
+     * Holds a map of Strings to {@link com.flipkart.layoutengine.binding.Binding}
+     */
+    private Map<String, Binding> bindings;
     private View view;
-    private Gson gson = new Gson();
 
-    public SimpleProteusView(View view, Map<String, Binding> mapOfBindings) {
+    public SimpleProteusView(View view, Map<String, Binding> bindings) {
         this.view = view;
-        this.mapOfBindings = mapOfBindings;
+        this.bindings = bindings;
     }
 
     @Override
@@ -41,13 +42,13 @@ public class SimpleProteusView implements ProteusView {
 
     @Override
     public Map<String, Binding> getBindings() {
-        return this.mapOfBindings;
+        return this.bindings;
     }
 
     @Override
     public View updateView(JsonObject data) {
 
-        for (Map.Entry<String, Binding> bindingEntry : this.mapOfBindings.entrySet()) {
+        for (Map.Entry<String, Binding> bindingEntry : this.bindings.entrySet()) {
             this.handleBinding(bindingEntry, data);
         }
         return this.getView();

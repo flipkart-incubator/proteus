@@ -10,8 +10,15 @@ import java.util.Map;
 
 /**
  * A wrapper class to update the views build by a {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
- * Enables consumers of the views built by the builder to update the data, data-model, or layout at
+ * Enables consumers of the views built by the builder to update the data at
  * runtime.
+ *
+ * The {@link com.flipkart.layoutengine.builder.LayoutBuilder#build} method returns a
+ * {@link com.flipkart.layoutengine.view.ProteusView}. To use raw view call it's
+ * {@link ProteusView#getView()} method.
+ *
+ * In order to update the data associated with the {@link android.view.View} use the
+ * {@link com.flipkart.layoutengine.view.ProteusView#updateView(com.google.gson.JsonObject)}.
  *
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
