@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
+import com.flipkart.layoutengine.view.ProteusView;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
     }
 
     @Override
-    public void addChildren(Context context, T parent, final List<View> children) {
+    public void addChildren(Context context, T parent, final List<ProteusView> children) {
         //not calling super since it calls addChild(). Addchild() on viewpager wont work.
 
         PagerAdapter adapter = new PagerAdapter() {
@@ -37,8 +38,8 @@ public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
 
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
-                View view = children.get(position);
-                container.addView(view);
+                ProteusView view = children.get(position);
+                container.addView(view.getView());
                 return view;
             }
 

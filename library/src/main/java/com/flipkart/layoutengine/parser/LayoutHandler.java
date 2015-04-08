@@ -1,10 +1,10 @@
 package com.flipkart.layoutengine.parser;
 
 import android.content.Context;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -27,7 +27,10 @@ public interface LayoutHandler<E> {
 
 
     public boolean canAddChild();
+
     public void setupView(ViewGroup parent, E view);
+
     public void prepare(Context context);
-    public void addChildren(Context context, E parent, List<View> children);
+
+    public void addChildren(Context context, E parent, List<ProteusView> children);
 }

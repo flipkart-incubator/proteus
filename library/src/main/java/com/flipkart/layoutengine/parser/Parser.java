@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.processor.AttributeProcessor;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -128,9 +129,9 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
      * @param children The List of child views which have to be added.
      */
     @Override
-    public void addChildren(Context context, T parent, List<View> children) {
-        for (View child : children) {
-            ((ViewGroup) parent).addView(child);
+    public void addChildren(Context context, T parent, List<ProteusView> children) {
+        for (ProteusView child : children) {
+            ((ViewGroup) parent).addView(child.getView());
         }
     }
 
