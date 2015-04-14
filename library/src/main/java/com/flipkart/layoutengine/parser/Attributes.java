@@ -135,6 +135,31 @@ public class Attributes {
         public static Attribute ShowDividers = new Attribute("showDividers");
     }
 
+    public static class ListView {
+        /**
+         * XML attributes inherited from {@link android.widget.AbsListView}
+         */
+        public static Attribute CacheColorHint  = new Attribute("cacheColorHint");
+        public static Attribute ChoiceMode  = new Attribute("choiceMode");
+        public static Attribute DrawSelectorOnTop  = new Attribute("drawSelectorOnTop");
+        public static Attribute FastScrollEnabled  = new Attribute("fastScrollEnabled");
+        public static Attribute ListSelector  = new Attribute("listSelector");
+        public static Attribute ScrollingCache  = new Attribute("scrollingCache");
+        public static Attribute SmoothScrollbar  = new Attribute("smoothScrollbar");
+        public static Attribute StackFromBottom  = new Attribute("stackFromBottom");
+        public static Attribute TextFilterEnabled  = new Attribute("textFilterEnabled");
+        public static Attribute TranscriptMode  = new Attribute("transcriptMode");
+        /**
+         * XML attributes of {@link android.widget.ListView}
+         */
+        public static Attribute Divider  = new Attribute("divider");
+        public static Attribute DividerHeight  = new Attribute("dividerHeight");
+        public static Attribute Entries  = new Attribute("entries");
+        public static Attribute FooterDividersEnabled  = new Attribute("footerDividersEnabled");
+        public static Attribute HeaderDividersEnabled  = new Attribute("headerDividersEnabled");
+
+    }
+
     public static class NetworkImageView {
         public static Attribute ImageUrl = new Attribute("imageUrl");
     }
