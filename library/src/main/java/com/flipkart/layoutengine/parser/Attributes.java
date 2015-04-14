@@ -158,6 +158,12 @@ public class Attributes {
         public static Attribute FooterDividersEnabled  = new Attribute("footerDividersEnabled");
         public static Attribute HeaderDividersEnabled  = new Attribute("headerDividersEnabled");
 
+        /**
+         * XML attribute for the {@link android.widget.ListView} Adapter layout
+         */
+        public static Attribute ListViewLayout = new Attribute("listViewLayout");
+        public static Attribute ListViewDataContext = new Attribute("listViewDataContext");
+
     }
 
     public static class NetworkImageView {

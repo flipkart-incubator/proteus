@@ -77,15 +77,13 @@ public class ListViewParser<T extends ListView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.ListView.DrawSelectorOnTop, new StringAttributeProcessor<T>() {
+        /*addHandler(Attributes.ListView.DrawSelectorOnTop, new StringAttributeProcessor<T>() {
                     @Override
                     public void handle(ParserContext parserContext, String attributeKey, String
                             attributeValue, T view) {
                         view.setCacheColorHint(Color.parseColor(attributeValue));
                     }
-                }
-
-        );
+                });
 
         addHandler(Attributes.ListView.Entries, new StringAttributeProcessor<T>() {
                     @Override
@@ -185,6 +183,6 @@ public class ListViewParser<T extends ListView> extends WrappableParser<T> {
                     }
                 }
 
-        );
+        );*/
     }
 }
