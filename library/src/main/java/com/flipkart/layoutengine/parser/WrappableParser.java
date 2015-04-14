@@ -21,16 +21,15 @@ public class WrappableParser<T extends View> extends Parser<T> {
 
     @Override
     protected void prepareHandlers(Context context) {
-        if(wrappedParser!=null) {
+        if (wrappedParser != null) {
             wrappedParser.prepareHandlers(context);
         }
     }
 
     @Override
     public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, T view, int childIndex) {
-        boolean handled = super.handleAttribute(context, attribute, jsonObject, element, view,childIndex );
-        if(wrappedParser!=null && !handled)
-        {
+        boolean handled = super.handleAttribute(context, attribute, jsonObject, element, view, childIndex);
+        if (wrappedParser != null && !handled) {
             handled = handled || wrappedParser.handleAttribute(context, attribute, jsonObject, element, view, childIndex);
         }
 
