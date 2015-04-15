@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class ListViewAdapter extends BaseAdapter {
@@ -21,17 +22,17 @@ public class ListViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return this.listViewItems.size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
+    public JsonElement getItem(int position) {
+        return this.listViewItems.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
@@ -39,17 +40,4 @@ public class ListViewAdapter extends BaseAdapter {
         return null;
     }
 
-    public boolean setListViewItemLayout(JsonObject listViewItemLayout) {
-        this.listViewItemLayout = listViewItemLayout;
-        return this.isReady();
-    }
-
-    public boolean setListViewItems(JsonArray listViewItems) {
-        this.listViewItems = listViewItems;
-        return this.isReady();
-    }
-
-    public boolean isReady() {
-        return this.listViewItemLayout != null && this.getCount() > 0;
-    }
 }
