@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -15,10 +14,9 @@ import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.flipkart.layoutengine.widgets.ListViewAdapter;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The layout handler for {@link android.widget.ListView}
@@ -38,11 +36,9 @@ public class ListViewParser<T extends ListView> extends WrappableParser<T> {
         addHandler(Attributes.ListView.ListViewData, new JsonDataProcessor<T>() {
             @Override
             public void handleData(ParserContext parserContext, String attributeKey, JsonObject attributeData, T view) {
-                List<String> list = new ArrayList<String>();
-                for (int i = 0; i < 40; i++) {
-                    list.add("this is item no " + i);
-                }
-                view.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, list));
+                JsonObject listViewLayout = attributeData.getAsJsonObject("layout");
+                JsonElement dataContext = attributeData.get("dataContext");
+                ListViewAdapter listViewAdapter = new ListViewAdapter(context, parserContext, listViewLayout, dataContext);
             }
         });
 

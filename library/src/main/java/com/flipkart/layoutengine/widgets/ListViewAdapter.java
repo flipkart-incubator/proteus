@@ -5,19 +5,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.provider.DataParsingAdapter;
+import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class ListViewAdapter extends BaseAdapter {
+
+    private static final Character PREFIX = DataParsingAdapter.PREFIX;
     private Context context;
     private JsonArray listViewItems;
     private JsonObject listViewItemLayout;
 
-    public ListViewAdapter(Context context, JsonObject listViewItemLayout, JsonArray listViewItems) {
+    public ListViewAdapter(Context context,ParserContext parserContext, JsonObject listViewItemLayout, JsonElement dataContext) {
         this.context = context;
         this.listViewItemLayout = listViewItemLayout;
-        this.listViewItems = listViewItems;
+        this.listViewItems = this.getListViewItemsFromData(parserContext, dataContext);
     }
 
     @Override
@@ -40,4 +45,7 @@ public class ListViewAdapter extends BaseAdapter {
         return null;
     }
 
+    private JsonArray getListViewItemsFromData(ParserContext parserContext, JsonElement dataContext) {
+        return Utils.getElementFromData(PREFIX, dataContext, parserContext.getDataProvider(), 0).getAsJsonArray();
+    }
 }
