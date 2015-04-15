@@ -5,14 +5,19 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.widget.AbsListView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
+import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The layout handler for {@link android.widget.ListView}
@@ -26,8 +31,19 @@ public class ListViewParser<T extends ListView> extends WrappableParser<T> {
     }
 
     @Override
-    protected void prepareHandlers(Context context) {
+    protected void prepareHandlers(final Context context) {
         super.prepareHandlers(context);
+
+        addHandler(Attributes.ListView.ListViewLayout, new JsonDataProcessor<T>() {
+            @Override
+            public void handleData(ParserContext parserContext, String attributeKey, Object attributeData, T view) {
+                List<String> list = new ArrayList<String>();
+                for (int i = 0; i < 40; i++) {
+                    list.add("this is item no " + i);
+                }
+                view.setAdapter(new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, list));
+            }
+        });
 
         addHandler(Attributes.ListView.CacheColorHint, new StringAttributeProcessor<T>() {
             @Override
