@@ -159,10 +159,9 @@ public class Attributes {
         public static Attribute HeaderDividersEnabled  = new Attribute("headerDividersEnabled");
 
         /**
-         * XML attribute for the {@link android.widget.ListView} Adapter layout
+         * XML attribute for the {@link android.widget.ListView} Adapter layout and data
          */
-        public static Attribute ListViewLayout = new Attribute("listViewLayout");
-        public static Attribute ListViewDataContext = new Attribute("listViewDataContext");
+        public static Attribute ListViewData = new Attribute("listViewData");
 
     }
 
