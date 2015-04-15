@@ -15,6 +15,7 @@ import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +35,9 @@ public class ListViewParser<T extends ListView> extends WrappableParser<T> {
     protected void prepareHandlers(final Context context) {
         super.prepareHandlers(context);
 
-        addHandler(Attributes.ListView.ListViewLayout, new JsonDataProcessor<T>() {
+        addHandler(Attributes.ListView.ListViewData, new JsonDataProcessor<T>() {
             @Override
-            public void handleData(ParserContext parserContext, String attributeKey, Object attributeData, T view) {
+            public void handleData(ParserContext parserContext, String attributeKey, JsonObject attributeData, T view) {
                 List<String> list = new ArrayList<String>();
                 for (int i = 0; i < 40; i++) {
                     list.add("this is item no " + i);

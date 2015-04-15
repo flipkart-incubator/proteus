@@ -8,15 +8,15 @@ import android.widget.BaseAdapter;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import org.json.JSONObject;
-
 public class ListViewAdapter extends BaseAdapter {
     private Context context;
     private JsonArray listViewItems;
     private JsonObject listViewItemLayout;
 
-    public ListViewAdapter(Context context) {
+    public ListViewAdapter(Context context, JsonObject listViewItemLayout, JsonArray listViewItems) {
         this.context = context;
+        this.listViewItemLayout = listViewItemLayout;
+        this.listViewItems = listViewItems;
     }
 
     @Override
@@ -37,15 +37,6 @@ public class ListViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         return null;
-    }
-
-    public void add(JsonArray listViewItems) {
-    }
-
-    public void add(JSONObject listViewItem) {
-    }
-
-    public void clear() {
     }
 
     public boolean setListViewItemLayout(JsonObject listViewItemLayout) {
