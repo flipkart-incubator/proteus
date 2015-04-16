@@ -39,6 +39,7 @@ public class ListViewParser<T extends ListView> extends WrappableParser<T> {
                 JsonObject listViewLayout = attributeData.getAsJsonObject("layout");
                 JsonElement dataContext = attributeData.get("dataContext");
                 ListViewAdapter listViewAdapter = new ListViewAdapter(context, parserContext, listViewLayout, dataContext);
+                view.setAdapter(listViewAdapter);
             }
         });
 
