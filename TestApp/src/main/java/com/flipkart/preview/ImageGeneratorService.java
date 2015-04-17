@@ -125,7 +125,7 @@ public class ImageGeneratorService extends Service {
         });
         View view = null;
         try {
-            view = builder.build(frameLayout, layout).getView();
+            view = builder.build(frameLayout, layout, null).getView();
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);

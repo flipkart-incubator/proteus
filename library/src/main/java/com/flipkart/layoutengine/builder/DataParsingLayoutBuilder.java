@@ -38,14 +38,16 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    public ProteusView build(ViewGroup parent, JsonObject jsonObject) {
-        return super.build(parent, jsonObject);
+    public ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data) {
+        return super.build(parent, layout, data);
     }
 
     @Override
-    protected ParserContext createParserContext() {
-        ParserContext context = super.createParserContext();
-        context.setDataProvider(dataProvider);
+    protected ParserContext createParserContext(JsonObject data) {
+        ParserContext context = super.createParserContext(data);
+        if (data == null) {
+            context.setDataProvider(dataProvider);
+        }
         return context;
     }
 

@@ -9,6 +9,7 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.DataParsingAdapter;
+import com.flipkart.layoutengine.provider.GsonProvider;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.flipkart.layoutengine.toolbox.Utils;
@@ -100,14 +101,17 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     @Override
-    public ProteusView build(ViewGroup parent, JsonObject jsonObject) {
-        return buildImpl(createParserContext(), parent, jsonObject, null, 0);
+    public ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data) {
+        return buildImpl(createParserContext(data), parent, layout, null, 0);
     }
 
 
-    protected ParserContext createParserContext() {
+    protected ParserContext createParserContext(JsonObject data) {
         ParserContext parserContext = new ParserContext();
         parserContext.setLayoutBuilder(this);
+        if (data != null) {
+            parserContext.setDataProvider(new GsonProvider(data));
+        }
         return parserContext;
     }
 
