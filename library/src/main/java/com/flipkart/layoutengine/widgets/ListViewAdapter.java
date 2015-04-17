@@ -1,12 +1,9 @@
 package com.flipkart.layoutengine.widgets;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.FrameLayout;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
@@ -74,7 +71,6 @@ public class ListViewAdapter extends BaseAdapter {
             layoutBuilder.setListener(new LayoutBuilderCallback() {
                 @Override
                 public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element, JsonObject object, View view, int childIndex) {
-                    Log.d("asd", "asdasd");
                 }
 
                 @Override
