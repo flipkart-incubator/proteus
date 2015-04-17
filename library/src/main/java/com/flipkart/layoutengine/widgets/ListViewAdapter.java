@@ -5,11 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
-import com.flipkart.layoutengine.builder.LayoutBuilder;
-import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.GsonProvider;
 import com.flipkart.layoutengine.toolbox.Utils;
@@ -28,12 +24,14 @@ public class ListViewAdapter extends BaseAdapter {
     private Context context;
     private JsonArray listViewItems;
     private JsonObject listViewItemLayout;
+    private ParserContext parserContext;
     private Map<View, ProteusView> viewMap = new HashMap<View, ProteusView>();
 
     public ListViewAdapter(Context context, ParserContext parserContext, JsonObject listViewItemLayout, JsonElement dataContext) {
         this.context = context;
         this.listViewItemLayout = listViewItemLayout;
         this.listViewItems = this.getListViewItemsFromData(parserContext, dataContext);
+        this.parserContext = parserContext.clone();
         this.dataContext = dataContext.getAsString().substring(1);
     }
 
@@ -63,28 +61,8 @@ public class ListViewAdapter extends BaseAdapter {
             ProteusView savedProteusView = this.viewMap.get(convertView);
             savedProteusView.updateView(itemDataPlaceHolder);
         } else {
-            LayoutBuilder layoutBuilder = new DefaultLayoutBuilderFactory()
-                    .createDataAndViewParsingLayoutBuilder(this.context,
-                            new GsonProvider(itemDataPlaceHolder),
-                            new GsonProvider(this.listViewItemLayout));
-
-            layoutBuilder.setListener(new LayoutBuilderCallback() {
-                @Override
-                public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element, JsonObject object, View view, int childIndex) {
-                }
-
-                @Override
-                public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent, int childIndex) {
-                    return null;
-                }
-
-                @Override
-                public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType) {
-                    return null;
-                }
-            });
-
-            ProteusView view = layoutBuilder.build(parent, this.listViewItemLayout);
+            //this.parserContext.setDataProvider(new GsonProvider(itemDataPlaceHolder));
+            ProteusView view = this.parserContext.getLayoutBuilder().build(parent, this.listViewItemLayout, itemDataPlaceHolder);
             convertView = view.getView();
 
             this.viewMap.put(convertView, view);
