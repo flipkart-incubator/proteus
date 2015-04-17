@@ -10,7 +10,8 @@ JsonObject layout = new JsonObject();   // this layout is the layout sent from s
 LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
 
 // now you have a dynamic view which can be added to decorview
-ProteusView proteusView = builder.build((ViewGroup)this.getWindow().getDecorView(), layout, null);
+ViewGroup parentViewGroup = (ViewGroup)this.getWindow().getDecorView();
+ProteusView proteusView = builder.build(parentViewGroup, layout, null);
 
 // To get the View call the ProteusView.getView()
 View view = proteusView.getView();
@@ -30,8 +31,11 @@ This is a layout builder which can parse json to construct an android view out o
 
 Example :
 
-    LayoutBuilder builder = new DefaultLayoutBuilderFactory().createSimpleLayoutBuilder(MainActivity.this);
-	View view = builder.build((ViewGroup)MainActivity.this.getWindow().getDecorView(),layout);
+```java
+LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
+ProteusView proteusView = builder.build(parentViewGroup, layout, null);
+View view = proteusView.getView();
+```
 
 DataParsingLayoutBuilder
 ------------------------
