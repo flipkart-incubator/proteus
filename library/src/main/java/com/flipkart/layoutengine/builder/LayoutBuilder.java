@@ -24,7 +24,7 @@ public interface LayoutBuilder {
 
     boolean handleAttribute(LayoutHandler handler, ParserContext context, String attribute, JsonObject layoutJsonObject, JsonElement modelData, View view, ViewGroup parent, int index);
 
-    ProteusView build(ViewGroup parent, JsonObject jsonObject);
+    ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data);
 
     LayoutBuilderCallback getListener();
 
