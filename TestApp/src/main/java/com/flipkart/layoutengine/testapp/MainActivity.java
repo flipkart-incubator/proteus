@@ -48,12 +48,12 @@ public class MainActivity extends ActionBarActivity {
         //JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"ListView\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"listViewLayout\":\"testting value\"}]}", JsonObject.class);
         JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"ListView\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"listViewData\":{\"dataContext\":\"$products\",\"layout\":{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$products.name\"}]}}}]}", JsonObject.class);
 
-        JsonElement data;
+        JsonObject data;
         if (newData != null) {
-            data = gson.fromJson(newData, JsonElement.class);
+            data = gson.fromJson(newData, JsonObject.class);
         } else {
-            //data = gson.fromJson("{\"product\":{\"name\":\"Gaming Mouse\",\"price\":\"1350\",\"rating\":\"****\"}}", JsonElement.class);
-            data = gson.fromJson("{\"products\":[{\"name\":\"qwe0\"},{\"name\":\"qwe1\"},{\"name\":\"qwe2\"},{\"name\":\"qwe3\"},{\"name\":\"qwe4\"},{\"name\":\"qwe5\"},{\"name\":\"qwe6\"},{\"name\":\"qwe7\"},{\"name\":\"qwe8\"},{\"name\":\"qwe9\"}]}", JsonElement.class);
+            //data = gson.fromJson("{\"product\":{\"name\":\"Gaming Mouse\",\"price\":\"1350\",\"rating\":\"****\"}}", JsonObject.class);
+            data = gson.fromJson("{\"products\":[{\"name\":\"qwe0\"},{\"name\":\"qwe1\"},{\"name\":\"qwe2\"},{\"name\":\"qwe3\"},{\"name\":\"qwe4\"},{\"name\":\"qwe5\"},{\"name\":\"qwe6\"},{\"name\":\"qwe7\"},{\"name\":\"qwe8\"},{\"name\":\"qwe9\"}]}", JsonObject.class);
         }
 
         LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataAndViewParsingLayoutBuilder(this, new GsonProvider(data), new GsonProvider(layoutData));
@@ -62,7 +62,7 @@ public class MainActivity extends ActionBarActivity {
 
         FrameLayout container = new FrameLayout(MainActivity.this);
 
-        this.proteusView = builder.build(container, layoutData);
+        this.proteusView = builder.build(container, layoutData, data);
         View view = proteusView.getView();
 
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
