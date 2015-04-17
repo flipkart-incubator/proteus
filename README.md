@@ -5,12 +5,16 @@ An android library for achieving granular control over the visual appearance and
 
 Usage:
 
-	
+```java
+JsonObject layout = new JsonObject();   // this layout is the layout sent from server
+LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
 
-    JsonObject layout = new JsonObject(); // this layout is the layout sent from server
-    LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
-	View view = builder.build((ViewGroup)this.getWindow().getDecorView(),layout); 	// now you have a dynamic view which can be added to decorview
+// now you have a dynamic view which can be added to decorview
+ProteusView proteusView = builder.build((ViewGroup)this.getWindow().getDecorView(), layout, null);
 
+// To get the View call the ProteusView.getView()
+View view = proteusView.getView();
+```
 
 Builder types
 =============
@@ -24,7 +28,7 @@ SimpleLayoutBuilder
 -------------------
 This is a layout builder which can parse json to construct an android view out of it. It uses the registered handlers to convert the json string to a view and then assign attributes. You can also assign a callback to get callbacks for unknown views and unknown attributes.
 
-Example : 
+Example :
 
     LayoutBuilder builder = new DefaultLayoutBuilderFactory().createSimpleLayoutBuilder(MainActivity.this);
 	View view = builder.build((ViewGroup)MainActivity.this.getWindow().getDecorView(),layout);
