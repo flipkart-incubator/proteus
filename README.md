@@ -44,7 +44,8 @@ A layout builder built on top of simple layout builder which can additionally pa
 Example :
 
 ```java
-LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataParsingLayoutBuilder(MainActivity.this, new GsonProvider(dataJsonObject));
+LayoutBuilder builder = new DefaultLayoutBuilderFactory()
+    .createDataParsingLayoutBuilder(MainActivity.this, new GsonProvider(dataJsonObject));
 
 ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
 // or
@@ -60,9 +61,10 @@ A layout builder built on top of data parsing layout builder which can make view
 Example :
 
 ```java
-LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataParsingLayoutBuilder(MainActivity.this,
-    new GsonProvider(dataJsonObject),
-    new GsonProvider(layoutJsonObject));
+LayoutBuilder builder = new DefaultLayoutBuilderFactory()
+    .createDataParsingLayoutBuilder(MainActivity.this,
+        new GsonProvider(dataJsonObject),
+        new GsonProvider(layoutJsonObject));
 
 ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
 // or
