@@ -73,6 +73,25 @@ ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, newDa
 View view = proteusView.getView();
 ```
 
+Updating a view
+----------------
+
+You can update a View created by Proteus with new data for the bindings. Using the update method does not re-create the view, but only updates the properties and attributes of the View.
+
+Example:
+
+```java
+ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
+View view = proteusView.getView();
+
+// some where else
+View view = proteusView.updateView(newDataJsonObject);
+
+// `view` is a reference to the old instance of the View associated with this ProteusView
+// with updated data bindings.
+
+```
+
 One click XML to JSON conversion
 --------------------------------
 Download [this plugin](https://github.com/Flipkart/android-studio-layoutengine-plugin/blob/master/Plugin/Plugin.jar) for android studio and enable it. Once enabled, you can select any android XML layout file and go to **Tools > Convert XML to JSON**
