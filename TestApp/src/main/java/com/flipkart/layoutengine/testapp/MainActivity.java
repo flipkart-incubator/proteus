@@ -46,7 +46,7 @@ public class MainActivity extends ActionBarActivity {
 
         //JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.name\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.price\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.rating\"}]}", JsonObject.class);
         //JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"ListView\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"listViewLayout\":\"testting value\"}]}", JsonObject.class);
-        JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"ListView\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"listViewData\":{\"dataContext\":\"$products\",\"layout\":{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$products.name\"}]}}}]}", JsonObject.class);
+        JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"ListView\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"listViewData\":{\"dataContext\":\"$products\",\"layout\":{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"orientation\":\"vertical\",\"onClick\":\"itemClicked\",\"children\":[{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$products.name\"}]}}}]}", JsonObject.class);
 
         JsonObject data;
         if (newData != null) {
@@ -88,6 +88,7 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType) {
+                Log.d("event", attributeValue.toString());
                 return null;
             }
         };
@@ -106,10 +107,10 @@ public class MainActivity extends ActionBarActivity {
 
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            //createView();
+            /*//createView();
             Gson gson = new Gson();
             JsonObject data = gson.fromJson("{\"product\":{\"name\":\"Intel Core i7\",\"price\":\"19500\",\"rating\":\"*****\"}}", JsonObject.class);
-            this.proteusView.updateView(data);
+            this.proteusView.updateView(data);*/
             return true;
         }
         return super.onOptionsItemSelected(item);
