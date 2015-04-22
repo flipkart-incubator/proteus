@@ -36,13 +36,13 @@ public class ViewParser<T extends View> extends Parser<T> {
 
     protected void prepareHandlers(final Context context) {
 
-        addHandler(Attributes.View.OnClick , new EventProcessor<T>(context) {
+        addHandler(Attributes.View.OnClick, new EventProcessor<T>(context) {
             @Override
-            public void setOnEventListener(final T view, final ParserContext parserContext, final JsonElement attribueValue) {
+            public void setOnEventListener(final T view, final ParserContext parserContext, final JsonElement attributeValue) {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                          fireEvent(view, parserContext, EventType.OnClick, attribueValue);
+                        fireEvent(view, parserContext, EventType.OnClick, attributeValue);
                     }
                 });
             }
@@ -239,7 +239,7 @@ public class ViewParser<T extends View> extends Parser<T> {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
 
-                    view.setId(IdGenerator.getInstance().getUnique(attributeValue));
+                view.setId(IdGenerator.getInstance().getUnique(attributeValue));
 
             }
         });
