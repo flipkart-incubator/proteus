@@ -119,12 +119,11 @@ class SimpleLayoutBuilder implements LayoutBuilder {
      */
     protected ProteusView buildImpl(final ParserContext context, final ViewGroup parent, final JsonObject jsonObject, View existingView, final int childIndex) {
         JsonElement viewTypeElement = jsonObject.get(TYPE);
-        //System.out.println("ViewType "+ viewTypeElement.getAsString());
-        String viewType = null;
+        String viewType;
+
         if (viewTypeElement != null) {
             viewType = viewTypeElement.getAsString();
         } else {
-
             Log.e(TAG, "view cannot be null");
             return null;
         }
@@ -148,7 +147,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         /**
          * Parsing each attribute and setting it on the view.
          */
-        Map<String, Binding> bindings = new HashMap<String, Binding>();
+        Map<String, Binding> bindings = new HashMap<>();
 
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
 
@@ -186,7 +185,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
         if (children != null && children.size() > 0) {
             ViewGroup selfViewGroup = (ViewGroup) createdView;
-            List<ProteusView> childrenToAdd = new ArrayList<ProteusView>();
+            List<ProteusView> childrenToAdd = new ArrayList<>();
             for (int i = 0; i < children.size(); i++) {
                 JsonObject childObject = children.get(i).getAsJsonObject();
                 if (childViewElement != null) {
@@ -194,30 +193,30 @@ class SimpleLayoutBuilder implements LayoutBuilder {
                     childObject.add(TYPE, childViewElement);
                 }
 
+                // build the child views
                 ProteusView childView = buildImpl(context, selfViewGroup, childObject, null, i);
 
+                // store all the bindings of the child view with the top level bindings
                 bindings.putAll(childView.getBindings());
 
-                if (childView != null) {
-                    childrenToAdd.add(childView);
-                }
-
+                childrenToAdd.add(childView);
             }
+
+            // add the children to the root view group
             if (childrenToAdd.size() > 0) {
                 handler.addChildren(this.context, selfViewGroup, childrenToAdd);
             }
         }
 
-        ProteusView finalProteusVIew = new SimpleProteusView(createdView, bindings);
-
-        return finalProteusVIew;
+        // Create the final ProteusView to return
+        return new SimpleProteusView(createdView, bindings);
     }
 
     protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
         return handler.parseChildren(context, childrenElement, childIndex);
     }
 
-    public boolean handleAttribute(LayoutHandler handler, ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int index) {
+    public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int index) {
         return handler.handleAttribute(context, attribute, jsonObject, element, view, index);
     }
 
@@ -236,8 +235,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     protected View createView(ParserContext context, ViewGroup parent, LayoutHandler<View> handler, JsonObject object) {
-        View view = handler.createView(context, this.context, parent, object);
-        return view;
+        return handler.createView(context, this.context, parent, object);
     }
 
     protected JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
@@ -260,9 +258,12 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     /**
-     * All network bitmap calls will be handed over to this loader.
+     * All network bitmap calls will be handed over to this loader. This method is used to
+     * set the {@link com.flipkart.layoutengine.toolbox.BitmapLoader} for the
+     * {@link com.flipkart.layoutengine.builder.LayoutBuilder}
      *
-     * @param bitmapLoader
+     * @param bitmapLoader {@link com.flipkart.layoutengine.toolbox.BitmapLoader} to use for
+     *                     loading images.
      */
     @Override
     public void setBitmapLoader(BitmapLoader bitmapLoader) {
