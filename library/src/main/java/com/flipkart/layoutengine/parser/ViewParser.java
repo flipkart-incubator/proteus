@@ -21,14 +21,10 @@ import com.nineoldandroids.view.ViewHelper;
 import java.util.HashMap;
 
 /**
- * Created by kiran.kumar on 12/05/14.
- *
- * @attr Tests
+ * @author kiran.kumar
  */
 public class ViewParser<T extends View> extends Parser<T> {
-
-
-    private static final String TAG = ViewParser.class.getSimpleName();
+    //private static final String TAG = ViewParser.class.getSimpleName();
 
     public ViewParser(Class viewClass) {
         super(viewClass);
@@ -79,7 +75,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.Weight, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                LinearLayout.LayoutParams layoutParams = null;
+                LinearLayout.LayoutParams layoutParams;
                 try {
                     layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
                     layoutParams.weight = Float.parseFloat(attributeValue);
@@ -266,7 +262,7 @@ public class ViewParser<T extends View> extends Parser<T> {
             }
         });
 
-        final HashMap<String, Integer> relativeLayoutParams = new HashMap<String, Integer>();
+        final HashMap<String, Integer> relativeLayoutParams = new HashMap<>();
         relativeLayoutParams.put(Attributes.View.Above.getName(), RelativeLayout.ABOVE);
         relativeLayoutParams.put(Attributes.View.AlignBaseline.getName(), RelativeLayout.ALIGN_BASELINE);
         relativeLayoutParams.put(Attributes.View.AlignBottom.getName(), RelativeLayout.ALIGN_BOTTOM);

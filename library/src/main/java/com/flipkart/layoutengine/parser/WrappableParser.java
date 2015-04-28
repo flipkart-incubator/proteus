@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
- * Created by kirankumar on 16/07/14.
+ * @author kirankumar
  */
 public class WrappableParser<T extends View> extends Parser<T> {
 
@@ -30,10 +30,8 @@ public class WrappableParser<T extends View> extends Parser<T> {
     public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, T view, int childIndex) {
         boolean handled = super.handleAttribute(context, attribute, jsonObject, element, view, childIndex);
         if (wrappedParser != null && !handled) {
-            handled = handled || wrappedParser.handleAttribute(context, attribute, jsonObject, element, view, childIndex);
+            handled = wrappedParser.handleAttribute(context, attribute, jsonObject, element, view, childIndex);
         }
-
         return handled;
-
     }
 }
