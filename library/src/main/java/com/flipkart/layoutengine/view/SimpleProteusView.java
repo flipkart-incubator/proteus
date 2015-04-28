@@ -52,7 +52,6 @@ public class SimpleProteusView implements ProteusView {
 
     @Override
     public View updateView(JsonObject data) {
-
         for (Map.Entry<String, Binding> bindingEntry : this.bindings.entrySet()) {
             this.handleBinding(bindingEntry, data);
         }
@@ -78,7 +77,7 @@ public class SimpleProteusView implements ProteusView {
 
         context.setDataProvider(new GsonProvider(data));
 
-        JsonElement dataValue = getElementFromData(dataAttribute, context.getDataProvider(), index);
+        JsonElement dataValue = this.getElementFromData(dataAttribute, context.getDataProvider(), index);
 
         binding.getParserContext().getLayoutBuilder().handleAttribute(
                 binding.getLayoutHandler(),
