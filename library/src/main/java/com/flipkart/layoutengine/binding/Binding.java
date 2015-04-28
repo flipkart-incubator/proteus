@@ -7,7 +7,7 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 
 /**
- * Created by kirankumar on 23/07/14.
+ * @author kirankumar
  */
 public class Binding {
     private int index;

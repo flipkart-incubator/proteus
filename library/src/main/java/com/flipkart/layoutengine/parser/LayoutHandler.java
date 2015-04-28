@@ -12,7 +12,7 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 /**
- * Created by kiran.kumar on 11/05/14.
+ * @author kiran.kumar
  */
 public interface LayoutHandler<E> {
 
@@ -24,7 +24,6 @@ public interface LayoutHandler<E> {
 
     //ask the handler to parse the value of 'children' and return an array of children elements.
     public JsonArray parseChildren(ParserContext context, JsonElement element, int childIndex);
-
 
     public boolean canAddChild();
 
