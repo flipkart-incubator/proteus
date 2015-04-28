@@ -28,7 +28,7 @@ import java.util.Map;
 /**
  * A layout builder which can parse json to construct an android view out of it. It uses the registered handlers to convert the json string to a view and then assign attributes.
  */
-public class SimpleLayoutBuilder implements LayoutBuilder {
+class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected static final String TAG = SimpleLayoutBuilder.class.getSimpleName();
 
@@ -38,24 +38,23 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     public static final String CHILDREN = "children";
     public static final String CHILD_TYPE = "childType";
 
-    private HashMap<String, LayoutHandler> layoutHandlers = new HashMap<String, LayoutHandler>();
+    private HashMap<String, LayoutHandler> layoutHandlers = new HashMap<>();
     private LayoutBuilderCallback listener;
     private BitmapLoader bitmapLoader;
 
     // see the getter for doc
     private boolean isSynchronousRendering = false;
 
+    private Context context;
 
-    /**
-     * Package private constructor so that no client can access it without the factory class
-     */
-    SimpleLayoutBuilder() {
+    public SimpleLayoutBuilder(Context context) {
+        this.context = context;
     }
 
     /**
      * Registers a {@link LayoutHandler} for the specified view type. All the attributes will pass through {@link LayoutHandler#handleAttribute} and expect to be handled.
      *
-     * @param viewType The string value for "view" attribute.
+     * @param viewType The string value for "view" attribute. e.g. TextView, ListView
      * @param handler  The handler which should handle this view.
      */
     @Override
@@ -86,25 +85,18 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     /**
      * Get the handler registered with the supplied view type
      *
-     * @param viewType
-     * @return
+     * @param viewType The string value for "view" attribute. e.g. TextView, ListView
+     * @return A {@link com.flipkart.layoutengine.parser.LayoutHandler} for the view type specified.
      */
     @Override
     public LayoutHandler getHandler(String viewType) {
         return layoutHandlers.get(viewType);
     }
 
-    private Context context;
-
-    public SimpleLayoutBuilder(Context context) {
-        this.context = context;
-    }
-
     @Override
     public ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data) {
         return buildImpl(createParserContext(data), parent, layout, null, 0);
     }
-
 
     protected ParserContext createParserContext(JsonObject data) {
         ParserContext parserContext = new ParserContext();
@@ -123,7 +115,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
      * @param jsonObject   The jsonObject which represents the current node which is getting parsed.
      * @param existingView A view which needs to be used instead of creating a new one. Pass null for first pass.
      * @param childIndex   index of child inside its parent view
-     * @return
+     * @return The {@link com.flipkart.layoutengine.view.ProteusView} that was built.
      */
     protected ProteusView buildImpl(final ParserContext context, final ViewGroup parent, final JsonObject jsonObject, View existingView, final int childIndex) {
         JsonElement viewTypeElement = jsonObject.get(TYPE);
@@ -242,7 +234,6 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         }
         return null;
     }
-
 
     protected View createView(ParserContext context, ViewGroup parent, LayoutHandler<View> handler, JsonObject object) {
         View view = handler.createView(context, this.context, parent, object);
