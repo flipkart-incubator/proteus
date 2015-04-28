@@ -38,7 +38,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     public static final String CHILDREN = "children";
     public static final String CHILD_TYPE = "childType";
 
-    private HashMap<String, LayoutHandler> layoutHandlers = new HashMap<>();
+    private HashMap<String, LayoutHandler<View>> layoutHandlers = new HashMap<>();
     private LayoutBuilderCallback listener;
     private BitmapLoader bitmapLoader;
 
@@ -58,7 +58,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
      * @param handler  The handler which should handle this view.
      */
     @Override
-    public void registerHandler(String viewType, LayoutHandler handler) {
+    public void registerHandler(String viewType, LayoutHandler<View> handler) {
         handler.prepare(context);
         layoutHandlers.put(viewType, handler);
 
