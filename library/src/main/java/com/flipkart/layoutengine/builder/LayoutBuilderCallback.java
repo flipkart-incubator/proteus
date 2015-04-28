@@ -10,18 +10,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
- * Created by kiran.kumar on 18/05/14.
+ * @author  kiran.kumar
  */
 public interface LayoutBuilderCallback {
-
 
     /**
      * called when the builder encounters an attribute key which is unhandled by its parser.
      *
      * @param context    ParserContext for current parsed view
      * @param attribute  attribute that is being parsed
-     * @param element
-     * @param object     corresponding JsonObject for the parsed attribute
+     * @param element    corresponding JsonElemt for the parsed attribute
+     * @param object     Original JsonObject of the view
      * @param view       corresponding view for current attribute that is being parsed
      * @param childIndex child index
      */
@@ -41,7 +40,7 @@ public interface LayoutBuilderCallback {
      * called when any click occurs on views
      *
      * @param context ParserContext for current parsed view
-     * @param view
+     * @param view The view that triggered the event
      */
     public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType);
 

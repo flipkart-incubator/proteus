@@ -23,8 +23,9 @@ import com.flipkart.layoutengine.parser.custom.WebViewParser;
 import com.flipkart.layoutengine.provider.Provider;
 
 /**
- * Factory class for creating Layout builders with different predefined behaviours. This is the only way to create layout builder objects.
- * To create a simple layout builder use {@link DefaultLayoutBuilderFactory#createSimpleLayoutBuilder(android.content.Context)}
+ * Factory class for creating Layout builders with different predefined behaviours. This is the
+ * only way to create layout builder objects. To create a simple layout builder use
+ * {@link DefaultLayoutBuilderFactory#createSimpleLayoutBuilder(android.content.Context)}
  */
 public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
 

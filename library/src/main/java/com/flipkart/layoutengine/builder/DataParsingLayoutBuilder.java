@@ -6,25 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.parser.LayoutHandler;
-import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * A layout builder which can parse @data blocks before passing it on to {@link SimpleLayoutBuilder}
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     private final Provider dataProvider;
-    private Map<String, Binding> bindings = new HashMap<String, Binding>();
-
 
     DataParsingLayoutBuilder(Context context, Provider dataProvider) {
         super(context);
@@ -69,8 +62,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             }
 
         }
-        ProteusView view = super.buildImpl(context, parent, jsonObject, existingView, childIndex);
-        return view;
+        return super.buildImpl(context, parent, jsonObject, existingView, childIndex);
     }
 
 }

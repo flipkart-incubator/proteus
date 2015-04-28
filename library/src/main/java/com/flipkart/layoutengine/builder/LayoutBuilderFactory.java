@@ -5,7 +5,7 @@ import android.content.Context;
 import com.flipkart.layoutengine.provider.Provider;
 
 /**
- * Created by kirankumar on 06/01/15.
+ * @author kirankumar
  */
 public interface LayoutBuilderFactory {
 

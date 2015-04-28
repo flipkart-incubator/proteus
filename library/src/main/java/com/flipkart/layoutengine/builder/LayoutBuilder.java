@@ -11,7 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
- * Created by kirankumar on 06/01/15.
+ * @author  kirankumar
  */
 public interface LayoutBuilder {
     void registerHandler(String viewType, LayoutHandler<View> handler);
