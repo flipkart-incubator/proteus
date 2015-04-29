@@ -148,25 +148,12 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         /**
          * Parsing each attribute and setting it on the view.
          */
-        Map<String, Binding> bindings = new HashMap<>();
-
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-
             if (TYPE.equals(entry.getKey()) || CHILDREN.equals(entry.getKey()) || CHILD_TYPE.equals(entry.getKey())) {
                 continue;
             }
             JsonElement jsonDataValue = entry.getValue();
             String attributeName = entry.getKey();
-
-            if (jsonDataValue.isJsonPrimitive()) {
-                String attributeValue = jsonDataValue.getAsString();
-                JsonElement elementFromData = getElementFromData(jsonDataValue, context.getDataProvider(), childIndex);
-                if (elementFromData != null) {
-                    Binding binding = new Binding(context, handler, attributeName, attributeValue, createdView, parent, childIndex);
-                    jsonDataValue = elementFromData;
-                    bindings.put(attributeValue, binding);
-                }
-            }
             boolean handled = handleAttribute(handler, context, attributeName, jsonObject, jsonDataValue, createdView, parent, childIndex);
 
             if (!handled) {
@@ -197,9 +184,6 @@ class SimpleLayoutBuilder implements LayoutBuilder {
                 // build the child views
                 ProteusView childView = buildImpl(context, selfViewGroup, childObject, null, i);
 
-                // store all the bindings of the child view with the top level bindings
-                bindings.putAll(childView.getBindings());
-
                 childrenToAdd.add(childView);
             }
 
@@ -210,7 +194,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         }
 
         // Create the final ProteusView to return
-        return new SimpleProteusView(createdView, bindings);
+        return new SimpleProteusView(createdView);
     }
 
     protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
