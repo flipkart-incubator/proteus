@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.view.ProteusView;
 
 /**
  * @author kirankumar
@@ -16,17 +17,17 @@ public class Binding {
     private String bindingName;
     private String attributeKey;
     private String attributeValue;
-    private View view;
+    private ProteusView<View> proteusView;
     private ViewGroup parentView;
 
     public Binding(ParserContext parserContext, LayoutHandler layoutHandler, String bindingName,
-                   String attributeKey, String attributeValue, View view, ViewGroup parentView, int index) {
+                   String attributeKey, String attributeValue, ProteusView<View> view, ViewGroup parentView, int index) {
         this.parserContext = parserContext.clone();
         this.layoutHandler = layoutHandler;
         this.bindingName = bindingName;
         this.attributeKey = attributeKey;
         this.attributeValue = attributeValue;
-        this.view = view;
+        this.proteusView = view;
         this.parentView = parentView;
         this.index = index;
     }
@@ -55,12 +56,12 @@ public class Binding {
         this.attributeKey = attributeKey;
     }
 
-    public View getView() {
-        return view;
+    public ProteusView<View> getProteusView() {
+        return proteusView;
     }
 
-    public void setView(View view) {
-        this.view = view;
+    public void setProteusView(ProteusView<View> proteusView) {
+        this.proteusView = proteusView;
     }
 
     public String getAttributeValue() {

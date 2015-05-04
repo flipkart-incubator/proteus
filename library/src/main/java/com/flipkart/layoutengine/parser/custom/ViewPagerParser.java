@@ -22,9 +22,8 @@ public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
     }
 
     @Override
-    public void addChildren(Context context, T parent, final List<ProteusView> children) {
-        //not calling super since it calls addChild(). Addchild() on viewpager wont work.
-
+    public void addChildren(Context context, ProteusView<View> parent, final List<ProteusView> children) {
+        //not calling super since it calls addChild(). addchild() on viewpager wont work.
         PagerAdapter adapter = new PagerAdapter() {
             @Override
             public int getCount() {
@@ -45,11 +44,9 @@ public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
-                container.removeView((View)object);
+                container.removeView((View) object);
             }
         };
-        parent.setAdapter(adapter);
-
-
+        ((T) parent.getView()).setAdapter(adapter);
     }
 }

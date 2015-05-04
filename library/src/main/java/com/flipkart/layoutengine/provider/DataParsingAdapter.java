@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Adds support for parsing data blocks before passing it to the enclosing handler.
  */
-public class DataParsingAdapter<E> implements LayoutHandler<E> {
+public class DataParsingAdapter<E extends View> implements LayoutHandler<E> {
 
     private final Provider dataProvider;
     private LayoutHandler<E> handler;
@@ -33,7 +33,7 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, E view, int index) {
+    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, ProteusView<E> view, int index) {
         element = getElementFromData(element, index);
         return handler.handleAttribute(context,attribute, jsonObject, element, view, index);
     }
@@ -66,7 +66,7 @@ public class DataParsingAdapter<E> implements LayoutHandler<E> {
     }
 
     @Override
-    public void addChildren(Context context, E parent, List<ProteusView> children) {
+    public void addChildren(Context context, ProteusView<View> parent, List<ProteusView> children) {
         handler.addChildren(context,parent,children);
     }
 
