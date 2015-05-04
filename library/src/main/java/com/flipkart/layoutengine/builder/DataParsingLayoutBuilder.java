@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.provider.GsonProvider;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -15,6 +16,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,12 +24,11 @@ import java.util.Map;
  * A layout builder which can parse @data blocks before passing it on to {@link SimpleLayoutBuilder}
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
-    private final Provider dataProvider;
-    private Map<String, Binding> bindings = new HashMap<>();
+    private Provider dataProvider;
+    private ArrayList<Binding> bindings = new ArrayList<>();
 
-    DataParsingLayoutBuilder(Context context, Provider dataProvider) {
+    DataParsingLayoutBuilder(Context context) {
         super(context);
-        this.dataProvider = dataProvider;
     }
 
     @Override
@@ -38,11 +39,17 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Override
     public ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data) {
+        this.dataProvider = new GsonProvider(data);
         return new DataProteusView(super.build(parent, layout, data).getView(), this.bindings);
     }
 
     @Override
     protected ProteusView buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject, View existingView, int childIndex) {
+
+        if (context.getDataProvider() == null) {
+            context = createParserContext();
+        }
+
         JsonElement dataContextElement = jsonObject.get("dataContext");
         if (dataContextElement != null) {
             ParserContext newContext = context.clone();
@@ -66,18 +73,18 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             String attributeValue = jsonDataValue.getAsString();
             JsonElement elementFromData = getElementFromData(jsonDataValue, context.getDataProvider(), childIndex);
             if (elementFromData != null) {
-                Binding binding = new Binding(context, handler, attributeName, attributeValue, createdView, parent, childIndex);
+                Binding binding = new Binding(context, handler, attributeValue, attributeName, attributeValue, createdView, parent, childIndex);
                 jsonDataValue = elementFromData;
-                bindings.put(attributeValue, binding);
+                bindings.add(binding);
             }
         }
         return super.handleAttribute(handler, context, attributeName, jsonObject, jsonDataValue, createdView, parent, childIndex);
     }
 
     @Override
-    protected ParserContext createParserContext(JsonObject data) {
-        ParserContext context = super.createParserContext(data);
-        if (data == null) {
+    protected ParserContext createParserContext() {
+        ParserContext context = super.createParserContext();
+        if (dataProvider != null) {
             context.setDataProvider(dataProvider);
         }
         return context;

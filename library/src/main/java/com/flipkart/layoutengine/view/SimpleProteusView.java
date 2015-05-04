@@ -5,6 +5,7 @@ import android.view.View;
 import com.flipkart.layoutengine.binding.Binding;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -28,7 +29,7 @@ public class SimpleProteusView implements ProteusView {
     }
 
     @Override
-    public Map<String, Binding> getBindings() {
+    public ArrayList<Binding> getBindings() {
         return null;
     }
 

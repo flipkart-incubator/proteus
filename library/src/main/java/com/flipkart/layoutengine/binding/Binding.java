@@ -13,14 +13,17 @@ public class Binding {
     private int index;
     private ParserContext parserContext;
     private LayoutHandler layoutHandler;
+    private String bindingName;
     private String attributeKey;
     private String attributeValue;
     private View view;
     private ViewGroup parentView;
 
-    public Binding(ParserContext parserContext, LayoutHandler layoutHandler, String attributeKey, String attributeValue, View view, ViewGroup parentView, int index) {
+    public Binding(ParserContext parserContext, LayoutHandler layoutHandler, String bindingName,
+                   String attributeKey, String attributeValue, View view, ViewGroup parentView, int index) {
         this.parserContext = parserContext.clone();
         this.layoutHandler = layoutHandler;
+        this.bindingName = bindingName;
         this.attributeKey = attributeKey;
         this.attributeValue = attributeValue;
         this.view = view;
@@ -74,5 +77,13 @@ public class Binding {
 
     public void setParentView(ViewGroup parentView) {
         this.parentView = parentView;
+    }
+
+    public String getBindingName() {
+        return bindingName;
+    }
+
+    public void setBindingName(String bindingName) {
+        this.bindingName = bindingName;
     }
 }

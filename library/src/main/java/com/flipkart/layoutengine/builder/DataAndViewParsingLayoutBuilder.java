@@ -16,8 +16,8 @@ import com.google.gson.JsonObject;
 public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
     private final Provider viewProvider;
 
-    DataAndViewParsingLayoutBuilder(Context context, Provider dataProvider, Provider viewProvider) {
-        super(context, dataProvider);
+    DataAndViewParsingLayoutBuilder(Context context, Provider viewProvider) {
+        super(context);
         this.viewProvider = viewProvider;
     }
 

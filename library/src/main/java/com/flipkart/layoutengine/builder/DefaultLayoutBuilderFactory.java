@@ -12,7 +12,6 @@ import com.flipkart.layoutengine.parser.custom.HorizontalScrollViewParser;
 import com.flipkart.layoutengine.parser.custom.ImageButtonParser;
 import com.flipkart.layoutengine.parser.custom.ImageViewParser;
 import com.flipkart.layoutengine.parser.custom.LinearLayoutParser;
-import com.flipkart.layoutengine.parser.custom.ListViewParser;
 import com.flipkart.layoutengine.parser.custom.NetworkImageViewParser;
 import com.flipkart.layoutengine.parser.custom.RatingBarParser;
 import com.flipkart.layoutengine.parser.custom.RelativeLayoutParser;
@@ -33,12 +32,11 @@ public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
      * Creates & returns a layout builder which can parse @data blocks as well as custom view blocks. See {@link DataParsingLayoutBuilder}
      *
      * @param context
-     * @param dataProvider
      * @return
      */
     @Override
-    public LayoutBuilder createDataAndViewParsingLayoutBuilder(Context context, Provider dataProvider, Provider viewProvider) {
-        DataAndViewParsingLayoutBuilder builder = new DataAndViewParsingLayoutBuilder(context, dataProvider, viewProvider);
+    public LayoutBuilder createDataAndViewParsingLayoutBuilder(Context context, Provider viewProvider) {
+        DataAndViewParsingLayoutBuilder builder = new DataAndViewParsingLayoutBuilder(context, viewProvider);
         registerBuiltInHandlers(builder);
         return builder;
     }
@@ -47,12 +45,11 @@ public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
      * Creates & returns a layout builder which can parse @data blocks. See {@link DataParsingLayoutBuilder}
      *
      * @param context
-     * @param dataProvider
      * @return
      */
     @Override
-    public LayoutBuilder createDataParsingLayoutBuilder(Context context, Provider dataProvider) {
-        LayoutBuilder builder = new DataParsingLayoutBuilder(context, dataProvider);
+    public LayoutBuilder createDataParsingLayoutBuilder(Context context) {
+        LayoutBuilder builder = new DataParsingLayoutBuilder(context);
         registerBuiltInHandlers(builder);
         return builder;
     }
@@ -94,9 +91,6 @@ public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
         RatingBarParser ratingBarParser = new RatingBarParser(viewParser);
         CheckBoxParser checkBoxParser = new CheckBoxParser(buttonParser);
 
-        // LayoutHandler for ListView
-        ListViewParser listViewParser = new ListViewParser(viewParser);
-
         layoutBuilder.registerHandler("View", viewParser);
         layoutBuilder.registerHandler("RelativeLayout", relativeLayoutParser);
         layoutBuilder.registerHandler("LinearLayout", linearLayoutParser);
@@ -113,8 +107,6 @@ public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
         layoutBuilder.registerHandler("WebView", webViewParser);
         layoutBuilder.registerHandler("RatingBar", ratingBarParser);
         layoutBuilder.registerHandler("CheckBox", checkBoxParser);
-        layoutBuilder.registerHandler("ListView", listViewParser);
-
     }
 
 }

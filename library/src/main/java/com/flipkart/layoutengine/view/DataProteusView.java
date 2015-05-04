@@ -11,7 +11,7 @@ import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * A {@link ProteusView} implementation to update the data
@@ -32,23 +32,22 @@ public class DataProteusView extends SimpleProteusView {
      * {@literal <}"$product.name", bindingObjectOfThisProperty{@literal >}
      * </pre>
      */
-    protected Map<String, Binding> bindings;
+    protected ArrayList<Binding> bindings;
 
-    public DataProteusView(View view, Map<String, Binding> bindings) {
+    public DataProteusView(View view, ArrayList<Binding> bindings) {
         super(view);
         this.bindings = bindings;
     }
 
     @Override
-    public Map<String, Binding> getBindings() {
+    public ArrayList<Binding> getBindings() {
         return this.bindings;
     }
 
     @Override
     protected View updateViewImpl(JsonObject data) {
-        Object[] entries = this.bindings.entrySet().toArray();
-        for (Object bindingEntry : entries) {
-            this.handleBinding((Map.Entry<String, Binding>) bindingEntry, data);
+        for (Binding binding : this.bindings) {
+            this.handleBinding(binding, data);
         }
         return this.getView();
     }
@@ -59,14 +58,13 @@ public class DataProteusView extends SimpleProteusView {
      * and {@link com.flipkart.layoutengine.parser.LayoutHandler} to update the value of the bound attribute with
      * the new value fetched from the new data object passed.
      *
-     * @param bindingEntry The property name to update mapped to its {@link com.flipkart.layoutengine.binding.Binding}
+     * @param binding The property name to update mapped to its {@link com.flipkart.layoutengine.binding.Binding}
      */
-    private void handleBinding(Map.Entry<String, Binding> bindingEntry, JsonObject data) {
+    private void handleBinding(Binding binding, JsonObject data) {
         JsonObject temp = new JsonObject();
-        temp.addProperty("value", bindingEntry.getKey());
+        temp.addProperty("value", binding.getBindingName());
 
         JsonElement dataAttribute = temp.get("value");
-        Binding binding = bindingEntry.getValue();
         ParserContext context = binding.getParserContext();
         int index = binding.getIndex();
 
