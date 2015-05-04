@@ -96,12 +96,15 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
     @Override
     public ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data) {
-        return buildImpl(createParserContext(), parent, layout, null, 0);
+        return buildImpl(createParserContext(data), parent, layout, null, 0);
     }
 
-    protected ParserContext createParserContext() {
+    protected ParserContext createParserContext(JsonObject data) {
         ParserContext parserContext = new ParserContext();
         parserContext.setLayoutBuilder(this);
+        if (data != null) {
+            parserContext.setDataProvider(new GsonProvider(data));
+        }
         return parserContext;
     }
 
@@ -151,12 +154,14 @@ class SimpleLayoutBuilder implements LayoutBuilder {
             }
             JsonElement jsonDataValue = entry.getValue();
             String attributeName = entry.getKey();
-            boolean handled = handleAttribute(handler, context, attributeName, jsonObject, jsonDataValue, createdView, parent, childIndex);
+            boolean handled = handleAttribute(handler, context, attributeName, jsonObject, jsonDataValue, new SimpleProteusView(createdView), parent, childIndex);
 
             if (!handled) {
                 onUnknownAttributeEncountered(context, attributeName, jsonDataValue, jsonObject, createdView, childIndex);
             }
         }
+
+        ProteusView proteusViewToReturn = new SimpleProteusView(createdView);
 
         /**
          * Processing the children.
@@ -186,19 +191,18 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
             // add the children to the root view group
             if (childrenToAdd.size() > 0) {
-                handler.addChildren(this.context, selfViewGroup, childrenToAdd);
+                handler.addChildren(this.context, proteusViewToReturn, childrenToAdd);
             }
         }
 
-        // Create the final ProteusView to return
-        return new SimpleProteusView(createdView);
+        return proteusViewToReturn;
     }
 
     protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
         return handler.parseChildren(context, childrenElement, childIndex);
     }
 
-    public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int index) {
+    public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, ProteusView<View> view, ViewGroup parent, int index) {
         return handler.handleAttribute(context, attribute, jsonObject, element, view, index);
     }
 

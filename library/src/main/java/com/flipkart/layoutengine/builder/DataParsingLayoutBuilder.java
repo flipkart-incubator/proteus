@@ -16,16 +16,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A layout builder which can parse @data blocks before passing it on to {@link SimpleLayoutBuilder}
+ * A layout builder which can parse data bindings before passing it on to {@link SimpleLayoutBuilder}
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
-    private Provider dataProvider;
-    private ArrayList<Binding> bindings = new ArrayList<>();
 
     DataParsingLayoutBuilder(Context context) {
         super(context);
@@ -39,18 +39,13 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Override
     public ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data) {
-        this.dataProvider = new GsonProvider(data);
-        return new DataProteusView(super.build(parent, layout, data).getView(), this.bindings);
+        return new DataProteusView(super.build(parent, layout, data));
     }
 
     @Override
     protected ProteusView buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject, View existingView, int childIndex) {
-
-        if (context.getDataProvider() == null) {
-            context = createParserContext();
-        }
-
         JsonElement dataContextElement = jsonObject.get("dataContext");
+
         if (dataContextElement != null) {
             ParserContext newContext = context.clone();
             Provider oldProvider = context.getDataProvider();
@@ -68,25 +63,16 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context, String attributeName, JsonObject jsonObject, JsonElement jsonDataValue, View createdView, ViewGroup parent, int childIndex) {
+    public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context, String attributeName, JsonObject jsonObject, JsonElement jsonDataValue, ProteusView<View> createdProteusView, ViewGroup parent, int childIndex) {
         if (jsonDataValue.isJsonPrimitive()) {
             String attributeValue = jsonDataValue.getAsString();
             JsonElement elementFromData = getElementFromData(jsonDataValue, context.getDataProvider(), childIndex);
             if (elementFromData != null) {
-                Binding binding = new Binding(context, handler, attributeValue, attributeName, attributeValue, createdView, parent, childIndex);
+                Binding binding = new Binding(context, handler, attributeValue, attributeName, attributeValue, createdProteusView, parent, childIndex);
                 jsonDataValue = elementFromData;
-                bindings.add(binding);
+                ((DataProteusView) createdProteusView).addBinding(binding);
             }
         }
-        return super.handleAttribute(handler, context, attributeName, jsonObject, jsonDataValue, createdView, parent, childIndex);
-    }
-
-    @Override
-    protected ParserContext createParserContext() {
-        ParserContext context = super.createParserContext();
-        if (dataProvider != null) {
-            context.setDataProvider(dataProvider);
-        }
-        return context;
+        return super.handleAttribute(handler, context, attributeName, jsonObject, jsonDataValue, createdProteusView, parent, childIndex);
     }
 }

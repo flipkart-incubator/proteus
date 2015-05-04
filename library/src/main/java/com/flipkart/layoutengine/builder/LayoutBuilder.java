@@ -22,7 +22,7 @@ public interface LayoutBuilder {
 
     LayoutHandler getHandler(String viewType);
 
-    boolean handleAttribute(LayoutHandler<View> handler, ParserContext context, String attribute, JsonObject layoutJsonObject, JsonElement modelData, View view, ViewGroup parent, int index);
+    boolean handleAttribute(LayoutHandler<View> handler, ParserContext context, String attribute, JsonObject layoutJsonObject, JsonElement modelData, ProteusView<View> view, ViewGroup parent, int index);
 
     ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data);
 
