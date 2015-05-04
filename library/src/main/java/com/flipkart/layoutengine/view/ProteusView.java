@@ -21,21 +21,24 @@ import java.util.ArrayList;
  *
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
-public interface ProteusView {
+public interface ProteusView<T extends View> {
 
     /**
      * Returns the reference to the view wrapped by the {@link ProteusView}
      *
      * @return reference to the view {@link android.view.View} wrapped by the {@link ProteusView}
      */
-    public View getView();
+    T getView();
 
     /**
-     * Returns the reference to the Array of bindings inside the {@link ProteusView}
      *
-     * @return reference to the map of bindings inside the {@link ProteusView}
      */
-    public ArrayList<Binding> getBindings();
+    void addChild(ProteusView view);
+
+    /**
+     *
+     */
+    ArrayList<ProteusView<View>> getChildren();
 
     /**
      * Updates the data associated with view wrapped by the {@link ProteusView}
@@ -45,5 +48,5 @@ public interface ProteusView {
      * @return reference to the updated view {@link android.view.View} wrapped by the
      * {@link ProteusView}
      */
-    public View updateView(JsonObject data);
+    View updateView(JsonObject data);
 }

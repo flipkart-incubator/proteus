@@ -1,12 +1,12 @@
 package com.flipkart.layoutengine.view;
 
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.binding.Binding;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * A {@link ProteusView} implementation for simple views associated with a
@@ -18,6 +18,7 @@ import java.util.Map;
 public class SimpleProteusView implements ProteusView {
     //private static final String TAG = SimpleProteusView.class.getSimpleName();
     protected View view;
+    protected ArrayList<ProteusView<View>> children;
 
     public SimpleProteusView(View view) {
         this.view = view;
@@ -29,8 +30,17 @@ public class SimpleProteusView implements ProteusView {
     }
 
     @Override
-    public ArrayList<Binding> getBindings() {
-        return null;
+    public void addChild(ProteusView view) {
+        if(this.children == null) {
+            this.children = new ArrayList<>();
+        }
+        this.children.add(view);
+        ((ViewGroup)getView()).addView(view.getView());
+    }
+
+    @Override
+    public ArrayList<ProteusView<View>> getChildren() {
+        return this.children;
     }
 
     @Override

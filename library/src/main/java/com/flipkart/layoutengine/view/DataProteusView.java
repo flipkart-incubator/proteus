@@ -34,14 +34,15 @@ public class DataProteusView extends SimpleProteusView {
      */
     protected ArrayList<Binding> bindings;
 
-    public DataProteusView(View view, ArrayList<Binding> bindings) {
-        super(view);
-        this.bindings = bindings;
+    public DataProteusView(ProteusView proteusView) {
+        super(proteusView.getView());
     }
 
-    @Override
-    public ArrayList<Binding> getBindings() {
-        return this.bindings;
+    public void addBinding(Binding binding) {
+        if (this.bindings == null) {
+            this.bindings = new ArrayList<>();
+        }
+        this.bindings.add(binding);
     }
 
     @Override
@@ -78,7 +79,7 @@ public class DataProteusView extends SimpleProteusView {
                 binding.getAttributeKey(),
                 null,
                 dataValue,
-                binding.getView(),
+                binding.getProteusView(),
                 binding.getParentView(),
                 index);
     }
