@@ -6,13 +6,6 @@ import com.google.gson.JsonElement;
  * Created by kirankumar on 24/06/14.
  */
 public class GsonProvider implements Provider {
-
-    private static class ObjectHolder {
-        public String path;
-        public JsonElement object;
-    }
-
-
     private JsonElement obj;
     private ObjectHolder previousObj = new ObjectHolder();
 
@@ -85,8 +78,6 @@ public class GsonProvider implements Provider {
                                 } else {
                                     el = el.getAsJsonArray().get(iindex);
                                 }
-                                ;
-
                             }
                         }
                     }
@@ -98,16 +89,13 @@ public class GsonProvider implements Provider {
                 } else {
                     el = el.getAsJsonObject().get(e);
                 }
-
             }
-
         }
 
         previousObj.path = path;
         previousObj.object = el;
         return el;
     }
-
 
     @Override
     public Provider clone() {
@@ -119,4 +107,10 @@ public class GsonProvider implements Provider {
         }
         return null;
     }
+
+    private static class ObjectHolder {
+        public String path;
+        public JsonElement object;
+    }
+
 }

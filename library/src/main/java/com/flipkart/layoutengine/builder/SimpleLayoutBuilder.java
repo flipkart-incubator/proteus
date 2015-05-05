@@ -33,8 +33,6 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected static final String TAG = SimpleLayoutBuilder.class.getSimpleName();
 
-    private static final Character PREFIX = DataParsingAdapter.PREFIX;
-
     public static final String TYPE = "type";
     public static final String CHILDREN = "children";
     public static final String CHILD_TYPE = "childType";
@@ -145,6 +143,9 @@ class SimpleLayoutBuilder implements LayoutBuilder {
             createdView = existingView;
         }
 
+        // create the proteus view to return
+        ProteusView proteusViewToReturn = createProteusViewToReturn(createdView);
+
         /**
          * Parsing each attribute and setting it on the view.
          */
@@ -152,16 +153,15 @@ class SimpleLayoutBuilder implements LayoutBuilder {
             if (TYPE.equals(entry.getKey()) || CHILDREN.equals(entry.getKey()) || CHILD_TYPE.equals(entry.getKey())) {
                 continue;
             }
+
             JsonElement jsonDataValue = entry.getValue();
             String attributeName = entry.getKey();
-            boolean handled = handleAttribute(handler, context, attributeName, jsonObject, jsonDataValue, new SimpleProteusView(createdView), parent, childIndex);
+            boolean handled = handleAttribute(handler, context, attributeName, jsonObject, jsonDataValue, proteusViewToReturn, parent, childIndex);
 
             if (!handled) {
                 onUnknownAttributeEncountered(context, attributeName, jsonDataValue, jsonObject, createdView, childIndex);
             }
         }
-
-        ProteusView proteusViewToReturn = new SimpleProteusView(createdView);
 
         /**
          * Processing the children.
@@ -194,8 +194,17 @@ class SimpleLayoutBuilder implements LayoutBuilder {
                 handler.addChildren(this.context, proteusViewToReturn, childrenToAdd);
             }
         }
+        if (proteusViewToReturn.getChildren() != null) {
+            Log.e("crap", proteusViewToReturn.getChildren().size() + " -- " + viewType);
+        } else {
+            Log.e("crap", "0 -- " + viewType);
 
+        }
         return proteusViewToReturn;
+    }
+
+    protected ProteusView createProteusViewToReturn(View createdView) {
+        return new SimpleProteusView(createdView);
     }
 
     protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
@@ -222,10 +231,6 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected View createView(ParserContext context, ViewGroup parent, LayoutHandler<View> handler, JsonObject object) {
         return handler.createView(context, this.context, parent, object);
-    }
-
-    protected JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
-        return Utils.getElementFromData(PREFIX, element, dataProvider, childIndex);
     }
 
     @Override
