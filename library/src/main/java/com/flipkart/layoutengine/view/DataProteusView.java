@@ -80,6 +80,7 @@ public class DataProteusView extends SimpleProteusView {
         JsonElement dataAttribute = temp.get("value");
 
         ParserContext context = binding.getParserContext();
+
         int index = binding.getIndex();
 
         setDataProvider(context, data, binding.getDataContext(), index);
@@ -100,9 +101,11 @@ public class DataProteusView extends SimpleProteusView {
     protected void setDataProvider(ParserContext context, JsonObject data, String dataContext, int childIndex) {
         if (dataContext == null) {
             context.setDataProvider(new GsonProvider(data));
+            context.setDataContext(null);
         } else {
             JsonElement newData = getElementFromData(data, context.getDataProvider(), childIndex);
             context.setDataProvider(new GsonProvider(newData));
+            context.setDataContext(dataContext);
         }
     }
 
