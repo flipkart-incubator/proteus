@@ -21,8 +21,9 @@ import java.util.ArrayList;
  */
 public class DataProteusView extends SimpleProteusView {
 
-    private static final Character PREFIX = DataParsingAdapter.PREFIX;
     //private static final String TAG = DataProteusView.class.getSimpleName();
+    private static final Character PREFIX = DataParsingAdapter.PREFIX;
+    private boolean isViewUpdating = false;
 
     /**
      * This Map holds a references to the {@link com.flipkart.layoutengine.binding.Binding} between
@@ -36,6 +37,7 @@ public class DataProteusView extends SimpleProteusView {
 
     public DataProteusView(ProteusView proteusView) {
         super(proteusView.getView());
+        addChildren(proteusView.getChildren());
     }
 
     public void addBinding(Binding binding) {
@@ -47,9 +49,20 @@ public class DataProteusView extends SimpleProteusView {
 
     @Override
     protected View updateViewImpl(JsonObject data) {
-        for (Binding binding : this.bindings) {
-            this.handleBinding(binding, data);
+        this.isViewUpdating = true;
+        if (this.bindings != null) {
+            for (Binding binding : this.bindings) {
+                this.handleBinding(binding, data);
+            }
         }
+
+        if (getChildren() != null) {
+            for (ProteusView proteusView : getChildren()) {
+                proteusView.updateView(data);
+            }
+        }
+
+        this.isViewUpdating = false;
         return this.getView();
     }
 
@@ -64,12 +77,12 @@ public class DataProteusView extends SimpleProteusView {
     private void handleBinding(Binding binding, JsonObject data) {
         JsonObject temp = new JsonObject();
         temp.addProperty("value", binding.getBindingName());
-
         JsonElement dataAttribute = temp.get("value");
+
         ParserContext context = binding.getParserContext();
         int index = binding.getIndex();
 
-        context.setDataProvider(new GsonProvider(data));
+        setDataProvider(context, data, binding.getDataContext(), index);
 
         JsonElement dataValue = this.getElementFromData(dataAttribute, context.getDataProvider(), index);
 
@@ -84,7 +97,20 @@ public class DataProteusView extends SimpleProteusView {
                 index);
     }
 
+    protected void setDataProvider(ParserContext context, JsonObject data, String dataContext, int childIndex) {
+        if (dataContext == null) {
+            context.setDataProvider(new GsonProvider(data));
+        } else {
+            JsonElement newData = getElementFromData(data, context.getDataProvider(), childIndex);
+            context.setDataProvider(new GsonProvider(newData));
+        }
+    }
+
     public JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
         return Utils.getElementFromData(PREFIX, element, dataProvider, childIndex);
+    }
+
+    public boolean isViewUpdating() {
+        return isViewUpdating;
     }
 }
