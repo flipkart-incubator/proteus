@@ -14,19 +14,18 @@ public class Binding {
     private int index;
     private ParserContext parserContext;
     private LayoutHandler layoutHandler;
-    private String dataContext;
     private String bindingName;
     private String attributeKey;
     private String attributeValue;
     private ProteusView<View> proteusView;
     private ViewGroup parentView;
 
-    public Binding(ParserContext parserContext, LayoutHandler layoutHandler, String dataContext,
-                   String bindingName, String attributeKey, String attributeValue,
-                   ProteusView<View> view, ViewGroup parentView, int index) {
+    public Binding(ParserContext parserContext, LayoutHandler layoutHandler, String bindingName,
+                   String attributeKey, String attributeValue, ProteusView<View> view,
+                   ViewGroup parentView, int index) {
         this.parserContext = parserContext.clone();
         this.layoutHandler = layoutHandler;
-        this.dataContext = dataContext;
+        /*this.dataContext = dataContext;*/
         this.bindingName = bindingName;
         this.attributeKey = attributeKey;
         this.attributeValue = attributeValue;
@@ -89,13 +88,5 @@ public class Binding {
 
     public void setBindingName(String bindingName) {
         this.bindingName = bindingName;
-    }
-
-    public String getDataContext() {
-        return dataContext;
-    }
-
-    public void setDataContext(String dataContext) {
-        this.dataContext = dataContext;
     }
 }

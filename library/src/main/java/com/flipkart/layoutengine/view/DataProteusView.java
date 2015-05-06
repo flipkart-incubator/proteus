@@ -86,7 +86,7 @@ public class DataProteusView extends SimpleProteusView {
 
         int index = binding.getIndex();
 
-        setDataProvider(context, data, binding.getDataContext(), index);
+        setDataProvider(context, data, context.getDataContext(), index);
 
         JsonElement dataValue = this.getElementFromData(dataAttribute, context.getDataProvider(), index);
 

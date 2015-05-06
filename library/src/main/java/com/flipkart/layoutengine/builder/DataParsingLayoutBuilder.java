@@ -81,7 +81,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 if (attributeValue.charAt(0) == PREFIX && !dataProteusView.isViewUpdating()) {
                     Binding binding = new Binding(context,
                             handler,
-                            context.getDataContext(),
                             attributeValue,
                             attributeName,
                             attributeValue,
