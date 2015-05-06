@@ -19,6 +19,11 @@ public class GsonProvider implements Provider {
     }
 
     @Override
+    public JsonElement getRoot() {
+        return this.obj;
+    }
+
+    @Override
     public JsonElement getObject(String key, int childIndex) {
         return getFromObject(key, childIndex);
     }

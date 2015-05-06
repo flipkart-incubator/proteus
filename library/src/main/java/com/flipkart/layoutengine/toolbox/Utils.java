@@ -4,6 +4,9 @@ import android.util.Log;
 
 import com.flipkart.layoutengine.provider.Provider;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import java.lang.reflect.Type;
 
 /**
  * Created by Aditya Sharat on 08-04-2015.
@@ -26,5 +29,19 @@ public class Utils {
             }
         }
         return element;
+    }
+
+    public static JsonElement getStringAsJsonElement(String string) {
+        JsonObject temp = new JsonObject();
+        temp.addProperty("value", string);
+        return temp.get("value");
+    }
+
+    public static JsonElement getNumberAsJsonElement(Number newValue) {
+        return null;
+    }
+
+    public static JsonElement getBooleanAsJsonElement(Boolean aBoolean) {
+        return null;
     }
 }

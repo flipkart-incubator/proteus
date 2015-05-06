@@ -36,10 +36,14 @@ public class DataProteusView extends SimpleProteusView {
      * </pre>
      */
     protected ArrayList<Binding> bindings;
+    private GsonProvider dataProvider;
 
     public DataProteusView(ProteusView proteusView) {
         super(proteusView.getView());
         addChildren(proteusView.getChildren());
+        if (proteusView instanceof DataProteusView) {
+            dataProvider = ((DataProteusView)proteusView).getDataProvider();
+        }
     }
 
     public void addBinding(Binding binding) {
@@ -78,17 +82,16 @@ public class DataProteusView extends SimpleProteusView {
      *                {@link com.flipkart.layoutengine.binding.Binding}
      */
     private void handleBinding(Binding binding, JsonObject data) {
-        JsonObject temp = new JsonObject();
-        temp.addProperty("value", binding.getBindingName());
-        JsonElement dataAttribute = temp.get("value");
+
+        JsonElement dataAttribute = Utils.getStringAsJsonElement(binding.getBindingName());
 
         ParserContext context = binding.getParserContext();
 
         int index = binding.getIndex();
 
-        setDataProvider(context, data, context.getDataContext(), index);
+        context = setCorrectDataProvider(context, data, index);
 
-        JsonElement dataValue = this.getElementFromData(dataAttribute, context.getDataProvider(), index);
+        JsonElement dataValue = getElementFromData(dataAttribute, context.getDataProvider(), index);
 
         binding.getParserContext().getLayoutBuilder().handleAttribute(
                 binding.getLayoutHandler(),
@@ -101,15 +104,16 @@ public class DataProteusView extends SimpleProteusView {
                 index);
     }
 
-    protected void setDataProvider(ParserContext context, JsonObject data, String dataContext, int childIndex) {
-        if (dataContext == null) {
-            context.setDataProvider(new GsonProvider(data));
-            context.setDataContext(null);
-        } else {
+    private ParserContext setCorrectDataProvider(ParserContext context, JsonObject data, int childIndex) {
+        if (context.getDataContext() != null) {
             JsonElement newData = getElementFromData(data, context.getDataProvider(), childIndex);
             context.setDataProvider(new GsonProvider(newData));
-            context.setDataContext(dataContext);
+            context.setDataContext(context.getDataContext());
+        } else {
+            context.getDataProvider().setRoot(data);
+            context.setDataContext(null);
         }
+        return context;
     }
 
     public JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
@@ -118,5 +122,83 @@ public class DataProteusView extends SimpleProteusView {
 
     public boolean isViewUpdating() {
         return isViewUpdating;
+    }
+
+    public void setDataProvider(Provider dataProvider) {
+        this.dataProvider = (GsonProvider) dataProvider;
+    }
+
+    public GsonProvider getDataProvider() {
+        return dataProvider;
+    }
+
+    public JsonElement get(String dataPath, int childIndex) {
+        JsonElement jsonDataPath = Utils.getStringAsJsonElement(dataPath);
+        getElementFromData(jsonDataPath, dataProvider, childIndex);
+        return null;
+    }
+
+    public void set(String dataPath, String newValue, int childIndex) {
+        if (dataPath == null) {
+            return;
+        }
+        JsonElement jsonParentDataPath = Utils.getStringAsJsonElement(dataPath.substring(0, dataPath.lastIndexOf(".")));
+        JsonElement parent = getElementFromData(jsonParentDataPath, dataProvider, childIndex);
+        if (!parent.isJsonObject()) {
+            return;
+        }
+        String propertyName = dataPath.substring(dataPath.lastIndexOf(".") + 1, dataPath.length());
+        parent.getAsJsonObject().add(propertyName, Utils.getStringAsJsonElement(newValue));
+
+        updateView(dataPath);
+    }
+
+    public void set(String dataPath, Number newValue, int childIndex) {
+        if (dataPath == null) {
+            return;
+        }
+        JsonElement jsonParentDataPath = Utils.getStringAsJsonElement(dataPath.substring(0, dataPath.lastIndexOf(".")));
+        JsonElement parent = getElementFromData(jsonParentDataPath, dataProvider, childIndex);
+        if (!parent.isJsonObject()) {
+            return;
+        }
+        String propertyName = dataPath.substring(dataPath.lastIndexOf(".") + 1, dataPath.length());
+        parent.getAsJsonObject().add(propertyName, Utils.getNumberAsJsonElement(newValue));
+
+        updateView(dataPath);
+    }
+
+    public void set(String dataPath, boolean newValue, int childIndex) {
+        if (dataPath == null) {
+            return;
+        }
+        JsonElement jsonParentDataPath = Utils.getStringAsJsonElement(dataPath.substring(0, dataPath.lastIndexOf(".")));
+        JsonElement parent = getElementFromData(jsonParentDataPath, dataProvider, childIndex);
+        if (!parent.isJsonObject()) {
+            return;
+        }
+        String propertyName = dataPath.substring(dataPath.lastIndexOf(".") + 1, dataPath.length());
+        parent.getAsJsonObject().add(propertyName, Utils.getBooleanAsJsonElement(newValue));
+
+        updateView(dataPath);
+    }
+
+    private void updateView(String dataPath) {
+        this.isViewUpdating = true;
+        if (this.bindings != null) {
+            for (Binding binding : this.bindings) {
+                if (binding.getBindingName().equals(dataPath)) {
+                    this.handleBinding(binding, dataProvider.getRoot().getAsJsonObject());
+                }
+            }
+        }
+
+        if (getChildren() != null) {
+            for (ProteusView proteusView : getChildren()) {
+                ((DataProteusView)proteusView).updateView(dataPath);
+            }
+        }
+
+        this.isViewUpdating = false;
     }
 }
