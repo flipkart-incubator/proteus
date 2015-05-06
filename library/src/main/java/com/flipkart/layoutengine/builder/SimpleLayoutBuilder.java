@@ -6,13 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.parser.LayoutHandler;
-import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.GsonProvider;
-import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
-import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.view.SimpleProteusView;
 import com.google.gson.JsonArray;
@@ -51,7 +47,8 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     /**
-     * Registers a {@link LayoutHandler} for the specified view type. All the attributes will pass through {@link LayoutHandler#handleAttribute} and expect to be handled.
+     * Registers a {@link LayoutHandler} for the specified view type. All the attributes will pass
+     * through {@link LayoutHandler#handleAttribute} and expect to be handled.
      *
      * @param viewType The string value for "view" attribute. e.g. TextView, ListView
      * @param handler  The handler which should handle this view.
@@ -110,13 +107,17 @@ class SimpleLayoutBuilder implements LayoutBuilder {
      * Starts recursively parsing the given jsonObject.
      *
      * @param context      Represents the context of the parsing.
-     * @param parent       The parent view group under which the view being created has to be added as a child.
+     * @param parent       The parent view group under which the view being created has to be
+     *                     added as a child.
      * @param jsonObject   The jsonObject which represents the current node which is getting parsed.
-     * @param existingView A view which needs to be used instead of creating a new one. Pass null for first pass.
+     * @param existingView A view which needs to be used instead of creating a new one. Pass null
+     *                     for first pass.
      * @param childIndex   index of child inside its parent view
      * @return The {@link com.flipkart.layoutengine.view.ProteusView} that was built.
      */
-    protected ProteusView buildImpl(final ParserContext context, final ViewGroup parent, final JsonObject jsonObject, View existingView, final int childIndex) {
+    protected ProteusView buildImpl(final ParserContext context, final ViewGroup parent,
+                                    final JsonObject jsonObject, View existingView,
+                                    final int childIndex) {
         JsonElement viewTypeElement = jsonObject.get(TYPE);
         String viewType;
 
@@ -150,16 +151,29 @@ class SimpleLayoutBuilder implements LayoutBuilder {
          * Parsing each attribute and setting it on the view.
          */
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-            if (TYPE.equals(entry.getKey()) || CHILDREN.equals(entry.getKey()) || CHILD_TYPE.equals(entry.getKey())) {
+            if (TYPE.equals(entry.getKey()) || CHILDREN.equals(entry.getKey())
+                    || CHILD_TYPE.equals(entry.getKey())) {
                 continue;
             }
 
             JsonElement jsonDataValue = entry.getValue();
             String attributeName = entry.getKey();
-            boolean handled = handleAttribute(handler, context, attributeName, jsonObject, jsonDataValue, proteusViewToReturn, parent, childIndex);
+            boolean handled = handleAttribute(handler,
+                    context,
+                    attributeName,
+                    jsonObject,
+                    jsonDataValue,
+                    proteusViewToReturn,
+                    parent,
+                    childIndex);
 
             if (!handled) {
-                onUnknownAttributeEncountered(context, attributeName, jsonDataValue, jsonObject, createdView, childIndex);
+                onUnknownAttributeEncountered(context,
+                        attributeName,
+                        jsonDataValue,
+                        jsonObject,
+                        createdView,
+                        childIndex);
             }
         }
 
@@ -207,21 +221,28 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         return new SimpleProteusView(createdView);
     }
 
-    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
+    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context,
+                                      JsonElement childrenElement, int childIndex) {
         return handler.parseChildren(context, childrenElement, childIndex);
     }
 
-    public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, ProteusView<View> view, ViewGroup parent, int index) {
+    public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context,
+                                   String attribute, JsonObject jsonObject, JsonElement element,
+                                   ProteusView<View> view, ViewGroup parent, int index) {
         return handler.handleAttribute(context, attribute, jsonObject, element, view, index);
     }
 
-    protected void onUnknownAttributeEncountered(ParserContext context, String attribute, JsonElement element, JsonObject object, View view, int childIndex) {
+    protected void onUnknownAttributeEncountered(ParserContext context, String attribute,
+                                                 JsonElement element, JsonObject object, View view,
+                                                 int childIndex) {
         if (listener != null) {
             listener.onUnknownAttribute(context, attribute, element, object, view, childIndex);
         }
     }
 
-    protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject, int childIndex) {
+    protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
+                                                   ViewGroup parent, JsonObject jsonObject,
+                                                   int childIndex) {
 
         if (listener != null) {
             return listener.onUnknownViewType(context, viewType, jsonObject, parent, childIndex);
@@ -229,7 +250,8 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         return null;
     }
 
-    protected View createView(ParserContext context, ViewGroup parent, LayoutHandler<View> handler, JsonObject object) {
+    protected View createView(ParserContext context, ViewGroup parent, LayoutHandler<View> handler,
+                              JsonObject object) {
         return handler.createView(context, this.context, parent, object);
     }
 
@@ -262,7 +284,8 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     /**
-     * Set this to true for rendering preview immediately. This is to be used to decide whether remote resources like remote images are to be downloaded synchronously or not
+     * Set this to true for rendering preview immediately. This is to be used to decide whether
+     * remote resources like remote images are to be downloaded synchronously or not
      *
      * @return true if the all views should be rendered immediately.
      */
