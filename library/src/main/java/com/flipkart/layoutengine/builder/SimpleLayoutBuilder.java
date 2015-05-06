@@ -206,12 +206,6 @@ class SimpleLayoutBuilder implements LayoutBuilder {
                 handler.addChildren(this.context, proteusViewToReturn, childrenToAdd);
             }
         }
-        if (proteusViewToReturn.getChildren() != null) {
-            Log.e("crap", proteusViewToReturn.getChildren().size() + " -- " + viewType);
-        } else {
-            Log.e("crap", "0 -- " + viewType);
-
-        }
         return proteusViewToReturn;
     }
 
@@ -239,11 +233,10 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
-                                                   ViewGroup parent, JsonObject jsonObject,
+                                                   ViewGroup parent, JsonObject viewJsonObject,
                                                    int childIndex) {
-
         if (listener != null) {
-            return listener.onUnknownViewType(context, viewType, jsonObject, parent, childIndex);
+            return listener.onUnknownViewType(context, viewType, viewJsonObject, parent, childIndex);
         }
         return null;
     }

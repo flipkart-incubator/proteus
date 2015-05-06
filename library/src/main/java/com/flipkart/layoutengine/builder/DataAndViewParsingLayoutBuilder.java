@@ -22,12 +22,13 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
     }
 
     @Override
-    protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject, int childIndex) {
-        JsonElement jsonElement = viewProvider.getObject(viewType, childIndex);
-        if (jsonElement != null) {
-            return buildImpl(context, parent, jsonElement.getAsJsonObject(), null, childIndex);
-        } else {
-            return super.onUnknownViewEncountered(context, viewType, parent, jsonObject, childIndex);
+    protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
+                                                   ViewGroup parent, JsonObject viewJsonObject,
+                                                   int childIndex) {
+        JsonElement viewElement = viewProvider.getObject(viewType, childIndex);
+        if (viewElement != null) {
+            return buildImpl(context, parent, viewElement.getAsJsonObject(), null, childIndex);
         }
+        return super.onUnknownViewEncountered(context, viewType, parent, viewJsonObject, childIndex);
     }
 }
