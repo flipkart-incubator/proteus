@@ -56,7 +56,8 @@ public class MainActivity extends ActionBarActivity {
             //data = gson.fromJson("{\"products\":[{\"name\":\"qwe0\"},{\"name\":\"qwe1\"},{\"name\":\"qwe2\"},{\"name\":\"qwe3\"},{\"name\":\"qwe4\"},{\"name\":\"qwe5\"},{\"name\":\"qwe6\"},{\"name\":\"qwe7\"},{\"name\":\"qwe8\"},{\"name\":\"qwe9\"},{\"name\":\"qwe10\"},{\"name\":\"qwe11\"},{\"name\":\"qwe12\"},{\"name\":\"qwe13\"},{\"name\":\"qwe14\"},{\"name\":\"qwe15\"},{\"name\":\"qwe16\"},{\"name\":\"qwe17\"},{\"name\":\"qwe18\"},{\"name\":\"qwe19\"}]}", JsonObject.class);
         }
 
-        LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutData));
+        LayoutBuilder builder = new DefaultLayoutBuilderFactory()
+                        .createDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutData));
 
         builder.setListener(createCallback());
 
@@ -65,7 +66,8 @@ public class MainActivity extends ActionBarActivity {
         this.proteusView = builder.build(container, layoutData, data);
         View view = proteusView.getView();
 
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
 
         if (view != null) {
             container.addView(view, layoutParams);

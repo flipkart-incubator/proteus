@@ -12,7 +12,8 @@ public class Utils {
 
     private static final String TAG = Utils.class.getSimpleName();
 
-    public static JsonElement getElementFromData(Character prefix, JsonElement element, Provider dataProvider, int childIndex) {
+    public static JsonElement getElementFromData(Character prefix, JsonElement element,
+                                                 Provider dataProvider, int childIndex) {
         if (element.isJsonPrimitive()) {
             String dataSourceKey = element.getAsString();
             if (dataSourceKey.length() > 0 && dataSourceKey.charAt(0) == prefix) {

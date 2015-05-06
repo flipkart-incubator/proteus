@@ -15,7 +15,8 @@ import java.util.ArrayList;
 
 /**
  * A {@link ProteusView} implementation to update the data
- * associated with a {@link android.view.View} built using a {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
+ * associated with a {@link android.view.View} built using a
+ * {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
  *
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
@@ -27,7 +28,8 @@ public class DataProteusView extends SimpleProteusView {
 
     /**
      * This Map holds a references to the {@link com.flipkart.layoutengine.binding.Binding} between
-     * the view and data. This map is used to update the data associated with the {@link android.view.View}
+     * the view and data. This map is used to update the data associated with the
+     * {@link android.view.View}
      * example:
      * <pre>
      * {@literal <}"$product.name", bindingObjectOfThisProperty{@literal >}
@@ -69,10 +71,11 @@ public class DataProteusView extends SimpleProteusView {
     /**
      * Updates the Binding with new data. It uses a {@link com.flipkart.layoutengine.binding.Binding}
      * to get the associated {@link android.view.View}, {@link com.flipkart.layoutengine.builder.LayoutBuilder},
-     * and {@link com.flipkart.layoutengine.parser.LayoutHandler} to update the value of the bound attribute with
-     * the new value fetched from the new data object passed.
+     * and {@link com.flipkart.layoutengine.parser.LayoutHandler} to update the value of the bound
+     * attribute with the new value fetched from the new data object passed.
      *
-     * @param binding The property name to update mapped to its {@link com.flipkart.layoutengine.binding.Binding}
+     * @param binding The property name to update mapped to its
+     *                {@link com.flipkart.layoutengine.binding.Binding}
      */
     private void handleBinding(Binding binding, JsonObject data) {
         JsonObject temp = new JsonObject();

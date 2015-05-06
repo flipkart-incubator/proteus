@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * A layout builder which can parse json to construct an android view out of it. It uses the
  * registered handlers to convert the json string to a view and then assign attributes.
@@ -57,7 +56,6 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     public void registerHandler(String viewType, LayoutHandler<View> handler) {
         handler.prepare(context);
         layoutHandlers.put(viewType, handler);
-
     }
 
     /**

@@ -29,7 +29,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex) {
+    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context,
+                                      JsonElement childrenElement, int childIndex) {
         childrenElement = getElementFromData(childrenElement, context.getDataProvider(), childIndex);
         return super.parseChildren(handler, context, childrenElement, childIndex);
     }
@@ -40,7 +41,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ProteusView buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject, View existingView, int childIndex) {
+    protected ProteusView buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject,
+                                    View existingView, int childIndex) {
         JsonElement dataContextElement = jsonObject.get("dataContext");
 
         if (dataContextElement != null) {
@@ -61,7 +63,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context, String attributeName, JsonObject jsonObject, JsonElement jsonDataValue, ProteusView<View> associatedProteusView, ViewGroup parent, int childIndex) {
+    public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context,
+                                   String attributeName, JsonObject jsonObject,
+                                   JsonElement jsonDataValue, ProteusView<View> associatedProteusView,
+                                   ViewGroup parent, int childIndex) {
         if (jsonDataValue.isJsonPrimitive()) {
             String attributeValue = jsonDataValue.getAsString();
             JsonElement elementFromData = getElementFromData(jsonDataValue, context.getDataProvider(), childIndex);
@@ -88,7 +93,14 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 }
             }
         }
-        return super.handleAttribute(handler, context, attributeName, jsonObject, jsonDataValue, associatedProteusView, parent, childIndex);
+        return super.handleAttribute(handler,
+                context,
+                attributeName,
+                jsonObject,
+                jsonDataValue,
+                associatedProteusView,
+                parent,
+                childIndex);
     }
 
     @Override
