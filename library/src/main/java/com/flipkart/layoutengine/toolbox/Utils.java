@@ -37,11 +37,15 @@ public class Utils {
         return temp.get("value");
     }
 
-    public static JsonElement getNumberAsJsonElement(Number newValue) {
-        return null;
+    public static JsonElement getNumberAsJsonElement(Number number) {
+        JsonObject temp = new JsonObject();
+        temp.addProperty("value", number);
+        return temp.get("value");
     }
 
     public static JsonElement getBooleanAsJsonElement(Boolean aBoolean) {
-        return null;
+        JsonObject temp = new JsonObject();
+        temp.addProperty("value", aBoolean);
+        return temp.get("value");
     }
 }
