@@ -17,6 +17,7 @@ import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.provider.GsonProvider;
+import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -57,7 +58,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
         LayoutBuilder builder = new DefaultLayoutBuilderFactory()
-                        .createDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutData));
+                .createDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutData));
 
         builder.setListener(createCallback());
 
@@ -89,6 +90,11 @@ public class MainActivity extends ActionBarActivity {
             }
 
             @Override
+            public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, ParserContext context, JsonObject viewJsonObject, ViewGroup parent, int childIndex) {
+                Log.e(TAG, "here");
+            }
+
+            @Override
             public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType) {
                 Log.d("event", attributeValue.toString());
                 return null;
@@ -110,9 +116,10 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             //createView();
-            Gson gson = new Gson();
-            JsonObject data = gson.fromJson("{\"product\":{\"name\":\"Intel Core i7\",\"price\":\"19500\",\"rating\":\"*****\"}}", JsonObject.class);
-            this.proteusView.updateView(data);
+            //Gson gson = new Gson();
+            //JsonObject data = gson.fromJson("{\"product\":{\"name\":\"Intel Core i7\",\"price\":\"19500\",\"rating\":\"*****\"}}", JsonObject.class);
+            //this.proteusView.updateView(data);
+            ((DataProteusView)this.proteusView).set("$product.name", "blah", 0);
             return true;
         }
         return super.onOptionsItemSelected(item);

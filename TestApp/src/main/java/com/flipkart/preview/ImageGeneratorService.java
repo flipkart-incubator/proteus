@@ -119,6 +119,11 @@ public class ImageGeneratorService extends Service {
             }
 
             @Override
+            public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, ParserContext context, JsonObject viewJsonObject, ViewGroup parent, int childIndex) {
+
+            }
+
+            @Override
             public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType) {
                 return null;
             }
