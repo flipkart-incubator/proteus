@@ -27,8 +27,18 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
                                                    int childIndex) {
         JsonElement viewElement = viewProvider.getObject(viewType, childIndex);
         if (viewElement != null) {
-            return buildImpl(context, parent, viewElement.getAsJsonObject(), null, childIndex);
+            JsonObject viewLayoutObject = viewElement.getAsJsonObject();
+            ProteusView createdView = buildImpl(context, parent, viewLayoutObject, null, childIndex);
+            ParserContext newParserContext = getNewParserContext(context, viewLayoutObject, childIndex);
+            onViewBuiltFromViewProvider(createdView, viewType, newParserContext, viewLayoutObject, parent, childIndex);
+            return createdView;
         }
         return super.onUnknownViewEncountered(context, viewType, parent, viewJsonObject, childIndex);
+    }
+
+    private void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, ParserContext parserContext, JsonObject viewLayoutObject, ViewGroup parent, int childIndex) {
+        if (listener != null) {
+            listener.onViewBuiltFromViewProvider(createdView, viewType, parserContext, viewLayoutObject, parent, childIndex);
+        }
     }
 }

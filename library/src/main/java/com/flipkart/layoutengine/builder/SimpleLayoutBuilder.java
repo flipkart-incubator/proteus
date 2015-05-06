@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.GsonProvider;
+import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.view.SimpleProteusView;
@@ -33,7 +34,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     public static final String CHILD_TYPE = "childType";
 
     private HashMap<String, LayoutHandler<View>> layoutHandlers = new HashMap<>();
-    private LayoutBuilderCallback listener;
+    protected LayoutBuilderCallback listener;
     private BitmapLoader bitmapLoader;
 
     // see the getter for doc
@@ -144,6 +145,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
         // create the proteus view to return
         ProteusView proteusViewToReturn = createProteusViewToReturn(createdView);
+        prepareView(proteusViewToReturn, context.getDataProvider());
 
         /**
          * Parsing each attribute and setting it on the view.
@@ -211,6 +213,10 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected ProteusView createProteusViewToReturn(View createdView) {
         return new SimpleProteusView(createdView);
+    }
+
+    protected void prepareView(ProteusView proteusView, Provider dataProvider) {
+        // nothing to do here
     }
 
     protected JsonArray parseChildren(LayoutHandler handler, ParserContext context,

@@ -38,6 +38,9 @@ public interface LayoutBuilderCallback {
     ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject viewJsonObject,
                                   ViewGroup parent, int childIndex);
 
+    void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, ParserContext context,
+                                     JsonObject viewJsonObject, ViewGroup parent, int childIndex);
+
     /**
      * called when any click occurs on views
      *

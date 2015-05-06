@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     private static final Character PREFIX = DataParsingAdapter.PREFIX;
+    protected static final String DATA_CONTEXT = "dataContext";
 
     DataParsingLayoutBuilder(Context context) {
         super(context);
@@ -43,22 +44,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     @Override
     protected ProteusView buildImpl(ParserContext context, ViewGroup parent, JsonObject currentViewJsonObject,
                                     View existingView, int childIndex) {
-        JsonElement dataContextElement = currentViewJsonObject.get("dataContext");
-
-        if (dataContextElement != null) {
-            ParserContext newContext = context.clone();
-            Provider oldProvider = context.getDataProvider();
-            if (oldProvider != null) {
-                Provider newProvider = oldProvider.clone();
-                JsonElement newRoot = getElementFromData(dataContextElement, oldProvider, childIndex);
-                newProvider.setRoot(newRoot);
-                newContext.setDataProvider(newProvider);
-                newContext.setDataContext(dataContextElement.getAsString());
-                context = newContext;
-            } else {
-                Log.e(TAG, "When dataContext is specified, data provider cannot be null");
-            }
-        }
+        context = getNewParserContext(context, currentViewJsonObject, childIndex);
         return super.buildImpl(context, parent, currentViewJsonObject, existingView, childIndex);
     }
 
@@ -102,9 +88,35 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 childIndex);
     }
 
+    protected ParserContext getNewParserContext(final ParserContext oldContext,
+                                                final JsonObject currentViewJsonObject,
+                                                final int childIndex) {
+        JsonElement dataContextElement = currentViewJsonObject.get(DATA_CONTEXT);
+        if (dataContextElement != null) {
+            ParserContext newContext = oldContext.clone();
+            Provider oldProvider = oldContext.getDataProvider();
+            if (oldProvider != null) {
+                Provider newProvider = oldProvider.clone();
+                JsonElement newRoot = getElementFromData(dataContextElement, oldProvider, childIndex);
+                newProvider.setRoot(newRoot);
+                newContext.setDataProvider(newProvider);
+                newContext.setDataContext(dataContextElement.getAsString());
+                return newContext;
+            } else {
+                Log.e(TAG, "When dataContext is specified, data provider cannot be null");
+            }
+        }
+        return oldContext;
+    }
+
     @Override
     protected ProteusView createProteusViewToReturn(View createdView) {
         return new DataProteusView(new SimpleProteusView(createdView));
+    }
+
+    @Override
+    protected void prepareView(ProteusView proteusView, Provider dataProvider) {
+        ((DataProteusView) proteusView).setDataProvider(dataProvider);
     }
 
     protected JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
