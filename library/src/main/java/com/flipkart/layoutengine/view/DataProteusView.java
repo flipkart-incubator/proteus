@@ -40,7 +40,7 @@ public class DataProteusView extends SimpleProteusView {
 
     public DataProteusView(ProteusView proteusView) {
         super(proteusView.getView());
-        addChildren(proteusView.getChildren());
+        this.children = proteusView.getChildren();
         if (proteusView instanceof DataProteusView) {
             dataProvider = ((DataProteusView)proteusView).getDataProvider();
         }
