@@ -10,7 +10,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
- * @author  kiran.kumar
+ * @author kiran.kumar
  */
 public interface LayoutBuilderCallback {
 
@@ -24,24 +24,26 @@ public interface LayoutBuilderCallback {
      * @param view       corresponding view for current attribute that is being parsed
      * @param childIndex child index
      */
-    public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element, JsonObject object, View view, int childIndex);
+    void onUnknownAttribute(ParserContext context, String attribute, JsonElement element,
+                            JsonObject object, View view, int childIndex);
 
     /**
      * called when the builder encounters a view type which it cannot understand.
      *
-     * @param context    ParserContext for current parsed view
-     * @param viewType   type of view that is being parsed
-     * @param object     corresponding JsonObject for the parsed attribute
-     * @param childIndex child index
+     * @param context        ParserContext for current parsed view
+     * @param viewType       type of view that is being parsed
+     * @param viewJsonObject corresponding JsonObject for the parsed attribute
+     * @param childIndex     child index
      */
-    public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent, int childIndex);
+    ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject viewJsonObject,
+                                  ViewGroup parent, int childIndex);
 
     /**
      * called when any click occurs on views
      *
      * @param context ParserContext for current parsed view
-     * @param view The view that triggered the event
+     * @param view    The view that triggered the event
      */
-    public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType);
+    View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType);
 
 }

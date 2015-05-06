@@ -41,9 +41,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ProteusView buildImpl(ParserContext context, ViewGroup parent, JsonObject jsonObject,
+    protected ProteusView buildImpl(ParserContext context, ViewGroup parent, JsonObject currentViewJsonObject,
                                     View existingView, int childIndex) {
-        JsonElement dataContextElement = jsonObject.get("dataContext");
+        JsonElement dataContextElement = currentViewJsonObject.get("dataContext");
 
         if (dataContextElement != null) {
             ParserContext newContext = context.clone();
@@ -59,7 +59,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 Log.e(TAG, "When dataContext is specified, data provider cannot be null");
             }
         }
-        return super.buildImpl(context, parent, jsonObject, existingView, childIndex);
+        return super.buildImpl(context, parent, currentViewJsonObject, existingView, childIndex);
     }
 
     @Override

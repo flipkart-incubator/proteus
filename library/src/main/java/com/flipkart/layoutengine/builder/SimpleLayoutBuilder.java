@@ -104,19 +104,19 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     /**
      * Starts recursively parsing the given jsonObject.
      *
-     * @param context      Represents the context of the parsing.
-     * @param parent       The parent view group under which the view being created has to be
-     *                     added as a child.
-     * @param jsonObject   The jsonObject which represents the current node which is getting parsed.
-     * @param existingView A view which needs to be used instead of creating a new one. Pass null
-     *                     for first pass.
-     * @param childIndex   index of child inside its parent view
+     * @param context               Represents the context of the parsing.
+     * @param parent                The parent view group under which the view being created has to be
+     *                              added as a child.
+     * @param currentViewJsonObject The jsonObject which represents the current node which is getting parsed.
+     * @param existingView          A view which needs to be used instead of creating a new one. Pass null
+     *                              for first pass.
+     * @param childIndex            index of child inside its parent view
      * @return The {@link com.flipkart.layoutengine.view.ProteusView} that was built.
      */
     protected ProteusView buildImpl(final ParserContext context, final ViewGroup parent,
-                                    final JsonObject jsonObject, View existingView,
+                                    final JsonObject currentViewJsonObject, View existingView,
                                     final int childIndex) {
-        JsonElement viewTypeElement = jsonObject.get(TYPE);
+        JsonElement viewTypeElement = currentViewJsonObject.get(TYPE);
         String viewType;
 
         if (viewTypeElement != null) {
@@ -128,7 +128,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
         LayoutHandler<View> handler = layoutHandlers.get(viewType);
         if (handler == null) {
-            return onUnknownViewEncountered(context, viewType, parent, jsonObject, childIndex);
+            return onUnknownViewEncountered(context, viewType, parent, currentViewJsonObject, childIndex);
         }
 
         /**
@@ -136,7 +136,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
          */
         final View createdView;
         if (existingView == null) {
-            createdView = createView(context, parent, handler, jsonObject);
+            createdView = createView(context, parent, handler, currentViewJsonObject);
             handler.setupView(parent, createdView);
         } else {
             createdView = existingView;
@@ -148,7 +148,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         /**
          * Parsing each attribute and setting it on the view.
          */
-        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
+        for (Map.Entry<String, JsonElement> entry : currentViewJsonObject.entrySet()) {
             if (TYPE.equals(entry.getKey()) || CHILDREN.equals(entry.getKey())
                     || CHILD_TYPE.equals(entry.getKey())) {
                 continue;
@@ -159,7 +159,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
             boolean handled = handleAttribute(handler,
                     context,
                     attributeName,
-                    jsonObject,
+                    currentViewJsonObject,
                     jsonDataValue,
                     proteusViewToReturn,
                     parent,
@@ -169,7 +169,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
                 onUnknownAttributeEncountered(context,
                         attributeName,
                         jsonDataValue,
-                        jsonObject,
+                        currentViewJsonObject,
                         createdView,
                         childIndex);
             }
@@ -178,8 +178,8 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         /**
          * Processing the children.
          */
-        JsonElement childViewElement = jsonObject.get(CHILD_TYPE);
-        JsonElement childrenElement = jsonObject.get(CHILDREN);
+        JsonElement childViewElement = currentViewJsonObject.get(CHILD_TYPE);
+        JsonElement childrenElement = currentViewJsonObject.get(CHILDREN);
         JsonArray children = null;
         if (childrenElement != null) {
             children = parseChildren(handler, context, childrenElement, childIndex);
