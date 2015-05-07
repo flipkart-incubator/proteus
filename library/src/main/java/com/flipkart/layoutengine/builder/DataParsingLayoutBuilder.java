@@ -55,26 +55,28 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                    ViewGroup parent, int childIndex) {
         if (jsonDataValue.isJsonPrimitive()) {
             String attributeValue = jsonDataValue.getAsString();
-            JsonElement elementFromData = getElementFromData(jsonDataValue, context.getDataProvider(), childIndex);
-            if (elementFromData != null) {
-                jsonDataValue = elementFromData;
+            if (attributeValue != null && !attributeValue.equals("")) {
+                JsonElement elementFromData = getElementFromData(jsonDataValue, context.getDataProvider(), childIndex);
+                if (elementFromData != null) {
+                    jsonDataValue = elementFromData;
 
-                // check if the view is in update mode
-                // if not that means that the update flow
-                // is running and we must not add more bindings
-                // for they will be duplicates
-                DataProteusView dataProteusView = (DataProteusView) associatedProteusView;
-                if (attributeValue.charAt(0) == PREFIX && !dataProteusView.isViewUpdating()) {
-                    Binding binding = new Binding(context,
-                            handler,
-                            attributeValue,
-                            attributeName,
-                            attributeValue,
-                            associatedProteusView,
-                            parent,
-                            childIndex);
+                    // check if the view is in update mode
+                    // if not that means that the update flow
+                    // is running and we must not add more bindings
+                    // for they will be duplicates
+                    DataProteusView dataProteusView = (DataProteusView) associatedProteusView;
+                    if (attributeValue.charAt(0) == PREFIX && !dataProteusView.isViewUpdating()) {
+                        Binding binding = new Binding(context,
+                                handler,
+                                attributeValue,
+                                attributeName,
+                                attributeValue,
+                                associatedProteusView,
+                                parent,
+                                childIndex);
 
-                    dataProteusView.addBinding(binding);
+                        dataProteusView.addBinding(binding);
+                    }
                 }
             }
         }
