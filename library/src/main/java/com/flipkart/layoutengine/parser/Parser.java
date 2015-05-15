@@ -126,12 +126,11 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     /**
      * This is a base implementation which calls addChild() on the parent.
      *
-     * @param context  Android context
      * @param parent   The view group into which the child will be added.
      * @param children The List of child views which have to be added.
      */
     @Override
-    public void addChildren(Context context, ProteusView<View> parent, List<ProteusView> children) {
+    public void addChildren(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children) {
         for (ProteusView child : children) {
             parent.addChild(child);
         }

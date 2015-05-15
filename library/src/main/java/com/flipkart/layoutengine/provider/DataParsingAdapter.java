@@ -29,22 +29,20 @@ public class DataParsingAdapter<E extends View> implements LayoutHandler<E> {
 
     @Override
     public E createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject object) {
-        return handler.createView(parserContext, context,parent,object);
+        return handler.createView(parserContext, context, parent, object);
     }
 
     @Override
     public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, ProteusView<E> view, int index) {
         element = getElementFromData(element, index);
-        return handler.handleAttribute(context,attribute, jsonObject, element, view, index);
+        return handler.handleAttribute(context, attribute, jsonObject, element, view, index);
     }
 
-    private JsonElement getElementFromData(JsonElement element, int index)
-    {
-        if(element.isJsonPrimitive())
-        {
+    private JsonElement getElementFromData(JsonElement element, int index) {
+        if (element.isJsonPrimitive()) {
             String dataSourceKey = element.getAsString();
-            if(dataSourceKey.charAt(0) == PREFIX) {
-                element = dataProvider.getObject(dataSourceKey.substring(1),index);
+            if (dataSourceKey.charAt(0) == PREFIX) {
+                element = dataProvider.getObject(dataSourceKey.substring(1), index);
             }
         }
         return element;
@@ -57,7 +55,7 @@ public class DataParsingAdapter<E extends View> implements LayoutHandler<E> {
 
     @Override
     public void setupView(ViewGroup parent, E view) {
-        handler.setupView(parent,view);
+        handler.setupView(parent, view);
     }
 
     @Override
@@ -66,8 +64,8 @@ public class DataParsingAdapter<E extends View> implements LayoutHandler<E> {
     }
 
     @Override
-    public void addChildren(Context context, ProteusView<View> parent, List<ProteusView> children) {
-        handler.addChildren(context,parent,children);
+    public void addChildren(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children) {
+        handler.addChildren(parserContext, parent, children);
     }
 
     @Override

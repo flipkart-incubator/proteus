@@ -205,7 +205,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
             // add the children to the root view group
             if (childrenToAdd.size() > 0) {
-                handler.addChildren(this.context, proteusViewToReturn, childrenToAdd);
+                handler.addChildren(context, proteusViewToReturn, childrenToAdd);
             }
         }
         return proteusViewToReturn;
