@@ -13,6 +13,7 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Adapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -35,6 +36,7 @@ import com.google.gson.JsonObject;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.List;
 
 /**
  * Created by kirankumar on 14/11/14.
@@ -105,30 +107,7 @@ public class ImageGeneratorService extends Service {
         FrameLayout frameLayout = new FrameLayout(getBaseContext());
         frameLayout.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         frameLayout.setBackgroundColor(Color.WHITE);
-
-        builder.setListener(new LayoutBuilderCallback() {
-
-            @Override
-            public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element, JsonObject object, View view, int childIndex) {
-
-            }
-
-            @Override
-            public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent, int childIndex) {
-                return null;
-            }
-
-            @Override
-            public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, ParserContext context, JsonObject viewJsonObject, ViewGroup parent, int childIndex) {
-
-            }
-
-            @Override
-            public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType) {
-                return null;
-            }
-        });
-        View view = null;
+        View view;
         try {
             view = builder.build(frameLayout, layout, null).getView();
         } catch (Exception e) {
@@ -142,7 +121,6 @@ public class ImageGeneratorService extends Service {
             tv.setTextSize(8);
             tv.setTextColor(Color.BLACK);
             view = tv;
-            // do nothing
         }
         if (view != null) {
             frameLayout.addView(view);

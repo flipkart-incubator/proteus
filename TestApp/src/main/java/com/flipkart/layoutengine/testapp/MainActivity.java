@@ -1,7 +1,9 @@
 package com.flipkart.layoutengine.testapp;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -9,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.FrameLayout;
 
 import com.flipkart.layoutengine.EventType;
@@ -22,6 +25,8 @@ import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -99,9 +104,18 @@ public class MainActivity extends ActionBarActivity {
                 Log.d("event", attributeValue.toString());
                 return null;
             }
+
+            @Override
+            public PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children) {
+                return null;
+            }
+
+            @Override
+            public Adapter onAdapterRequired(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children) {
+                return null;
+            }
         };
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

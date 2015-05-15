@@ -1,13 +1,18 @@
 package com.flipkart.layoutengine.builder;
 
+import android.content.Context;
+import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import java.util.List;
 
 /**
  * @author kiran.kumar
@@ -48,5 +53,11 @@ public interface LayoutBuilderCallback {
      * @param view    The view that triggered the event
      */
     View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType);
+
+    PagerAdapter onPagerAdapterRequired(ParserContext parserContext,
+                                        ProteusView<View> parent, final List<ProteusView> children);
+
+    Adapter onAdapterRequired(ParserContext parserContext,
+                              ProteusView<View> parent, final List<ProteusView> children);
 
 }
