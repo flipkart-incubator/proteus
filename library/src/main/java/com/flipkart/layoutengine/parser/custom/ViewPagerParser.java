@@ -4,8 +4,8 @@ import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.view.ViewGroup;
 
+import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -22,31 +22,14 @@ public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
     }
 
     @Override
-    public void addChildren(Context context, ProteusView<View> parent, final List<ProteusView> children) {
+    public void addChildren(ParserContext parserContext, ProteusView<View> parent,
+                            final List<ProteusView> children) {
+
         //not calling super since it calls addChild(). addchild() on viewpager wont work.
-        PagerAdapter adapter = new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return children.size();
-            }
+        PagerAdapter adapter = parserContext.getLayoutBuilder()
+                .getListener()
+                .onPagerAdapterRequired(parserContext, parent, children);
 
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return view == object;
-            }
-
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                ProteusView view = children.get(position);
-                container.addView(view.getView());
-                return view;
-            }
-
-            @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
-                container.removeView((View) object);
-            }
-        };
         ((T) parent.getView()).setAdapter(adapter);
     }
 }
