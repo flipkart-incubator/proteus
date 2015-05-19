@@ -131,7 +131,7 @@ public class MainActivity extends ActionBarActivity {
             //createView();
             //Gson gson = new Gson();
             //JsonObject data = gson.fromJson("{\"product\":{\"name\":\"Intel Core i7\",\"price\":\"19500\",\"rating\":\"*****\"}}", JsonObject.class);
-            //this.proteusView.updateView(data);
+            //this.proteusView.updateData(data);
             ((DataProteusView)this.proteusView).set("product.name", "blah", 0);
             return true;
         }

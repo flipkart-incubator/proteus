@@ -1,8 +1,6 @@
 package com.flipkart.layoutengine.toolbox;
 
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Aditya Sharat on 18-05-2015.
@@ -46,8 +44,6 @@ public class Formatters {
                 return NOOP;
         }
     }
-
-    private static Map<String, Formatter> formatters = new HashMap<>();
 
     public interface Formatter {
         String format(String value);
