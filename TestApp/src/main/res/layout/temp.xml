@@ -22,4 +22,9 @@
         android:layout_height="50dp"
         android:text="$product.rating" />
 
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="~{{product.name}} is awesome {{product.price}}$(number)" />
+
 </LinearLayout>
