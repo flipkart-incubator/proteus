@@ -3,7 +3,6 @@ package com.flipkart.layoutengine.view;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.layoutengine.binding.Binding;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -44,11 +43,11 @@ public class SimpleProteusView implements ProteusView {
     }
 
     @Override
-    public View updateView(JsonObject data) {
-        return updateViewImpl(data);
+    public View updateData(JsonObject data) {
+        return updateDataImpl(data);
     }
 
-    protected View updateViewImpl(JsonObject data) {
+    protected View updateDataImpl(JsonObject data) {
         return this.view;
     }
 }

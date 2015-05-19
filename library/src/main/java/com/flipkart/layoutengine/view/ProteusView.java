@@ -2,7 +2,6 @@ package com.flipkart.layoutengine.view;
 
 import android.view.View;
 
-import com.flipkart.layoutengine.binding.Binding;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.ArrayList;
  * {@link ProteusView#getView()} method.
  * <p/>
  * In order to update the data associated with the {@link android.view.View} use the
- * {@link com.flipkart.layoutengine.view.ProteusView#updateView(com.google.gson.JsonObject)}.
+ * {@link com.flipkart.layoutengine.view.ProteusView#updateData(com.google.gson.JsonObject)}.
  *
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
@@ -48,5 +47,5 @@ public interface ProteusView<T extends View> {
      * @return reference to the updated view {@link android.view.View} wrapped by the
      * {@link ProteusView}
      */
-    View updateView(JsonObject data);
+    View updateData(JsonObject data);
 }

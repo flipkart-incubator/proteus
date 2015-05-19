@@ -4,7 +4,6 @@ import android.view.View;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
-import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.GsonProvider;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.Utils;
@@ -40,7 +39,7 @@ public class DataProteusView extends SimpleProteusView {
         super(proteusView.getView());
         this.children = proteusView.getChildren();
         if (proteusView instanceof DataProteusView) {
-            dataProvider = ((DataProteusView)proteusView).getDataProvider();
+            dataProvider = ((DataProteusView) proteusView).getDataProvider();
         }
     }
 
@@ -52,7 +51,7 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     @Override
-    protected View updateViewImpl(JsonObject data) {
+    protected View updateDataImpl(JsonObject data) {
         this.isViewUpdating = true;
         if (this.bindings != null) {
             for (Binding binding : this.bindings) {
@@ -62,10 +61,9 @@ public class DataProteusView extends SimpleProteusView {
 
         if (getChildren() != null) {
             for (ProteusView proteusView : getChildren()) {
-                proteusView.updateView(data);
+                proteusView.updateData(data);
             }
         }
-
         this.isViewUpdating = false;
         return this.getView();
     }
@@ -177,14 +175,14 @@ public class DataProteusView extends SimpleProteusView {
 
         if (getChildren() != null) {
             for (ProteusView proteusView : getChildren()) {
-                ((DataProteusView)proteusView).updateView(dataPath);
+                ((DataProteusView) proteusView).updateView(dataPath);
             }
         }
 
         this.isViewUpdating = false;
     }
 
-    public JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
+    private JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
         return Utils.getElementFromData(element, dataProvider, childIndex);
     }
 }
