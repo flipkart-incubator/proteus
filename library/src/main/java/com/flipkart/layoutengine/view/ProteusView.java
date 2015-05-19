@@ -48,4 +48,6 @@ public interface ProteusView<T extends View> {
      * {@link ProteusView}
      */
     View updateData(JsonObject data);
+
+    void replaceView(ProteusView view);
 }

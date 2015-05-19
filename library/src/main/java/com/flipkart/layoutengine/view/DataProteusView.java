@@ -1,6 +1,7 @@
 package com.flipkart.layoutengine.view;
 
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
@@ -32,7 +33,7 @@ public class DataProteusView extends SimpleProteusView {
      * {@literal <}"$product.name", bindingObjectOfThisProperty{@literal >}
      * </pre>
      */
-    protected ArrayList<Binding> bindings;
+    private ArrayList<Binding> bindings;
     private Provider dataProvider;
 
     public DataProteusView(ProteusView proteusView) {
@@ -41,6 +42,15 @@ public class DataProteusView extends SimpleProteusView {
         if (proteusView instanceof DataProteusView) {
             dataProvider = ((DataProteusView) proteusView).getDataProvider();
         }
+    }
+
+    @Override
+    public void replaceView(ProteusView view) {
+        if (view instanceof DataProteusView) {
+            DataProteusView dataProteusView = (DataProteusView)view;
+            this.bindings = dataProteusView.getBindings();
+        }
+        super.replaceView(view);
     }
 
     public void addBinding(Binding binding) {
@@ -120,6 +130,10 @@ public class DataProteusView extends SimpleProteusView {
 
     public boolean isViewUpdating() {
         return isViewUpdating;
+    }
+
+    public ArrayList<Binding> getBindings() {
+        return bindings;
     }
 
     public void setDataProvider(Provider dataProvider) {

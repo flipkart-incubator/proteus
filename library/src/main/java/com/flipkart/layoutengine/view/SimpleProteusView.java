@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.view;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 
 import com.google.gson.JsonObject;
 
@@ -45,6 +46,15 @@ public class SimpleProteusView implements ProteusView {
     @Override
     public View updateData(JsonObject data) {
         return updateDataImpl(data);
+    }
+
+    @Override
+    public void replaceView(ProteusView view) {
+        this.children = view.getChildren();
+        ViewGroup parent = (ViewGroup)this.view.getParent();
+        int index = parent.indexOfChild(this.view);
+        parent.removeView(this.view);
+        parent.addView(view.getView(), index);
     }
 
     protected View updateDataImpl(JsonObject data) {
