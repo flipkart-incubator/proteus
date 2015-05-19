@@ -33,7 +33,7 @@ public class DataProteusView extends SimpleProteusView {
      * </pre>
      */
     protected ArrayList<Binding> bindings;
-    private GsonProvider dataProvider;
+    private Provider dataProvider;
 
     public DataProteusView(ProteusView proteusView) {
         super(proteusView.getView());
@@ -125,10 +125,10 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     public void setDataProvider(Provider dataProvider) {
-        this.dataProvider = (GsonProvider) dataProvider;
+        this.dataProvider = dataProvider;
     }
 
-    public GsonProvider getDataProvider() {
+    public Provider getDataProvider() {
         return dataProvider;
     }
 
