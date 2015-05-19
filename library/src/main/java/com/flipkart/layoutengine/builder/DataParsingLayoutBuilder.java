@@ -19,13 +19,12 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A layout builder which can parse data bindings before passing it on to {@link SimpleLayoutBuilder}
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
-    private static final Character PREFIX = DataParsingAdapter.PREFIX;
+    private static final Character PREFIX = DataParsingAdapter.DATA_PREFIX;
     protected static final String DATA_CONTEXT = "dataContext";
 
     DataParsingLayoutBuilder(Context context) {
@@ -35,7 +34,12 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     @Override
     protected JsonArray parseChildren(LayoutHandler handler, ParserContext context,
                                       JsonElement childrenElement, int childIndex) {
-        childrenElement = getElementFromData(childrenElement, context.getDataProvider(), childIndex);
+        if (childrenElement.isJsonPrimitive()) {
+            String attributeValue = childrenElement.getAsString();
+            if (attributeValue != null && !"".equals(attributeValue)) {
+                childrenElement = getElementFromData(attributeValue, context.getDataProvider(), childIndex);
+            }
+        }
         return super.parseChildren(handler, context, childrenElement, childIndex);
     }
 
@@ -81,79 +85,128 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                              int childIndex) {
 
         String attributeValue = jsonDataValue.getAsString();
-        if (attributeValue != null && !attributeValue.equals("")) {
-            JsonElement elementFromData = getElementFromData(jsonDataValue, context.getDataProvider(), childIndex);
-            if (elementFromData != null) {
-                jsonDataValue = elementFromData;
 
-                // check if the view is in update mode
-                // if not that means that the update flow
-                // is running and we must not add more bindings
-                // for they will be duplicates
-                DataProteusView dataProteusView = (DataProteusView) associatedProteusView;
-                if (attributeValue.charAt(0) == PREFIX && !dataProteusView.isViewUpdating()) {
-                    String bindindingName = attributeValue;
-                    String dataContext = context.getDataContext();
-                    if (dataContext != null) {
-                        bindindingName = dataContext + "." + bindindingName.substring(1);
+        if (attributeValue != null && !"".equals(attributeValue) &&
+                (attributeValue.charAt(0) == DataParsingAdapter.DATA_PREFIX ||
+                        attributeValue.charAt(0) == DataParsingAdapter.REGEX_PREFIX)) {
+
+            if (attributeValue.charAt(0) == DataParsingAdapter.REGEX_PREFIX) {
+                Matcher regexMatcher = DataParsingAdapter.REGEX_PATTERN.matcher(attributeValue);
+                String finalValue = attributeValue;
+
+                while (regexMatcher.find()) {
+                    String matchedString = regexMatcher.group(0);
+                    String bindingName;
+                    if (regexMatcher.group(3) != null) {
+
+                        // has NO formatter
+                        String dataPath = regexMatcher.group(3);
+                        finalValue = finalValue.replace(matchedString, getElementFromData(
+                                dataPath,
+                                context.getDataProvider(),
+                                childIndex).getAsString());
+                        bindingName = dataPath;
+                    } else {
+
+                        // has formatter
+                        String dataPath = regexMatcher.group(1);
+                        String formatterName = regexMatcher.group(2);
+
+                        String formattedValue = Utils.format(getElementFromData(dataPath,
+                                context.getDataProvider(),
+                                childIndex).getAsString(), formatterName);
+                        finalValue = finalValue.replace(matchedString, formattedValue);
+                        bindingName = dataPath;
                     }
-
-                    Binding binding = new Binding(context,
-                            handler,
-                            bindindingName,
+                    addBinding(associatedProteusView,
+                            bindingName,
                             attributeName,
                             attributeValue,
-                            associatedProteusView,
+                            context,
+                            handler,
                             parent,
-                            childIndex);
-
-                    dataProteusView.addBinding(binding);
+                            childIndex,
+                            true);
                 }
+                finalValue = finalValue.substring(1);
+                jsonDataValue = Utils.getStringAsJsonElement(finalValue);
+
+            } else if (attributeValue.charAt(0) == DataParsingAdapter.DATA_PREFIX) {
+                JsonElement elementFromData = getElementFromData(attributeValue.substring(1),
+                        context.getDataProvider(), childIndex);
+                if (elementFromData != null) {
+                    jsonDataValue = elementFromData;
+                }
+                addBinding(associatedProteusView,
+                        attributeValue.substring(1),
+                        attributeName,
+                        attributeValue,
+                        context,
+                        handler,
+                        parent,
+                        childIndex,
+                        false);
             }
         }
         return jsonDataValue;
     }
 
-    public void s() {
-        String attr = "hello ${person.name}. How is ${person.children[0].name}?";
+    private void addBinding(ProteusView associatedProteusView, String bindingName, String attributeName,
+                            String attributeValue, ParserContext context, LayoutHandler handler,
+                            ViewGroup parent, int childIndex, boolean hasRegEx) {
+        // check if the view is in update mode
+        // if not that means that the update flow
+        // is running and we must not add more bindings
+        // for they will be duplicates
+        DataProteusView dataProteusView = (DataProteusView) associatedProteusView;
+        if (!dataProteusView.isViewUpdating()) {
+            //String bindingName = attributeValue.substring(1);
+            String dataContext = context.getDataContext();
+            if (dataContext != null) {
+                bindingName = dataContext + "." + bindingName.substring(1);
+            }
 
-        Pattern regex = Pattern.compile("(\\$\\{+.?\\})");
-        Matcher regexMatcher = regex.matcher(attr);
+            Binding binding = new Binding(context,
+                    handler,
+                    bindingName,
+                    attributeName,
+                    attributeValue,
+                    dataProteusView,
+                    parent,
+                    childIndex,
+                    hasRegEx);
 
-        while (regexMatcher.find()) {
-            String dataPath = regexMatcher.group();
-            System.out.println(dataPath);
+            dataProteusView.addBinding(binding);
         }
     }
 
     protected ParserContext getNewParserContext(final ParserContext oldContext,
                                                 final JsonObject currentViewJsonObject,
                                                 final int childIndex) {
+
         JsonElement dataContextElement = currentViewJsonObject.get(DATA_CONTEXT);
 
         if (dataContextElement != null) {
+            String currentDataContext = dataContextElement.getAsString().substring(1);
             currentViewJsonObject.remove(DATA_CONTEXT);
             ParserContext newContext = oldContext.clone();
             Provider oldProvider = oldContext.getDataProvider();
+
             if (oldProvider != null) {
                 Provider newProvider = oldProvider.clone();
-                JsonElement newRoot = getElementFromData(dataContextElement, oldProvider, childIndex);
+                JsonElement newRoot = getElementFromData(currentDataContext, oldProvider, childIndex);
                 newProvider.setRoot(newRoot);
                 newContext.setDataProvider(newProvider);
-                String currentDataContext = dataContextElement.getAsString();
                 String oldDataContext = oldContext.getDataContext();
 
-                if (currentDataContext != null && oldDataContext != null) {
-                    currentDataContext = currentDataContext.substring(1);
+                if (newRoot != null && oldDataContext != null) {
                     newContext.setDataContext(oldDataContext + "." + currentDataContext);
-                } else if (currentDataContext != null) {
+                } else if (newRoot != null) {
                     newContext.setDataContext(currentDataContext);
                 } else {
                     newContext.setDataContext(oldDataContext);
                 }
-
                 return newContext;
-
             } else {
                 Log.e(TAG, "When dataContext is specified, data provider cannot be null");
             }
@@ -171,7 +224,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         ((DataProteusView) proteusView).setDataProvider(dataProvider);
     }
 
-    protected JsonElement getElementFromData(JsonElement element, Provider dataProvider, int childIndex) {
-        return Utils.getElementFromData(PREFIX, element, dataProvider, childIndex);
+    protected JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
+        return Utils.getElementFromData(element, dataProvider, childIndex);
     }
 }
