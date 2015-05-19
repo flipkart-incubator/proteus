@@ -24,8 +24,8 @@ public class DataProteusView extends SimpleProteusView {
     private boolean isViewUpdating = false;
 
     /**
-     * This Map holds a references to the {@link com.flipkart.layoutengine.binding.Binding} between
-     * the view and data. This map is used to update the data associated with the
+     * This Array holds a references to the {@link com.flipkart.layoutengine.binding.Binding} of
+     * this {@link DataProteusView}. This map is used to update the data associated with the
      * {@link android.view.View}
      * example:
      * <pre>
@@ -123,7 +123,9 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     public void setDataProvider(Provider dataProvider) {
-        this.dataProvider = dataProvider;
+        if (dataProvider.getRoot() != null) {
+            this.dataProvider.setRoot(dataProvider.getRoot());
+        }
     }
 
     public Provider getDataProvider() {

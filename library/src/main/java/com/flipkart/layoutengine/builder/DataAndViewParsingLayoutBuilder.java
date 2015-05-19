@@ -25,7 +25,10 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
     protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
                                                    ViewGroup parent, JsonObject viewJsonObject,
                                                    int childIndex) {
-        JsonElement viewElement = viewProvider.getObject(viewType, childIndex);
+        JsonElement viewElement = null;
+        if (viewProvider != null) {
+            viewElement = viewProvider.getObject(viewType, childIndex);
+        }
         if (viewElement != null) {
             JsonObject viewLayoutObject = viewElement.getAsJsonObject();
             ProteusView createdView = buildImpl(context, parent, viewLayoutObject, null, childIndex);
