@@ -163,7 +163,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             //String bindingName = attributeValue.substring(1);
             String dataContext = context.getDataContext();
             if (dataContext != null) {
-                bindingName = dataContext + "." + bindingName.substring(1);
+                bindingName = dataContext + "." + bindingName;
             }
 
             Binding binding = new Binding(context,
