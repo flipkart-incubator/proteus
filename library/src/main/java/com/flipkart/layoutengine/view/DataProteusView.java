@@ -82,7 +82,7 @@ public class DataProteusView extends SimpleProteusView {
         ParserContext context = binding.getParserContext();
         int index = binding.getIndex();
 
-        context = setCorrectDataProvider(context, data, index);
+        context = setCorrectDataProvider(context, data);
 
         if (binding.hasRegEx()) {
             binding.getParserContext().getLayoutBuilder().handleAttribute(
@@ -109,13 +109,11 @@ public class DataProteusView extends SimpleProteusView {
 
     }
 
-    private ParserContext setCorrectDataProvider(ParserContext context, JsonObject data, int childIndex) {
+    private ParserContext setCorrectDataProvider(ParserContext context, JsonObject data) {
         if (context.getDataContext() != null) {
             context.setDataProvider(new GsonProvider(data));
-            context.setDataContext(context.getDataContext());
         } else {
             context.getDataProvider().setRoot(data);
-            context.setDataContext(null);
         }
         return context;
     }
