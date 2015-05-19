@@ -6,29 +6,23 @@ import com.flipkart.layoutengine.provider.Provider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.lang.reflect.Type;
-
 /**
  * Created by Aditya Sharat on 08-04-2015.
  */
 public class Utils {
 
-    private static final String TAG = Utils.class.getSimpleName();
+    public static final String TAG = Utils.class.getSimpleName();
 
-    public static JsonElement getElementFromData(Character prefix, JsonElement element,
-                                                 Provider dataProvider, int childIndex) {
-        if (element.isJsonPrimitive()) {
-            String dataSourceKey = element.getAsString();
-            if (dataSourceKey.length() > 0 && dataSourceKey.charAt(0) == prefix) {
-                JsonElement tempElement = dataProvider.getObject(dataSourceKey.substring(1), childIndex);
-                if (tempElement != null) {
-                    element = tempElement;
-                } else {
-                    Log.e(TAG, "Got null element for " + dataSourceKey);
-                }
+    public static JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
+        if (element != null && element.length() > 0) {
+            JsonElement elementToReturn = dataProvider.getObject(element, childIndex);
+            if (elementToReturn != null) {
+                return elementToReturn;
+            } else {
+                Log.e(TAG, "Got null element for " + element);
             }
         }
-        return element;
+        return Utils.getStringAsJsonElement(element);
     }
 
     public static JsonElement getStringAsJsonElement(String string) {
@@ -48,4 +42,9 @@ public class Utils {
         temp.addProperty("value", aBoolean);
         return temp.get("value");
     }
+
+    public static String format(String value, String formatterName) {
+        return Formatters.get(formatterName).format(value);
+    }
+
 }
