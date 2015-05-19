@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Adds support for parsing data blocks before passing it to the enclosing handler.
@@ -20,7 +21,9 @@ public class DataParsingAdapter<E extends View> implements LayoutHandler<E> {
 
     private final Provider dataProvider;
     private LayoutHandler<E> handler;
-    public static final Character PREFIX = '$';
+    public static final Character DATA_PREFIX = '$';
+    public static final Character REGEX_PREFIX = '~';
+    public static final Pattern REGEX_PATTERN = Pattern.compile("\\{\\{(\\S+?)\\}\\}\\$\\((.+?)\\)|\\{\\{(\\S+?)\\}\\}");
 
     public DataParsingAdapter(Provider dataProvider, LayoutHandler<E> enclosingHandler) {
         this.dataProvider = dataProvider;
@@ -41,7 +44,7 @@ public class DataParsingAdapter<E extends View> implements LayoutHandler<E> {
     private JsonElement getElementFromData(JsonElement element, int index) {
         if (element.isJsonPrimitive()) {
             String dataSourceKey = element.getAsString();
-            if (dataSourceKey.charAt(0) == PREFIX) {
+            if (dataSourceKey.charAt(0) == DATA_PREFIX) {
                 element = dataProvider.getObject(dataSourceKey.substring(1), index);
             }
         }
