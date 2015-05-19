@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 
 /**
@@ -19,19 +20,20 @@ public class Binding {
     private String attributeValue;
     private ProteusView<View> proteusView;
     private ViewGroup parentView;
+    private boolean hasRegEx;
 
     public Binding(ParserContext parserContext, LayoutHandler layoutHandler, String bindingName,
-                   String attributeKey, String attributeValue, ProteusView<View> view,
-                   ViewGroup parentView, int index) {
+                   String attributeKey, String attributeValue, DataProteusView view,
+                   ViewGroup parentView, int index, boolean hasRegEx) {
         this.parserContext = parserContext.clone();
         this.layoutHandler = layoutHandler;
-        /*this.dataContext = dataContext;*/
         this.bindingName = bindingName;
         this.attributeKey = attributeKey;
         this.attributeValue = attributeValue;
         this.proteusView = view;
         this.parentView = parentView;
         this.index = index;
+        this.hasRegEx = hasRegEx;
     }
 
     public ParserContext getParserContext() {
@@ -88,5 +90,13 @@ public class Binding {
 
     public void setBindingName(String bindingName) {
         this.bindingName = bindingName;
+    }
+
+    public boolean hasRegEx() {
+        return hasRegEx;
+    }
+
+    public void hasRegEx(boolean hasRegEx) {
+        this.hasRegEx = hasRegEx;
     }
 }
