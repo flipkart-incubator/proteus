@@ -137,8 +137,12 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     public void setDataProvider(Provider dataProvider) {
-        if (dataProvider.getRoot() != null) {
-            this.dataProvider.setRoot(dataProvider.getRoot());
+        if (dataProvider != null && dataProvider.getRoot() != null) {
+            if (this.dataProvider != null) {
+                this.dataProvider.setRoot(dataProvider.getRoot());
+            } else {
+                this.dataProvider = dataProvider;
+            }
         }
     }
 
