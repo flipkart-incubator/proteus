@@ -36,8 +36,6 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     private HashMap<String, LayoutHandler<View>> layoutHandlers = new HashMap<>();
     protected LayoutBuilderCallback listener;
     private BitmapLoader bitmapLoader;
-
-    // see the getter for doc
     private boolean isSynchronousRendering = false;
 
     private Context context;
@@ -46,43 +44,22 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         this.context = context;
     }
 
-    /**
-     * Registers a {@link LayoutHandler} for the specified view type. All the attributes will pass
-     * through {@link LayoutHandler#handleAttribute} and expect to be handled.
-     *
-     * @param viewType The string value for "view" attribute. e.g. TextView, ListView
-     * @param handler  The handler which should handle this view.
-     */
     @Override
     public void registerHandler(String viewType, LayoutHandler<View> handler) {
         handler.prepare(context);
         layoutHandlers.put(viewType, handler);
     }
 
-    /**
-     * Unregisters the specified view type.
-     *
-     * @param viewType The string value for "view" attribute.
-     */
     @Override
     public void unregisterHandler(String viewType) {
         layoutHandlers.remove(viewType);
     }
 
-    /**
-     * Unregisters all handlers.
-     */
     @Override
     public void unregisterAllHandlers() {
         layoutHandlers.clear();
     }
 
-    /**
-     * Get the handler registered with the supplied view type
-     *
-     * @param viewType The string value for "view" attribute. e.g. TextView, ListView
-     * @return A {@link com.flipkart.layoutengine.parser.LayoutHandler} for the view type specified.
-     */
     @Override
     public LayoutHandler getHandler(String viewType) {
         return layoutHandlers.get(viewType);
@@ -267,25 +244,11 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         return bitmapLoader;
     }
 
-    /**
-     * All network bitmap calls will be handed over to this loader. This method is used to
-     * set the {@link com.flipkart.layoutengine.toolbox.BitmapLoader} for the
-     * {@link com.flipkart.layoutengine.builder.LayoutBuilder}
-     *
-     * @param bitmapLoader {@link com.flipkart.layoutengine.toolbox.BitmapLoader} to use for
-     *                     loading images.
-     */
     @Override
     public void setBitmapLoader(BitmapLoader bitmapLoader) {
         this.bitmapLoader = bitmapLoader;
     }
 
-    /**
-     * Set this to true for rendering preview immediately. This is to be used to decide whether
-     * remote resources like remote images are to be downloaded synchronously or not
-     *
-     * @return true if the all views should be rendered immediately.
-     */
     @Override
     public boolean isSynchronousRendering() {
         return isSynchronousRendering;
