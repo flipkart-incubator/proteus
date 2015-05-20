@@ -1,13 +1,15 @@
 package com.flipkart.layoutengine.toolbox;
 
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Aditya Sharat on 18-05-2015.
  */
 public class Formatters {
 
-    public static Formatter NumberFormatter = new Formatter() {
+    private static Formatter NumberFormatter = new Formatter() {
         @Override
         public String format(String value) {
             int valueAsNumber = Integer.parseInt(value);
@@ -24,7 +26,7 @@ public class Formatters {
         }
     };
 
-    public static Formatter NOOP = new Formatter() {
+    private static Formatter NOOP = new Formatter() {
         @Override
         public String format(String value) {
             return value;
@@ -36,13 +38,26 @@ public class Formatters {
         }
     };
 
+    private static Map<String, Formatter> formatters = new HashMap<>();
+
+    static {
+        formatters.put(NumberFormatter.getName(), NumberFormatter);
+    }
+
     public static Formatter get(String formatterName) {
-        switch (formatterName) {
-            case "number":
-                return NumberFormatter;
-            default:
-                return NOOP;
+        Formatter formatter = formatters.get(formatterName);
+        if (formatter == null) {
+            return NOOP;
         }
+        return formatter;
+    }
+
+    public static void add(Formatter formatter) {
+        formatters.put(formatter.getName(), formatter);
+    }
+
+    public static void remove(String formatterName) {
+        formatters.remove(formatterName);
     }
 
     public interface Formatter {

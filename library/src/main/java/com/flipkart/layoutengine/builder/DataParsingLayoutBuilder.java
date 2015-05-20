@@ -10,6 +10,7 @@ import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.DataParsingAdapter;
 import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.toolbox.Formatters;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -226,5 +227,13 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     protected JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
         return Utils.getElementFromData(element, dataProvider, childIndex);
+    }
+
+    public void registerFormatter(Formatters.Formatter formatter) {
+        Formatters.add(formatter);
+    }
+
+    public void unregisterFormatter(String formatterName) {
+        Formatters.remove(formatterName);
     }
 }
