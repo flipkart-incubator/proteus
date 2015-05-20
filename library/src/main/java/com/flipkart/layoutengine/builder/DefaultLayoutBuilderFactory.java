@@ -29,13 +29,15 @@ import com.flipkart.layoutengine.provider.Provider;
 public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
 
     /**
-     * Creates & returns a layout builder which can parse @data blocks as well as custom view blocks. See {@link DataParsingLayoutBuilder}
+     * Creates & returns a layout builder which can parse @data blocks as well as custom view blocks.
+     * See {@link DataParsingLayoutBuilder}
      *
-     * @param context
-     * @return
+     * @param context {@link Context} of the activity
+     * @return A new {@link DataAndViewParsingLayoutBuilder}
      */
     @Override
-    public LayoutBuilder createDataAndViewParsingLayoutBuilder(Context context, Provider viewProvider) {
+    public DataAndViewParsingLayoutBuilder createDataAndViewParsingLayoutBuilder(Context context,
+                                                                                 Provider viewProvider) {
         DataAndViewParsingLayoutBuilder builder = new DataAndViewParsingLayoutBuilder(context, viewProvider);
         registerBuiltInHandlers(builder);
         return builder;
@@ -44,12 +46,12 @@ public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
     /**
      * Creates & returns a layout builder which can parse @data blocks. See {@link DataParsingLayoutBuilder}
      *
-     * @param context
-     * @return
+     * @param context {@link Context} of the activity
+     * @return A new {@link DataParsingLayoutBuilder}
      */
     @Override
-    public LayoutBuilder createDataParsingLayoutBuilder(Context context) {
-        LayoutBuilder builder = new DataParsingLayoutBuilder(context);
+    public DataParsingLayoutBuilder createDataParsingLayoutBuilder(Context context) {
+        DataParsingLayoutBuilder builder = new DataParsingLayoutBuilder(context);
         registerBuiltInHandlers(builder);
         return builder;
     }
@@ -57,12 +59,12 @@ public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
     /**
      * Creates & returns a simple layout builder. See {@link SimpleLayoutBuilder}
      *
-     * @param context
-     * @return
+     * @param context {@link Context} of the activity
+     * @return A new {@link SimpleLayoutBuilder}
      */
     @Override
-    public LayoutBuilder createSimpleLayoutBuilder(Context context) {
-        LayoutBuilder builder = new SimpleLayoutBuilder(context);
+    public SimpleLayoutBuilder createSimpleLayoutBuilder(Context context) {
+        SimpleLayoutBuilder builder = new SimpleLayoutBuilder(context);
         registerBuiltInHandlers(builder);
         return builder;
     }

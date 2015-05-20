@@ -9,7 +9,7 @@ import com.flipkart.layoutengine.provider.Provider;
  */
 public interface LayoutBuilderFactory {
 
-    LayoutBuilder createDataAndViewParsingLayoutBuilder(Context context, Provider viewProvider);
-    LayoutBuilder createDataParsingLayoutBuilder(Context context);
-    LayoutBuilder createSimpleLayoutBuilder(Context context);
+    DataAndViewParsingLayoutBuilder createDataAndViewParsingLayoutBuilder(Context context, Provider viewProvider);
+    DataParsingLayoutBuilder createDataParsingLayoutBuilder(Context context);
+    SimpleLayoutBuilder createSimpleLayoutBuilder(Context context);
 }
