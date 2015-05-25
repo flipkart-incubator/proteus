@@ -1,8 +1,6 @@
 package com.flipkart.layoutengine.testapp;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -105,7 +103,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
             @Override
-            public PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children) {
+            public PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children, JsonObject viewLayout) {
                 return null;
             }
 
@@ -128,9 +126,9 @@ public class MainActivity extends ActionBarActivity {
 
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            ((DataProteusView)this.proteusView).set("product.price", "17000", 0);
-            ((DataProteusView)this.proteusView).set("product.name", "Intel Core i7", 0);
-            ((DataProteusView)this.proteusView).set("product.rating", "***", 0);
+            ((DataProteusView) this.proteusView).set("product.price", "17000", 0);
+            ((DataProteusView) this.proteusView).set("product.name", "Intel Core i7", 0);
+            ((DataProteusView) this.proteusView).set("product.rating", "***", 0);
             return true;
         }
         return super.onOptionsItemSelected(item);

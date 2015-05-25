@@ -67,8 +67,9 @@ public class DataParsingAdapter<E extends View> implements LayoutHandler<E> {
     }
 
     @Override
-    public void addChildren(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children) {
-        handler.addChildren(parserContext, parent, children);
+    public void addChildren(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children,
+                            JsonObject viewLayout) {
+        handler.addChildren(parserContext, parent, children, viewLayout);
     }
 
     @Override

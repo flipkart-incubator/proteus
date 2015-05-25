@@ -130,7 +130,8 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
      * @param children The List of child views which have to be added.
      */
     @Override
-    public void addChildren(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children) {
+    public void addChildren(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children,
+                            JsonObject viewLayout) {
         for (ProteusView child : children) {
             parent.addChild(child);
         }
