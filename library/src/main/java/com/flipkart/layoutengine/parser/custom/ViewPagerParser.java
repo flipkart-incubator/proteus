@@ -1,6 +1,5 @@
 package com.flipkart.layoutengine.parser.custom;
 
-import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
@@ -9,6 +8,7 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.view.ProteusView;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 
@@ -23,12 +23,12 @@ public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
 
     @Override
     public void addChildren(ParserContext parserContext, ProteusView<View> parent,
-                            final List<ProteusView> children) {
+                            final List<ProteusView> children, JsonObject viewLayout) {
 
         //not calling super since it calls addChild(). addchild() on viewpager wont work.
         PagerAdapter adapter = parserContext.getLayoutBuilder()
                 .getListener()
-                .onPagerAdapterRequired(parserContext, parent, children);
+                .onPagerAdapterRequired(parserContext, parent, children, viewLayout);
 
         ((T) parent.getView()).setAdapter(adapter);
     }
