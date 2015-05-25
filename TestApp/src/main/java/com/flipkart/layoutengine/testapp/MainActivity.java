@@ -108,7 +108,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
             @Override
-            public Adapter onAdapterRequired(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children) {
+            public Adapter onAdapterRequired(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children, JsonObject viewLayout) {
                 return null;
             }
         };
