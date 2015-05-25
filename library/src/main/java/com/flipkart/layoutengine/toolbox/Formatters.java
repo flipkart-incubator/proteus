@@ -1,6 +1,11 @@
 package com.flipkart.layoutengine.toolbox;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,11 +18,23 @@ public class Formatters {
         @Override
         public String format(String value) {
             int valueAsNumber = Integer.parseInt(value);
-            return new DecimalFormat("#,###.00").format(valueAsNumber);
+            NumberFormat numberFormat = new DecimalFormat("#,###");
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
+                numberFormat.setRoundingMode(RoundingMode.FLOOR);
+            }
+            numberFormat.setMinimumFractionDigits(0);
+            numberFormat.setMaximumFractionDigits(2);
+            return numberFormat.format(valueAsNumber);
         }
 
         public String format(int value) {
-            return new DecimalFormat("#,###.00").format(value);
+            NumberFormat numberFormat = new DecimalFormat("#,###");
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
+                numberFormat.setRoundingMode(RoundingMode.FLOOR);
+            }
+            numberFormat.setMinimumFractionDigits(0);
+            numberFormat.setMaximumFractionDigits(2);
+            return numberFormat.format(value);
         }
 
         @Override
