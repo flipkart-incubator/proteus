@@ -32,5 +32,6 @@ public interface LayoutHandler<E extends View> {
 
     void prepare(Context context);
 
-    void addChildren(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children);
+    void addChildren(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children,
+                     JsonObject viewLayout);
 }
