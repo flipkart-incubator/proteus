@@ -22,48 +22,49 @@ import com.flipkart.layoutengine.parser.custom.WebViewParser;
 import com.flipkart.layoutengine.provider.Provider;
 
 /**
- * Factory class for creating Layout builders with different predefined behaviours. This is the only way to create layout builder objects.
- * To create a simple layout builder use {@link DefaultLayoutBuilderFactory#createSimpleLayoutBuilder(android.content.Context)}
+ * Factory class for creating Layout builders with different predefined behaviours. This is the
+ * only way to create layout builder objects. To create a simple layout builder use
+ * {@link DefaultLayoutBuilderFactory#createSimpleLayoutBuilder(android.content.Context)}
  */
 public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
 
     /**
-     * Creates & returns a layout builder which can parse @data blocks as well as custom view blocks. See {@link DataParsingLayoutBuilder}
-     * @param context
-     * @param dataProvider
-     * @return
+     * Creates & returns a layout builder which can parse @data blocks as well as custom view blocks.
+     * See {@link DataParsingLayoutBuilder}
+     *
+     * @param context {@link Context} of the activity
+     * @return A new {@link DataAndViewParsingLayoutBuilder}
      */
     @Override
-    public LayoutBuilder createDataAndViewParsingLayoutBuilder(Context context, Provider dataProvider, Provider viewProvider)
-    {
-        DataAndViewParsingLayoutBuilder builder = new DataAndViewParsingLayoutBuilder(context, dataProvider, viewProvider);
+    public DataAndViewParsingLayoutBuilder createDataAndViewParsingLayoutBuilder(Context context,
+                                                                                 Provider viewProvider) {
+        DataAndViewParsingLayoutBuilder builder = new DataAndViewParsingLayoutBuilder(context, viewProvider);
         registerBuiltInHandlers(builder);
         return builder;
     }
 
     /**
      * Creates & returns a layout builder which can parse @data blocks. See {@link DataParsingLayoutBuilder}
-     * @param context
-     * @param dataProvider
-     * @return
+     *
+     * @param context {@link Context} of the activity
+     * @return A new {@link DataParsingLayoutBuilder}
      */
     @Override
-    public LayoutBuilder createDataParsingLayoutBuilder(Context context, Provider dataProvider)
-    {
-        LayoutBuilder builder = new DataParsingLayoutBuilder(context, dataProvider);
+    public DataParsingLayoutBuilder createDataParsingLayoutBuilder(Context context) {
+        DataParsingLayoutBuilder builder = new DataParsingLayoutBuilder(context);
         registerBuiltInHandlers(builder);
         return builder;
     }
 
     /**
      * Creates & returns a simple layout builder. See {@link SimpleLayoutBuilder}
-     * @param context
-     * @return
+     *
+     * @param context {@link Context} of the activity
+     * @return A new {@link SimpleLayoutBuilder}
      */
     @Override
-    public LayoutBuilder createSimpleLayoutBuilder(Context context)
-    {
-        LayoutBuilder builder = new SimpleLayoutBuilder(context);
+    public SimpleLayoutBuilder createSimpleLayoutBuilder(Context context) {
+        SimpleLayoutBuilder builder = new SimpleLayoutBuilder(context);
         registerBuiltInHandlers(builder);
         return builder;
     }
@@ -71,6 +72,7 @@ public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
 
     /**
      * This method will register all the internal layout handlers to the builder specified.
+     *
      * @param layoutBuilder
      */
     protected void registerBuiltInHandlers(LayoutBuilder layoutBuilder) {
@@ -91,26 +93,22 @@ public class DefaultLayoutBuilderFactory implements LayoutBuilderFactory {
         RatingBarParser ratingBarParser = new RatingBarParser(viewParser);
         CheckBoxParser checkBoxParser = new CheckBoxParser(buttonParser);
 
-
-
-        layoutBuilder.registerHandler("View",viewParser);
-        layoutBuilder.registerHandler("RelativeLayout",relativeLayoutParser);
-        layoutBuilder.registerHandler("LinearLayout",linearLayoutParser);
-        layoutBuilder.registerHandler("FrameLayout",frameLayoutParser);
-        layoutBuilder.registerHandler("ScrollView",scrollViewParser);
-        layoutBuilder.registerHandler("HorizontalScrollView",horizontalScrollViewParser);
-        layoutBuilder.registerHandler("ImageView",imageViewParser);
-        layoutBuilder.registerHandler("TextView",textViewParser);
-        layoutBuilder.registerHandler("EditText",editTextParser);
-        layoutBuilder.registerHandler("Button",buttonParser);
-        layoutBuilder.registerHandler("ImageButton",imageButtonParser);
-        layoutBuilder.registerHandler("ViewPager",viewPagerParser);
-        layoutBuilder.registerHandler("NetworkImageView",networkImageViewParser);
-        layoutBuilder.registerHandler("WebView",webViewParser);
-        layoutBuilder.registerHandler("RatingBar",ratingBarParser);
-        layoutBuilder.registerHandler("CheckBox",checkBoxParser);
-
-
+        layoutBuilder.registerHandler("View", viewParser);
+        layoutBuilder.registerHandler("RelativeLayout", relativeLayoutParser);
+        layoutBuilder.registerHandler("LinearLayout", linearLayoutParser);
+        layoutBuilder.registerHandler("FrameLayout", frameLayoutParser);
+        layoutBuilder.registerHandler("ScrollView", scrollViewParser);
+        layoutBuilder.registerHandler("HorizontalScrollView", horizontalScrollViewParser);
+        layoutBuilder.registerHandler("ImageView", imageViewParser);
+        layoutBuilder.registerHandler("TextView", textViewParser);
+        layoutBuilder.registerHandler("EditText", editTextParser);
+        layoutBuilder.registerHandler("Button", buttonParser);
+        layoutBuilder.registerHandler("ImageButton", imageButtonParser);
+        layoutBuilder.registerHandler("ViewPager", viewPagerParser);
+        layoutBuilder.registerHandler("NetworkImageView", networkImageViewParser);
+        layoutBuilder.registerHandler("WebView", webViewParser);
+        layoutBuilder.registerHandler("RatingBar", ratingBarParser);
+        layoutBuilder.registerHandler("CheckBox", checkBoxParser);
     }
 
 }

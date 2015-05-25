@@ -4,24 +4,36 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.view.DataProteusView;
+import com.flipkart.layoutengine.view.ProteusView;
 
 /**
- * Created by kirankumar on 23/07/14.
+ * @author kirankumar
  */
 public class Binding {
+    private int index;
     private ParserContext parserContext;
+    private LayoutHandler layoutHandler;
+    private String bindingName;
     private String attributeKey;
     private String attributeValue;
-    private View view;
+    private ProteusView<View> proteusView;
     private ViewGroup parentView;
+    private boolean hasRegEx;
 
-    public Binding(ParserContext parserContext, String attributeKey, String attributeValue, View view, ViewGroup parentView)
-    {
-        this.parserContext = parserContext;
+    public Binding(ParserContext parserContext, LayoutHandler layoutHandler, String bindingName,
+                   String attributeKey, String attributeValue, DataProteusView view,
+                   ViewGroup parentView, int index, boolean hasRegEx) {
+        this.parserContext = parserContext.clone();
+        this.layoutHandler = layoutHandler;
+        this.bindingName = bindingName;
         this.attributeKey = attributeKey;
         this.attributeValue = attributeValue;
-        this.view = view;
+        this.proteusView = view;
         this.parentView = parentView;
+        this.index = index;
+        this.hasRegEx = hasRegEx;
     }
 
     public ParserContext getParserContext() {
@@ -32,6 +44,14 @@ public class Binding {
         this.parserContext = parserContext;
     }
 
+    public LayoutHandler getLayoutHandler() {
+        return this.layoutHandler;
+    }
+
+    public int getIndex() {
+        return this.index;
+    }
+
     public String getAttributeKey() {
         return attributeKey;
     }
@@ -40,12 +60,12 @@ public class Binding {
         this.attributeKey = attributeKey;
     }
 
-    public View getView() {
-        return view;
+    public ProteusView<View> getProteusView() {
+        return proteusView;
     }
 
-    public void setView(View view) {
-        this.view = view;
+    public void setProteusView(ProteusView<View> proteusView) {
+        this.proteusView = proteusView;
     }
 
     public String getAttributeValue() {
@@ -62,5 +82,21 @@ public class Binding {
 
     public void setParentView(ViewGroup parentView) {
         this.parentView = parentView;
+    }
+
+    public String getBindingName() {
+        return bindingName;
+    }
+
+    public void setBindingName(String bindingName) {
+        this.bindingName = bindingName;
+    }
+
+    public boolean hasRegEx() {
+        return hasRegEx;
+    }
+
+    public void hasRegEx(boolean hasRegEx) {
+        this.hasRegEx = hasRegEx;
     }
 }
