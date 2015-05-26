@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -12,22 +13,25 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 /**
- * Created by kiran.kumar on 11/05/14.
+ * @author kiran.kumar
  */
-public interface LayoutHandler<E> {
+public interface LayoutHandler<E extends View> {
 
     //create the view and return it.
-    public E createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject object);
+    E createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject object);
 
     //ask the handler to handle the attributes of the view it created
-    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, E view, int childIndex);
+    boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, ProteusView<E> view, int childIndex);
 
     //ask the handler to parse the value of 'children' and return an array of children elements.
-    public JsonArray parseChildren(ParserContext context, JsonElement element, int childIndex);
+    JsonArray parseChildren(ParserContext context, JsonElement element, int childIndex);
 
+    boolean canAddChild();
 
-    public boolean canAddChild();
-    public void setupView(ViewGroup parent, E view);
-    public void prepare(Context context);
-    public void addChildren(Context context, E parent, List<View> children);
+    void setupView(ViewGroup parent, E view);
+
+    void prepare(Context context);
+
+    void addChildren(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children,
+                     JsonObject viewLayout);
 }

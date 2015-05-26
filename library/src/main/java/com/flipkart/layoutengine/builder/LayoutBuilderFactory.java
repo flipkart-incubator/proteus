@@ -5,11 +5,11 @@ import android.content.Context;
 import com.flipkart.layoutengine.provider.Provider;
 
 /**
- * Created by kirankumar on 06/01/15.
+ * @author kirankumar
  */
 public interface LayoutBuilderFactory {
 
-    LayoutBuilder createDataAndViewParsingLayoutBuilder(Context context, Provider dataProvider, Provider viewProvider);
-    LayoutBuilder createDataParsingLayoutBuilder(Context context, Provider dataProvider);
-    LayoutBuilder createSimpleLayoutBuilder(Context context);
+    DataAndViewParsingLayoutBuilder createDataAndViewParsingLayoutBuilder(Context context, Provider viewProvider);
+    DataParsingLayoutBuilder createDataParsingLayoutBuilder(Context context);
+    SimpleLayoutBuilder createSimpleLayoutBuilder(Context context);
 }

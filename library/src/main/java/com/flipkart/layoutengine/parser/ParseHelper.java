@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by kiran.kumar on 17/05/14.
+ * @author kiran.kumar
  */
 public class ParseHelper {
 
@@ -50,45 +50,45 @@ public class ParseHelper {
                 gravityValue = Gravity.TOP;
             } else if ("bottom".equals(gravity)) {
                 gravityValue = Gravity.BOTTOM;
-            }else if ("start".equals(gravity)) {
+            } else if ("start".equals(gravity)) {
                 gravityValue = Gravity.START;
-            }else if ("end".equals(gravity)) {
+            } else if ("end".equals(gravity)) {
                 gravityValue = Gravity.END;
             }
 
-            returnGravity |= gravityValue;
+            returnGravity = gravityValue;
         }
 
 
         return returnGravity;
     }
 
-    public static int parseDividerMode(String attributeValue){
+    public static int parseDividerMode(String attributeValue) {
 
         int returnValue = LinearLayout.SHOW_DIVIDER_NONE;
-        if(attributeValue.equals("end")){
+        if (attributeValue.equals("end")) {
             returnValue = LinearLayout.SHOW_DIVIDER_END;
-        }else if(attributeValue.equals("middle")){
+        } else if (attributeValue.equals("middle")) {
             returnValue = LinearLayout.SHOW_DIVIDER_MIDDLE;
-        }else if(attributeValue.equals("beginning")){
+        } else if (attributeValue.equals("beginning")) {
             returnValue = LinearLayout.SHOW_DIVIDER_BEGINNING;
-        }else{
+        } else {
             returnValue = LinearLayout.SHOW_DIVIDER_NONE;
         }
 
         return returnValue;
     }
 
-    public static Enum parseEllipsize(String attributeValue){
+    public static Enum parseEllipsize(String attributeValue) {
         Enum returnValue = TextUtils.TruncateAt.END;
 
-        if(attributeValue.equals("end"))
-           returnValue = TextUtils.TruncateAt.END;
-        else if(attributeValue.equals("start"))
-           returnValue = TextUtils.TruncateAt.START;
-        else if(attributeValue.equals("marquee"))
+        if (attributeValue.equals("end"))
+            returnValue = TextUtils.TruncateAt.END;
+        else if (attributeValue.equals("start"))
+            returnValue = TextUtils.TruncateAt.START;
+        else if (attributeValue.equals("marquee"))
             returnValue = TextUtils.TruncateAt.MARQUEE;
-        else if(attributeValue.equals("middle"))
+        else if (attributeValue.equals("middle"))
             returnValue = TextUtils.TruncateAt.MIDDLE;
 
         return returnValue;
@@ -141,8 +141,7 @@ public class ParseHelper {
 
     public static Integer parseId(String id) {
         try {
-            Integer idInt = Integer.valueOf(id);
-            return idInt;
+            return Integer.valueOf(id);
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
         }
@@ -152,11 +151,7 @@ public class ParseHelper {
     }
 
     public static boolean parseBoolean(String trueOrFalse) {
-        if (trueOrFalse.equals("true")) {
-            return true;
-        } else {
-            return false;
-        }
+        return trueOrFalse.equals("true");
     }
 
     public static int parseRelativeLayoutBoolean(String trueOrFalse) {
@@ -183,34 +178,33 @@ public class ParseHelper {
     }
 
     public static float pxToDp(int px) {
-        return (float) (px / Resources.getSystem().getDisplayMetrics().density);
+        return (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
     public static int parseTextStyle(String attributeValue) {
+        int typeface = Typeface.NORMAL;
         if (attributeValue != null) {
-            Typeface typeface = Typeface.DEFAULT;
             attributeValue = attributeValue.toLowerCase();
-            if ("bold".equals(attributeValue)) {
-                typeface = Typeface.DEFAULT_BOLD;
-            } else if ("italic".equals(attributeValue)) {
-                //typeface = Typ
+            switch (attributeValue) {
+                case "bold":
+                    typeface = Typeface.BOLD;
+                    break;
+                case "italic":
+                    typeface = Typeface.ITALIC;
+                    break;
+                default:
+                    typeface = Typeface.NORMAL;
+                    break;
             }
         }
-        return 0;
+        return typeface;
     }
 
     public static boolean isLocalResource(String attributeValue) {
         return attributeValue.startsWith("@drawable/");
     }
 
-
-    /**
-     * Parses the json object which represents a single state of a {@link android.graphics.drawable.StateListDrawable}
-     *
-     * @param jsonObject Object representing a single state. Typically a child of a selector.
-     * @return a pair of 2 things. First the states useful for StateListDrawable and a string representing the drawable
-     */
-    public static Map<String, Integer> stateMap = new HashMap<String, Integer>();
+    public static Map<String, Integer> stateMap = new HashMap<>();
 
     static {
         stateMap.put("state_pressed", android.R.attr.state_pressed);
@@ -227,7 +221,6 @@ public class ParseHelper {
 
     public static Pair<int[], String> parseState(JsonObject stateObject) {
 
-
         //drawable
         JsonElement jsonElement = stateObject.get("drawable");
         if (jsonElement.isJsonPrimitive()) {
@@ -235,13 +228,13 @@ public class ParseHelper {
 
             //states
             Set<Map.Entry<String, JsonElement>> entries = stateObject.entrySet();
-            List<Integer> statesToReturn = new ArrayList<Integer>();
+            List<Integer> statesToReturn = new ArrayList<>();
             for (Map.Entry<String, JsonElement> entry : entries) {
                 JsonElement value = entry.getValue();
                 String state = entry.getKey();
                 Integer stateInteger = stateMap.get(state);
                 if (stateInteger != null) {
-                    String stateValue = entry.getValue().getAsString();
+                    String stateValue = value.getAsString();
                     boolean stateValueBoolean = ParseHelper.parseBoolean(stateValue);
                     if (stateValueBoolean) {
                         //e.g state_pressed = true
@@ -259,7 +252,7 @@ public class ParseHelper {
             int[] statesToReturnInteger = new int[statesToReturn.size()];
             for (int i = 0; i < statesToReturn.size(); i++)
                 statesToReturnInteger[i] = statesToReturn.get(i);
-            return new Pair<int[], String>(statesToReturnInteger, drawable);
+            return new Pair<>(statesToReturnInteger, drawable);
         }
         return null;
     }
@@ -268,13 +261,13 @@ public class ParseHelper {
      * Uses reflection to fetch the R.id from the given class.
      * This method is faster than using {@link android.content.res.Resources#getResourceName(int)}
      *
-     * @param variableName
-     * @param с
-     * @return
+     * @param variableName the name of the variable
+     * @param с            The class
+     * @return resource id
      */
     public static int getResId(String variableName, Class<?> с) {
 
-        Field field = null;
+        Field field;
         int resId = 0;
         try {
             field = с.getField(variableName);
@@ -294,8 +287,8 @@ public class ParseHelper {
      * Get int resource id, by just passing the string value of android:id from xml file.
      * Note : This method only works for @android:id or @+android:id right now
      *
-     * @param fullResIdString
-     * @return
+     * @param fullResIdString the string id of the view
+     * @return the number id of the view
      */
     public static int getAndroidResIdByXmlResId(String fullResIdString) {
 
@@ -303,10 +296,7 @@ public class ParseHelper {
             int i = fullResIdString.indexOf("/");
             if (i >= 0) {
                 String idString = fullResIdString.substring(i + 1);
-                if (idString != null) {
-                    return getResId(idString, android.R.id.class);
-
-                }
+                return getResId(idString, android.R.id.class);
             }
         }
         return View.NO_ID;
@@ -314,9 +304,10 @@ public class ParseHelper {
 
     /**
      * Parses a single layer item (represented by {@param child) inside a layer list and gives a pair of android:id and a string for the drawable path
+     *
      * @param child
      * @return
-     **/
+     */
     public static Pair<Integer, String> parseLayer(JsonObject child) {
 
         JsonElement id = child.get("id");
@@ -334,13 +325,14 @@ public class ParseHelper {
             drawable = drawableElement.getAsString();
         }
 
-        return new Pair<Integer, String>(androidResIdByXmlResId, drawable);
+        return new Pair<>(androidResIdByXmlResId, drawable);
     }
 
     /**
      * Parses a image view scale type
-     * @param attributeValue
-     * @return
+     *
+     * @param attributeValue value of the scale type attribute
+     * @return {@link android.widget.ImageView.ScaleType} enum
      */
     public static ImageView.ScaleType parseScaleType(String attributeValue) {
         ImageView.ScaleType type = null;
@@ -364,9 +356,10 @@ public class ParseHelper {
     }
 
     /**
-     * parses textview typeface
-     * @param attributeValue
-     * @return
+     * parses TextView typeface
+     *
+     * @param attributeValue value of the typeface attribute
+     * @return the typeface value
      */
     public static int parseTypeFace(String attributeValue) {
         int typeface = 0;
