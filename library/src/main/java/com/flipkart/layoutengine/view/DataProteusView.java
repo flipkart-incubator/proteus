@@ -12,6 +12,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * A {@link ProteusView} implementation to update the data
@@ -120,10 +121,13 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     private ParserContext setCorrectDataProvider(ParserContext context, JsonObject data) {
+        // merge the data with new data
+        JsonObject oldData = context.getDataProvider().getRoot().getAsJsonObject();
+        JsonObject mergedData = Utils.merge(oldData, data);
         if (context.getDataContext() != null) {
-            context.setDataProvider(new GsonProvider(data));
+            context.setDataProvider(new GsonProvider(mergedData));
         } else {
-            context.getDataProvider().setRoot(data);
+            context.getDataProvider().setRoot(mergedData);
         }
         return context;
     }
@@ -151,8 +155,7 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     public JsonElement get(String dataPath, int childIndex) {
-        getElementFromData(dataPath, dataProvider, childIndex);
-        return null;
+        return getElementFromData(dataPath, dataProvider, childIndex);
     }
 
     public void set(String dataPath, JsonElement newValue, int childIndex) {

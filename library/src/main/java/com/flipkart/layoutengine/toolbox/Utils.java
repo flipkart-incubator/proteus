@@ -6,6 +6,8 @@ import com.flipkart.layoutengine.provider.Provider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.Map;
+
 /**
  * Created by Aditya Sharat on 08-04-2015.
  */
@@ -23,6 +25,20 @@ public class Utils {
             }
         }
         return Utils.getStringAsJsonElement(element);
+    }
+
+    public static JsonObject merge(JsonObject x, JsonObject y) {
+        for (Map.Entry<String, JsonElement> entry : x.entrySet()) {
+            String key = entry.getKey();
+            JsonElement newDataElement = y.get(key);
+            if (entry.getValue().isJsonObject() && newDataElement != null) {
+                newDataElement = merge(entry.getValue().getAsJsonObject(), newDataElement.getAsJsonObject());
+            }
+            if (newDataElement != null) {
+                x.add(key, newDataElement);
+            }
+        }
+        return x;
     }
 
     public static JsonElement getStringAsJsonElement(String string) {
