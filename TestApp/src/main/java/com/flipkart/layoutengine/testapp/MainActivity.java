@@ -31,6 +31,7 @@ public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private ProteusView proteusView;
+    private Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +47,9 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void createView(String newData) {
-        Gson gson = new Gson();
+        this.gson = new Gson();
 
-        JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.name\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.price\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"dataContext\":\"$product\",\"text\":\"$rating\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"~{{product.name}} is awesome {{product.price}}$(number)\"},{\"type\":\"RatingBar\",\"layout_width\":\"wrap_content\",\"layout_height\":\"wrap_content\",\"layout_marginRight\":\"2dp\",\"layout_marginTop\":\"2dp\",\"minHeight\":\"11dp\",\"rating\":\"$product.avgrating\"}]}", JsonObject.class);
+        JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.name\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.price\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"dataContext\":\"$product\",\"text\":\"$rating\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"~<font color=\\\"#008800\\\">{{product.name}}</font> is awesome <b>{{product.price}}$(number)</b>\"},{\"type\":\"RatingBar\",\"layout_width\":\"wrap_content\",\"layout_height\":\"wrap_content\",\"layout_marginRight\":\"2dp\",\"layout_marginTop\":\"2dp\",\"minHeight\":\"11dp\",\"rating\":\"$product.avgrating\"}]}", JsonObject.class);
 
         JsonObject data;
         if (newData != null) {
@@ -124,9 +125,10 @@ public class MainActivity extends ActionBarActivity {
 
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            ((DataProteusView) this.proteusView).set("product.price", "17000", 0);
-            ((DataProteusView) this.proteusView).set("product.name", "Intel Core i7", 0);
-            ((DataProteusView) this.proteusView).set("product.rating", "***", 0);
+            this.proteusView.updateData(gson.fromJson("{\"product\":{\"price\":\"17000\",\"rating\":\"**\",\"avgrating\":\"4.5\"}}", JsonObject.class));
+            //((DataProteusView) this.proteusView).set("product.price", "17000", 0);
+            //((DataProteusView) this.proteusView).set("product.name", "Intel Core i7", 0);
+            //((DataProteusView) this.proteusView).set("product.rating", "***", 0);
             return true;
         }
         return super.onOptionsItemSelected(item);
