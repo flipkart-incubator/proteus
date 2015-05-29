@@ -1,0 +1,64 @@
+{
+  "type": "LinearLayout",
+  "android": "http://schemas.android.com/apk/res/android",
+  "layout_width": "match_parent",
+  "layout_height": "wrap_content",
+  "background": "#ffffff",
+  "orientation": "vertical",
+  "paddingBottom": "16dp",
+  "paddingLeft": "16dp",
+  "paddingRight": "16dp",
+  "paddingTop": "16dp",
+  "children": [{
+    "type": "LinearLayout",
+    "android": "http://schemas.android.com/apk/res/android",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "background": "#ffffff",
+    "orientation": "vertical",
+    "paddingBottom": "16dp",
+    "paddingLeft": "16dp",
+    "paddingRight": "16dp",
+    "paddingTop": "16dp",
+    "children": [{
+      "type": "TextView",
+      "layout_width": "wrap_content",
+      "layout_height": "wrap_content",
+      "layout_marginBottom": "10dp",
+      "text": "$product.title",
+      "textColor": "#444444"
+    }, {
+      "type": "TextView",
+      "layout_width": "wrap_content",
+      "layout_height": "wrap_content",
+      "layout_marginBottom": "10dp",
+      "text": "~({{product.subTitle}})",
+      "textColor": "#444444"
+    }, {
+      "type": "LinearLayout",
+      "layout_width": "wrap_content",
+      "layout_height": "wrap_content",
+      "orientation": "horizontal",
+      "children": [{
+        "type": "RatingBar",
+        "layout_width": "wrap_content",
+        "layout_height": "8dp",
+        "layout_marginRight": "5dp",
+        "focusableInTouchMode": "false",
+        "isIndicator": "true",
+        "numStars": "5",
+        "minHeight": "11dp",
+        "layout_marginTop": "7dp",
+        "progressDrawable": "@drawable/rating_starts",
+        "maxHeight": "11dp",
+        "rating": "$product.rating.averageRating"
+      }, {
+        "type": "TextView",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "text": "~({{product.rating.ratingCount}})",
+        "textColor": "#444444"
+      }]
+    }]
+  }]
+}
