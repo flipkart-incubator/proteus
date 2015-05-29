@@ -24,6 +24,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 
@@ -49,13 +52,17 @@ public class MainActivity extends ActionBarActivity {
     private void createView(String newData) {
         this.gson = new Gson();
 
-        JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.name\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.price\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"dataContext\":\"$product\",\"text\":\"$rating\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"~<font color=\\\"#008800\\\">{{product.name}}</font> is awesome <b>{{product.price}}$(number)</b>\"},{\"type\":\"RatingBar\",\"layout_width\":\"wrap_content\",\"layout_height\":\"wrap_content\",\"layout_marginRight\":\"2dp\",\"layout_marginTop\":\"2dp\",\"minHeight\":\"11dp\",\"rating\":\"$product.avgrating\"}]}", JsonObject.class);
+        InputStream inputStream = getResources().openRawResource(R.raw.layout);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        JsonObject layoutData = gson.fromJson(reader, JsonObject.class);
 
         JsonObject data;
         if (newData != null) {
             data = gson.fromJson(newData, JsonObject.class);
         } else {
-            data = gson.fromJson("{\"product\":{\"name\":\"Gaming Mouse\",\"price\":\"1350\",\"rating\":\"****\",\"avgrating\":\"4.5\"}}", JsonObject.class);
+            inputStream = getResources().openRawResource(R.raw.data_0);
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            data = gson.fromJson(reader, JsonObject.class);
         }
 
         LayoutBuilder builder = new DefaultLayoutBuilderFactory()
@@ -81,33 +88,39 @@ public class MainActivity extends ActionBarActivity {
         return new LayoutBuilderCallback() {
 
             @Override
-            public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element, JsonObject object, View view, int childIndex) {
+            public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element,
+                                           JsonObject object, View view, int childIndex) {
 
             }
 
             @Override
-            public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent, int childIndex) {
+            public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object,
+                                                 ViewGroup parent, int childIndex) {
                 return null;
             }
 
             @Override
-            public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, ParserContext context, JsonObject viewJsonObject, ViewGroup parent, int childIndex) {
+            public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
+                                                    ParserContext context, JsonObject viewJsonObject,
+                                                    ViewGroup parent, int childIndex) {
                 Log.e(TAG, "here");
             }
 
             @Override
             public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType) {
                 Log.d("event", attributeValue.toString());
+                return view;
+            }
+
+            @Override
+            public PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView<View> parent,
+                                                       List<ProteusView> children, JsonObject viewLayout) {
                 return null;
             }
 
             @Override
-            public PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children, JsonObject viewLayout) {
-                return null;
-            }
-
-            @Override
-            public Adapter onAdapterRequired(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children, JsonObject viewLayout) {
+            public Adapter onAdapterRequired(ParserContext parserContext, ProteusView<View> parent,
+                                             List<ProteusView> children, JsonObject viewLayout) {
                 return null;
             }
         };
@@ -124,11 +137,11 @@ public class MainActivity extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        if (id == R.id.action_refresh) {
-            this.proteusView.updateData(gson.fromJson("{\"product\":{\"price\":\"17000\",\"rating\":\"**\",\"avgrating\":\"4.5\"}}", JsonObject.class));
-            //((DataProteusView) this.proteusView).set("product.price", "17000", 0);
-            //((DataProteusView) this.proteusView).set("product.name", "Intel Core i7", 0);
-            //((DataProteusView) this.proteusView).set("product.rating", "***", 0);
+        if (id == R.id.action_refresh_data) {
+            ((DataProteusView) this.proteusView).set("product.price", "17400", 0);
+            ((DataProteusView) this.proteusView).set("product.title", "Intel Core i7 5400K", 0);
+            ((DataProteusView) this.proteusView).set("product.rating.averageRating", 3.554, 0);
+            ((DataProteusView) this.proteusView).set("product.rating.ratingCount", 126, 0);
             return true;
         }
         return super.onOptionsItemSelected(item);
