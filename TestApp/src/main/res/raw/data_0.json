@@ -2,10 +2,21 @@
   "product": {
     "title": "Intel Core i7, 4th Gen",
     "subTitle": "2.7 GHz, Turbo boost upto 3.2GHz",
-    "price": "1350",
     "rating": {
       "averageRating": 4.56257,
       "ratingCount": 271
-    }
+    },
+    "sellers": [
+      {
+        "name": "Retailer 1",
+        "price": 13100,
+        "rating": 3.2
+      },
+      {
+        "name": "Retailer 2",
+        "price": 14100,
+        "rating": 4.3
+      }
+    ]
   }
 }
