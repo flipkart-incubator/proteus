@@ -11,11 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.builder.DataAndViewParsingLayoutBuilder;
 import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
-import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.provider.GsonProvider;
 import com.flipkart.layoutengine.view.DataProteusView;
@@ -52,32 +53,38 @@ public class MainActivity extends ActionBarActivity {
     private void createView(String newData) {
         this.gson = new Gson();
 
-        InputStream inputStream = getResources().openRawResource(R.raw.layout);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        JsonObject layoutData = gson.fromJson(reader, JsonObject.class);
+        JsonObject layoutData = getJsonFromFile(R.raw.layout).getAsJsonObject();
 
         JsonObject data;
         if (newData != null) {
             data = gson.fromJson(newData, JsonObject.class);
         } else {
-            inputStream = getResources().openRawResource(R.raw.data_0);
-            reader = new BufferedReader(new InputStreamReader(inputStream));
-            data = gson.fromJson(reader, JsonObject.class);
+            data = getJsonFromFile(R.raw.data_0).getAsJsonObject();
         }
 
-        LayoutBuilder builder = new DefaultLayoutBuilderFactory()
-                .createDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutData));
+        JsonElement sellerWidget = getJsonFromFile(R.raw.layout_seller_widget);
+        JsonObject layoutProvider = new JsonObject();
+        layoutProvider.add("SellerWidget", sellerWidget);
+
+        DataAndViewParsingLayoutBuilder builder = new DefaultLayoutBuilderFactory()
+                .createDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutProvider));
 
         builder.setListener(createCallback());
 
         FrameLayout container = new FrameLayout(MainActivity.this);
-
-        this.proteusView = builder.build(container, layoutData, data);
-        View view = proteusView.getView();
-
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
+        long startTime = System.currentTimeMillis();
+
+        this.proteusView = builder.build(container, layoutData, data);
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+
+        Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
+
+        View view = proteusView.getView();
         if (view != null) {
             container.addView(view, layoutParams);
         }
@@ -135,10 +142,8 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
         if (id == R.id.action_refresh_data) {
-            ((DataProteusView) this.proteusView).set("product.price", "17400", 0);
             ((DataProteusView) this.proteusView).set("product.title", "Intel Core i7 5400K", 0);
             ((DataProteusView) this.proteusView).set("product.rating.averageRating", 3.554, 0);
             ((DataProteusView) this.proteusView).set("product.rating.ratingCount", 126, 0);
@@ -154,5 +159,11 @@ public class MainActivity extends ActionBarActivity {
             MainActivity.this.setContentView(new FrameLayout(this));
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private JsonElement getJsonFromFile(int resId) {
+        InputStream inputStream = getResources().openRawResource(resId);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        return gson.fromJson(reader, JsonElement.class);
     }
 }
