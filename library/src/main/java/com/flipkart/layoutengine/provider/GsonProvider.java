@@ -8,7 +8,7 @@ import com.google.gson.JsonElement;
  */
 public class GsonProvider implements Provider {
     private JsonElement rootElement;
-    public static final String DATA_PATH_DELIMITER = "\\.|\\[|\\]";1
+    public static final String DATA_PATH_DELIMITER = "\\.|\\[|\\]";
     public static final String CHILD_INDEX_REFERENCE = "$index";
 
     public GsonProvider(JsonElement jsonElement) {
