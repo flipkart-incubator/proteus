@@ -28,15 +28,14 @@ public class Utils {
     }
 
     public static JsonObject merge(JsonObject x, JsonObject y) {
-        for (Map.Entry<String, JsonElement> entry : x.entrySet()) {
+        for (Map.Entry<String, JsonElement> entry : y.entrySet()) {
             String key = entry.getKey();
+            JsonElement oldDataElement = x.get(key);
             JsonElement newDataElement = y.get(key);
-            if (entry.getValue().isJsonObject() && newDataElement != null) {
+            if (oldDataElement != null && oldDataElement.isJsonObject() && newDataElement != null) {
                 newDataElement = merge(entry.getValue().getAsJsonObject(), newDataElement.getAsJsonObject());
             }
-            if (newDataElement != null) {
-                x.add(key, newDataElement);
-            }
+            x.add(key, newDataElement);
         }
         return x;
     }
