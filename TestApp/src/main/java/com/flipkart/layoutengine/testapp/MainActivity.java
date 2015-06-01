@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,53 +35,48 @@ public class MainActivity extends ActionBarActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private ProteusView proteusView;
     private Gson gson;
+    private DataAndViewParsingLayoutBuilder builder;
+    private FrameLayout container;
+    private JsonObject layout;
+    private JsonObject data;
+    private ViewGroup.LayoutParams layoutParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            setupView(null);
+            createView();
         }
     }
 
-    private void setupView(String newData) {
-        createView(newData);
-    }
-
-    private void createView(String newData) {
+    private void createView() {
         this.gson = new Gson();
 
         JsonObject layoutData = getJsonFromFile(R.raw.layout).getAsJsonObject();
+        layout = layoutData;
+        JsonObject productData = getJsonFromFile(R.raw.data_0).getAsJsonObject();
+        data = productData;
 
-        JsonObject data;
-        if (newData != null) {
-            data = gson.fromJson(newData, JsonObject.class);
-        } else {
-            data = getJsonFromFile(R.raw.data_0).getAsJsonObject();
-        }
-
-        JsonElement sellerWidget = getJsonFromFile(R.raw.layout_seller_widget);
+        JsonElement sellerWidget = getJsonFromFile(R.raw.layout_seller_widget_0);
         JsonObject layoutProvider = new JsonObject();
         layoutProvider.add("SellerWidget", sellerWidget);
 
-        DataAndViewParsingLayoutBuilder builder = new DefaultLayoutBuilderFactory()
+        this.builder = new DefaultLayoutBuilderFactory()
                 .createDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutProvider));
 
         builder.setListener(createCallback());
 
-        FrameLayout container = new FrameLayout(MainActivity.this);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        this.container = new FrameLayout(MainActivity.this);
+        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
         long startTime = System.currentTimeMillis();
 
-        this.proteusView = builder.build(container, layoutData, data);
+        this.proteusView = builder.build(container, layoutData, productData);
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
-
-        Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
 
         View view = proteusView.getView();
         if (view != null) {
@@ -97,7 +91,6 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element,
                                            JsonObject object, View view, int childIndex) {
-
             }
 
             @Override
@@ -110,7 +103,6 @@ public class MainActivity extends ActionBarActivity {
             public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
                                                     ParserContext context, JsonObject viewJsonObject,
                                                     ViewGroup parent, int childIndex) {
-                Log.e(TAG, "here");
             }
 
             @Override
@@ -143,22 +135,44 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_refresh_data) {
-            ((DataProteusView) this.proteusView).set("product.title", "Intel Core i7 5400K", 0);
-            ((DataProteusView) this.proteusView).set("product.rating.averageRating", 3.554, 0);
-            ((DataProteusView) this.proteusView).set("product.rating.ratingCount", 126, 0);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+        long startTime, stopTime, elapsedTime;
+        switch (id) {
+            case R.id.action_refresh_data:
+                startTime = System.currentTimeMillis();
+                ((DataProteusView) this.proteusView).set("product.title", "Intel Core i7 5400K", 0);
+                ((DataProteusView) this.proteusView).set("product.rating.averageRating", 2.854, 0);
+                ((DataProteusView) this.proteusView).set("product.rating.ratingCount", 126, 0);
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.d(TAG, "key down " + keyCode);
-        if (keyCode == KeyEvent.KEYCODE_R) {
-            MainActivity.this.setContentView(new FrameLayout(this));
+                stopTime = System.currentTimeMillis();
+                elapsedTime = stopTime - startTime;
+
+                Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.action_refresh_layout:
+                JsonElement sellerWidget = getJsonFromFile(R.raw.layout_seller_widget_1);
+                JsonObject layoutProvider = new JsonObject();
+                layoutProvider.add("SellerWidget", sellerWidget);
+                builder.updateLayoutProvider(layoutProvider);
+
+                startTime = System.currentTimeMillis();
+
+                this.proteusView = builder.build(container, layout, data);
+
+                stopTime = System.currentTimeMillis();
+                elapsedTime = stopTime - startTime;
+
+                Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
+
+                View view = proteusView.getView();
+                if (view != null) {
+                    container.addView(view, layoutParams);
+                }
+                MainActivity.this.setContentView(container);
+
+                return true;
         }
-        return super.onKeyDown(keyCode, event);
+
+        return super.onOptionsItemSelected(item);
     }
 
     private JsonElement getJsonFromFile(int resId) {
