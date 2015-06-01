@@ -25,8 +25,7 @@ import java.util.regex.Matcher;
  * A layout builder which can parse data bindings before passing it on to {@link SimpleLayoutBuilder}
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
-    private static final Character PREFIX = DataParsingAdapter.DATA_PREFIX;
-    protected static final String DATA_CONTEXT = "dataContext";
+    public static final String DATA_CONTEXT = "dataContext";
 
     DataParsingLayoutBuilder(Context context) {
         super(context);
@@ -189,7 +188,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         if (dataContextElement != null) {
             String currentDataContext = dataContextElement.getAsString().substring(1);
-            currentViewJsonObject.remove(DATA_CONTEXT);
             ParserContext newContext = oldContext.clone();
             Provider oldProvider = oldContext.getDataProvider();
 
@@ -214,7 +212,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         }
         return oldContext;
     }
-
+    
     @Override
     protected ProteusView createProteusViewToReturn(View createdView) {
         return new DataProteusView(new SimpleProteusView(createdView));

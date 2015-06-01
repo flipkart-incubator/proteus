@@ -3,18 +3,20 @@
   "android": "http://schemas.android.com/apk/res/android",
   "layout_width": "match_parent",
   "layout_height": "wrap_content",
+  "dataContext": "$product.sellers[$index]",
   "orientation": "vertical",
   "children": [
     {
       "type": "TextView",
       "layout_width": "wrap_content",
       "layout_height": "wrap_content",
-      "text": "~{{product.sellers[].name}} [{{product.sellers[].rating}}/5]"
+      "text": "~{{name}} [{{rating}}/5]"
     },
     {
       "type": "TextView",
       "layout_width": "match_parent",
       "layout_height": "wrap_content",
-      "text": "~Rs. {{product.sellers[].price}}$(number)"
-    }]
+      "text": "~Rs. {{price}}$(number)"
+    }
+  ]
 }
