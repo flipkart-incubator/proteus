@@ -78,6 +78,8 @@ public class MainActivity extends ActionBarActivity {
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
 
+        Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
+
         View view = proteusView.getView();
         if (view != null) {
             container.addView(view, layoutParams);
