@@ -5,10 +5,7 @@
   "layout_height": "wrap_content",
   "background": "#ffffff",
   "orientation": "vertical",
-  "paddingBottom": "16dp",
-  "paddingLeft": "16dp",
-  "paddingRight": "16dp",
-  "paddingTop": "16dp",
+  "padding": "16dp",
   "children": [
     {
       "type": "LinearLayout",

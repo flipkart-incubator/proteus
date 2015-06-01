@@ -4,7 +4,8 @@
     <string name="app_name">Layout Test App</string>
     <string name="hello_world">Hello World!</string>
     <string name="action_settings">Settings</string>
-    <string name="action_refresh">Update Data</string>
+    <string name="action_update_data">Update Data</string>
     <string name="loading">Loading…</string>
+    <string name="action_update_layout">Update Layout</string>
 
 </resources>

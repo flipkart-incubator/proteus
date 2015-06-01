@@ -4,7 +4,12 @@
     tools:context="com.flipkart.layoutengine.testapp.MainActivity" >
     
     <item android:id="@+id/action_refresh_data"
-        android:title="@string/action_refresh"
+        android:title="@string/action_update_data"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_refresh_layout"
+        android:title="@string/action_update_layout"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>
