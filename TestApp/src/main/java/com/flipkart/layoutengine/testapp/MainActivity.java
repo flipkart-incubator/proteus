@@ -15,8 +15,8 @@ import android.widget.Toast;
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DataAndViewParsingLayoutBuilder;
-import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
+import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.provider.GsonProvider;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -33,7 +33,7 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private ProteusView proteusView;
+    private DataProteusView proteusView;
     private Gson gson;
     private DataAndViewParsingLayoutBuilder builder;
     private FrameLayout container;
@@ -62,8 +62,7 @@ public class MainActivity extends ActionBarActivity {
         JsonObject layoutProvider = new JsonObject();
         layoutProvider.add("SellerWidget", sellerWidget);
 
-        this.builder = new DefaultLayoutBuilderFactory()
-                .createDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutProvider));
+        this.builder = LayoutBuilderFactory.getDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutProvider));
 
         builder.setListener(createCallback());
 
@@ -73,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
 
         long startTime = System.currentTimeMillis();
 
-        this.proteusView = builder.build(container, layoutData, productData);
+        this.proteusView = (DataProteusView) builder.build(container, layoutData, productData);
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
@@ -141,9 +140,12 @@ public class MainActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_refresh_data:
                 startTime = System.currentTimeMillis();
-                ((DataProteusView) this.proteusView).set("product.title", "Intel Core i7 5400K", 0);
-                ((DataProteusView) this.proteusView).set("product.rating.averageRating", 2.854, 0);
-                ((DataProteusView) this.proteusView).set("product.rating.ratingCount", 126, 0);
+
+                this.proteusView.set("product.title", "Intel Core i7 5400K", 0);
+                this.proteusView.set("product.rating.averageRating", 2.854, 0);
+                this.proteusView.set("product.rating.ratingCount", 126, 0);
+                this.proteusView.set("product.sellers[0].price", 18800, 0);
+                this.proteusView.set("product.sellers[1].price", 17100, 0);
 
                 stopTime = System.currentTimeMillis();
                 elapsedTime = stopTime - startTime;
@@ -158,7 +160,7 @@ public class MainActivity extends ActionBarActivity {
 
                 startTime = System.currentTimeMillis();
 
-                this.proteusView = builder.build(container, layout, data);
+                this.proteusView = (DataProteusView) builder.build(container, layout, data);
 
                 stopTime = System.currentTimeMillis();
                 elapsedTime = stopTime - startTime;

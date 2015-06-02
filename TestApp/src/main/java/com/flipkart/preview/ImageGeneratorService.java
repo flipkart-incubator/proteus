@@ -13,16 +13,11 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Adapter;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.flipkart.layoutengine.EventType;
-import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
-import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
-import com.flipkart.layoutengine.view.ProteusView;
+import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.networking.API;
 import com.flipkart.networking.request.BaseRequest;
 import com.flipkart.networking.request.BitmapUploadRequest;
@@ -31,12 +26,10 @@ import com.flipkart.networking.request.components.OnRequestErrorListener;
 import com.flipkart.networking.request.components.OnRequestFinishListener;
 import com.flipkart.networking.request.components.RequestError;
 import com.flipkart.networking.response.RemoteRenderingResponse;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.List;
 
 /**
  * Created by kirankumar on 14/11/14.
@@ -53,7 +46,7 @@ public class ImageGeneratorService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handler = new Handler();
-        builder = new DefaultLayoutBuilderFactory().createSimpleLayoutBuilder(getBaseContext());
+        builder = LayoutBuilderFactory.getSimpleLayoutBuilder(getBaseContext());
         builder.setSynchronousRendering(true);
         startPollingServer(intent);
         return Service.START_STICKY;
