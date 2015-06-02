@@ -3,7 +3,9 @@
   "android": "http://schemas.android.com/apk/res/android",
   "layout_width": "match_parent",
   "layout_height": "wrap_content",
-  "dataContext": "$product.sellers[$index]",
+  "dataContext": {
+    "seller": "product.sellers[$index]"
+  },
   "orientation": "vertical",
   "padding": "16dp",
   "children": [
@@ -12,13 +14,13 @@
       "layout_width": "wrap_content",
       "layout_height": "wrap_content",
       "marginBottom": "5dp",
-      "text": "~{{name}} <font color=#6688ee>[{{rating}}/5]</font>"
+      "text": "~{{seller.name}} <font color=#6688ee>[{{seller.rating}}/5]</font>"
     },
     {
       "type": "TextView",
       "layout_width": "match_parent",
       "layout_height": "wrap_content",
-      "text": "~<b>Rs. {{price}}$(number)</b>"
+      "text": "~<b>Rs. {{seller.price}}$(number)</b>"
     }
   ]
 }
