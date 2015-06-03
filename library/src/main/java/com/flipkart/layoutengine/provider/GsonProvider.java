@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 public class GsonProvider implements Provider {
     private JsonElement rootElement;
     public static final String DATA_PATH_DELIMITER = "\\.|\\[|\\]";
+    public static final String DATA_PATH_SIMPLE_DELIMITER = "\\.";
     public static final String CHILD_INDEX_REFERENCE = "$index";
 
     public GsonProvider(JsonElement jsonElement) {
@@ -16,12 +17,12 @@ public class GsonProvider implements Provider {
     }
 
     @Override
-    public void setRoot(JsonElement rootElement) {
+    public void setData(JsonElement rootElement) {
         this.rootElement = rootElement;
     }
 
     @Override
-    public JsonElement getRoot() {
+    public JsonElement getData() {
         return this.rootElement;
     }
 

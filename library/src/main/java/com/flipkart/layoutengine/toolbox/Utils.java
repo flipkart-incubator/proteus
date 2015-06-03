@@ -15,16 +15,16 @@ public class Utils {
 
     public static final String TAG = Utils.class.getSimpleName();
 
-    public static JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
-        if (element != null && element.length() > 0) {
-            JsonElement elementToReturn = dataProvider.getObject(element, childIndex);
+    public static JsonElement getElementFromData(String dataPath, Provider dataProvider, int childIndex) {
+        if (dataPath != null && dataPath.length() > 0) {
+            JsonElement elementToReturn = dataProvider.getObject(dataPath, childIndex);
             if (elementToReturn != null) {
                 return elementToReturn;
             } else {
-                Log.e(TAG, "Got null element for " + element);
+                Log.e(TAG, "Got null for dataPath " + dataPath);
             }
         }
-        return Utils.getStringAsJsonElement(element);
+        return Utils.getStringAsJsonElement(dataPath);
     }
 
     public static JsonObject merge(JsonObject x, JsonObject y) {

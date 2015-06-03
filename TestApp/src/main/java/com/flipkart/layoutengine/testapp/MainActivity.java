@@ -96,14 +96,14 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object,
-                                                 ViewGroup parent, int childIndex) {
+                                                 ProteusView parent, int childIndex) {
                 return null;
             }
 
             @Override
             public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
                                                     ParserContext context, JsonObject viewJsonObject,
-                                                    ViewGroup parent, int childIndex) {
+                                                    ProteusView parent, int childIndex) {
             }
 
             @Override
@@ -144,11 +144,15 @@ public class MainActivity extends ActionBarActivity {
                 this.proteusView.set("product.title", "Intel Core i7 5400K", 0);
                 this.proteusView.set("product.rating.averageRating", 2.854, 0);
                 this.proteusView.set("product.rating.ratingCount", 126, 0);
-                this.proteusView.set("product.sellers[0].price", 18800, 0);
-                this.proteusView.set("product.sellers[1].price", 17100, 0);
+                this.proteusView.set("sellers_1[0].price", 18800, 0);
+                this.proteusView.set("sellers_1[1].price", 17100, 0);
+
+                JsonElement je = this.proteusView.get("sellers_1[0].price", -1);
 
                 stopTime = System.currentTimeMillis();
                 elapsedTime = stopTime - startTime;
+
+                Log.e("data", je != null ? je.getAsString() : "fuck");
 
                 Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
                 return true;

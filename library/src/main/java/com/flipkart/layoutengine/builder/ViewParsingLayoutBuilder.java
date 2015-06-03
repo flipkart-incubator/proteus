@@ -1,8 +1,6 @@
 package com.flipkart.layoutengine.builder;
 
 import android.app.Activity;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.provider.Provider;
@@ -23,13 +21,11 @@ public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject, int childIndex) {
+    protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType, ProteusView parent, JsonObject jsonObject, int childIndex) {
         JsonElement jsonElement = viewProvider.getObject(viewType, childIndex);
-        if(jsonElement!=null)
-        {
-            return buildImpl(context, parent,jsonElement.getAsJsonObject(), null , childIndex);
-        }
-        else {
+        if (jsonElement != null) {
+            return buildImpl(context, parent, jsonElement.getAsJsonObject(), null, childIndex);
+        } else {
             return super.onUnknownViewEncountered(context, viewType, parent, jsonObject, childIndex);
         }
     }

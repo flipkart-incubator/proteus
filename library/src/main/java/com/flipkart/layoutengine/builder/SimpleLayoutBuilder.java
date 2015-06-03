@@ -66,8 +66,8 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     @Override
-    public ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data) {
-        return buildImpl(createParserContext(data), parent, layout, null, 0);
+    public ProteusView build(View parent, JsonObject layout, JsonObject data) {
+        return buildImpl(createParserContext(data), new SimpleProteusView(parent, 0, null), layout, null, 0);
     }
 
     protected ParserContext createParserContext(JsonObject data) {
@@ -88,7 +88,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
      * @param childIndex            index of child inside its parent view
      * @return The {@link com.flipkart.layoutengine.view.ProteusView} that was built.
      */
-    protected ProteusView buildImpl(final ParserContext context, final ViewGroup parent,
+    protected ProteusView buildImpl(final ParserContext context, final ProteusView parent,
                                     final JsonObject currentViewJsonObject, View existingView,
                                     final int childIndex) {
         JsonElement viewTypeElement = currentViewJsonObject.get(TYPE);
@@ -111,14 +111,15 @@ class SimpleLayoutBuilder implements LayoutBuilder {
          */
         final View createdView;
         if (existingView == null) {
-            createdView = createView(context, parent, handler, currentViewJsonObject);
-            handler.setupView(parent, createdView);
+            ViewGroup parentViewGroup = (ViewGroup)parent.getView();
+            createdView = createView(context, parentViewGroup, handler, currentViewJsonObject);
+            handler.setupView(parentViewGroup, createdView);
         } else {
             createdView = existingView;
         }
 
         // create the proteus view to return
-        ProteusView proteusViewToReturn = createProteusViewToReturn(createdView);
+        ProteusView proteusViewToReturn = createProteusViewToReturn(createdView, childIndex, parent);
         prepareView(proteusViewToReturn, context);
 
         /**
@@ -162,7 +163,6 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         }
 
         if (children != null && children.size() > 0) {
-            ViewGroup selfViewGroup = (ViewGroup) createdView;
             List<ProteusView> childrenToAdd = new ArrayList<>();
             for (int i = 0; i < children.size(); i++) {
                 JsonObject childObject = children.get(i).getAsJsonObject();
@@ -172,7 +172,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
                 }
 
                 // build the child views
-                ProteusView childView = buildImpl(context, selfViewGroup, childObject, null, i);
+                ProteusView childView = buildImpl(context, proteusViewToReturn, childObject, null, i);
 
                 childrenToAdd.add(childView);
             }
@@ -185,8 +185,8 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         return proteusViewToReturn;
     }
 
-    protected ProteusView createProteusViewToReturn(View createdView) {
-        return new SimpleProteusView(createdView);
+    protected ProteusView createProteusViewToReturn(View createdView, int index, ProteusView parent) {
+        return new SimpleProteusView(createdView, index, parent);
     }
 
     protected void prepareView(ProteusView proteusView, ParserContext parserContext) {
@@ -200,7 +200,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
     public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context,
                                    String attribute, JsonObject jsonObject, JsonElement element,
-                                   ProteusView<View> view, ViewGroup parent, int index) {
+                                   ProteusView view, ProteusView parent, int index) {
         return handler.handleAttribute(context, attribute, jsonObject, element, view, index);
     }
 
@@ -213,7 +213,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
-                                                   ViewGroup parent, JsonObject viewJsonObject,
+                                                   ProteusView parent, JsonObject viewJsonObject,
                                                    int childIndex) {
         if (listener != null) {
             return listener.onUnknownViewType(context, viewType, viewJsonObject, parent, childIndex);

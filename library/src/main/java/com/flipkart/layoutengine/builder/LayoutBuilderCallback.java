@@ -2,7 +2,6 @@ package com.flipkart.layoutengine.builder;
 
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Adapter;
 
 import com.flipkart.layoutengine.EventType;
@@ -40,10 +39,10 @@ public interface LayoutBuilderCallback {
      * @param childIndex     child index
      */
     ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject viewJsonObject,
-                                  ViewGroup parent, int childIndex);
+                                  ProteusView parent, int childIndex);
 
     void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, ParserContext context,
-                                     JsonObject viewJsonObject, ViewGroup parent, int childIndex);
+                                     JsonObject viewJsonObject, ProteusView parent, int childIndex);
 
     /**
      * called when any click occurs on views

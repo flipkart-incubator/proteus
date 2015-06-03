@@ -7,8 +7,8 @@ import com.google.gson.JsonElement;
  */
 public interface Provider extends Cloneable {
     JsonElement getObject(String key, int childIndex);
-    void setRoot(JsonElement rootElement);
-    JsonElement getRoot();
+    void setData(JsonElement rootElement);
+    JsonElement getData();
     Provider clone();
 
 }

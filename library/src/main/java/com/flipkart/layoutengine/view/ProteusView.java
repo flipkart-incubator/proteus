@@ -29,6 +29,10 @@ public interface ProteusView<T extends View> {
      */
     T getView();
 
+    int getIndex();
+
+    ProteusView getParent();
+
     /**
      *
      */

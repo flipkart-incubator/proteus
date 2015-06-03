@@ -1,7 +1,6 @@
 package com.flipkart.layoutengine.builder;
 
 import android.content.Context;
-import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.provider.GsonProvider;
@@ -25,7 +24,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
     @Override
     protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
-                                                   ViewGroup parent, JsonObject viewJsonObject,
+                                                   ProteusView parent, JsonObject viewJsonObject,
                                                    int childIndex) {
         JsonElement viewElement = null;
         if (viewProvider != null) {
@@ -42,9 +41,9 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
     }
 
     public void updateLayoutProvider(JsonObject newViewProvider) {
-        if (viewProvider != null && viewProvider.getRoot() != null) {
-            JsonObject viewProviderData = Utils.merge(viewProvider.getRoot().getAsJsonObject(), newViewProvider);
-            viewProvider.setRoot(viewProviderData);
+        if (viewProvider != null && viewProvider.getData() != null) {
+            JsonObject viewProviderData = Utils.merge(viewProvider.getData().getAsJsonObject(), newViewProvider);
+            viewProvider.setData(viewProviderData);
         } else {
             viewProvider = new GsonProvider(newViewProvider);
         }
@@ -52,7 +51,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
     private void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
                                              ParserContext parserContext, JsonObject viewLayoutObject,
-                                             ViewGroup parent, int childIndex) {
+                                             ProteusView parent, int childIndex) {
         if (listener != null) {
             listener.onViewBuiltFromViewProvider(createdView, viewType, parserContext, viewLayoutObject, parent, childIndex);
         }

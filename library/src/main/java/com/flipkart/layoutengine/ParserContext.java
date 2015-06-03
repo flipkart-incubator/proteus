@@ -1,24 +1,17 @@
 package com.flipkart.layoutengine;
 
 import com.flipkart.layoutengine.builder.LayoutBuilder;
-import com.flipkart.layoutengine.provider.Provider;
-import com.google.gson.JsonObject;
 
 /**
- * Created by kirankumar on 02/07/14.
+ * @author kirankumar
  */
 public class ParserContext implements Cloneable {
 
-    private Provider dataProvider;
     private LayoutBuilder layoutBuilder;
-    private JsonObject dataContext;
+    private DataContext dataContext;
 
-    public Provider getDataProvider() {
-        return dataProvider;
-    }
-
-    public void setDataProvider(Provider dataProvider) {
-        this.dataProvider = dataProvider;
+    public ParserContext() {
+        this.dataContext = new DataContext(null, null, null, null);
     }
 
     public LayoutBuilder getLayoutBuilder() {
@@ -29,11 +22,11 @@ public class ParserContext implements Cloneable {
         this.layoutBuilder = layoutBuilder;
     }
 
-    public JsonObject getDataContext() {
+    public DataContext getDataContext() {
         return dataContext;
     }
 
-    public void setDataContext(JsonObject dataContext) {
+    public void setDataContext(DataContext dataContext) {
         this.dataContext = dataContext;
     }
 

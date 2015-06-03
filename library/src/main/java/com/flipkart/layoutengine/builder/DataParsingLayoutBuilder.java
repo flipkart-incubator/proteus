@@ -3,8 +3,8 @@ package com.flipkart.layoutengine.builder;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 
+import com.flipkart.layoutengine.DataContext;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.parser.LayoutHandler;
@@ -20,6 +20,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,19 +36,19 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context,
+    protected JsonArray parseChildren(LayoutHandler handler, ParserContext parserContext,
                                       JsonElement childrenElement, int childIndex) {
         if (childrenElement.isJsonPrimitive()) {
             String attributeValue = childrenElement.getAsString();
             if (attributeValue != null && !"".equals(attributeValue)) {
-                childrenElement = getElementFromData(attributeValue, context.getDataProvider(), childIndex);
+                childrenElement = getElementFromData(attributeValue, parserContext.getDataContext().getDataProvider(), childIndex);
             }
         }
-        return super.parseChildren(handler, context, childrenElement, childIndex);
+        return super.parseChildren(handler, parserContext, childrenElement, childIndex);
     }
 
     @Override
-    public ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data) {
+    public ProteusView build(View parent, JsonObject layout, JsonObject data) {
         return super.build(parent, layout, data);
     }
 
@@ -55,13 +56,13 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     protected ParserContext createParserContext(JsonObject data) {
         ParserContext parserContext = super.createParserContext(data);
         if (data != null) {
-            parserContext.setDataProvider(new GsonProvider(data));
+            parserContext.getDataContext().setDataProvider(new GsonProvider(data));
         }
         return parserContext;
     }
 
     @Override
-    protected ProteusView buildImpl(ParserContext context, ViewGroup parent, JsonObject currentViewJsonObject,
+    protected ProteusView buildImpl(ParserContext context, ProteusView parent, JsonObject currentViewJsonObject,
                                     View existingView, int childIndex) {
         context = getNewParserContext(context, currentViewJsonObject, childIndex);
         return super.buildImpl(context, parent, currentViewJsonObject, existingView, childIndex);
@@ -70,8 +71,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     @Override
     public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context,
                                    String attributeName, JsonObject jsonObject,
-                                   JsonElement jsonDataValue, ProteusView<View> associatedProteusView,
-                                   ViewGroup parent, int childIndex) {
+                                   JsonElement jsonDataValue, ProteusView associatedProteusView,
+                                   ProteusView parent, int childIndex) {
         if (jsonDataValue.isJsonPrimitive()) {
             if (DATA_CONTEXT.equals(attributeName)) {
                 return true;
@@ -81,7 +82,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     handler,
                     attributeName,
                     associatedProteusView,
-                    parent,
                     childIndex);
         }
         return super.handleAttribute(handler,
@@ -94,10 +94,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 childIndex);
     }
 
-    private JsonElement findAndReplaceValues(JsonElement jsonDataValue, ParserContext context,
+    private JsonElement findAndReplaceValues(JsonElement jsonDataValue, ParserContext parserContext,
                                              LayoutHandler<View> handler, String attributeName,
-                                             ProteusView<View> associatedProteusView, ViewGroup parent,
-                                             int childIndex) {
+                                             ProteusView<View> associatedProteusView, int childIndex) {
 
         String attributeValue = jsonDataValue.getAsString();
 
@@ -118,7 +117,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         String dataPath = regexMatcher.group(3);
                         finalValue = finalValue.replace(matchedString, getElementFromData(
                                 dataPath,
-                                context.getDataProvider(),
+                                parserContext.getDataContext().getDataProvider(),
                                 childIndex).getAsString());
                         bindingName = dataPath;
                     } else {
@@ -128,7 +127,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         String formatterName = regexMatcher.group(2);
 
                         String formattedValue = Utils.format(getElementFromData(dataPath,
-                                context.getDataProvider(),
+                                parserContext.getDataContext().getDataProvider(),
                                 childIndex).getAsString(), formatterName);
                         finalValue = finalValue.replace(matchedString, formattedValue);
                         bindingName = dataPath;
@@ -137,9 +136,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             bindingName,
                             attributeName,
                             attributeValue,
-                            context,
+                            parserContext,
                             handler,
-                            parent,
                             childIndex,
                             true);
                 }
@@ -148,7 +146,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
             } else if (attributeValue.charAt(0) == DataParsingAdapter.DATA_PREFIX) {
                 JsonElement elementFromData = getElementFromData(attributeValue.substring(1),
-                        context.getDataProvider(), childIndex);
+                        parserContext.getDataContext().getDataProvider(), childIndex);
                 if (elementFromData != null) {
                     jsonDataValue = elementFromData;
                 }
@@ -156,9 +154,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         attributeValue.substring(1),
                         attributeName,
                         attributeValue,
-                        context,
+                        parserContext,
                         handler,
-                        parent,
                         childIndex,
                         false);
             }
@@ -168,66 +165,50 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private void addBinding(ProteusView associatedProteusView, String bindingName, String attributeName,
                             String attributeValue, ParserContext context, LayoutHandler handler,
-                            ViewGroup parent, int childIndex, boolean hasRegEx) {
+                            int childIndex, boolean hasRegEx) {
         // check if the view is in update mode
         // if not that means that the update flow
         // is running and we must not add more bindings
         // for they will be duplicates
         DataProteusView dataProteusView = (DataProteusView) associatedProteusView;
         if (!dataProteusView.isViewUpdating()) {
-            JsonObject dataContext = context.getDataContext();
-            if (dataContext != null) {
-                String dataContextBindingAlias = bindingName.split(GsonProvider.DATA_PATH_DELIMITER)[0];
-                JsonElement dataContextBindingPathElement = dataContext.get(dataContextBindingAlias);
-                if (dataContextBindingPathElement != null) {
-                    String dataContextBindingPath = dataContextBindingPathElement.getAsString();
-                    dataContextBindingPath = dataContextBindingPath.replace(GsonProvider.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
-                    bindingName = bindingName.replaceFirst(Pattern.quote(dataContextBindingAlias), dataContextBindingPath);
-                }
-            }
-
-            Binding binding = new Binding(context,
-                    handler,
+            Binding binding = new Binding(handler,
                     bindingName,
                     attributeName,
                     attributeValue,
-                    dataProteusView,
-                    parent,
-                    childIndex,
                     hasRegEx);
 
             dataProteusView.addBinding(binding);
         }
     }
 
-    protected ParserContext getNewParserContext(final ParserContext oldContext,
+    protected ParserContext getNewParserContext(final ParserContext oldParserContext,
                                                 final JsonObject currentViewJsonObject,
                                                 final int childIndex) {
 
-        JsonElement dataContextElement = currentViewJsonObject.get(DATA_CONTEXT);
+        JsonElement scopeElement = currentViewJsonObject.get(DATA_CONTEXT);
 
-        if (dataContextElement != null) {
-            ParserContext newContext = oldContext.clone();
-            Provider oldProvider = oldContext.getDataProvider();
-            JsonObject currentDataContext = dataContextElement.getAsJsonObject();
-
-            if (oldProvider != null) {
-                Provider newProvider = oldProvider.clone();
-                JsonElement newRoot = constructNewRoot(currentDataContext, oldProvider, childIndex);
-                newProvider.setRoot(newRoot);
-                newContext.setDataProvider(newProvider);
-                newContext.setDataContext(currentDataContext);
-                return newContext;
-            } else {
-                Log.e(TAG, "When dataContext is specified, data provider cannot be null");
-            }
+        if (scopeElement == null) {
+            return oldParserContext;
         }
-        return oldContext;
+
+        DataContext oldDataContext = oldParserContext.getDataContext();
+
+        if (oldDataContext.getDataProvider() == null) {
+            Log.e(TAG, "When scope is specified, data provider cannot be null");
+            return oldParserContext;
+        }
+
+        DataContext newDataContext = getNewDataContext(scopeElement.getAsJsonObject(), oldDataContext, childIndex);
+        ParserContext newParserContext = oldParserContext.clone();
+        newParserContext.setDataContext(newDataContext);
+
+        return newParserContext;
     }
 
     @Override
-    protected ProteusView createProteusViewToReturn(View createdView) {
-        return new DataProteusView(new SimpleProteusView(createdView));
+    protected ProteusView createProteusViewToReturn(View createdView, int index, ProteusView parent) {
+        return new DataProteusView(new SimpleProteusView(createdView, index, parent));
     }
 
     @Override
@@ -235,13 +216,22 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         ((DataProteusView) proteusView).setParserContext(parserContext);
     }
 
-    private JsonElement constructNewRoot(JsonObject currentDataContext, Provider oldProvider, int childIndex) {
+    private DataContext getNewDataContext(JsonObject currentScope, DataContext oldDataContext, int childIndex) {
         JsonObject newRoot = new JsonObject();
-        for (Map.Entry<String, JsonElement> entry : currentDataContext.entrySet()) {
-            JsonElement data = getElementFromData(entry.getValue().getAsString(), oldProvider, childIndex);
-            newRoot.add(entry.getKey(), data);
+        Map<String, String> scope = new HashMap<>();
+        Map<String, String> reverseScope = new HashMap<>();
+        GsonProvider oldDataProvider = oldDataContext.getDataProvider();
+
+        for (Map.Entry<String, JsonElement> entry : currentScope.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue().getAsString();
+            JsonElement data = getElementFromData(value, oldDataProvider, childIndex);
+            newRoot.add(key, data);
+            scope.put(key, value);
+            String unaliasedValue = value.replace(GsonProvider.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
+            reverseScope.put(unaliasedValue, key);
         }
-        return newRoot;
+        return new DataContext(new GsonProvider(newRoot), scope, reverseScope, oldDataContext);
     }
 
     protected JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
