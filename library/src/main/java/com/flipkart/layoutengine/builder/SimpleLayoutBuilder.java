@@ -73,9 +73,6 @@ class SimpleLayoutBuilder implements LayoutBuilder {
     protected ParserContext createParserContext(JsonObject data) {
         ParserContext parserContext = new ParserContext();
         parserContext.setLayoutBuilder(this);
-        if (data != null) {
-            parserContext.setDataProvider(new GsonProvider(data));
-        }
         return parserContext;
     }
 
@@ -122,7 +119,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
         // create the proteus view to return
         ProteusView proteusViewToReturn = createProteusViewToReturn(createdView);
-        prepareView(proteusViewToReturn, context.getDataProvider());
+        prepareView(proteusViewToReturn, context);
 
         /**
          * Parsing each attribute and setting it on the view.
@@ -192,7 +189,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         return new SimpleProteusView(createdView);
     }
 
-    protected void prepareView(ProteusView proteusView, Provider dataProvider) {
+    protected void prepareView(ProteusView proteusView, ParserContext parserContext) {
         // nothing to do here
     }
 

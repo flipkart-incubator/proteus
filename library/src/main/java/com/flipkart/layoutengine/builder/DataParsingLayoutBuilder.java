@@ -52,6 +52,15 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
+    protected ParserContext createParserContext(JsonObject data) {
+        ParserContext parserContext = super.createParserContext(data);
+        if (data != null) {
+            parserContext.setDataProvider(new GsonProvider(data));
+        }
+        return parserContext;
+    }
+
+    @Override
     protected ProteusView buildImpl(ParserContext context, ViewGroup parent, JsonObject currentViewJsonObject,
                                     View existingView, int childIndex) {
         context = getNewParserContext(context, currentViewJsonObject, childIndex);
@@ -222,8 +231,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected void prepareView(ProteusView proteusView, Provider dataProvider) {
-        ((DataProteusView) proteusView).setDataProvider(dataProvider);
+    protected void prepareView(ProteusView proteusView, ParserContext parserContext) {
+        ((DataProteusView) proteusView).setParserContext(parserContext);
     }
 
     private JsonElement constructNewRoot(JsonObject currentDataContext, Provider oldProvider, int childIndex) {
