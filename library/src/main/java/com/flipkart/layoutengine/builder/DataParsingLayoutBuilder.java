@@ -3,7 +3,6 @@ package com.flipkart.layoutengine.builder;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
@@ -139,7 +138,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             attributeValue,
                             context,
                             handler,
-                            parent,
                             childIndex,
                             true);
                 }
@@ -158,7 +156,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         attributeValue,
                         context,
                         handler,
-                        parent,
                         childIndex,
                         false);
             }
@@ -168,7 +165,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private void addBinding(ProteusView associatedProteusView, String bindingName, String attributeName,
                             String attributeValue, ParserContext context, LayoutHandler handler,
-                            ProteusView parent, int childIndex, boolean hasRegEx) {
+                            int childIndex, boolean hasRegEx) {
         // check if the view is in update mode
         // if not that means that the update flow
         // is running and we must not add more bindings
@@ -186,14 +183,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 }
             }
 
-            Binding binding = new Binding(context,
-                    handler,
+            Binding binding = new Binding(handler,
                     bindingName,
                     attributeName,
                     attributeValue,
-                    dataProteusView,
-                    parent,
-                    childIndex,
                     hasRegEx);
 
             dataProteusView.addBinding(binding);
