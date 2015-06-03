@@ -1,7 +1,6 @@
 package com.flipkart.layoutengine.builder;
 
 import android.content.Context;
-import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.provider.GsonProvider;
@@ -42,9 +41,9 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
     }
 
     public void updateLayoutProvider(JsonObject newViewProvider) {
-        if (viewProvider != null && viewProvider.getRoot() != null) {
-            JsonObject viewProviderData = Utils.merge(viewProvider.getRoot().getAsJsonObject(), newViewProvider);
-            viewProvider.setRoot(viewProviderData);
+        if (viewProvider != null && viewProvider.getData() != null) {
+            JsonObject viewProviderData = Utils.merge(viewProvider.getData().getAsJsonObject(), newViewProvider);
+            viewProvider.setData(viewProviderData);
         } else {
             viewProvider = new GsonProvider(newViewProvider);
         }

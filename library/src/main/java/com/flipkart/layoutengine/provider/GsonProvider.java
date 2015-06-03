@@ -16,12 +16,12 @@ public class GsonProvider implements Provider {
     }
 
     @Override
-    public void setRoot(JsonElement rootElement) {
+    public void setData(JsonElement rootElement) {
         this.rootElement = rootElement;
     }
 
     @Override
-    public JsonElement getRoot() {
+    public JsonElement getData() {
         return this.rootElement;
     }
 
