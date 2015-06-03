@@ -6,6 +6,10 @@
   "background": "#ffffff",
   "orientation": "vertical",
   "padding": "16dp",
+  "dataContext": {
+    "sellers": "sellers_1",
+    "product": "product"
+  },
   "children": [{
     "type": "LinearLayout",
     "android": "http://schemas.android.com/apk/res/android",
@@ -63,7 +67,7 @@
     "layout_width": "match_parent",
     "layout_height": "wrap_content",
     "orientation": "vertical",
-    "children": "product.sellers",
+    "children": "sellers",
     "childType": "SellerWidget"
   }]
 }

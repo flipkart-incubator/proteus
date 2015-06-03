@@ -4,7 +4,8 @@
   "layout_width": "match_parent",
   "layout_height": "wrap_content",
   "dataContext": {
-    "seller": "product.sellers[$index]"
+    "seller": "sellers[$index]",
+    "product": "product"
   },
   "orientation": "vertical",
   "children": [
@@ -19,6 +20,12 @@
       "layout_width": "match_parent",
       "layout_height": "wrap_content",
       "text": "~Rs. {{seller.price}}$(number)"
+    },
+    {
+      "type": "TextView",
+      "layout_width": "match_parent",
+      "layout_height": "wrap_content",
+      "text": "$product.title"
     }
   ]
 }

@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.view;
 
 import android.view.View;
 
+import com.flipkart.layoutengine.DataContext;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.provider.Provider;
@@ -57,7 +58,9 @@ public class DataProteusView extends SimpleProteusView {
     @Override
     protected View updateDataImpl(JsonObject data) {
         this.isViewUpdating = true;
-        updateParserContext(data);
+
+        updateDataContext(data);
+
         if (this.bindings != null) {
             for (Binding binding : this.bindings) {
                 this.handleBinding(binding);
@@ -73,7 +76,9 @@ public class DataProteusView extends SimpleProteusView {
         return this.getView();
     }
 
-    private void updateParserContext(JsonObject data) {
+    private void updateDataContext(JsonObject newData) {
+        JsonObject oldData = parserContext.getDataContext().getDataProvider().getData().getAsJsonObject();
+        Utils.merge(oldData, newData);
     }
 
     /**
@@ -98,7 +103,7 @@ public class DataProteusView extends SimpleProteusView {
                     parent,
                     index);
         } else {
-            JsonElement dataValue = getElementFromData(binding.getBindingName(), parserContext.getDataProvider(), index);
+            JsonElement dataValue = getElementFromData(binding.getBindingName(), parserContext.getDataContext().getDataProvider(), index);
             parserContext.getLayoutBuilder().handleAttribute(
                     binding.getLayoutHandler(),
                     parserContext,
@@ -129,21 +134,26 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     public JsonElement get(String dataPath, int childIndex) {
-        return getElementFromData(dataPath, parserContext.getDataProvider(), childIndex);
+        return parserContext.getDataContext().get(dataPath, childIndex);
     }
 
     public void set(String dataPath, JsonElement newValue, int childIndex) {
         if (dataPath == null) {
             return;
         }
-        JsonElement parent = getElementFromData(dataPath.substring(0, dataPath.lastIndexOf(".")), parserContext.getDataProvider(), childIndex);
+
+        String aliasedDataPath = DataContext.getAliasedDataPath(dataPath,
+                parserContext.getDataContext().getReverseScopeMap(), true);
+
+        JsonElement parent = getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
+                parserContext.getDataContext().getDataProvider(), childIndex);
         if (!parent.isJsonObject()) {
             return;
         }
-        String propertyName = dataPath.substring(dataPath.lastIndexOf(".") + 1, dataPath.length());
+        String propertyName = aliasedDataPath.substring(aliasedDataPath.lastIndexOf(".") + 1, aliasedDataPath.length());
         parent.getAsJsonObject().add(propertyName, newValue);
 
-        updateView(dataPath);
+        updateView(aliasedDataPath);
     }
 
     public void set(String dataPath, String newValue, int childIndex) {
@@ -170,14 +180,17 @@ public class DataProteusView extends SimpleProteusView {
 
         if (getChildren() != null) {
             for (ProteusView proteusView : getChildren()) {
-                ((DataProteusView) proteusView).updateView(dataPath);
+                DataProteusView dataProteusView = (DataProteusView) proteusView;
+                String aliasedDataPath = DataContext.getAliasedDataPath(dataPath,
+                        dataProteusView.getParserContext().getDataContext().getReverseScopeMap(), false);
+                dataProteusView.updateView(aliasedDataPath);
             }
         }
 
         this.isViewUpdating = false;
     }
 
-    private JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
-        return Utils.getElementFromData(element, dataProvider, childIndex);
+    private JsonElement getElementFromData(String dataPath, Provider dataProvider, int childIndex) {
+        return Utils.getElementFromData(dataPath, dataProvider, childIndex);
     }
 }
