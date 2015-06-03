@@ -53,7 +53,6 @@ public interface LayoutBuilder {
      * @param layoutJsonObject      The current {@link JsonObject} of the layout associated to this attribute.
      * @param jsonAttributeValue    The name of or reference to the value of this attribute
      * @param associatedProteusView The {@link ProteusView} that is being built.
-     * @param parent                The parent view of the view that is being built.
      * @param index                 The index of the view in its parent.
      * @return true if the attribute is processed false otherwise.
      */
@@ -62,8 +61,8 @@ public interface LayoutBuilder {
                             String attributeName,
                             JsonObject layoutJsonObject,
                             JsonElement jsonAttributeValue,
-                            ProteusView<View> associatedProteusView,
-                            ViewGroup parent,
+                            ProteusView associatedProteusView,
+                            ProteusView parent,
                             int index);
 
     /**
@@ -75,7 +74,7 @@ public interface LayoutBuilder {
      * @param data   The {@link JsonObject} which will be used to replace bindings with values in the {@link View}
      * @return A {@link ProteusView} with the built view, an array of its children and optionally its bindings.
      */
-    ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data);
+    ProteusView build(View parent, JsonObject layout, JsonObject data);
 
     /**
      * Used to set a callback object to handle unknown view types and unknown attributes and other

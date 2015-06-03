@@ -96,14 +96,14 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object,
-                                                 ViewGroup parent, int childIndex) {
+                                                 ProteusView parent, int childIndex) {
                 return null;
             }
 
             @Override
             public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
                                                     ParserContext context, JsonObject viewJsonObject,
-                                                    ViewGroup parent, int childIndex) {
+                                                    ProteusView parent, int childIndex) {
             }
 
             @Override

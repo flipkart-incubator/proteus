@@ -25,7 +25,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
     @Override
     protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
-                                                   ViewGroup parent, JsonObject viewJsonObject,
+                                                   ProteusView parent, JsonObject viewJsonObject,
                                                    int childIndex) {
         JsonElement viewElement = null;
         if (viewProvider != null) {
@@ -52,7 +52,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
     private void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
                                              ParserContext parserContext, JsonObject viewLayoutObject,
-                                             ViewGroup parent, int childIndex) {
+                                             ProteusView parent, int childIndex) {
         if (listener != null) {
             listener.onViewBuiltFromViewProvider(createdView, viewType, parserContext, viewLayoutObject, parent, childIndex);
         }

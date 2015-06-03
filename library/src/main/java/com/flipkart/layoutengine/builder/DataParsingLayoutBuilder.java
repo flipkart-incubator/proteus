@@ -47,7 +47,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    public ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data) {
+    public ProteusView build(View parent, JsonObject layout, JsonObject data) {
         return super.build(parent, layout, data);
     }
 
@@ -61,7 +61,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ProteusView buildImpl(ParserContext context, ViewGroup parent, JsonObject currentViewJsonObject,
+    protected ProteusView buildImpl(ParserContext context, ProteusView parent, JsonObject currentViewJsonObject,
                                     View existingView, int childIndex) {
         context = getNewParserContext(context, currentViewJsonObject, childIndex);
         return super.buildImpl(context, parent, currentViewJsonObject, existingView, childIndex);
@@ -70,8 +70,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     @Override
     public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context,
                                    String attributeName, JsonObject jsonObject,
-                                   JsonElement jsonDataValue, ProteusView<View> associatedProteusView,
-                                   ViewGroup parent, int childIndex) {
+                                   JsonElement jsonDataValue, ProteusView associatedProteusView,
+                                   ProteusView parent, int childIndex) {
         if (jsonDataValue.isJsonPrimitive()) {
             if (DATA_CONTEXT.equals(attributeName)) {
                 return true;
@@ -96,7 +96,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private JsonElement findAndReplaceValues(JsonElement jsonDataValue, ParserContext context,
                                              LayoutHandler<View> handler, String attributeName,
-                                             ProteusView<View> associatedProteusView, ViewGroup parent,
+                                             ProteusView<View> associatedProteusView, ProteusView parent,
                                              int childIndex) {
 
         String attributeValue = jsonDataValue.getAsString();
@@ -168,7 +168,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private void addBinding(ProteusView associatedProteusView, String bindingName, String attributeName,
                             String attributeValue, ParserContext context, LayoutHandler handler,
-                            ViewGroup parent, int childIndex, boolean hasRegEx) {
+                            ProteusView parent, int childIndex, boolean hasRegEx) {
         // check if the view is in update mode
         // if not that means that the update flow
         // is running and we must not add more bindings
@@ -226,8 +226,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ProteusView createProteusViewToReturn(View createdView, int index) {
-        return new DataProteusView(new SimpleProteusView(createdView, index));
+    protected ProteusView createProteusViewToReturn(View createdView, int index, ProteusView parent) {
+        return new DataProteusView(new SimpleProteusView(createdView, index, parent));
     }
 
     @Override

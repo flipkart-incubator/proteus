@@ -1,7 +1,6 @@
 package com.flipkart.layoutengine.binding;
 
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
@@ -19,19 +18,19 @@ public class Binding {
     private String attributeKey;
     private String attributeValue;
     private ProteusView<View> proteusView;
-    private ViewGroup parentView;
+    private ProteusView parentProteusView;
     private boolean hasRegEx;
 
     public Binding(ParserContext parserContext, LayoutHandler layoutHandler, String bindingName,
                    String attributeKey, String attributeValue, DataProteusView view,
-                   ViewGroup parentView, int index, boolean hasRegEx) {
+                   ProteusView parentProteusView, int index, boolean hasRegEx) {
         this.parserContext = parserContext.clone();
         this.layoutHandler = layoutHandler;
         this.bindingName = bindingName;
         this.attributeKey = attributeKey;
         this.attributeValue = attributeValue;
         this.proteusView = view;
-        this.parentView = parentView;
+        this.parentProteusView = parentProteusView;
         this.index = index;
         this.hasRegEx = hasRegEx;
     }
@@ -60,11 +59,11 @@ public class Binding {
         this.attributeKey = attributeKey;
     }
 
-    public ProteusView<View> getProteusView() {
+    public ProteusView getProteusView() {
         return proteusView;
     }
 
-    public void setProteusView(ProteusView<View> proteusView) {
+    public void setProteusView(ProteusView proteusView) {
         this.proteusView = proteusView;
     }
 
@@ -76,12 +75,12 @@ public class Binding {
         this.attributeValue = attributeValue;
     }
 
-    public ViewGroup getParentView() {
-        return parentView;
+    public ProteusView getParent() {
+        return parentProteusView;
     }
 
-    public void setParentView(ViewGroup parentView) {
-        this.parentView = parentView;
+    public void setParent(ProteusView parentProteusView) {
+        this.parentProteusView = parentProteusView;
     }
 
     public String getBindingName() {

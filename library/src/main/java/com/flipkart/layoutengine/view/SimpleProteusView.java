@@ -15,13 +15,15 @@ import java.util.ArrayList;
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
 public class SimpleProteusView implements ProteusView {
+    protected ProteusView parent;
     protected View view;
     protected int index;
     protected ArrayList<ProteusView<View>> children;
 
-    public SimpleProteusView(View view, int index) {
+    public SimpleProteusView(View view, int index, ProteusView parent) {
         this.view = view;
         this.index = index;
+        this.parent = parent;
     }
 
     @Override
@@ -31,6 +33,11 @@ public class SimpleProteusView implements ProteusView {
 
     public int getIndex() {
         return this.index;
+    }
+
+    @Override
+    public ProteusView getParent() {
+        return this.parent;
     }
 
     @Override
