@@ -118,7 +118,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         }
 
         // create the proteus view to return
-        ProteusView proteusViewToReturn = createProteusViewToReturn(createdView);
+        ProteusView proteusViewToReturn = createProteusViewToReturn(createdView, childIndex);
         prepareView(proteusViewToReturn, context);
 
         /**
@@ -185,8 +185,8 @@ class SimpleLayoutBuilder implements LayoutBuilder {
         return proteusViewToReturn;
     }
 
-    protected ProteusView createProteusViewToReturn(View createdView) {
-        return new SimpleProteusView(createdView);
+    protected ProteusView createProteusViewToReturn(View createdView, int index) {
+        return new SimpleProteusView(createdView, index);
     }
 
     protected void prepareView(ProteusView proteusView, ParserContext parserContext) {

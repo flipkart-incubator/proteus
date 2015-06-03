@@ -226,8 +226,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ProteusView createProteusViewToReturn(View createdView) {
-        return new DataProteusView(new SimpleProteusView(createdView));
+    protected ProteusView createProteusViewToReturn(View createdView, int index) {
+        return new DataProteusView(new SimpleProteusView(createdView, index));
     }
 
     @Override

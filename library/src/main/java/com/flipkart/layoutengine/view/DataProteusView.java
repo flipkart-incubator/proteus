@@ -24,18 +24,14 @@ public class DataProteusView extends SimpleProteusView {
 
     /**
      * This Array holds a references to the {@link com.flipkart.layoutengine.binding.Binding} of
-     * this {@link DataProteusView}. This map is used to update the data associated with the
+     * this {@link DataProteusView}. This array is used to update the data associated with the
      * {@link android.view.View}
-     * example:
-     * <pre>
-     * {@literal <}"$product.name", bindingObjectOfThisProperty{@literal >}
-     * </pre>
      */
     private ArrayList<Binding> bindings;
     private ParserContext parserContext;
 
     public DataProteusView(ProteusView proteusView) {
-        super(proteusView.getView());
+        super(proteusView.getView(), proteusView.getIndex());
         this.children = proteusView.getChildren();
         if (proteusView instanceof DataProteusView) {
             parserContext = ((DataProteusView) proteusView).getParserContext();
@@ -91,7 +87,6 @@ public class DataProteusView extends SimpleProteusView {
      *                {@link com.flipkart.layoutengine.binding.Binding}
      */
     private void handleBinding(Binding binding) {
-        int index = binding.getIndex();
 
         if (binding.hasRegEx()) {
             parserContext.getLayoutBuilder().handleAttribute(
@@ -100,7 +95,7 @@ public class DataProteusView extends SimpleProteusView {
                     binding.getAttributeKey(),
                     null,
                     Utils.getStringAsJsonElement(binding.getAttributeValue()),
-                    binding.getProteusView(),
+                    this,
                     binding.getParentView(),
                     index);
         } else {
@@ -111,7 +106,7 @@ public class DataProteusView extends SimpleProteusView {
                     binding.getAttributeKey(),
                     null,
                     dataValue,
-                    binding.getProteusView(),
+                    this,
                     binding.getParentView(),
                     index);
         }
