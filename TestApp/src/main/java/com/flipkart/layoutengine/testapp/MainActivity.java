@@ -62,7 +62,7 @@ public class MainActivity extends ActionBarActivity {
         JsonObject layoutProvider = new JsonObject();
         layoutProvider.add("SellerWidget", sellerWidget);
 
-        this.builder = LayoutBuilderFactory.getDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutProvider));
+        this.builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutProvider));
 
         builder.setListener(createCallback());
 

@@ -35,6 +35,13 @@
       "layout_marginBottom": "10dp",
       "text": "~({{product.subTitle}})",
       "textColor": "#444444"
+    },{
+      "type": "TextView",
+      "layout_width": "wrap_content",
+      "layout_height": "wrap_content",
+      "layout_marginBottom": "10dp",
+      "text": "~({{product.float}}$(number))",
+      "textColor": "#444444"
     }, {
       "type": "LinearLayout",
       "layout_width": "wrap_content",
@@ -60,6 +67,13 @@
         "text": "~({{product.rating.ratingCount}})",
         "textColor": "#444444"
       }]
+    }, {
+      "type": "ProgressBar",
+      "layout_width": "match_parent",
+      "layout_height": "wrap_content",
+      "progressTint": "#88aa33",
+      "progress": "$product.rating.4",
+      "max": "$product.rating.ratingCount"
     }]
   }, {
     "type": "LinearLayout",
