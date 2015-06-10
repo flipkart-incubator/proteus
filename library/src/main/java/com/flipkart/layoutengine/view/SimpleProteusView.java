@@ -42,6 +42,9 @@ public class SimpleProteusView implements ProteusView {
 
     @Override
     public void addChild(ProteusView view) {
+        if (view == null) {
+            return;
+        }
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
