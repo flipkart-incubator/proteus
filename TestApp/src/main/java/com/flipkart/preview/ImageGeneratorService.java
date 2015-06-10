@@ -46,7 +46,7 @@ public class ImageGeneratorService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handler = new Handler();
-        builder = LayoutBuilderFactory.getSimpleLayoutBuilder(getBaseContext());
+        builder = new LayoutBuilderFactory().getSimpleLayoutBuilder(getBaseContext());
         builder.setSynchronousRendering(true);
         startPollingServer(intent);
         return Service.START_STICKY;
