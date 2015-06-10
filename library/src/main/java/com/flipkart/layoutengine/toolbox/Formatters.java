@@ -17,7 +17,7 @@ public class Formatters {
     private static Formatter NumberFormatter = new Formatter() {
         @Override
         public String format(String value) {
-            int valueAsNumber = Integer.parseInt(value);
+            double valueAsNumber = Double.parseDouble(value);
             NumberFormat numberFormat = new DecimalFormat("#,###");
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
                 numberFormat.setRoundingMode(RoundingMode.FLOOR);
