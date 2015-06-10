@@ -28,7 +28,7 @@ import java.util.Map;
 public abstract class Parser<T extends View> implements LayoutHandler<T> {
 
     private static final String TAG = Parser.class.getSimpleName();
-    private final Class<T> viewClass;
+    protected final Class<T> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<String, AttributeProcessor>();
 
     public Parser(Class<T> viewClass) {
@@ -71,8 +71,8 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
      * @param viewClass
      * @return
      */
-    protected Constructor<? extends View> getContextConstructor(Class<T> viewClass) {
-        Constructor<? extends View> constructor = constructorCache.get(viewClass);
+    protected Constructor<? extends T> getContextConstructor(Class<T> viewClass) {
+        Constructor<? extends T> constructor = (Constructor<? extends T>) constructorCache.get(viewClass);
         if (constructor == null) {
             try {
                 constructor = viewClass.getDeclaredConstructor(Context.class);

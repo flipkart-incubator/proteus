@@ -6,12 +6,6 @@ package com.flipkart.layoutengine.parser;
  */
 public class Attributes {
 
-
-    public static class Webview {
-        public static Attribute Url = new Attribute("url");
-
-    }
-
     public static class View {
 
         /**
@@ -74,6 +68,11 @@ public class Attributes {
         public static Attribute ContentDescription = new Attribute("contentDescription");
         public static Attribute Clickable = new Attribute("clickable");
         public static Attribute OnClick = new Attribute("onClick");
+
+    }
+
+    public static class Webview {
+        public static Attribute Url = new Attribute("url");
 
     }
 
@@ -168,6 +167,13 @@ public class Attributes {
 
     public static class HorizontalScrollView {
         public static Attribute FillViewPort = new Attribute("fillViewPort");
+    }
+
+    public static class ProgressBar {
+        public static Attribute Progress = new Attribute("progress");
+        public static Attribute Max = new Attribute("max");
+        public static Attribute ProgressTint = new Attribute("progressTint");
+
     }
 
     public static class Attribute {
