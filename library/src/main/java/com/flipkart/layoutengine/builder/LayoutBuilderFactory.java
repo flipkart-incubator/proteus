@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.builder;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.flipkart.layoutengine.parser.ViewParser;
 import com.flipkart.layoutengine.parser.custom.ButtonParser;
@@ -13,6 +14,7 @@ import com.flipkart.layoutengine.parser.custom.ImageButtonParser;
 import com.flipkart.layoutengine.parser.custom.ImageViewParser;
 import com.flipkart.layoutengine.parser.custom.LinearLayoutParser;
 import com.flipkart.layoutengine.parser.custom.NetworkImageViewParser;
+import com.flipkart.layoutengine.parser.custom.ProgressBarParser;
 import com.flipkart.layoutengine.parser.custom.RatingBarParser;
 import com.flipkart.layoutengine.parser.custom.RelativeLayoutParser;
 import com.flipkart.layoutengine.parser.custom.ScrollViewParser;
@@ -28,12 +30,9 @@ import com.flipkart.layoutengine.provider.Provider;
  */
 public class LayoutBuilderFactory {
 
-    private static SimpleLayoutBuilder simpleLayoutBuilderInstance;
-    private static DataParsingLayoutBuilder dataParsingLayoutBuilderInstance;
-    private static DataAndViewParsingLayoutBuilder dataAndViewParsingLayoutBuilderInstance;
-
-    private LayoutBuilderFactory() {
-    }
+    private SimpleLayoutBuilder simpleLayoutBuilderInstance;
+    private DataParsingLayoutBuilder dataParsingLayoutBuilderInstance;
+    private DataAndViewParsingLayoutBuilder dataAndViewParsingLayoutBuilderInstance;
 
     /**
      * Returns a layout builder which can parse @data blocks as well as custom view blocks.
@@ -42,8 +41,8 @@ public class LayoutBuilderFactory {
      * @param context {@link Context} of the activity
      * @return A new {@link DataAndViewParsingLayoutBuilder}
      */
-    public static synchronized DataAndViewParsingLayoutBuilder
-    getDataAndViewParsingLayoutBuilder(Context context, Provider viewProvider) {
+    public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Context context,
+                                                                              Provider viewProvider) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
             dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(context, viewProvider);
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
@@ -57,7 +56,7 @@ public class LayoutBuilderFactory {
      * @param context {@link Context} of the activity
      * @return A new {@link DataParsingLayoutBuilder}
      */
-    public static synchronized DataParsingLayoutBuilder getDataParsingLayoutBuilder(Context context) {
+    public DataParsingLayoutBuilder getDataParsingLayoutBuilder(Context context) {
         if (dataParsingLayoutBuilderInstance == null) {
             dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder(context);
             registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
@@ -71,7 +70,7 @@ public class LayoutBuilderFactory {
      * @param context {@link Context} of the activity
      * @return A new {@link SimpleLayoutBuilder}
      */
-    public static synchronized SimpleLayoutBuilder getSimpleLayoutBuilder(Context context) {
+    public SimpleLayoutBuilder getSimpleLayoutBuilder(Context context) {
         if (simpleLayoutBuilderInstance == null) {
             simpleLayoutBuilderInstance = new SimpleLayoutBuilder(context);
             registerBuiltInHandlers(simpleLayoutBuilderInstance);
@@ -85,7 +84,7 @@ public class LayoutBuilderFactory {
      *
      * @param layoutBuilder The layout builder which will have handlers registered to it.
      */
-    protected static void registerBuiltInHandlers(LayoutBuilder layoutBuilder) {
+    protected void registerBuiltInHandlers(LayoutBuilder layoutBuilder) {
         ViewParser viewParser = new ViewParser(View.class);
         ImageViewParser imageViewParser = new ImageViewParser(viewParser);
         ImageButtonParser imageButtonParser = new ImageButtonParser(imageViewParser);
@@ -102,6 +101,7 @@ public class LayoutBuilderFactory {
         WebViewParser webViewParser = new WebViewParser(viewParser);
         RatingBarParser ratingBarParser = new RatingBarParser(viewParser);
         CheckBoxParser checkBoxParser = new CheckBoxParser(buttonParser);
+        ProgressBarParser progressBarParser = new ProgressBarParser(viewParser);
 
         layoutBuilder.registerHandler("View", viewParser);
         layoutBuilder.registerHandler("RelativeLayout", relativeLayoutParser);
@@ -119,6 +119,7 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("WebView", webViewParser);
         layoutBuilder.registerHandler("RatingBar", ratingBarParser);
         layoutBuilder.registerHandler("CheckBox", checkBoxParser);
+        layoutBuilder.registerHandler("ProgressBar", progressBarParser);
     }
 
 }

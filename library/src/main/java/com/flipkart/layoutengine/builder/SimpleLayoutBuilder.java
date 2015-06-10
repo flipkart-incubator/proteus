@@ -40,7 +40,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
     private Context context;
 
-    public SimpleLayoutBuilder(Context context) {
+    protected SimpleLayoutBuilder(Context context) {
         this.context = context;
     }
 

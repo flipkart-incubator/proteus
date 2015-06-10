@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     public static final String DATA_CONTEXT = "dataContext";
 
-    DataParsingLayoutBuilder(Context context) {
+    protected DataParsingLayoutBuilder(Context context) {
         super(context);
     }
 
