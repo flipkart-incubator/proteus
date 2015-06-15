@@ -10,97 +10,117 @@
     "sellers": "sellers_1",
     "product": "product"
   },
-  "children": [{
-    "type": "LinearLayout",
-    "android": "http://schemas.android.com/apk/res/android",
-    "layout_width": "match_parent",
-    "layout_height": "wrap_content",
-    "background": "#ffffff",
-    "orientation": "vertical",
-    "paddingBottom": "16dp",
-    "paddingLeft": "16dp",
-    "paddingRight": "16dp",
-    "paddingTop": "16dp",
-    "children": [{
-      "type": "TextView",
-      "layout_width": "wrap_content",
-      "layout_height": "wrap_content",
-      "layout_marginBottom": "10dp",
-      "text": "$product.title",
-      "textColor": "#444444"
-    }, {
-      "type": "TextView",
-      "layout_width": "wrap_content",
-      "layout_height": "wrap_content",
-      "layout_marginBottom": "10dp",
-      "text": "~({{product.subTitle}})",
-      "textColor": "#444444"
-    },{
-      "type": "TextView",
-      "layout_width": "wrap_content",
-      "layout_height": "wrap_content",
-      "layout_marginBottom": "10dp",
-      "text": "~({{product.float}}$(number))",
-      "textColor": "#444444"
-    }, {
+  "children": [
+    {
       "type": "LinearLayout",
-      "layout_width": "wrap_content",
+      "android": "http://schemas.android.com/apk/res/android",
+      "layout_width": "match_parent",
       "layout_height": "wrap_content",
-      "orientation": "horizontal",
-      "children": [{
-        "type": "RatingBar",
-        "layout_width": "wrap_content",
-        "layout_height": "12dp",
-        "layout_marginLeft": "5dp",
-        "focusableInTouchMode": "false",
-        "isIndicator": "true",
-        "numStars": "5",
-        "minHeight": "22dp",
-        "layout_marginTop": "3dp",
-        "maxHeight": "22dp",
-        "progressDrawable": {
-          "type": "layer-list",
+      "background": "#ffffff",
+      "orientation": "vertical",
+      "paddingBottom": "16dp",
+      "paddingLeft": "16dp",
+      "paddingRight": "16dp",
+      "paddingTop": "16dp",
+      "children": [
+        {
+          "type": "TextView",
+          "layout_width": "wrap_content",
+          "layout_height": "wrap_content",
+          "layout_marginBottom": "10dp",
+          "text": "$product.title",
+          "textColor": "#444444"
+        },
+        {
+          "type": "TextView",
+          "layout_width": "wrap_content",
+          "layout_height": "wrap_content",
+          "layout_marginBottom": "10dp",
+          "text": "~({{product.subTitle}})",
+          "textColor": "#444444"
+        },
+        {
+          "type": "TextView",
+          "layout_width": "wrap_content",
+          "layout_height": "wrap_content",
+          "layout_marginBottom": "10dp",
+          "text": "~({{product.float}}$(number))",
+          "textColor": "#444444"
+        },
+        {
+          "type": "LinearLayout",
+          "layout_width": "wrap_content",
+          "layout_height": "wrap_content",
+          "orientation": "horizontal",
           "children": [
             {
-              "type": "item",
-              "id": "@+android:id/background",
-              "drawable": "@drawable/rating_star_grey"
+              "type": "RatingBar",
+              "layout_width": "wrap_content",
+              "layout_height": "12dp",
+              "layout_marginLeft": "5dp",
+              "focusableInTouchMode": "false",
+              "isIndicator": "true",
+              "numStars": "5",
+              "minHeight": "22dp",
+              "layout_marginTop": "3dp",
+              "maxHeight": "22dp",
+              "progressDrawable": {
+                "type": "layer-list",
+                "children": [
+                  {
+                    "type": "item",
+                    "id": "@+android:id/background",
+                    "drawable": "@drawable/rating_star_grey"
+                  },
+                  {
+                    "type": "item",
+                    "id": "@+android:id/secondaryProgress",
+                    "drawable": "@drawable/rating_star_grey"
+                  },
+                  {
+                    "type": "item",
+                    "id": "@+android:id/progress",
+                    "drawable": "@drawable/rating_star"
+                  }
+                ]
+              },
+              "rating": "$product.rating.averageRating"
             },
             {
-              "type": "item",
-              "id": "@+android:id/secondaryProgress",
-              "drawable": "@drawable/rating_star_grey"
-            },
-            {
-              "type": "item",
-              "id": "@+android:id/progress",
-              "drawable": "@drawable/rating_star"
+              "type": "TextView",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "text": "~({{product.rating.ratingCount}})",
+              "textColor": "#444444"
             }
           ]
         },
-        "rating": "$product.rating.averageRating"
-      }, {
-        "type": "TextView",
-        "layout_width": "wrap_content",
-        "layout_height": "wrap_content",
-        "text": "~({{product.rating.ratingCount}})",
-        "textColor": "#444444"
-      }]
-    }, {
-      "type": "ProgressBar",
+        {
+          "type": "ProgressBar",
+          "layout_width": "match_parent",
+          "layout_height": "wrap_content",
+          "progressTint": "#88aa33",
+          "progress": "$product.rating.4",
+          "max": "$product.rating.ratingCount"
+        },
+        {
+          "type": "TextView",
+          "layout_width": "wrap_content",
+          "layout_height": "wrap_content",
+          "layout_marginBottom": "10dp",
+          "text": "~({{product.date}}$(date))",
+          "textColor": "#444444"
+        }
+      ]
+    },
+    {
+      "type": "LinearLayout",
+      "android": "http://schemas.android.com/apk/res/android",
       "layout_width": "match_parent",
       "layout_height": "wrap_content",
-      "progressTint": "#88aa33",
-      "progress": "$product.rating.4",
-      "max": "$product.rating.ratingCount"
-    }]
-  }, {
-    "type": "LinearLayout",
-    "android": "http://schemas.android.com/apk/res/android",
-    "layout_width": "match_parent",
-    "layout_height": "wrap_content",
-    "orientation": "vertical",
-    "children": "sellers",
-    "childType": "SellerWidget"
-  }]
+      "orientation": "vertical",
+      "children": "sellers",
+      "childType": "SellerWidget"
+    }
+  ]
 }
