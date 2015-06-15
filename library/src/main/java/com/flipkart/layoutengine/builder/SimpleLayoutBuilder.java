@@ -7,8 +7,6 @@ import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
-import com.flipkart.layoutengine.provider.GsonProvider;
-import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.view.SimpleProteusView;
@@ -111,7 +109,7 @@ class SimpleLayoutBuilder implements LayoutBuilder {
          */
         final View createdView;
         if (existingView == null) {
-            ViewGroup parentViewGroup = (ViewGroup)parent.getView();
+            ViewGroup parentViewGroup = (ViewGroup) parent.getView();
             createdView = createView(context, parentViewGroup, handler, currentViewJsonObject);
             handler.setupView(parentViewGroup, createdView);
         } else {
@@ -164,13 +162,19 @@ class SimpleLayoutBuilder implements LayoutBuilder {
 
         if (children != null && children.size() > 0) {
             List<ProteusView> childrenToAdd = new ArrayList<>();
+            JsonObject childLayout = null;
+            if (childViewElement != null) {
+                childLayout = onChildTypeLayoutRequired(context, childViewElement.getAsString(),
+                        currentViewJsonObject, proteusViewToReturn);
+            }
             for (int i = 0; i < children.size(); i++) {
                 JsonObject childObject = children.get(i).getAsJsonObject();
-                if (childViewElement != null) {
+                if (childLayout == null && childViewElement != null) {
                     // propagate the value of 'childView' to the recursive calls
                     childObject.add(TYPE, childViewElement);
+                } else if (childLayout != null) {
+                    childObject = childLayout;
                 }
-
                 // build the child views
                 ProteusView childView = buildImpl(context, proteusViewToReturn, childObject, null, i);
 
@@ -217,6 +221,14 @@ class SimpleLayoutBuilder implements LayoutBuilder {
                                                    int childIndex) {
         if (listener != null) {
             return listener.onUnknownViewType(context, viewType, viewJsonObject, parent, childIndex);
+        }
+        return null;
+    }
+
+    protected JsonObject onChildTypeLayoutRequired(ParserContext context, String viewType,
+                                                   JsonObject parentViewJsonObject, ProteusView parent) {
+        if (listener != null) {
+            return listener.onChildTypeLayoutRequired(context, viewType, parentViewJsonObject, parent);
         }
         return null;
     }

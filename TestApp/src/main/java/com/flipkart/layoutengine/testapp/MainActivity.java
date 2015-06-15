@@ -101,6 +101,12 @@ public class MainActivity extends ActionBarActivity {
             }
 
             @Override
+            public JsonObject onChildTypeLayoutRequired(ParserContext context, String viewType,
+                                                        JsonObject parentViewJsonObject, ProteusView parent) {
+                return null;
+            }
+
+            @Override
             public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
                                                     ParserContext context, JsonObject viewJsonObject,
                                                     ProteusView parent, int childIndex) {
