@@ -1,12 +1,14 @@
 package com.flipkart.layoutengine.toolbox;
 
-import android.annotation.TargetApi;
 import android.os.Build;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -48,6 +50,24 @@ public class Formatters {
         }
     };
 
+    private static Formatter DateFormatter = new Formatter() {
+        @Override
+        public String format(String value) {
+            try {
+                // 2015-06-18 12:01:37
+                Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(value);
+                return new SimpleDateFormat("d MMM, E").format(date);
+            } catch (Exception e) {
+                return  value;
+            }
+        }
+
+        @Override
+        public String getName() {
+            return "date";
+        }
+    };
+
     private static Formatter NOOP = new Formatter() {
         @Override
         public String format(String value) {
@@ -64,6 +84,7 @@ public class Formatters {
 
     static {
         formatters.put(NumberFormatter.getName(), NumberFormatter);
+        formatters.put(DateFormatter.getName(), DateFormatter);
     }
 
     public static Formatter get(String formatterName) {
