@@ -74,8 +74,6 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
                     }
 
                 }
-
-
             }
             setDrawable(view, stateListDrawable);
         } else if ("layer-list".equals(drawableType)) {
@@ -90,18 +88,13 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
                     ResourceReferenceProcessor<T> processor = new ResourceReferenceProcessor<T>(context) {
                         @Override
                         public void setDrawable(T view, Drawable drawable) {
-                            drawables.add(new Pair<Integer, Drawable>(layerPair.first, drawable));
+                            drawables.add(new Pair<>(layerPair.first, drawable));
                             onLayerDrawableFinish(view, drawables);
-
                         }
                     };
                     processor.handle(parserContext, attributeKey, new JsonPrimitive(layerPair.second), view);
-
                 }
-
-
             }
-
         }
     }
 
