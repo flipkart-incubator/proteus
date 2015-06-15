@@ -50,15 +50,34 @@
       "children": [{
         "type": "RatingBar",
         "layout_width": "wrap_content",
-        "layout_height": "8dp",
-        "layout_marginRight": "5dp",
+        "layout_height": "12dp",
+        "layout_marginLeft": "5dp",
         "focusableInTouchMode": "false",
         "isIndicator": "true",
         "numStars": "5",
-        "minHeight": "11dp",
-        "layout_marginTop": "7dp",
-        "progressDrawable": "@drawable/rating_starts",
-        "maxHeight": "11dp",
+        "minHeight": "22dp",
+        "layout_marginTop": "3dp",
+        "maxHeight": "22dp",
+        "progressDrawable": {
+          "type": "layer-list",
+          "children": [
+            {
+              "type": "item",
+              "id": "@+android:id/background",
+              "drawable": "@drawable/rating_star_grey"
+            },
+            {
+              "type": "item",
+              "id": "@+android:id/secondaryProgress",
+              "drawable": "@drawable/rating_star_grey"
+            },
+            {
+              "type": "item",
+              "id": "@+android:id/progress",
+              "drawable": "@drawable/rating_star"
+            }
+          ]
+        },
         "rating": "$product.rating.averageRating"
       }, {
         "type": "TextView",
