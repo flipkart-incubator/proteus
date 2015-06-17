@@ -23,7 +23,6 @@ import com.google.gson.JsonObject;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * A layout builder which can parse data bindings before passing it on to {@link SimpleLayoutBuilder}
@@ -217,21 +216,38 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     private DataContext getNewDataContext(JsonObject currentScope, DataContext oldDataContext, int childIndex) {
-        JsonObject newRoot = new JsonObject();
-        Map<String, String> scope = new HashMap<>();
-        Map<String, String> reverseScope = new HashMap<>();
+        Map<String, String> newScope = new HashMap<>();
+        JsonObject newData = new JsonObject();
+        Map<String, String> oldScope = oldDataContext.getScope();
+        Map<String, String> oldReverseScope = oldDataContext.getReverseScopeMap();
+        Map<String, String> newReverseScope = new HashMap<>();
         GsonProvider oldDataProvider = oldDataContext.getDataProvider();
+        JsonObject oldData = oldDataProvider.getData().getAsJsonObject();
+
+        if (oldData == null) {
+            oldData = new JsonObject();
+        }
 
         for (Map.Entry<String, JsonElement> entry : currentScope.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue().getAsString();
             JsonElement data = getElementFromData(value, oldDataProvider, childIndex);
-            newRoot.add(key, data);
-            scope.put(key, value);
+            newData.add(key, data);
+            newScope.put(key, value);
             String unaliasedValue = value.replace(GsonProvider.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
-            reverseScope.put(unaliasedValue, key);
+            newReverseScope.put(unaliasedValue, key);
         }
-        return new DataContext(new GsonProvider(newRoot), scope, reverseScope, oldDataContext);
+        if (oldScope != null) {
+            newScope.putAll(oldScope);
+        }
+
+        if (oldReverseScope != null) {
+            newReverseScope.putAll(oldReverseScope);
+        }
+
+        Utils.addElements(newData, oldData.entrySet(), false);
+
+        return new DataContext(new GsonProvider(newData), newScope, newReverseScope, oldDataContext);
     }
 
     protected JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
