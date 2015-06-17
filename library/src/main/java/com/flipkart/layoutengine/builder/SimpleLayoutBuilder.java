@@ -64,8 +64,8 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     @Override
-    public ProteusView build(View parent, JsonObject layout, JsonObject data) {
-        return buildImpl(createParserContext(data), new SimpleProteusView(parent, 0, null), layout, null, 0);
+    public ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex) {
+        return buildImpl(createParserContext(data), new SimpleProteusView(parent, 0, null), layout, null, childIndex);
     }
 
     protected ParserContext createParserContext(JsonObject data) {
