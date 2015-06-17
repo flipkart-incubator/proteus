@@ -72,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
 
         long startTime = System.currentTimeMillis();
 
-        this.proteusView = (DataProteusView) builder.build(container, layoutData, productData);
+        this.proteusView = (DataProteusView) builder.build(container, layoutData, productData, 0);
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
@@ -170,7 +170,7 @@ public class MainActivity extends ActionBarActivity {
 
                 startTime = System.currentTimeMillis();
 
-                this.proteusView = (DataProteusView) builder.build(container, layout, data);
+                this.proteusView = (DataProteusView) builder.build(container, layout, data, 0);
 
                 stopTime = System.currentTimeMillis();
                 elapsedTime = stopTime - startTime;

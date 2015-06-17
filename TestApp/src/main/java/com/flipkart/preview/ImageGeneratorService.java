@@ -102,7 +102,7 @@ public class ImageGeneratorService extends Service {
         frameLayout.setBackgroundColor(Color.WHITE);
         View view;
         try {
-            view = builder.build(frameLayout, layout, null).getView();
+            view = builder.build(frameLayout, layout, null, 0).getView();
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
