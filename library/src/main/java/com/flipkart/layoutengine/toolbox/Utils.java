@@ -5,15 +5,16 @@ import android.util.Log;
 import com.flipkart.layoutengine.provider.Provider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.Map;
 
 /**
- * Created by Aditya Sharat on 08-04-2015.
+ * @author Aditya Sharat
  */
 public class Utils {
-
-    public static final String TAG = Utils.class.getSimpleName();
+    public static final String LIB_NAME = "proteus";
+    public static final String TAG = LIB_NAME + ":" + Utils.class.getSimpleName();
 
     public static JsonElement getElementFromData(String dataPath, Provider dataProvider, int childIndex) {
         if (dataPath != null && dataPath.length() > 0) {
@@ -41,21 +42,15 @@ public class Utils {
     }
 
     public static JsonElement getStringAsJsonElement(String string) {
-        JsonObject temp = new JsonObject();
-        temp.addProperty("value", string);
-        return temp.get("value");
+        return new JsonPrimitive(string);
     }
 
     public static JsonElement getNumberAsJsonElement(Number number) {
-        JsonObject temp = new JsonObject();
-        temp.addProperty("value", number);
-        return temp.get("value");
+        return new JsonPrimitive(number);
     }
 
     public static JsonElement getBooleanAsJsonElement(Boolean aBoolean) {
-        JsonObject temp = new JsonObject();
-        temp.addProperty("value", aBoolean);
-        return temp.get("value");
+        return new JsonPrimitive(aBoolean);
     }
 
     public static String format(String value, String formatterName) {
