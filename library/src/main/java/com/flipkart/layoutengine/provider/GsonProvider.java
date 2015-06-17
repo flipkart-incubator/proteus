@@ -39,7 +39,7 @@ public class GsonProvider implements Provider {
         JsonArray tempArray = null;
 
         for (String segment : segments) {
-            if (elementToReturn == null) {
+            if (elementToReturn == null || elementToReturn.isJsonNull()) {
                 return null;
             }
             if ("".equals(segment)) {
