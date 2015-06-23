@@ -15,12 +15,14 @@ public class DataContext {
     private Map<String, String> reverseScope;
     private Map<String, String> scope;
     private DataContext parent;
+    private int index;
 
-    public DataContext(GsonProvider dataProvider, Map<String, String> scope, Map<String, String> reverseScope, DataContext parent) {
+    public DataContext(GsonProvider dataProvider, Map<String, String> scope, Map<String, String> reverseScope, DataContext parent, int index) {
         this.dataProvider = dataProvider;
         this.reverseScope = reverseScope;
         this.scope = scope;
         this.parent = parent;
+        this.index = index;
     }
 
     public Map<String, String> getReverseScopeMap() {
@@ -79,5 +81,13 @@ public class DataContext {
         String aliasedPath = dataPath.replaceFirst(Pattern.quote(segments[0]), alias);
         return aliasedPath;
 
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }
