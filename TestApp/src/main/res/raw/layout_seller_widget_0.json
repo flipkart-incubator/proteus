@@ -13,7 +13,7 @@
       "type": "TextView",
       "layout_width": "wrap_content",
       "layout_height": "wrap_content",
-      "text": "~ $index {{seller.name}} [{{seller.rating}}/5]"
+      "text": "~ {{$index}}$(index) {{seller.name}} [{{seller.rating}}/5]"
     },
     {
       "type": "TextView",
