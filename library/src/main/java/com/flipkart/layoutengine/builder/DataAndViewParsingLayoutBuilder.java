@@ -53,7 +53,8 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
                                              ParserContext parserContext, JsonObject viewLayoutObject,
                                              ProteusView parent, int childIndex) {
         if (listener != null) {
-            listener.onViewBuiltFromViewProvider(createdView, viewType, parserContext, viewLayoutObject, parent, childIndex);
+            listener.onViewBuiltFromViewProvider(createdView, viewType, parserContext, viewLayoutObject,
+                    parent, childIndex);
         }
     }
 }
