@@ -13,9 +13,8 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 
 /**
- * A {@link ProteusView} implementation to update the data
- * associated with a {@link android.view.View} built using a
- * {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
+ * A {@link ProteusView} implementation to update the data associated with a {@link android.view.View}
+ * built using a {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
  *
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
@@ -24,9 +23,7 @@ public class DataProteusView extends SimpleProteusView {
     private boolean isViewUpdating = false;
 
     /**
-     * This Array holds a references to the {@link com.flipkart.layoutengine.binding.Binding} of
-     * this {@link DataProteusView}. This array is used to update the data associated with the
-     * {@link android.view.View}
+     * This Array holds a to the {@link Binding}s of this {@link DataProteusView}.
      */
     private ArrayList<Binding> bindings;
     private ParserContext parserContext;

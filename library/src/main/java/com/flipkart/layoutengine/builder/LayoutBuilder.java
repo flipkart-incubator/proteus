@@ -71,7 +71,8 @@ public interface LayoutBuilder {
      *
      * @param parent The intended parent view for the {@link View} that will be built.
      * @param layout The {@link JsonObject} which defines the layout for the {@link View} to be built.
-     * @param data   The {@link JsonObject} which will be used to replace bindings with values in the {@link View}
+     * @param data   The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
+     * @param childIndex The index of this view in its parent. Pass 0 if it has no parent.
      * @return A {@link ProteusView} with the built view, an array of its children and optionally its bindings.
      */
     ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex);
