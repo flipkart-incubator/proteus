@@ -68,6 +68,24 @@ public class Formatters {
         }
     };
 
+    private static Formatter IndexFormatter = new Formatter() {
+        @Override
+        public String format(String value) {
+            int valueAsNumber;
+            try {
+                valueAsNumber = Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                return value;
+            }
+            return String.valueOf(valueAsNumber + 1);
+        }
+
+        @Override
+        public String getName() {
+            return "index";
+        }
+    };
+
     private static Formatter NOOP = new Formatter() {
         @Override
         public String format(String value) {
@@ -85,6 +103,7 @@ public class Formatters {
     static {
         formatters.put(NumberFormatter.getName(), NumberFormatter);
         formatters.put(DateFormatter.getName(), DateFormatter);
+        formatters.put(IndexFormatter.getName(), IndexFormatter);
     }
 
     public static Formatter get(String formatterName) {
