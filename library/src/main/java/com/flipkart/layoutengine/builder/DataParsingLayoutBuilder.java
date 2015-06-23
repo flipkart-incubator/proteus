@@ -103,6 +103,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 (attributeValue.charAt(0) == DataParsingAdapter.DATA_PREFIX ||
                         attributeValue.charAt(0) == DataParsingAdapter.REGEX_PREFIX)) {
 
+            // replace CHILD_INDEX_REFERENCE reference with index value
+            attributeValue = attributeValue.replace(GsonProvider.CHILD_INDEX_REFERENCE,
+                    String.valueOf(parserContext.getDataContext().getIndex()));
+
             if (attributeValue.charAt(0) == DataParsingAdapter.REGEX_PREFIX) {
                 Matcher regexMatcher = DataParsingAdapter.REGEX_PATTERN.matcher(attributeValue);
                 String finalValue = attributeValue;
@@ -140,7 +144,11 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             childIndex,
                             true);
                 }
+
+                // remove the REGEX_PREFIX
                 finalValue = finalValue.substring(1);
+
+                // return as a JSONPrimitive
                 jsonDataValue = Utils.getStringAsJsonElement(finalValue);
 
             } else if (attributeValue.charAt(0) == DataParsingAdapter.DATA_PREFIX) {
@@ -247,7 +255,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         Utils.addElements(newData, oldData.entrySet(), false);
 
-        return new DataContext(new GsonProvider(newData), newScope, newReverseScope, oldDataContext);
+        return new DataContext(new GsonProvider(newData), newScope, newReverseScope, oldDataContext, childIndex);
     }
 
     protected JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
