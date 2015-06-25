@@ -1,6 +1,6 @@
 package com.flipkart.layoutengine;
 
-import com.flipkart.layoutengine.provider.GsonProvider;
+import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 
@@ -11,13 +11,13 @@ import java.util.regex.Pattern;
  * @author Aditya Sharat
  */
 public class DataContext {
-    private GsonProvider dataProvider;
+    private JsonProvider dataProvider;
     private Map<String, String> reverseScope;
     private Map<String, String> scope;
     private DataContext parent;
     private int index;
 
-    public DataContext(GsonProvider dataProvider, Map<String, String> scope, Map<String, String> reverseScope, DataContext parent, int index) {
+    public DataContext(JsonProvider dataProvider, Map<String, String> scope, Map<String, String> reverseScope, DataContext parent, int index) {
         this.dataProvider = dataProvider;
         this.reverseScope = reverseScope;
         this.scope = scope;
@@ -33,11 +33,11 @@ public class DataContext {
         this.reverseScope = reverseScopeMap;
     }
 
-    public GsonProvider getDataProvider() {
+    public JsonProvider getDataProvider() {
         return dataProvider;
     }
 
-    public void setDataProvider(GsonProvider dataProvider) {
+    public void setDataProvider(JsonProvider dataProvider) {
         this.dataProvider = dataProvider;
     }
 
@@ -65,9 +65,9 @@ public class DataContext {
     public static String getAliasedDataPath(String dataPath, Map<String, String> reverseScope, boolean isBindingPath) {
         String[] segments;
         if (isBindingPath) {
-            segments = dataPath.split(GsonProvider.DATA_PATH_DELIMITER);
+            segments = dataPath.split(JsonProvider.DATA_PATH_DELIMITER);
         } else {
-            segments = dataPath.split(GsonProvider.DATA_PATH_SIMPLE_DELIMITER);
+            segments = dataPath.split(JsonProvider.DATA_PATH_SIMPLE_DELIMITER);
         }
 
         if (reverseScope == null) {

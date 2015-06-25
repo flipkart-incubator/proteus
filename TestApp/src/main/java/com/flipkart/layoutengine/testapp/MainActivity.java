@@ -17,7 +17,7 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DataAndViewParsingLayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
-import com.flipkart.layoutengine.provider.GsonProvider;
+import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
@@ -62,7 +62,7 @@ public class MainActivity extends ActionBarActivity {
         JsonObject layoutProvider = new JsonObject();
         layoutProvider.add("SellerWidget", sellerWidget);
 
-        this.builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutProvider));
+        this.builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, new JsonProvider(layoutProvider));
 
         builder.setListener(createCallback());
 

@@ -6,13 +6,13 @@ import com.google.gson.JsonElement;
 /**
  * Created by kirankumar on 24/06/14.
  */
-public class GsonProvider implements Provider {
+public class JsonProvider implements Provider {
     private JsonElement rootElement;
     public static final String DATA_PATH_DELIMITER = "\\.|\\[|\\]";
     public static final String DATA_PATH_SIMPLE_DELIMITER = "\\.";
     public static final String CHILD_INDEX_REFERENCE = "$index";
 
-    public GsonProvider(JsonElement jsonElement) {
+    public JsonProvider(JsonElement jsonElement) {
         this.rootElement = jsonElement;
     }
 

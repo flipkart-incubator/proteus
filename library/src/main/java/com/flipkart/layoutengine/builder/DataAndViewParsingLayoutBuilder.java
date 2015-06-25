@@ -3,7 +3,7 @@ package com.flipkart.layoutengine.builder;
 import android.content.Context;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.provider.GsonProvider;
+import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -45,7 +45,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
             JsonObject viewProviderData = Utils.merge(viewProvider.getData().getAsJsonObject(), newViewProvider);
             viewProvider.setData(viewProviderData);
         } else {
-            viewProvider = new GsonProvider(newViewProvider);
+            viewProvider = new JsonProvider(newViewProvider);
         }
     }
 

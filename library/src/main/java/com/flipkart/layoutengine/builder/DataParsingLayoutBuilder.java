@@ -9,7 +9,7 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.DataParsingAdapter;
-import com.flipkart.layoutengine.provider.GsonProvider;
+import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.Formatters;
 import com.flipkart.layoutengine.toolbox.Utils;
@@ -55,7 +55,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     protected ParserContext createParserContext(JsonObject data) {
         ParserContext parserContext = super.createParserContext(data);
         if (data != null) {
-            parserContext.getDataContext().setDataProvider(new GsonProvider(data));
+            parserContext.getDataContext().setDataProvider(new JsonProvider(data));
         }
         return parserContext;
     }
@@ -104,7 +104,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         attributeValue.charAt(0) == DataParsingAdapter.REGEX_PREFIX)) {
 
             // replace CHILD_INDEX_REFERENCE reference with index value
-            attributeValue = attributeValue.replace(GsonProvider.CHILD_INDEX_REFERENCE,
+            attributeValue = attributeValue.replace(JsonProvider.CHILD_INDEX_REFERENCE,
                     String.valueOf(parserContext.getDataContext().getIndex()));
 
             if (attributeValue.charAt(0) == DataParsingAdapter.REGEX_PREFIX) {
@@ -229,7 +229,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         Map<String, String> oldScope = oldDataContext.getScope();
         Map<String, String> oldReverseScope = oldDataContext.getReverseScopeMap();
         Map<String, String> newReverseScope = new HashMap<>();
-        GsonProvider oldDataProvider = oldDataContext.getDataProvider();
+        JsonProvider oldDataProvider = oldDataContext.getDataProvider();
         JsonObject oldData = oldDataProvider.getData().getAsJsonObject();
 
         if (oldData == null) {
@@ -242,7 +242,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             JsonElement data = getElementFromData(value, oldDataProvider, childIndex);
             newData.add(key, data);
             newScope.put(key, value);
-            String unaliasedValue = value.replace(GsonProvider.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
+            String unaliasedValue = value.replace(JsonProvider.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
             newReverseScope.put(unaliasedValue, key);
         }
         if (oldScope != null) {
@@ -255,7 +255,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         Utils.addElements(newData, oldData.entrySet(), false);
 
-        return new DataContext(new GsonProvider(newData), newScope, newReverseScope, oldDataContext, childIndex);
+        return new DataContext(new JsonProvider(newData), newScope, newReverseScope, oldDataContext, childIndex);
     }
 
     protected JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
