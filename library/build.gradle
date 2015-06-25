@@ -24,15 +24,21 @@ repositories {
 }
 
 android {
-    compileSdkVersion 22
+    compileSdkVersion 21
     buildToolsVersion '20.0'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 20
         versionCode 1
         versionName "1.0"
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -118,7 +124,7 @@ artifactory {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:22.2.0'
+    compile 'com.android.support:appcompat-v7:20.+'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.code.gson:gson:2.3'
 }
