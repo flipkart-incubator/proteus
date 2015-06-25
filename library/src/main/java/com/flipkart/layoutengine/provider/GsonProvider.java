@@ -58,7 +58,7 @@ public class GsonProvider implements Provider {
                     elementToReturn = null;
                     break;
                 }
-            } else {
+            } else if (elementToReturn.isJsonObject()) {
                 tempElement = elementToReturn.getAsJsonObject().get(segment);
                 if (tempElement != null) {
                     elementToReturn = tempElement;
@@ -66,6 +66,10 @@ public class GsonProvider implements Provider {
                     elementToReturn = null;
                     break;
                 }
+            } else if (elementToReturn.isJsonPrimitive())  {
+                return null;
+            } else {
+                return null;
             }
         }
         return elementToReturn;
