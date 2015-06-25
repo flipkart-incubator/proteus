@@ -16,7 +16,6 @@ import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.google.gson.JsonElement;
-import com.nineoldandroids.view.ViewHelper;
 
 import java.util.HashMap;
 
@@ -217,7 +216,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.Alpha, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                ViewHelper.setAlpha(view, Float.parseFloat(attributeValue));
+                view.setAlpha(Float.parseFloat(attributeValue));
             }
         });
         addHandler(Attributes.View.Visibility, new StringAttributeProcessor<T>() {
