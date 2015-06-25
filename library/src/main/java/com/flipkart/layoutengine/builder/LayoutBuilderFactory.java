@@ -22,6 +22,7 @@ import com.flipkart.layoutengine.parser.custom.TextViewParser;
 import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
 import com.flipkart.layoutengine.parser.custom.WebViewParser;
 import com.flipkart.layoutengine.provider.Provider;
+import com.google.gson.JsonObject;
 
 /**
  * Factory class for creating Layout builders with different predefined behaviours. This is the
@@ -42,7 +43,7 @@ public class LayoutBuilderFactory {
      * @return A new {@link DataAndViewParsingLayoutBuilder}
      */
     public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Context context,
-                                                                              Provider viewProvider) {
+                                                                              JsonObject viewProvider) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
             dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(context, viewProvider);
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
