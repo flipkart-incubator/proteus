@@ -1,5 +1,8 @@
 package com.flipkart.layoutengine.provider;
 
+import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
+import com.flipkart.layoutengine.exceptions.JsonNullException;
+import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
@@ -27,20 +30,25 @@ public class JsonProvider implements Provider {
     }
 
     @Override
-    public JsonElement getObject(String key, int childIndex) {
+    public JsonElement getObject(String key, int childIndex)
+            throws InvalidDataPathException, NoSuchDataPathException, JsonNullException {
         return getFromObject(key, childIndex);
     }
 
-    private JsonElement getFromObject(String path, int childIndex) {
+    private JsonElement getFromObject(String path, int childIndex)
+            throws InvalidDataPathException, JsonNullException, NoSuchDataPathException {
         JsonElement root = this.rootElement;
         String[] segments = path.split(DATA_PATH_DELIMITER);
         JsonElement elementToReturn = root;
-        JsonElement tempElement = null;
-        JsonArray tempArray = null;
+        JsonElement tempElement;
+        JsonArray tempArray;
 
         for (String segment : segments) {
-            if (elementToReturn == null || elementToReturn.isJsonNull()) {
-                return null;
+            if (elementToReturn == null) {
+                throw new NoSuchDataPathException(path);
+            }
+            if (elementToReturn.isJsonNull()) {
+                throw new JsonNullException(path);
             }
             if ("".equals(segment)) {
                 continue;
@@ -55,22 +63,23 @@ public class JsonProvider implements Provider {
                         elementToReturn = tempArray.get(index);
                     }
                 } else {
-                    elementToReturn = null;
-                    break;
+                    throw new NoSuchDataPathException(path);
                 }
             } else if (elementToReturn.isJsonObject()) {
                 tempElement = elementToReturn.getAsJsonObject().get(segment);
                 if (tempElement != null) {
                     elementToReturn = tempElement;
                 } else {
-                    elementToReturn = null;
-                    break;
+                    throw new NoSuchDataPathException(path);
                 }
-            } else if (elementToReturn.isJsonPrimitive())  {
-                return null;
+            } else if (elementToReturn.isJsonPrimitive()) {
+                throw new InvalidDataPathException(path);
             } else {
-                return null;
+                throw new NoSuchDataPathException(path);
             }
+        }
+        if (elementToReturn.isJsonNull()) {
+            throw new JsonNullException(path);
         }
         return elementToReturn;
     }

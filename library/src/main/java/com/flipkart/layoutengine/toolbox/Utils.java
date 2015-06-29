@@ -1,8 +1,9 @@
 package com.flipkart.layoutengine.toolbox;
 
-import android.util.Log;
-
-import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
+import com.flipkart.layoutengine.exceptions.JsonNullException;
+import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import com.flipkart.layoutengine.provider.JsonProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -16,18 +17,17 @@ import java.util.Set;
 public class Utils {
     public static final String LIB_NAME = "proteus";
     public static final String VERSION = "2.5.4-RC1";
-    public static final String TAG = LIB_NAME+ ":" + VERSION + ":" + Utils.class.getSimpleName();
+    public static final String TAG = getTagPrefix() + Utils.class.getSimpleName();
 
-    public static JsonElement getElementFromData(String dataPath, Provider dataProvider, int childIndex) {
-        if (dataPath != null && dataPath.length() > 0) {
-            JsonElement elementToReturn = dataProvider.getObject(dataPath, childIndex);
-            if (elementToReturn != null) {
-                return elementToReturn;
-            } else {
-                Log.e(TAG, "Got null for dataPath " + dataPath);
-            }
+    public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
+            throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
+        // replace CHILD_INDEX_REFERENCE reference with index value
+        if (JsonProvider.CHILD_INDEX_REFERENCE.equals(dataPath)) {
+            dataPath = dataPath.replace(JsonProvider.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
+            return Utils.getStringAsJsonElement(dataPath);
+        } else {
+            return dataProvider.getObject(dataPath, childIndex);
         }
-        return Utils.getStringAsJsonElement(dataPath);
     }
 
     public static JsonObject merge(JsonObject x, JsonObject y) {
@@ -67,6 +67,10 @@ public class Utils {
 
     public static String format(String value, String formatterName) {
         return Formatters.get(formatterName).format(value);
+    }
+
+    public static String getTagPrefix() {
+        return LIB_NAME + ":" + VERSION + ":";
     }
 
 }
