@@ -4,6 +4,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
+import com.flipkart.layoutengine.exceptions.JsonNullException;
+import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -63,7 +66,7 @@ public interface LayoutBuilder {
                             JsonElement jsonAttributeValue,
                             ProteusView associatedProteusView,
                             ProteusView parent,
-                            int index);
+                            int index) throws JsonNullException, NoSuchDataPathException, InvalidDataPathException;
 
     /**
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and an optional

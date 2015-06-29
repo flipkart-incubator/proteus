@@ -6,8 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
+import com.flipkart.layoutengine.exceptions.JsonNullException;
+import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.view.SimpleProteusView;
 import com.google.gson.JsonArray;
@@ -25,7 +29,7 @@ import java.util.Map;
  */
 public class SimpleLayoutBuilder implements LayoutBuilder {
 
-    protected static final String TAG = SimpleLayoutBuilder.class.getSimpleName();
+    public static final String TAG = Utils.getTagPrefix() + SimpleLayoutBuilder.class.getSimpleName();
 
     public static final String TYPE = "type";
     public static final String CHILDREN = "children";
@@ -131,14 +135,20 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
             JsonElement jsonDataValue = entry.getValue();
             String attributeName = entry.getKey();
-            boolean handled = handleAttribute(handler,
-                    context,
-                    attributeName,
-                    currentViewJsonObject,
-                    jsonDataValue,
-                    proteusViewToReturn,
-                    parent,
-                    childIndex);
+            boolean handled = false;
+            try {
+                handled = handleAttribute(handler,
+                        context,
+                        attributeName,
+                        currentViewJsonObject,
+                        jsonDataValue,
+                        proteusViewToReturn,
+                        parent,
+                        childIndex);
+            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                handled = true;
+                Log.e(TAG + "#buildImpl()", e.getMessage());
+            }
 
             if (!handled) {
                 onUnknownAttributeEncountered(context,
@@ -177,8 +187,10 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
                 }
                 // build the child views
                 ProteusView childView = buildImpl(context, proteusViewToReturn, childObject, null, i);
-
-                childrenToAdd.add(childView);
+                // add the child view to the array of children
+                if (childView != null) {
+                    childrenToAdd.add(childView);
+                }
             }
 
             // add the children to the root view group
@@ -204,7 +216,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context,
                                    String attribute, JsonObject jsonObject, JsonElement element,
-                                   ProteusView view, ProteusView parent, int index) {
+                                   ProteusView view, ProteusView parent, int index) throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
         return handler.handleAttribute(context, attribute, jsonObject, element, view, index);
     }
 

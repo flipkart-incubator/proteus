@@ -7,10 +7,12 @@ import android.view.View;
 import com.flipkart.layoutengine.DataContext;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
+import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
+import com.flipkart.layoutengine.exceptions.JsonNullException;
+import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.parser.LayoutHandler;
-import com.flipkart.layoutengine.provider.DataParsingAdapter;
+import com.flipkart.layoutengine.provider.DataParsingConstants;
 import com.flipkart.layoutengine.provider.JsonProvider;
-import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.Formatters;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.DataProteusView;
@@ -29,6 +31,7 @@ import java.util.regex.Matcher;
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     public static final String DATA_CONTEXT = "dataContext";
+    public static final String TAG = Utils.getTagPrefix() + DataParsingLayoutBuilder.class.getSimpleName();
 
     protected DataParsingLayoutBuilder(Context context) {
         super(context);
@@ -40,7 +43,11 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         if (childrenElement.isJsonPrimitive()) {
             String attributeValue = childrenElement.getAsString();
             if (attributeValue != null && !"".equals(attributeValue)) {
-                childrenElement = getElementFromData(attributeValue, parserContext.getDataContext().getDataProvider(), childIndex);
+                try {
+                    childrenElement = getElementFromData(attributeValue, parserContext.getDataContext().getDataProvider(), childIndex);
+                } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                    Log.e(TAG + "#parseChildren()", e.getMessage());
+                }
             }
         }
         return super.parseChildren(handler, parserContext, childrenElement, childIndex);
@@ -71,7 +78,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context,
                                    String attributeName, JsonObject jsonObject,
                                    JsonElement jsonDataValue, ProteusView associatedProteusView,
-                                   ProteusView parent, int childIndex) {
+                                   ProteusView parent, int childIndex)
+            throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
         if (jsonDataValue.isJsonPrimitive()) {
             if (DATA_CONTEXT.equals(attributeName)) {
                 return true;
@@ -95,20 +103,17 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private JsonElement findAndReplaceValues(JsonElement jsonDataValue, ParserContext parserContext,
                                              LayoutHandler<View> handler, String attributeName,
-                                             ProteusView<View> associatedProteusView, int childIndex) {
+                                             ProteusView<View> associatedProteusView, int childIndex)
+            throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
 
         String attributeValue = jsonDataValue.getAsString();
 
         if (attributeValue != null && !"".equals(attributeValue) &&
-                (attributeValue.charAt(0) == DataParsingAdapter.DATA_PREFIX ||
-                        attributeValue.charAt(0) == DataParsingAdapter.REGEX_PREFIX)) {
+                (attributeValue.charAt(0) == DataParsingConstants.DATA_PREFIX ||
+                        attributeValue.charAt(0) == DataParsingConstants.REGEX_PREFIX)) {
 
-            // replace CHILD_INDEX_REFERENCE reference with index value
-            attributeValue = attributeValue.replace(JsonProvider.CHILD_INDEX_REFERENCE,
-                    String.valueOf(parserContext.getDataContext().getIndex()));
-
-            if (attributeValue.charAt(0) == DataParsingAdapter.REGEX_PREFIX) {
-                Matcher regexMatcher = DataParsingAdapter.REGEX_PATTERN.matcher(attributeValue);
+            if (attributeValue.charAt(0) == DataParsingConstants.REGEX_PREFIX) {
+                Matcher regexMatcher = DataParsingConstants.REGEX_PATTERN.matcher(attributeValue);
                 String finalValue = attributeValue;
 
                 while (regexMatcher.find()) {
@@ -121,7 +126,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         finalValue = finalValue.replace(matchedString, getElementFromData(
                                 dataPath,
                                 parserContext.getDataContext().getDataProvider(),
-                                childIndex).getAsString());
+                                parserContext.getDataContext().getIndex()).getAsString());
                         bindingName = dataPath;
                     } else {
 
@@ -130,8 +135,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         String formatterName = regexMatcher.group(2);
 
                         String formattedValue = Utils.format(getElementFromData(dataPath,
-                                parserContext.getDataContext().getDataProvider(),
-                                childIndex).getAsString(), formatterName);
+                                        parserContext.getDataContext().getDataProvider(),
+                                        parserContext.getDataContext().getIndex()).getAsString(),
+                                formatterName);
                         finalValue = finalValue.replace(matchedString, formattedValue);
                         bindingName = dataPath;
                     }
@@ -151,7 +157,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 // return as a JSONPrimitive
                 jsonDataValue = Utils.getStringAsJsonElement(finalValue);
 
-            } else if (attributeValue.charAt(0) == DataParsingAdapter.DATA_PREFIX) {
+            } else if (attributeValue.charAt(0) == DataParsingConstants.DATA_PREFIX) {
                 JsonElement elementFromData = getElementFromData(attributeValue.substring(1),
                         parserContext.getDataContext().getDataProvider(), childIndex);
                 if (elementFromData != null) {
@@ -239,7 +245,14 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         for (Map.Entry<String, JsonElement> entry : currentScope.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue().getAsString();
-            JsonElement data = getElementFromData(value, oldDataProvider, childIndex);
+            JsonElement data = new JsonObject();
+
+            try {
+                data = getElementFromData(value, oldDataProvider, childIndex);
+            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                Log.e(TAG + "#getNewDataContext()", e.getMessage());
+            }
+
             newData.add(key, data);
             newScope.put(key, value);
             String unaliasedValue = value.replace(JsonProvider.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
@@ -258,7 +271,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         return new DataContext(new JsonProvider(newData), newScope, newReverseScope, oldDataContext, childIndex);
     }
 
-    protected JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
+    protected JsonElement getElementFromData(String element, JsonProvider dataProvider, int childIndex)
+            throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
         return Utils.getElementFromData(element, dataProvider, childIndex);
     }
 

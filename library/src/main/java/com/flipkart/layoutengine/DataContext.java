@@ -1,8 +1,13 @@
 package com.flipkart.layoutengine;
 
+import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
+import com.flipkart.layoutengine.exceptions.JsonNullException;
+import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonPrimitive;
 
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -59,7 +64,13 @@ public class DataContext {
 
     public JsonElement get(String dataPath, int childIndex) {
         String aliasedDataPath = getAliasedDataPath(dataPath, reverseScope, true);
-        return Utils.getElementFromData(aliasedDataPath, dataProvider, childIndex);
+        try {
+            return Utils.getElementFromData(aliasedDataPath, dataProvider, childIndex);
+        } catch (JsonNullException e) {
+            return JsonNull.INSTANCE;
+        } catch (NoSuchDataPathException | InvalidDataPathException e) {
+            return null;
+        }
     }
 
     public static String getAliasedDataPath(String dataPath, Map<String, String> reverseScope, boolean isBindingPath) {

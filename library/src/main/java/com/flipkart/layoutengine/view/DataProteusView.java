@@ -1,11 +1,15 @@
 package com.flipkart.layoutengine.view;
 
+import android.util.Log;
 import android.view.View;
 
 import com.flipkart.layoutengine.DataContext;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
-import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
+import com.flipkart.layoutengine.exceptions.JsonNullException;
+import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,6 +24,7 @@ import java.util.ArrayList;
  */
 public class DataProteusView extends SimpleProteusView {
 
+    public static final String TAG = Utils.getTagPrefix() + DataProteusView.class.getSimpleName();
     private boolean isViewUpdating = false;
 
     /**
@@ -90,26 +95,41 @@ public class DataProteusView extends SimpleProteusView {
     private void handleBinding(Binding binding) {
 
         if (binding.hasRegEx()) {
-            parserContext.getLayoutBuilder().handleAttribute(
-                    binding.getLayoutHandler(),
-                    parserContext,
-                    binding.getAttributeKey(),
-                    null,
-                    Utils.getStringAsJsonElement(binding.getAttributeValue()),
-                    this,
-                    parent,
-                    index);
+            try {
+                parserContext.getLayoutBuilder().handleAttribute(
+                        binding.getLayoutHandler(),
+                        parserContext,
+                        binding.getAttributeKey(),
+                        null,
+                        Utils.getStringAsJsonElement(binding.getAttributeValue()),
+                        this,
+                        parent,
+                        index);
+            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                Log.e(TAG + "#handleBinding(regexp)", e.getMessage());
+            }
         } else {
-            JsonElement dataValue = getElementFromData(binding.getBindingName(), parserContext.getDataContext().getDataProvider(), index);
-            parserContext.getLayoutBuilder().handleAttribute(
-                    binding.getLayoutHandler(),
-                    parserContext,
-                    binding.getAttributeKey(),
-                    null,
-                    dataValue,
-                    this,
-                    parent,
-                    index);
+            JsonElement dataValue;
+            try {
+                dataValue = getElementFromData(binding.getBindingName(),
+                        parserContext.getDataContext().getDataProvider(), index);
+            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                Log.e(TAG + "#handleBinding()", e.getMessage());
+                return;
+            }
+            try {
+                parserContext.getLayoutBuilder().handleAttribute(
+                        binding.getLayoutHandler(),
+                        parserContext,
+                        binding.getAttributeKey(),
+                        null,
+                        dataValue,
+                        this,
+                        parent,
+                        index);
+            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                Log.e(TAG + "#handleBinding()", e.getMessage());
+            }
         }
 
     }
@@ -142,11 +162,17 @@ public class DataProteusView extends SimpleProteusView {
         String aliasedDataPath = DataContext.getAliasedDataPath(dataPath,
                 parserContext.getDataContext().getReverseScopeMap(), true);
 
-        JsonElement parent = getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
-                parserContext.getDataContext().getDataProvider(), childIndex);
-        if (!parent.isJsonObject()) {
+        JsonElement parent = null;
+        try {
+            parent = getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
+                    parserContext.getDataContext().getDataProvider(), childIndex);
+        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+            Log.e(TAG + "#set()", e.getMessage());
+        }
+        if (parent == null || !parent.isJsonObject()) {
             return;
         }
+
         String propertyName = aliasedDataPath.substring(aliasedDataPath.lastIndexOf(".") + 1, aliasedDataPath.length());
         parent.getAsJsonObject().add(propertyName, newValue);
 
@@ -187,7 +213,8 @@ public class DataProteusView extends SimpleProteusView {
         this.isViewUpdating = false;
     }
 
-    private JsonElement getElementFromData(String dataPath, Provider dataProvider, int childIndex) {
+    private JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
+            throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
         return Utils.getElementFromData(dataPath, dataProvider, childIndex);
     }
 }

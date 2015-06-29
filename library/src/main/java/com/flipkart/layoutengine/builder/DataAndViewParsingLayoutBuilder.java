@@ -1,8 +1,12 @@
 package com.flipkart.layoutengine.builder;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
+import com.flipkart.layoutengine.exceptions.JsonNullException;
+import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.Utils;
@@ -15,6 +19,8 @@ import com.google.gson.JsonObject;
  * {@link SimpleLayoutBuilder}
  */
 public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
+
+    public static final String TAG = Utils.getTagPrefix() + DataAndViewParsingLayoutBuilder.class.getSimpleName();
     private Provider viewProvider;
 
     protected DataAndViewParsingLayoutBuilder(Context context, JsonObject viewProvider) {
@@ -28,7 +34,11 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
                                                    int childIndex) {
         JsonElement viewElement = null;
         if (viewProvider != null) {
-            viewElement = viewProvider.getObject(viewType, childIndex);
+            try {
+                viewElement = viewProvider.getObject(viewType, childIndex);
+            } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
+                Log.e(TAG, e.getMessage());
+            }
         }
         if (viewElement != null) {
             JsonObject viewLayoutObject = viewElement.getAsJsonObject();
