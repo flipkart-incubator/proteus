@@ -10,7 +10,9 @@ import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.provider.DataParsingConstants;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.toolbox.Formatters;
@@ -21,6 +23,7 @@ import com.flipkart.layoutengine.view.SimpleProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +33,9 @@ import java.util.regex.Matcher;
  * A layout builder which can parse data bindings before passing it on to {@link SimpleLayoutBuilder}
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
-    public static final String DATA_CONTEXT = "dataContext";
     public static final String TAG = Utils.getTagPrefix() + DataParsingLayoutBuilder.class.getSimpleName();
+    public static final String DATA_CONTEXT = "dataContext";
+    public static final String DATA_VISIBILITY = "data";
 
     protected DataParsingLayoutBuilder(Context context) {
         super(context);
@@ -44,7 +48,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             String attributeValue = childrenElement.getAsString();
             if (attributeValue != null && !"".equals(attributeValue)) {
                 try {
-                    childrenElement = getElementFromData(attributeValue, parserContext.getDataContext().getDataProvider(), childIndex);
+                    childrenElement = Utils.getElementFromData(attributeValue,
+                            parserContext.getDataContext().getDataProvider(),
+                            childIndex);
                 } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                     Log.e(TAG + "#parseChildren()", e.getMessage());
                 }
@@ -68,18 +74,18 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ProteusView buildImpl(ParserContext context, ProteusView parent, JsonObject currentViewJsonObject,
-                                    View existingView, int childIndex) {
+    protected ProteusView buildImpl(ParserContext context, final ProteusView parent,
+                                    final JsonObject currentViewJsonObject, View existingView,
+                                    final int childIndex) {
         context = getNewParserContext(context, currentViewJsonObject, childIndex);
         return super.buildImpl(context, parent, currentViewJsonObject, existingView, childIndex);
     }
 
     @Override
-    public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context,
-                                   String attributeName, JsonObject jsonObject,
+    public boolean handleAttribute(LayoutHandler handler, ParserContext context,
+                                   String attributeName, JsonObject viewJsonObject,
                                    JsonElement jsonDataValue, ProteusView associatedProteusView,
-                                   ProteusView parent, int childIndex)
-            throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
+                                   ProteusView parent, int childIndex) {
         if (jsonDataValue.isJsonPrimitive()) {
             if (DATA_CONTEXT.equals(attributeName)) {
                 return true;
@@ -89,12 +95,13 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     handler,
                     attributeName,
                     associatedProteusView,
+                    viewJsonObject,
                     childIndex);
         }
         return super.handleAttribute(handler,
                 context,
                 attributeName,
-                jsonObject,
+                viewJsonObject,
                 jsonDataValue,
                 associatedProteusView,
                 parent,
@@ -102,11 +109,13 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     private JsonElement findAndReplaceValues(JsonElement jsonDataValue, ParserContext parserContext,
-                                             LayoutHandler<View> handler, String attributeName,
-                                             ProteusView<View> associatedProteusView, int childIndex)
-            throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
+                                             LayoutHandler handler, String attributeName,
+                                             ProteusView proteusView, JsonObject viewJsonObject,
+                                             int childIndex) {
 
+        boolean failed = false;
         String attributeValue = jsonDataValue.getAsString();
+        DataProteusView associatedProteusView = (DataProteusView) proteusView;
 
         if (attributeValue != null && !"".equals(attributeValue) &&
                 (attributeValue.charAt(0) == DataParsingConstants.DATA_PREFIX ||
@@ -123,10 +132,17 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
                         // has NO formatter
                         String dataPath = regexMatcher.group(3);
-                        finalValue = finalValue.replace(matchedString, getElementFromData(
-                                dataPath,
-                                parserContext.getDataContext().getDataProvider(),
-                                parserContext.getDataContext().getIndex()).getAsString());
+                        try {
+                            finalValue = finalValue.replace(matchedString, Utils.getElementFromData(
+                                    dataPath,
+                                    parserContext.getDataContext().getDataProvider(),
+                                    parserContext.getDataContext().getIndex()).getAsString());
+                        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                            Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
+                            e.printStackTrace();
+                            finalValue = dataPath;
+                            failed = true;
+                        }
                         bindingName = dataPath;
                     } else {
 
@@ -134,10 +150,18 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         String dataPath = regexMatcher.group(1);
                         String formatterName = regexMatcher.group(2);
 
-                        String formattedValue = Utils.format(getElementFromData(dataPath,
-                                        parserContext.getDataContext().getDataProvider(),
-                                        parserContext.getDataContext().getIndex()).getAsString(),
-                                formatterName);
+                        String formattedValue = null;
+                        try {
+                            formattedValue = Utils.format(Utils.getElementFromData(dataPath,
+                                            parserContext.getDataContext().getDataProvider(),
+                                            parserContext.getDataContext().getIndex()).getAsString(),
+                                    formatterName);
+                        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                            Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
+                            e.printStackTrace();
+                            formattedValue = dataPath;
+                            failed = true;
+                        }
                         finalValue = finalValue.replace(matchedString, formattedValue);
                         bindingName = dataPath;
                     }
@@ -145,9 +169,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             bindingName,
                             attributeName,
                             attributeValue,
-                            parserContext,
                             handler,
-                            childIndex,
                             true);
                 }
 
@@ -158,8 +180,18 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 jsonDataValue = Utils.getStringAsJsonElement(finalValue);
 
             } else if (attributeValue.charAt(0) == DataParsingConstants.DATA_PREFIX) {
-                JsonElement elementFromData = getElementFromData(attributeValue.substring(1),
-                        parserContext.getDataContext().getDataProvider(), childIndex);
+                JsonElement elementFromData = null;
+                try {
+                    elementFromData = Utils.getElementFromData(attributeValue.substring(1),
+                            parserContext.getDataContext().getDataProvider(),
+                            childIndex);
+                } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                    Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
+                    e.printStackTrace();
+                    failed = true;
+                    elementFromData = new JsonPrimitive(0);
+                }
+
                 if (elementFromData != null) {
                     jsonDataValue = elementFromData;
                 }
@@ -167,23 +199,36 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         attributeValue.substring(1),
                         attributeName,
                         attributeValue,
-                        parserContext,
                         handler,
-                        childIndex,
                         false);
             }
         }
+
+        if (associatedProteusView.getView() != null) {
+            if (failed) {
+                if (viewJsonObject != null && !viewJsonObject.isJsonNull()
+                        && viewJsonObject.get(Attributes.View.Visibility.getName()) != null) {
+                    String visibility = viewJsonObject.get(Attributes.View.Visibility.getName()).getAsString();
+                    if (DATA_VISIBILITY.equals(visibility)) {
+                        associatedProteusView.getView().setVisibility(View.INVISIBLE);
+                    }
+                } else {
+                    associatedProteusView.getView().setVisibility(View.GONE);
+                }
+            } else if (associatedProteusView.isViewUpdating()) {
+                associatedProteusView.getView().setVisibility(View.VISIBLE);
+            }
+        }
+
         return jsonDataValue;
     }
 
-    private void addBinding(ProteusView associatedProteusView, String bindingName, String attributeName,
-                            String attributeValue, ParserContext context, LayoutHandler handler,
-                            int childIndex, boolean hasRegEx) {
+    private void addBinding(DataProteusView dataProteusView, String bindingName, String attributeName,
+                            String attributeValue, LayoutHandler handler, boolean hasRegEx) {
         // check if the view is in update mode
         // if not that means that the update flow
         // is running and we must not add more bindings
         // for they will be duplicates
-        DataProteusView dataProteusView = (DataProteusView) associatedProteusView;
         if (!dataProteusView.isViewUpdating()) {
             Binding binding = new Binding(handler,
                     bindingName,
@@ -245,12 +290,12 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         for (Map.Entry<String, JsonElement> entry : currentScope.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue().getAsString();
-            JsonElement data = new JsonObject();
-
+            JsonElement data;
             try {
-                data = getElementFromData(value, oldDataProvider, childIndex);
+                data = Utils.getElementFromData(value, oldDataProvider, childIndex);
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                 Log.e(TAG + "#getNewDataContext()", e.getMessage());
+                data = entry.getValue();
             }
 
             newData.add(key, data);
@@ -269,11 +314,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         Utils.addElements(newData, oldData.entrySet(), false);
 
         return new DataContext(new JsonProvider(newData), newScope, newReverseScope, oldDataContext, childIndex);
-    }
-
-    protected JsonElement getElementFromData(String element, JsonProvider dataProvider, int childIndex)
-            throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
-        return Utils.getElementFromData(element, dataProvider, childIndex);
     }
 
     public void registerFormatter(Formatters.Formatter formatter) {

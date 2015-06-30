@@ -6,9 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
-import com.flipkart.layoutengine.exceptions.JsonNullException;
-import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.flipkart.layoutengine.toolbox.Utils;
@@ -69,7 +66,8 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     @Override
     public ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex) {
-        return buildImpl(createParserContext(data), new SimpleProteusView(parent, 0, null), layout, null, childIndex);
+        return buildImpl(createParserContext(data), new SimpleProteusView(parent, 0, null),
+                layout, null, childIndex);
     }
 
     protected ParserContext createParserContext(JsonObject data) {
@@ -87,10 +85,10 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
      * @param currentViewJsonObject The jsonObject which represents the current node which is getting parsed.
      * @param existingView          A view which needs to be used instead of creating a new one. Pass null
      *                              for first pass.
-     * @param childIndex            index of child inside its parent view
+     * @param childIndex            index of child inside its parent view.
      * @return The {@link com.flipkart.layoutengine.view.ProteusView} that was built.
      */
-    protected ProteusView buildImpl(final ParserContext context, final ProteusView parent,
+    protected ProteusView buildImpl(ParserContext context, final ProteusView parent,
                                     final JsonObject currentViewJsonObject, View existingView,
                                     final int childIndex) {
         JsonElement viewTypeElement = currentViewJsonObject.get(TYPE);
@@ -135,20 +133,16 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
             JsonElement jsonDataValue = entry.getValue();
             String attributeName = entry.getKey();
-            boolean handled = false;
-            try {
-                handled = handleAttribute(handler,
-                        context,
-                        attributeName,
-                        currentViewJsonObject,
-                        jsonDataValue,
-                        proteusViewToReturn,
-                        parent,
-                        childIndex);
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                handled = true;
-                Log.e(TAG + "#buildImpl()", e.getMessage());
-            }
+            boolean handled;
+
+            handled = handleAttribute(handler,
+                    context,
+                    attributeName,
+                    currentViewJsonObject,
+                    jsonDataValue,
+                    proteusViewToReturn,
+                    parent,
+                    childIndex);
 
             if (!handled) {
                 onUnknownAttributeEncountered(context,
@@ -214,9 +208,9 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         return handler.parseChildren(context, childrenElement, childIndex);
     }
 
-    public boolean handleAttribute(LayoutHandler<View> handler, ParserContext context,
+    public boolean handleAttribute(LayoutHandler handler, ParserContext context,
                                    String attribute, JsonObject jsonObject, JsonElement element,
-                                   ProteusView view, ProteusView parent, int index) throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
+                                   ProteusView view, ProteusView parent, int index) {
         return handler.handleAttribute(context, attribute, jsonObject, element, view, index);
     }
 

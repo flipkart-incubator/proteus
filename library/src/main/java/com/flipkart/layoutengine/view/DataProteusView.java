@@ -9,7 +9,6 @@ import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
-import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -93,45 +92,39 @@ public class DataProteusView extends SimpleProteusView {
      *                {@link com.flipkart.layoutengine.binding.Binding}
      */
     private void handleBinding(Binding binding) {
-
         if (binding.hasRegEx()) {
-            try {
-                parserContext.getLayoutBuilder().handleAttribute(
-                        binding.getLayoutHandler(),
-                        parserContext,
-                        binding.getAttributeKey(),
-                        null,
-                        Utils.getStringAsJsonElement(binding.getAttributeValue()),
-                        this,
-                        parent,
-                        index);
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                Log.e(TAG + "#handleBinding(regexp)", e.getMessage());
-            }
+            parserContext.getLayoutBuilder().handleAttribute(
+                    binding.getLayoutHandler(),
+                    parserContext,
+                    binding.getAttributeKey(),
+                    null,
+                    Utils.getStringAsJsonElement(binding.getAttributeValue()),
+                    this,
+                    parent,
+                    index);
         } else {
             JsonElement dataValue;
             try {
-                dataValue = getElementFromData(binding.getBindingName(),
+                dataValue = Utils.getElementFromData(binding.getBindingName(),
                         parserContext.getDataContext().getDataProvider(), index);
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                 Log.e(TAG + "#handleBinding()", e.getMessage());
+                if (getView() != null) {
+                    getView().setVisibility(View.GONE);
+                }
                 return;
             }
-            try {
-                parserContext.getLayoutBuilder().handleAttribute(
-                        binding.getLayoutHandler(),
-                        parserContext,
-                        binding.getAttributeKey(),
-                        null,
-                        dataValue,
-                        this,
-                        parent,
-                        index);
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                Log.e(TAG + "#handleBinding()", e.getMessage());
-            }
-        }
+            parserContext.getLayoutBuilder().handleAttribute(
+                    binding.getLayoutHandler(),
+                    parserContext,
+                    binding.getAttributeKey(),
+                    null,
+                    dataValue,
+                    this,
+                    parent,
+                    index);
 
+        }
     }
 
     public boolean isViewUpdating() {
@@ -164,7 +157,7 @@ public class DataProteusView extends SimpleProteusView {
 
         JsonElement parent = null;
         try {
-            parent = getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
+            parent = Utils.getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
                     parserContext.getDataContext().getDataProvider(), childIndex);
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
             Log.e(TAG + "#set()", e.getMessage());
@@ -211,10 +204,5 @@ public class DataProteusView extends SimpleProteusView {
         }
 
         this.isViewUpdating = false;
-    }
-
-    private JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
-            throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
-        return Utils.getElementFromData(dataPath, dataProvider, childIndex);
     }
 }
