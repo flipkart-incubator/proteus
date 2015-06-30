@@ -21,6 +21,7 @@ import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
@@ -151,6 +152,7 @@ public class MainActivity extends ActionBarActivity {
                 this.proteusView.set("product.rating.ratingCount", 126, 0);
                 this.proteusView.set("sellers_1[0].price", 18800, 0);
                 this.proteusView.set("sellers_1[1].price", 17100, 0);
+                this.proteusView.set("product.dateNull", "2018-01-01 12:01:37", 0);
 
                 JsonElement je = this.proteusView.get("sellers_1[0].price", -1);
 
