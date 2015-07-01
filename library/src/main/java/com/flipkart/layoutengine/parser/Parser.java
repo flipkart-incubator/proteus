@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.processor.AttributeProcessor;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -27,17 +28,18 @@ import java.util.Map;
 public abstract class Parser<T extends View> implements LayoutHandler<T> {
 
     private static final String TAG = Parser.class.getSimpleName();
-    private final Class<T> viewClass;
+    protected final Class<T> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<String, AttributeProcessor>();
 
     public Parser(Class<T> viewClass) {
         this.viewClass = viewClass;
     }
-    protected static final Map<Class<?>,Constructor<? extends View>> constructorCache = new HashMap<Class<?>, Constructor<? extends View>>();
+
+    protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<Class<?>, Constructor<? extends View>>();
 
     @Override
     public void prepare(Context context) {
-        if(handlers.size() == 0) {
+        if (handlers.size() == 0) {
             prepareHandlers(context);
         }
     }
@@ -51,7 +53,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
         View v = null;
         try {
             Constructor<? extends View> constructor = getContextConstructor(viewClass);
-            if(constructor!=null) {
+            if (constructor != null) {
                 v = constructor.newInstance(context);
                 ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent, object);
                 v.setLayoutParams(layoutParams);
@@ -60,22 +62,22 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
             e.printStackTrace();
         }
 
-        return (T)v;
+        return (T) v;
     }
 
     /**
      * Gets and caches the constructor
+     *
      * @param viewClass
      * @return
      */
-    protected Constructor<? extends View> getContextConstructor(Class<T> viewClass)
-    {
-        Constructor<? extends View> constructor = constructorCache.get(viewClass);
-        if(constructor == null) {
+    protected Constructor<? extends T> getContextConstructor(Class<T> viewClass) {
+        Constructor<? extends T> constructor = (Constructor<? extends T>) constructorCache.get(viewClass);
+        if (constructor == null) {
             try {
                 constructor = viewClass.getDeclaredConstructor(Context.class);
-                constructorCache.put(viewClass,constructor);
-                Log.d(TAG,"constructor for "+viewClass+" was created and put into cache");
+                constructorCache.put(viewClass, constructor);
+                Log.d(TAG, "constructor for " + viewClass + " was created and put into cache");
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
@@ -104,14 +106,15 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, T view, int childIndex) {
+    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, ProteusView view, int childIndex) {
         AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
-            attributeProcessor.handle(context, attribute, element, view);
+            attributeProcessor.handle(context, attribute, element, view.getView());
             return true;
         }
         return false;
     }
+
     @Override
     public boolean canAddChild() {
         return false;
@@ -120,17 +123,17 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     protected abstract void prepareHandlers(Context context);
 
 
-
     /**
      * This is a base implementation which calls addChild() on the parent.
-     *  @param context Android context
+     *
      * @param parent   The view group into which the child will be added.
      * @param children The List of child views which have to be added.
      */
     @Override
-    public void addChildren(Context context, T parent, List<View> children) {
-        for (View child : children) {
-            ((ViewGroup) parent).addView(child);
+    public void addChildren(ParserContext parserContext, ProteusView parent, List<ProteusView> children,
+                            JsonObject viewLayout) {
+        for (ProteusView child : children) {
+            parent.addChild(child);
         }
     }
 

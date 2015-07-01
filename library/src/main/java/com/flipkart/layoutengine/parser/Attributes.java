@@ -1,40 +1,30 @@
 package com.flipkart.layoutengine.parser;
 
 /**
- * Created by kirankumar on 20/11/14.
+ * @author kirankumar
+ * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
 public class Attributes {
-
-
-    public static class Webview
-    {
-        public static Attribute Url = new Attribute("url");
-
-    }
 
     public static class View {
 
         /**
-         * @origAttr weight
-         * @newAttr weight
+         * @serialField weight
          */
         public static Attribute Weight = new Attribute("layout_weight");
 
         /**
-         * @origAttr width
-         * @newAttr width
+         * @serialField width
          */
         public static Attribute Width = new Attribute("layout_width");
 
         /**
-         * @origAttr background
-         * @newAttr background
+         * @serialField background
          */
         public static Attribute Background = new Attribute("background");
 
         /**
-         * @origAttr height
-         * @newAttr height
+         * @serialField height
          */
         public static Attribute Height = new Attribute("layout_height");
         public static Attribute LayoutGravity = new Attribute("layout_gravity");
@@ -81,6 +71,11 @@ public class Attributes {
 
     }
 
+    public static class Webview {
+        public static Attribute Url = new Attribute("url");
+
+    }
+
     public static class RatingBar {
         public static Attribute NumStars = new Attribute("numStars");
         public static Attribute Rating = new Attribute("rating");
@@ -90,7 +85,8 @@ public class Attributes {
         public static Attribute MinHeight = new Attribute("minHeight");
         public static Attribute MaxHeight = new Attribute("maxHeight");
     }
-        public static class TextView {
+
+    public static class TextView {
         public static Attribute Gravity = new Attribute("gravity");
         public static Attribute Text = new Attribute("text");
         public static Attribute TextSize = new Attribute("textSize");
@@ -130,9 +126,39 @@ public class Attributes {
 
     public static class LinearLayout {
         public static Attribute Orientation = new Attribute("orientation");
-        public static Attribute Divider     = new Attribute("divider");
+        public static Attribute Divider = new Attribute("divider");
         public static Attribute DividerPadding = new Attribute("dividerPadding");
         public static Attribute ShowDividers = new Attribute("showDividers");
+    }
+
+    public static class ListView {
+        /**
+         * XML attributes inherited from {@link android.widget.AbsListView}
+         */
+        public static Attribute CacheColorHint = new Attribute("cacheColorHint");
+        public static Attribute ChoiceMode = new Attribute("choiceMode");
+        public static Attribute DrawSelectorOnTop = new Attribute("drawSelectorOnTop");
+        public static Attribute FastScrollEnabled = new Attribute("fastScrollEnabled");
+        public static Attribute ListSelector = new Attribute("listSelector");
+        public static Attribute ScrollingCache = new Attribute("scrollingCache");
+        public static Attribute SmoothScrollbar = new Attribute("smoothScrollbar");
+        public static Attribute StackFromBottom = new Attribute("stackFromBottom");
+        public static Attribute TextFilterEnabled = new Attribute("textFilterEnabled");
+        public static Attribute TranscriptMode = new Attribute("transcriptMode");
+        /**
+         * XML attributes of {@link android.widget.ListView}
+         */
+        public static Attribute Divider = new Attribute("divider");
+        public static Attribute DividerHeight = new Attribute("dividerHeight");
+        public static Attribute Entries = new Attribute("entries");
+        public static Attribute FooterDividersEnabled = new Attribute("footerDividersEnabled");
+        public static Attribute HeaderDividersEnabled = new Attribute("headerDividersEnabled");
+
+        /**
+         * XML attribute for the {@link android.widget.ListView} Adapter layout and data
+         */
+        public static Attribute ListViewData = new Attribute("listViewData");
+
     }
 
     public static class NetworkImageView {
@@ -141,6 +167,13 @@ public class Attributes {
 
     public static class HorizontalScrollView {
         public static Attribute FillViewPort = new Attribute("fillViewPort");
+    }
+
+    public static class ProgressBar {
+        public static Attribute Progress = new Attribute("progress");
+        public static Attribute Max = new Attribute("max");
+        public static Attribute ProgressTint = new Attribute("progressTint");
+
     }
 
     public static class Attribute {

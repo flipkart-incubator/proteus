@@ -7,7 +7,11 @@ import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.Utils;
+import com.flipkart.layoutengine.view.ProteusView;
+import com.flipkart.layoutengine.view.SimpleProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -17,89 +21,57 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
- * A layout builder which can parse json to construct an android view out of it. It uses the registered handlers to convert the json string to a view and then assign attributes.
+ * A layout builder which can parse json to construct an android view out of it. It uses the
+ * registered handlers to convert the json string to a view and then assign attributes.
  */
 public class SimpleLayoutBuilder implements LayoutBuilder {
 
-    protected static final String TAG = SimpleLayoutBuilder.class.getSimpleName();
+    public static final String TAG = Utils.getTagPrefix() + SimpleLayoutBuilder.class.getSimpleName();
 
     public static final String TYPE = "type";
     public static final String CHILDREN = "children";
     public static final String CHILD_TYPE = "childType";
 
-    private HashMap<String,LayoutHandler> layoutHandlers = new HashMap<String, LayoutHandler>();
-    private LayoutBuilderCallback listener;
+    private HashMap<String, LayoutHandler<View>> layoutHandlers = new HashMap<>();
+    protected LayoutBuilderCallback listener;
     private BitmapLoader bitmapLoader;
-
-    // see the getter for doc
     private boolean isSynchronousRendering = false;
-
-
-    /**
-     * Package private constructor so that no client can access it without the factory class
-     */
-    SimpleLayoutBuilder() {}
-
-    /**
-     * Registers a {@link LayoutHandler} for the specified view type. All the attributes will pass through {@link LayoutHandler#handleAttribute(com.flipkart.layoutengine.ParserContext, String, com.google.gson.JsonObject, com.google.gson.JsonElement, Object)} and expect to be handled.
-     * @param viewType The string value for "view" attribute.
-     * @param handler The handler which should handle this view.
-     */
-    @Override
-    public void registerHandler(String viewType, LayoutHandler handler)
-    {
-        handler.prepare(context);
-        layoutHandlers.put(viewType, handler);
-
-    }
-
-    /**
-     * Unregisters the specified view type.
-     * @param viewType The string value for "view" attribute.
-     */
-    @Override
-    public void unregisterHandler(String viewType)
-    {
-        layoutHandlers.remove(viewType);
-    }
-
-    /**
-     * Unregisters all handlers.
-     */
-    @Override
-    public void unregisterAllHandlers()
-    {
-        layoutHandlers.clear();
-    }
-
-    /**
-     * Get the handler registered with the supplied view type
-     * @param viewType
-     * @return
-     */
-    @Override
-    public LayoutHandler getHandler(String viewType)
-    {
-        return layoutHandlers.get(viewType);
-    }
 
     private Context context;
 
-    public SimpleLayoutBuilder(Context context) {
+    protected SimpleLayoutBuilder(Context context) {
         this.context = context;
     }
 
     @Override
-    public View build(ViewGroup parent, JsonObject jsonObject)
-    {
-        return buildImpl(createParserContext(), parent, jsonObject, null , 0);
+    public void registerHandler(String viewType, LayoutHandler<View> handler) {
+        handler.prepare(context);
+        layoutHandlers.put(viewType, handler);
     }
 
+    @Override
+    public void unregisterHandler(String viewType) {
+        layoutHandlers.remove(viewType);
+    }
 
-    protected ParserContext createParserContext()
-    {
+    @Override
+    public void unregisterAllHandlers() {
+        layoutHandlers.clear();
+    }
+
+    @Override
+    public LayoutHandler getHandler(String viewType) {
+        return layoutHandlers.get(viewType);
+    }
+
+    @Override
+    public ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex) {
+        return buildImpl(createParserContext(data), new SimpleProteusView(parent, 0, null),
+                layout, null, childIndex);
+    }
+
+    protected ParserContext createParserContext(JsonObject data) {
         ParserContext parserContext = new ParserContext();
         parserContext.setLayoutBuilder(this);
         return parserContext;
@@ -107,139 +79,174 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     /**
      * Starts recursively parsing the given jsonObject.
-     * @param context Represents the context of the parsing.
-     * @param parent The parent view group under which the view being created has to be added as a child.
-     * @param jsonObject The jsonObject which represents the current node which is getting parsed.
-     * @param existingView A view which needs to be used instead of creating a new one. Pass null for first pass.
-     * @param childIndex index of child inside its parent view
-     * @return
+     *
+     * @param context               Represents the context of the parsing.
+     * @param parent                The parent view group under which the view being created has to be
+     *                              added as a child.
+     * @param currentViewJsonObject The jsonObject which represents the current node which is getting parsed.
+     * @param existingView          A view which needs to be used instead of creating a new one. Pass null
+     *                              for first pass.
+     * @param childIndex            index of child inside its parent view.
+     * @return The {@link com.flipkart.layoutengine.view.ProteusView} that was built.
      */
-    protected View buildImpl(final ParserContext context, final ViewGroup parent, final JsonObject jsonObject, View existingView , final int childIndex)
-    {
-        JsonElement viewTypeElement = jsonObject.get(TYPE);
-        //System.out.println("ViewType "+ viewTypeElement.getAsString());
-        String viewType = null;
-        if(viewTypeElement!=null) {
-            viewType = viewTypeElement.getAsString();
-        }
-        else
-        {
+    protected ProteusView buildImpl(ParserContext context, final ProteusView parent,
+                                    final JsonObject currentViewJsonObject, View existingView,
+                                    final int childIndex) {
+        JsonElement viewTypeElement = currentViewJsonObject.get(TYPE);
+        String viewType;
 
-            Log.e(TAG,"view cannot be null");
+        if (viewTypeElement != null) {
+            viewType = viewTypeElement.getAsString();
+        } else {
+            Log.e(TAG, "view cannot be null");
             return null;
         }
 
         LayoutHandler<View> handler = layoutHandlers.get(viewType);
-        if(handler == null)
-        {
-            return onUnknownViewEncountered(context,viewType,parent,jsonObject,childIndex);
-        }
-
-
-
-        JsonElement childViewElement = jsonObject.get(CHILD_TYPE);
-        JsonElement childrenElement = jsonObject.get(CHILDREN);
-        JsonArray children = null;
-        if(childrenElement!=null) {
-            children = parseChildren(handler,context,childrenElement,childIndex);
+        if (handler == null) {
+            return onUnknownViewEncountered(context, viewType, parent, currentViewJsonObject, childIndex);
         }
 
         /**
          * View creation.
          */
-        final View self;
-        if(existingView == null) {
-            self = createView(context, parent, handler, jsonObject);
-            handler.setupView(parent,self);
+        final View createdView;
+        if (existingView == null) {
+            ViewGroup parentViewGroup = (ViewGroup) parent.getView();
+            createdView = createView(context, parentViewGroup, handler, currentViewJsonObject);
+            handler.setupView(parentViewGroup, createdView);
+        } else {
+            createdView = existingView;
         }
-        else
-        {
-            self = existingView;
-        }
+
+        // create the proteus view to return
+        ProteusView proteusViewToReturn = createProteusViewToReturn(createdView, childIndex, parent);
+        prepareView(proteusViewToReturn, context);
 
         /**
          * Parsing each attribute and setting it on the view.
          */
-        for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-
-            if(TYPE.equals(entry.getKey()) || CHILDREN.equals(entry.getKey()) || CHILD_TYPE.equals(entry.getKey()))
-            {
+        for (Map.Entry<String, JsonElement> entry : currentViewJsonObject.entrySet()) {
+            if (TYPE.equals(entry.getKey()) || CHILDREN.equals(entry.getKey())
+                    || CHILD_TYPE.equals(entry.getKey())) {
                 continue;
             }
-            boolean handled = handleAttribute(handler,context,entry.getKey(),jsonObject,entry.getValue(),self,parent, childIndex);
 
-            if(!handled)
-            {
-                onUnknownAttributeEncountered(context, entry.getKey(), entry.getValue(), jsonObject, self , childIndex);
+            JsonElement jsonDataValue = entry.getValue();
+            String attributeName = entry.getKey();
+            boolean handled;
+
+            handled = handleAttribute(handler,
+                    context,
+                    attributeName,
+                    currentViewJsonObject,
+                    jsonDataValue,
+                    proteusViewToReturn,
+                    parent,
+                    childIndex);
+
+            if (!handled) {
+                onUnknownAttributeEncountered(context,
+                        attributeName,
+                        jsonDataValue,
+                        currentViewJsonObject,
+                        createdView,
+                        childIndex);
             }
         }
 
         /**
          * Processing the children.
          */
+        JsonElement childViewElement = currentViewJsonObject.get(CHILD_TYPE);
+        JsonElement childrenElement = currentViewJsonObject.get(CHILDREN);
+        JsonArray children = null;
+        if (childrenElement != null) {
+            children = parseChildren(handler, context, childrenElement, childIndex);
+        }
 
-        if(children!=null && children.size()>0) {
-            ViewGroup selfViewGroup = (ViewGroup) self;
-            List<View> childrenToAdd = new ArrayList<View>();
+        if (children != null && children.size() > 0) {
+            List<ProteusView> childrenToAdd = new ArrayList<>();
+            JsonObject childLayout = null;
+            if (childViewElement != null) {
+                childLayout = onChildTypeLayoutRequired(context, childViewElement.getAsString(),
+                        currentViewJsonObject, proteusViewToReturn);
+            }
             for (int i = 0; i < children.size(); i++) {
                 JsonObject childObject = children.get(i).getAsJsonObject();
-                if(childViewElement!=null)
-                {
+                if (childLayout == null && childViewElement != null) {
                     // propagate the value of 'childView' to the recursive calls
-                    childObject.add(TYPE,childViewElement);
+                    childObject.add(TYPE, childViewElement);
+                } else if (childLayout != null) {
+                    childObject = childLayout;
                 }
-                View childView = buildImpl(context, selfViewGroup, childObject, null, i);
-                if(childView!=null) {
+                // build the child views
+                ProteusView childView = buildImpl(context, proteusViewToReturn, childObject, null, i);
+                // add the child view to the array of children
+                if (childView != null) {
                     childrenToAdd.add(childView);
                 }
-
             }
-            if(childrenToAdd.size()>0) {
-                handler.addChildren(this.context, selfViewGroup, childrenToAdd);
+
+            // add the children to the root view group
+            if (childrenToAdd.size() > 0) {
+                handler.addChildren(context, proteusViewToReturn, childrenToAdd, currentViewJsonObject);
             }
         }
-
-        return self;
-
+        return proteusViewToReturn;
     }
 
-    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, JsonElement childrenElement, int childIndex)
-    {
-        return handler.parseChildren(context,childrenElement,childIndex);
+    protected ProteusView createProteusViewToReturn(View createdView, int index, ProteusView parent) {
+        return new SimpleProteusView(createdView, index, parent);
     }
 
-    protected boolean handleAttribute(LayoutHandler handler, ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, View view, ViewGroup parent, int index)
-    {
-        return handler.handleAttribute(context, attribute, jsonObject , element, view, index);
+    protected void prepareView(ProteusView proteusView, ParserContext parserContext) {
+        // nothing to do here
     }
 
-    protected void onUnknownAttributeEncountered(ParserContext context, String attribute, JsonElement element, JsonObject object, View view , int childIndex)
-    {
-        if(listener!=null)
-        {
-            listener.onUnknownAttribute(context,attribute,element, object, view, childIndex);
+    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context,
+                                      JsonElement childrenElement, int childIndex) {
+        return handler.parseChildren(context, childrenElement, childIndex);
+    }
+
+    public boolean handleAttribute(LayoutHandler handler, ParserContext context,
+                                   String attribute, JsonObject jsonObject, JsonElement element,
+                                   ProteusView view, ProteusView parent, int index) {
+        return handler.handleAttribute(context, attribute, jsonObject, element, view, index);
+    }
+
+    protected void onUnknownAttributeEncountered(ParserContext context, String attribute,
+                                                 JsonElement element, JsonObject object, View view,
+                                                 int childIndex) {
+        if (ProteusConstants.ATTRIBUTES_TO_IGNORE.contains(attribute)) {
+            return;
+        }
+        if (listener != null) {
+            listener.onUnknownAttribute(context, attribute, element, object, view, childIndex);
         }
     }
 
-    protected View onUnknownViewEncountered(ParserContext context, String viewType, ViewGroup parent, JsonObject jsonObject, int childIndex) {
-
-        if(listener!=null)
-        {
-            return listener.onUnknownViewType(context,viewType,jsonObject,parent,childIndex);
+    protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
+                                                   ProteusView parent, JsonObject viewJsonObject,
+                                                   int childIndex) {
+        if (listener != null) {
+            return listener.onUnknownViewType(context, viewType, viewJsonObject, parent, childIndex);
         }
         return null;
     }
 
-
-
-    protected View createView(ParserContext context, ViewGroup parent, LayoutHandler<View> handler, JsonObject object)
-    {
-        View view = handler.createView(context, this.context, parent, object);
-        return view;
+    protected JsonObject onChildTypeLayoutRequired(ParserContext context, String viewType,
+                                                   JsonObject parentViewJsonObject, ProteusView parent) {
+        if (listener != null) {
+            return listener.onChildTypeLayoutRequired(context, viewType, parentViewJsonObject, parent);
+        }
+        return null;
     }
 
-
-
+    protected View createView(ParserContext context, ViewGroup parent, LayoutHandler<View> handler,
+                              JsonObject object) {
+        return handler.createView(context, this.context, parent, object);
+    }
 
     @Override
     public LayoutBuilderCallback getListener() {
@@ -252,25 +259,15 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     @Override
-    public BitmapLoader getNetworkDrawableHelper(){
+    public BitmapLoader getNetworkDrawableHelper() {
         return bitmapLoader;
     }
 
-    /**
-     * All network bitmap calls will be handed over to this loader.
-     * @param bitmapLoader
-     */
     @Override
-    public void setBitmapLoader(BitmapLoader bitmapLoader){
+    public void setBitmapLoader(BitmapLoader bitmapLoader) {
         this.bitmapLoader = bitmapLoader;
     }
 
-    /**
-     *
-     * Set this to true for rendering preview immediately. This is to be used to decide whether remote resources like remote images are to be downloaded synchronously or not
-     * @return true if the all views should be rendered immediately.
-     *
-     */
     @Override
     public boolean isSynchronousRendering() {
         return isSynchronousRendering;
