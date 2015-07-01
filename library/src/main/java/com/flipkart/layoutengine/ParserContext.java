@@ -1,23 +1,17 @@
 package com.flipkart.layoutengine;
 
 import com.flipkart.layoutengine.builder.LayoutBuilder;
-import com.flipkart.layoutengine.provider.Provider;
 
 /**
- * Created by kirankumar on 02/07/14.
+ * @author kirankumar
  */
 public class ParserContext implements Cloneable {
 
-    private Provider dataProvider;
     private LayoutBuilder layoutBuilder;
-    private String dataContext;
+    private DataContext dataContext;
 
-    public Provider getDataProvider() {
-        return dataProvider;
-    }
-
-    public void setDataProvider(Provider dataProvider) {
-        this.dataProvider = dataProvider;
+    public ParserContext() {
+        this.dataContext = new DataContext(null, null, null, null, 0);
     }
 
     public LayoutBuilder getLayoutBuilder() {
@@ -28,11 +22,11 @@ public class ParserContext implements Cloneable {
         this.layoutBuilder = layoutBuilder;
     }
 
-    public String getDataContext() {
+    public DataContext getDataContext() {
         return dataContext;
     }
 
-    public void setDataContext(String dataContext) {
+    public void setDataContext(DataContext dataContext) {
         this.dataContext = dataContext;
     }
 

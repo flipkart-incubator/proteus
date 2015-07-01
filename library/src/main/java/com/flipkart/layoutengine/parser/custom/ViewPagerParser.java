@@ -22,7 +22,7 @@ public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
     }
 
     @Override
-    public void addChildren(ParserContext parserContext, ProteusView<View> parent,
+    public void addChildren(ParserContext parserContext, ProteusView parent,
                             final List<ProteusView> children, JsonObject viewLayout) {
 
         //not calling super since it calls addChild(). addchild() on viewpager wont work.

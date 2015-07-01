@@ -1,50 +1,73 @@
 package com.flipkart.layoutengine.toolbox;
 
-import android.util.Log;
-
-import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
+import com.flipkart.layoutengine.exceptions.JsonNullException;
+import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import com.flipkart.layoutengine.provider.JsonProvider;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Created by Aditya Sharat on 08-04-2015.
+ * @author Aditya Sharat
  */
 public class Utils {
+    public static final String LIB_NAME = "proteus";
+    public static final String VERSION = "2.6.8-SNAPSHOT";
+    public static final String TAG = getTagPrefix() + Utils.class.getSimpleName();
 
-    public static final String TAG = Utils.class.getSimpleName();
-
-    public static JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
-        if (element != null && element.length() > 0) {
-            JsonElement elementToReturn = dataProvider.getObject(element, childIndex);
-            if (elementToReturn != null) {
-                return elementToReturn;
-            } else {
-                Log.e(TAG, "Got null element for " + element);
-            }
+    public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
+            throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
+        // replace CHILD_INDEX_REFERENCE reference with index value
+        if (ProteusConstants.CHILD_INDEX_REFERENCE.equals(dataPath)) {
+            dataPath = dataPath.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
+            return new JsonPrimitive(dataPath);
+        } else {
+            return dataProvider.getObject(dataPath, childIndex);
         }
-        return Utils.getStringAsJsonElement(element);
     }
 
-    public static JsonElement getStringAsJsonElement(String string) {
-        JsonObject temp = new JsonObject();
-        temp.addProperty("value", string);
-        return temp.get("value");
+    public static JsonObject merge(JsonObject x, JsonObject y) {
+        for (Map.Entry<String, JsonElement> entry : y.entrySet()) {
+            String key = entry.getKey();
+            JsonElement oldDataElement = x.get(key);
+            JsonElement newDataElement = y.get(key);
+            if (oldDataElement != null && oldDataElement.isJsonObject() && newDataElement != null) {
+                newDataElement = merge(entry.getValue().getAsJsonObject(), newDataElement.getAsJsonObject());
+            }
+            x.add(key, newDataElement);
+        }
+        return x;
+    }
+
+    public static JsonObject addElements(JsonObject jsonObject, Set<Map.Entry<String, JsonElement>> members, boolean override) {
+        for (Map.Entry<String, JsonElement> entry : members) {
+            if (override && jsonObject.get(entry.getKey()) != null) {
+                break;
+            }
+            jsonObject.add(entry.getKey(), entry.getValue());
+        }
+        return jsonObject;
+    }
+
+   /* public static JsonElement getStringAsJsonElement(String string) {
+        return new JsonPrimitive(string);
     }
 
     public static JsonElement getNumberAsJsonElement(Number number) {
-        JsonObject temp = new JsonObject();
-        temp.addProperty("value", number);
-        return temp.get("value");
+        return new JsonPrimitive(number);
     }
 
     public static JsonElement getBooleanAsJsonElement(Boolean aBoolean) {
-        JsonObject temp = new JsonObject();
-        temp.addProperty("value", aBoolean);
-        return temp.get("value");
-    }
+        return new JsonPrimitive(aBoolean);
+    }*/
 
-    public static String format(String value, String formatterName) {
-        return Formatters.get(formatterName).format(value);
+    public static String getTagPrefix() {
+        return LIB_NAME + ":" + VERSION + ":";
     }
 
 }

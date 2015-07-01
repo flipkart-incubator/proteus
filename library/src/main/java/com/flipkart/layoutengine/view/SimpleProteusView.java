@@ -2,7 +2,6 @@ package com.flipkart.layoutengine.view;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 
 import com.google.gson.JsonObject;
 
@@ -16,12 +15,15 @@ import java.util.ArrayList;
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
 public class SimpleProteusView implements ProteusView {
-    //private static final String TAG = SimpleProteusView.class.getSimpleName();
-    protected View view;
-    protected ArrayList<ProteusView<View>> children;
+    protected ProteusView parent;
+    private View view;
+    protected int index;
+    protected ArrayList<ProteusView> children;
 
-    public SimpleProteusView(View view) {
+    public SimpleProteusView(View view, int index, ProteusView parent) {
         this.view = view;
+        this.index = index;
+        this.parent = parent;
     }
 
     @Override
@@ -29,17 +31,31 @@ public class SimpleProteusView implements ProteusView {
         return this.view;
     }
 
-    @Override
-    public void addChild(ProteusView view) {
-        if(this.children == null) {
-            this.children = new ArrayList<>();
-        }
-        this.children.add(view);
-        ((ViewGroup)getView()).addView(view.getView());
+    public int getIndex() {
+        return this.index;
     }
 
     @Override
-    public ArrayList<ProteusView<View>> getChildren() {
+    public ProteusView getParent() {
+        return this.parent;
+    }
+
+    @Override
+    public void addChild(ProteusView proteusView) {
+        if (proteusView == null) {
+            return;
+        }
+        if (this.children == null) {
+            this.children = new ArrayList<>();
+        }
+        this.children.add(proteusView);
+        if (view !=null && proteusView.getView() != null) {
+            ((ViewGroup) view).addView(proteusView.getView());
+        }
+    }
+
+    @Override
+    public ArrayList<ProteusView> getChildren() {
         return this.children;
     }
 
@@ -51,7 +67,7 @@ public class SimpleProteusView implements ProteusView {
     @Override
     public void replaceView(ProteusView view) {
         this.children = view.getChildren();
-        ViewGroup parent = (ViewGroup)this.view.getParent();
+        ViewGroup parent = (ViewGroup) this.view.getParent();
         int index = parent.indexOfChild(this.view);
         parent.removeView(this.view);
         parent.addView(view.getView(), index);

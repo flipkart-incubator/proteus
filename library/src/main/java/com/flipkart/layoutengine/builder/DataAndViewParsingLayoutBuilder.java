@@ -1,10 +1,15 @@
 package com.flipkart.layoutengine.builder;
 
 import android.content.Context;
-import android.view.ViewGroup;
+import android.util.Log;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
+import com.flipkart.layoutengine.exceptions.JsonNullException;
+import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -14,20 +19,26 @@ import com.google.gson.JsonObject;
  * {@link SimpleLayoutBuilder}
  */
 public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
-    private final Provider viewProvider;
 
-    DataAndViewParsingLayoutBuilder(Context context, Provider viewProvider) {
+    public static final String TAG = Utils.getTagPrefix() + DataAndViewParsingLayoutBuilder.class.getSimpleName();
+    private Provider viewProvider;
+
+    protected DataAndViewParsingLayoutBuilder(Context context, JsonObject viewProvider) {
         super(context);
-        this.viewProvider = viewProvider;
+        this.viewProvider = new JsonProvider(viewProvider);
     }
 
     @Override
     protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
-                                                   ViewGroup parent, JsonObject viewJsonObject,
+                                                   ProteusView parent, JsonObject viewJsonObject,
                                                    int childIndex) {
         JsonElement viewElement = null;
         if (viewProvider != null) {
-            viewElement = viewProvider.getObject(viewType, childIndex);
+            try {
+                viewElement = viewProvider.getObject(viewType, childIndex);
+            } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
+                Log.e(TAG, e.getMessage());
+            }
         }
         if (viewElement != null) {
             JsonObject viewLayoutObject = viewElement.getAsJsonObject();
@@ -39,11 +50,21 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
         return super.onUnknownViewEncountered(context, viewType, parent, viewJsonObject, childIndex);
     }
 
+    public void updateLayoutProvider(JsonObject newViewProvider) {
+        if (viewProvider != null && viewProvider.getData() != null) {
+            JsonObject viewProviderData = Utils.merge(viewProvider.getData().getAsJsonObject(), newViewProvider);
+            viewProvider.setData(viewProviderData);
+        } else {
+            viewProvider = new JsonProvider(newViewProvider);
+        }
+    }
+
     private void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
                                              ParserContext parserContext, JsonObject viewLayoutObject,
-                                             ViewGroup parent, int childIndex) {
+                                             ProteusView parent, int childIndex) {
         if (listener != null) {
-            listener.onViewBuiltFromViewProvider(createdView, viewType, parserContext, viewLayoutObject, parent, childIndex);
+            listener.onViewBuiltFromViewProvider(createdView, viewType, parserContext, viewLayoutObject,
+                    parent, childIndex);
         }
     }
 }

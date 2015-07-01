@@ -1,53 +1,50 @@
 package com.flipkart.layoutengine.view;
 
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 
+import com.flipkart.layoutengine.DataContext;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
-import com.flipkart.layoutengine.provider.GsonProvider;
-import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
+import com.flipkart.layoutengine.exceptions.JsonNullException;
+import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
 
 /**
- * A {@link ProteusView} implementation to update the data
- * associated with a {@link android.view.View} built using a
- * {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
+ * A {@link ProteusView} implementation to update the data associated with a {@link android.view.View}
+ * built using a {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
  *
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
 public class DataProteusView extends SimpleProteusView {
 
+    public static final String TAG = Utils.getTagPrefix() + DataProteusView.class.getSimpleName();
     private boolean isViewUpdating = false;
 
     /**
-     * This Array holds a references to the {@link com.flipkart.layoutengine.binding.Binding} of
-     * this {@link DataProteusView}. This map is used to update the data associated with the
-     * {@link android.view.View}
-     * example:
-     * <pre>
-     * {@literal <}"$product.name", bindingObjectOfThisProperty{@literal >}
-     * </pre>
+     * This Array holds a to the {@link Binding}s of this {@link DataProteusView}.
      */
     private ArrayList<Binding> bindings;
-    private Provider dataProvider;
+    private ParserContext parserContext;
 
     public DataProteusView(ProteusView proteusView) {
-        super(proteusView.getView());
+        super(proteusView.getView(), proteusView.getIndex(), proteusView.getParent());
         this.children = proteusView.getChildren();
         if (proteusView instanceof DataProteusView) {
-            dataProvider = ((DataProteusView) proteusView).getDataProvider();
+            parserContext = ((DataProteusView) proteusView).getParserContext();
         }
     }
 
     @Override
     public void replaceView(ProteusView view) {
         if (view instanceof DataProteusView) {
-            DataProteusView dataProteusView = (DataProteusView)view;
+            DataProteusView dataProteusView = (DataProteusView) view;
             this.bindings = dataProteusView.getBindings();
         }
         super.replaceView(view);
@@ -63,9 +60,12 @@ public class DataProteusView extends SimpleProteusView {
     @Override
     protected View updateDataImpl(JsonObject data) {
         this.isViewUpdating = true;
+
+        updateDataContext(data);
+
         if (this.bindings != null) {
             for (Binding binding : this.bindings) {
-                this.handleBinding(binding, data);
+                this.handleBinding(binding);
             }
         }
 
@@ -78,6 +78,11 @@ public class DataProteusView extends SimpleProteusView {
         return this.getView();
     }
 
+    private void updateDataContext(JsonObject newData) {
+        JsonObject oldData = parserContext.getDataContext().getDataProvider().getData().getAsJsonObject();
+        Utils.merge(oldData, newData);
+    }
+
     /**
      * Updates the Binding with new data. It uses a {@link com.flipkart.layoutengine.binding.Binding}
      * to get the associated {@link android.view.View}, {@link com.flipkart.layoutengine.builder.LayoutBuilder},
@@ -87,45 +92,40 @@ public class DataProteusView extends SimpleProteusView {
      * @param binding The property name to update mapped to its
      *                {@link com.flipkart.layoutengine.binding.Binding}
      */
-    private void handleBinding(Binding binding, JsonObject data) {
-
-        ParserContext context = binding.getParserContext();
-        int index = binding.getIndex();
-
-        context = setCorrectDataProvider(context, data);
-
+    private void handleBinding(Binding binding) {
         if (binding.hasRegEx()) {
-            binding.getParserContext().getLayoutBuilder().handleAttribute(
+            parserContext.getLayoutBuilder().handleAttribute(
                     binding.getLayoutHandler(),
-                    context,
+                    parserContext,
                     binding.getAttributeKey(),
                     null,
-                    Utils.getStringAsJsonElement(binding.getAttributeValue()),
-                    binding.getProteusView(),
-                    binding.getParentView(),
+                    new JsonPrimitive(binding.getAttributeValue()),
+                    this,
+                    parent,
                     index);
         } else {
-            JsonElement dataValue = getElementFromData(binding.getBindingName(), context.getDataProvider(), index);
-            binding.getParserContext().getLayoutBuilder().handleAttribute(
+            JsonElement dataValue;
+            try {
+                dataValue = Utils.getElementFromData(binding.getBindingName(),
+                        parserContext.getDataContext().getDataProvider(), index);
+            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                Log.e(TAG + "#handleBinding()", e.getMessage());
+                if (getView() != null) {
+                    getView().setVisibility(View.GONE);
+                }
+                return;
+            }
+            parserContext.getLayoutBuilder().handleAttribute(
                     binding.getLayoutHandler(),
-                    context,
+                    parserContext,
                     binding.getAttributeKey(),
                     null,
                     dataValue,
-                    binding.getProteusView(),
-                    binding.getParentView(),
+                    this,
+                    parent,
                     index);
-        }
 
-    }
-
-    private ParserContext setCorrectDataProvider(ParserContext context, JsonObject data) {
-        if (context.getDataContext() != null) {
-            context.setDataProvider(new GsonProvider(data));
-        } else {
-            context.getDataProvider().setRoot(data);
         }
-        return context;
     }
 
     public boolean isViewUpdating() {
@@ -136,49 +136,53 @@ public class DataProteusView extends SimpleProteusView {
         return bindings;
     }
 
-    public void setDataProvider(Provider dataProvider) {
-        if (dataProvider != null && dataProvider.getRoot() != null) {
-            if (this.dataProvider != null) {
-                this.dataProvider.setRoot(dataProvider.getRoot());
-            } else {
-                this.dataProvider = dataProvider;
-            }
-        }
+    public void setParserContext(ParserContext parserContext) {
+        this.parserContext = parserContext;
     }
 
-    public Provider getDataProvider() {
-        return dataProvider;
+    public ParserContext getParserContext() {
+        return parserContext;
     }
 
     public JsonElement get(String dataPath, int childIndex) {
-        getElementFromData(dataPath, dataProvider, childIndex);
-        return null;
+        return parserContext.getDataContext().get(dataPath, childIndex);
     }
 
     public void set(String dataPath, JsonElement newValue, int childIndex) {
         if (dataPath == null) {
             return;
         }
-        JsonElement parent = getElementFromData(dataPath.substring(0, dataPath.lastIndexOf(".")), dataProvider, childIndex);
-        if (!parent.isJsonObject()) {
+
+        String aliasedDataPath = DataContext.getAliasedDataPath(dataPath,
+                parserContext.getDataContext().getReverseScopeMap(), true);
+
+        JsonElement parent = null;
+        try {
+            parent = Utils.getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
+                    parserContext.getDataContext().getDataProvider(), childIndex);
+        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+            Log.e(TAG + "#set()", e.getMessage());
+        }
+        if (parent == null || !parent.isJsonObject()) {
             return;
         }
-        String propertyName = dataPath.substring(dataPath.lastIndexOf(".") + 1, dataPath.length());
+
+        String propertyName = aliasedDataPath.substring(aliasedDataPath.lastIndexOf(".") + 1, aliasedDataPath.length());
         parent.getAsJsonObject().add(propertyName, newValue);
 
-        updateView(dataPath);
+        updateView(aliasedDataPath);
     }
 
     public void set(String dataPath, String newValue, int childIndex) {
-        set(dataPath, Utils.getStringAsJsonElement(newValue), childIndex);
+        set(dataPath, new JsonPrimitive(newValue), childIndex);
     }
 
     public void set(String dataPath, Number newValue, int childIndex) {
-        set(dataPath, Utils.getNumberAsJsonElement(newValue), childIndex);
+        set(dataPath, new JsonPrimitive(newValue), childIndex);
     }
 
     public void set(String dataPath, boolean newValue, int childIndex) {
-        set(dataPath, Utils.getBooleanAsJsonElement(newValue), childIndex);
+        set(dataPath, new JsonPrimitive(newValue), childIndex);
     }
 
     private void updateView(String dataPath) {
@@ -186,21 +190,20 @@ public class DataProteusView extends SimpleProteusView {
         if (this.bindings != null) {
             for (Binding binding : this.bindings) {
                 if (binding.getBindingName().equals(dataPath)) {
-                    this.handleBinding(binding, dataProvider.getRoot().getAsJsonObject());
+                    this.handleBinding(binding);
                 }
             }
         }
 
         if (getChildren() != null) {
             for (ProteusView proteusView : getChildren()) {
-                ((DataProteusView) proteusView).updateView(dataPath);
+                DataProteusView dataProteusView = (DataProteusView) proteusView;
+                String aliasedDataPath = DataContext.getAliasedDataPath(dataPath,
+                        dataProteusView.getParserContext().getDataContext().getReverseScopeMap(), false);
+                dataProteusView.updateView(aliasedDataPath);
             }
         }
 
         this.isViewUpdating = false;
-    }
-
-    private JsonElement getElementFromData(String element, Provider dataProvider, int childIndex) {
-        return Utils.getElementFromData(element, dataProvider, childIndex);
     }
 }

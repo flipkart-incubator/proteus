@@ -4,74 +4,82 @@ import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.builder.DefaultLayoutBuilderFactory;
-import com.flipkart.layoutengine.builder.LayoutBuilder;
+import com.flipkart.layoutengine.builder.DataAndViewParsingLayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
-import com.flipkart.layoutengine.provider.GsonProvider;
+import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private ProteusView proteusView;
+    private DataProteusView proteusView;
+    private Gson gson;
+    private DataAndViewParsingLayoutBuilder builder;
+    private FrameLayout container;
+    private JsonObject layout;
+    private JsonObject data;
+    private ViewGroup.LayoutParams layoutParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
-            setupView(null);
+            createView();
         }
     }
 
-    private void setupView(String newData) {
-        createView(newData);
-    }
+    private void createView() {
+        this.gson = new Gson();
 
-    private void createView(String newData) {
-        Gson gson = new Gson();
+        JsonObject layoutData = getJsonFromFile(R.raw.layout).getAsJsonObject();
+        layout = layoutData;
+        JsonObject productData = getJsonFromFile(R.raw.data_0).getAsJsonObject();
+        data = productData;
 
-        //JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"TextView\",\"dataContext\":\"$product\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$name\"},{\"type\":\"TextView\",\"dataContext\":\"$product\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$price\"},{\"type\":\"TextView\",\"dataContext\":\"$product\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$rating\"}]}", JsonObject.class);
-        JsonObject layoutData = gson.fromJson("{\"type\":\"LinearLayout\",\"android\":\"http://schemas.android.com/apk/res/android\",\"layout_width\":\"match_parent\",\"layout_height\":\"match_parent\",\"paddingLeft\":\"16dp\",\"paddingRight\":\"16dp\",\"paddingTop\":\"16dp\",\"paddingBottom\":\"16dp\",\"orientation\":\"vertical\",\"children\":[{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.name\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"$product.price\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"dataContext\":\"$product\",\"text\":\"$rating\"},{\"type\":\"TextView\",\"layout_width\":\"200dp\",\"layout_height\":\"50dp\",\"text\":\"~{{product.name}} is awesome {{product.price}}$(number)\"}]}", JsonObject.class);
+        JsonElement sellerWidget = getJsonFromFile(R.raw.layout_seller_widget_0);
+        JsonObject layoutProvider = new JsonObject();
+        layoutProvider.add("SellerWidget", sellerWidget);
 
-        JsonObject data;
-        if (newData != null) {
-            data = gson.fromJson(newData, JsonObject.class);
-        } else {
-            data = gson.fromJson("{\"product\":{\"name\":\"Gaming Mouse\",\"price\":\"1350\",\"rating\":\"****\"}}", JsonObject.class);
-            //data = gson.fromJson("{\"products\":[{\"name\":\"qwe0\"},{\"name\":\"qwe1\"},{\"name\":\"qwe2\"},{\"name\":\"qwe3\"},{\"name\":\"qwe4\"},{\"name\":\"qwe5\"},{\"name\":\"qwe6\"},{\"name\":\"qwe7\"},{\"name\":\"qwe8\"},{\"name\":\"qwe9\"},{\"name\":\"qwe10\"},{\"name\":\"qwe11\"},{\"name\":\"qwe12\"},{\"name\":\"qwe13\"},{\"name\":\"qwe14\"},{\"name\":\"qwe15\"},{\"name\":\"qwe16\"},{\"name\":\"qwe17\"},{\"name\":\"qwe18\"},{\"name\":\"qwe19\"}]}", JsonObject.class);
-        }
-
-        LayoutBuilder builder = new DefaultLayoutBuilderFactory()
-                .createDataAndViewParsingLayoutBuilder(this, new GsonProvider(layoutData));
+        this.builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, layoutProvider);
 
         builder.setListener(createCallback());
 
-        FrameLayout container = new FrameLayout(MainActivity.this);
-
-        this.proteusView = builder.build(container, layoutData, data);
-        View view = proteusView.getView();
-
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        this.container = new FrameLayout(MainActivity.this);
+        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
+        long startTime = System.currentTimeMillis();
+
+        this.proteusView = (DataProteusView) builder.build(container, layoutData, productData, 0);
+
+        long stopTime = System.currentTimeMillis();
+        long elapsedTime = stopTime - startTime;
+
+        Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
+
+        View view = proteusView.getView();
         if (view != null) {
             container.addView(view, layoutParams);
         }
@@ -82,33 +90,44 @@ public class MainActivity extends ActionBarActivity {
         return new LayoutBuilderCallback() {
 
             @Override
-            public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element, JsonObject object, View view, int childIndex) {
-
+            public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element,
+                                           JsonObject object, View view, int childIndex) {
+                Log.i("unknown-attib", attribute + " in " + object.toString());
             }
 
             @Override
-            public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object, ViewGroup parent, int childIndex) {
+            public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object,
+                                                 ProteusView parent, int childIndex) {
                 return null;
             }
 
             @Override
-            public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, ParserContext context, JsonObject viewJsonObject, ViewGroup parent, int childIndex) {
-                Log.e(TAG, "here");
+            public JsonObject onChildTypeLayoutRequired(ParserContext context, String viewType,
+                                                        JsonObject parentViewJsonObject, ProteusView parent) {
+                return null;
+            }
+
+            @Override
+            public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
+                                                    ParserContext context, JsonObject viewJsonObject,
+                                                    ProteusView parent, int childIndex) {
             }
 
             @Override
             public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType) {
                 Log.d("event", attributeValue.toString());
+                return view;
+            }
+
+            @Override
+            public PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView parent,
+                                                       List<ProteusView> children, JsonObject viewLayout) {
                 return null;
             }
 
             @Override
-            public PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children, JsonObject viewLayout) {
-                return null;
-            }
-
-            @Override
-            public Adapter onAdapterRequired(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children, JsonObject viewLayout) {
+            public Adapter onAdapterRequired(ParserContext parserContext, ProteusView parent,
+                                             List<ProteusView> children, JsonObject viewLayout) {
                 return null;
             }
         };
@@ -123,23 +142,57 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-        if (id == R.id.action_refresh) {
-            ((DataProteusView) this.proteusView).set("product.price", "17000", 0);
-            ((DataProteusView) this.proteusView).set("product.name", "Intel Core i7", 0);
-            ((DataProteusView) this.proteusView).set("product.rating", "***", 0);
-            return true;
+        long startTime, stopTime, elapsedTime;
+        switch (id) {
+            case R.id.action_refresh_data:
+                startTime = System.currentTimeMillis();
+
+                this.proteusView.set("product.title", "Intel Core i7 5400K", 0);
+                this.proteusView.set("product.rating.averageRating", 2.854, 0);
+                this.proteusView.set("product.rating.ratingCount", 126, 0);
+                this.proteusView.set("sellers_1[0].price", 18800, 0);
+                this.proteusView.set("sellers_1[1].price", 17100, 0);
+                this.proteusView.set("product.dateNull", "2018-01-01 12:01:37", 0);
+
+                JsonElement je = this.proteusView.get("sellers_1[0].price", -1);
+
+                stopTime = System.currentTimeMillis();
+                elapsedTime = stopTime - startTime;
+
+                Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
+                return true;
+
+            case R.id.action_refresh_layout:
+                JsonElement sellerWidget = getJsonFromFile(R.raw.layout_seller_widget_1);
+                JsonObject layoutProvider = new JsonObject();
+                layoutProvider.add("SellerWidget", sellerWidget);
+                builder.updateLayoutProvider(layoutProvider);
+
+                startTime = System.currentTimeMillis();
+
+                this.proteusView = (DataProteusView) builder.build(container, layout, data, 0);
+
+                stopTime = System.currentTimeMillis();
+                elapsedTime = stopTime - startTime;
+
+                Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
+
+                View view = proteusView.getView();
+                if (view != null) {
+                    container.addView(view, layoutParams);
+                }
+                MainActivity.this.setContentView(container);
+
+                return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        Log.d(TAG, "key down " + keyCode);
-        if (keyCode == KeyEvent.KEYCODE_R) {
-            MainActivity.this.setContentView(new FrameLayout(this));
-        }
-        return super.onKeyDown(keyCode, event);
+    private JsonElement getJsonFromFile(int resId) {
+        InputStream inputStream = getResources().openRawResource(resId);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        return gson.fromJson(reader, JsonElement.class);
     }
 }

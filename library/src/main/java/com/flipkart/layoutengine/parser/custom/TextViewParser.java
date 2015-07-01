@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.text.Html;
 import android.widget.TextView;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -30,7 +31,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         addHandler(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setText(attributeValue);
+                view.setText(Html.fromHtml(attributeValue));
             }
         });
 

@@ -1,7 +1,6 @@
 package com.flipkart.layoutengine.builder;
 
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
@@ -53,29 +52,29 @@ public interface LayoutBuilder {
      * @param layoutJsonObject      The current {@link JsonObject} of the layout associated to this attribute.
      * @param jsonAttributeValue    The name of or reference to the value of this attribute
      * @param associatedProteusView The {@link ProteusView} that is being built.
-     * @param parent                The parent view of the view that is being built.
      * @param index                 The index of the view in its parent.
      * @return true if the attribute is processed false otherwise.
      */
-    boolean handleAttribute(LayoutHandler<View> handler,
+    boolean handleAttribute(LayoutHandler handler,
                             ParserContext context,
                             String attributeName,
                             JsonObject layoutJsonObject,
                             JsonElement jsonAttributeValue,
-                            ProteusView<View> associatedProteusView,
-                            ViewGroup parent,
+                            ProteusView associatedProteusView,
+                            ProteusView parent,
                             int index);
 
     /**
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and an optional
      * data {@link JsonObject} for binding.
      *
-     * @param parent The intended parent view for the {@link View} that will be built.
-     * @param layout The {@link JsonObject} which defines the layout for the {@link View} to be built.
-     * @param data   The {@link JsonObject} which will be used to replace bindings with values in the {@link View}
+     * @param parent     The intended parent view for the {@link View} that will be built.
+     * @param layout     The {@link JsonObject} which defines the layout for the {@link View} to be built.
+     * @param data       The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
+     * @param childIndex The index of this view in its parent. Pass 0 if it has no parent.
      * @return A {@link ProteusView} with the built view, an array of its children and optionally its bindings.
      */
-    ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data);
+    ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex);
 
     /**
      * Used to set a callback object to handle unknown view types and unknown attributes and other
