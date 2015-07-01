@@ -92,6 +92,7 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element,
                                            JsonObject object, View view, int childIndex) {
+                Log.i("unkown-attib", attribute);
             }
 
             @Override
@@ -159,10 +160,9 @@ public class MainActivity extends ActionBarActivity {
                 stopTime = System.currentTimeMillis();
                 elapsedTime = stopTime - startTime;
 
-                Log.e("data", je != null ? je.getAsString() : "fuck");
-
                 Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
                 return true;
+
             case R.id.action_refresh_layout:
                 JsonElement sellerWidget = getJsonFromFile(R.raw.layout_seller_widget_1);
                 JsonObject layoutProvider = new JsonObject();

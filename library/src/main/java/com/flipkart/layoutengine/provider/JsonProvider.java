@@ -11,9 +11,7 @@ import com.google.gson.JsonElement;
  */
 public class JsonProvider implements Provider {
     private JsonElement rootElement;
-    public static final String DATA_PATH_DELIMITER = "\\.|\\[|\\]";
-    public static final String DATA_PATH_SIMPLE_DELIMITER = "\\.";
-    public static final String CHILD_INDEX_REFERENCE = "$index";
+
 
     public JsonProvider(JsonElement jsonElement) {
         this.rootElement = jsonElement;
@@ -38,7 +36,7 @@ public class JsonProvider implements Provider {
     private JsonElement getFromObject(String path, int childIndex)
             throws InvalidDataPathException, JsonNullException, NoSuchDataPathException {
         JsonElement root = this.rootElement;
-        String[] segments = path.split(DATA_PATH_DELIMITER);
+        String[] segments = path.split(ProteusConstants.DATA_PATH_DELIMITER);
         JsonElement elementToReturn = root;
         JsonElement tempElement;
         JsonArray tempArray;
@@ -56,7 +54,7 @@ public class JsonProvider implements Provider {
             if (elementToReturn.isJsonArray()) {
                 tempArray = elementToReturn.getAsJsonArray();
                 if (tempArray != null) {
-                    if (CHILD_INDEX_REFERENCE.equals(segment)) {
+                    if (ProteusConstants.CHILD_INDEX_REFERENCE.equals(segment)) {
                         elementToReturn = tempArray.get(childIndex);
                     } else {
                         int index = Integer.parseInt(segment);

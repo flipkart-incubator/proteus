@@ -3,6 +3,7 @@ package com.flipkart.layoutengine.toolbox;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -22,8 +23,8 @@ public class Utils {
     public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
             throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
         // replace CHILD_INDEX_REFERENCE reference with index value
-        if (JsonProvider.CHILD_INDEX_REFERENCE.equals(dataPath)) {
-            dataPath = dataPath.replace(JsonProvider.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
+        if (ProteusConstants.CHILD_INDEX_REFERENCE.equals(dataPath)) {
+            dataPath = dataPath.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
             return Utils.getStringAsJsonElement(dataPath);
         } else {
             return dataProvider.getObject(dataPath, childIndex);

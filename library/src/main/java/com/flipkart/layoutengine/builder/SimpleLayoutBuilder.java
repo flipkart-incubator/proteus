@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -217,6 +218,9 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     protected void onUnknownAttributeEncountered(ParserContext context, String attribute,
                                                  JsonElement element, JsonObject object, View view,
                                                  int childIndex) {
+        if (ProteusConstants.ATTRIBUTES_TO_IGNORE.contains(attribute)) {
+            return;
+        }
         if (listener != null) {
             listener.onUnknownAttribute(context, attribute, element, object, view, childIndex);
         }

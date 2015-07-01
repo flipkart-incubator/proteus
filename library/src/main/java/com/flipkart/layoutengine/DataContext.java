@@ -3,11 +3,11 @@ package com.flipkart.layoutengine;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import com.google.gson.JsonPrimitive;
 
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
  * @author Aditya Sharat
  */
 public class DataContext {
+
     private JsonProvider dataProvider;
     private Map<String, String> reverseScope;
     private Map<String, String> scope;
@@ -76,9 +77,9 @@ public class DataContext {
     public static String getAliasedDataPath(String dataPath, Map<String, String> reverseScope, boolean isBindingPath) {
         String[] segments;
         if (isBindingPath) {
-            segments = dataPath.split(JsonProvider.DATA_PATH_DELIMITER);
+            segments = dataPath.split(ProteusConstants.DATA_PATH_DELIMITER);
         } else {
-            segments = dataPath.split(JsonProvider.DATA_PATH_SIMPLE_DELIMITER);
+            segments = dataPath.split(ProteusConstants.DATA_PATH_SIMPLE_DELIMITER);
         }
 
         if (reverseScope == null) {
@@ -89,9 +90,7 @@ public class DataContext {
             return dataPath;
         }
 
-        String aliasedPath = dataPath.replaceFirst(Pattern.quote(segments[0]), alias);
-        return aliasedPath;
-
+        return dataPath.replaceFirst(Pattern.quote(segments[0]), alias);
     }
 
     public int getIndex() {

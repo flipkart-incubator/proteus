@@ -12,8 +12,7 @@ import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.LayoutHandler;
-import com.flipkart.layoutengine.parser.ParseHelper;
-import com.flipkart.layoutengine.provider.DataParsingConstants;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.toolbox.Formatters;
 import com.flipkart.layoutengine.toolbox.Utils;
@@ -119,11 +118,11 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         DataProteusView associatedProteusView = (DataProteusView) proteusView;
 
         if (attributeValue != null && !"".equals(attributeValue) &&
-                (attributeValue.charAt(0) == DataParsingConstants.DATA_PREFIX ||
-                        attributeValue.charAt(0) == DataParsingConstants.REGEX_PREFIX)) {
+                (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX ||
+                        attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX)) {
 
-            if (attributeValue.charAt(0) == DataParsingConstants.REGEX_PREFIX) {
-                Matcher regexMatcher = DataParsingConstants.REGEX_PATTERN.matcher(attributeValue);
+            if (attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX) {
+                Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(attributeValue);
                 String finalValue = attributeValue;
 
                 while (regexMatcher.find()) {
@@ -180,7 +179,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 // return as a JSONPrimitive
                 jsonDataValue = Utils.getStringAsJsonElement(finalValue);
 
-            } else if (attributeValue.charAt(0) == DataParsingConstants.DATA_PREFIX) {
+            } else if (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX) {
                 JsonElement elementFromData = null;
                 try {
                     elementFromData = Utils.getElementFromData(attributeValue.substring(1),
@@ -301,7 +300,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
             newData.add(key, data);
             newScope.put(key, value);
-            String unaliasedValue = value.replace(JsonProvider.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
+            String unaliasedValue = value.replace(ProteusConstants.CHILD_INDEX_REFERENCE,
+                    String.valueOf(childIndex));
             newReverseScope.put(unaliasedValue, key);
         }
         if (oldScope != null) {
