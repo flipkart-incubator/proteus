@@ -55,10 +55,10 @@ public interface LayoutBuilderCallback {
      */
     View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType);
 
-    PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView<View> parent,
+    PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView parent,
                                         final List<ProteusView> children, JsonObject viewLayout);
 
-    Adapter onAdapterRequired(ParserContext parserContext, ProteusView<View> parent,
+    Adapter onAdapterRequired(ParserContext parserContext, ProteusView parent,
                               final List<ProteusView> children, JsonObject viewLayout);
 
 }

@@ -16,9 +16,9 @@ import java.util.ArrayList;
  */
 public class SimpleProteusView implements ProteusView {
     protected ProteusView parent;
-    protected View view;
+    private View view;
     protected int index;
-    protected ArrayList<ProteusView<View>> children;
+    protected ArrayList<ProteusView> children;
 
     public SimpleProteusView(View view, int index, ProteusView parent) {
         this.view = view;
@@ -41,19 +41,21 @@ public class SimpleProteusView implements ProteusView {
     }
 
     @Override
-    public void addChild(ProteusView view) {
-        if (view == null) {
+    public void addChild(ProteusView proteusView) {
+        if (proteusView == null) {
             return;
         }
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
-        this.children.add(view);
-        ((ViewGroup) getView()).addView(view.getView());
+        this.children.add(proteusView);
+        if (view !=null && proteusView.getView() != null) {
+            ((ViewGroup) view).addView(proteusView.getView());
+        }
     }
 
     @Override
-    public ArrayList<ProteusView<View>> getChildren() {
+    public ArrayList<ProteusView> getChildren() {
         return this.children;
     }
 

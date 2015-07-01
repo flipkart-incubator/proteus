@@ -53,6 +53,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             childIndex);
                 } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                     Log.e(TAG + "#parseChildren()", e.getMessage());
+                    childrenElement = new JsonArray();
                 }
             }
         }

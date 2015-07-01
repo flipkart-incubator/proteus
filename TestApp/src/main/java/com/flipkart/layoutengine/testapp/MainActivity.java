@@ -119,13 +119,13 @@ public class MainActivity extends ActionBarActivity {
             }
 
             @Override
-            public PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView<View> parent,
+            public PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView parent,
                                                        List<ProteusView> children, JsonObject viewLayout) {
                 return null;
             }
 
             @Override
-            public Adapter onAdapterRequired(ParserContext parserContext, ProteusView<View> parent,
+            public Adapter onAdapterRequired(ParserContext parserContext, ProteusView parent,
                                              List<ProteusView> children, JsonObject viewLayout) {
                 return null;
             }

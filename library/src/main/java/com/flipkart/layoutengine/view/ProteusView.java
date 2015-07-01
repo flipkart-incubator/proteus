@@ -20,12 +20,12 @@ import java.util.ArrayList;
  *
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
-public interface ProteusView<T extends View> {
+public interface ProteusView {
 
     /**
      * @return reference to the view {@link android.view.View} wrapped by the {@link ProteusView}
      */
-    T getView();
+    View getView();
 
     /**
      * @return the index of this view in it's parent.
@@ -47,7 +47,7 @@ public interface ProteusView<T extends View> {
     /**
      * @return the list of children.
      */
-    ArrayList<ProteusView<View>> getChildren();
+    ArrayList<ProteusView> getChildren();
 
     /**
      * Updates the data associated with view wrapped by the {@link ProteusView}

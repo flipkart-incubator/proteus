@@ -106,7 +106,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, ProteusView<T> view, int childIndex) {
+    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, ProteusView view, int childIndex) {
         AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
             attributeProcessor.handle(context, attribute, element, view.getView());
@@ -130,7 +130,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
      * @param children The List of child views which have to be added.
      */
     @Override
-    public void addChildren(ParserContext parserContext, ProteusView<View> parent, List<ProteusView> children,
+    public void addChildren(ParserContext parserContext, ProteusView parent, List<ProteusView> children,
                             JsonObject viewLayout) {
         for (ProteusView child : children) {
             parent.addChild(child);
