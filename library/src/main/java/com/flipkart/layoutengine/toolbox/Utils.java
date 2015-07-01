@@ -66,10 +66,6 @@ public class Utils {
         return new JsonPrimitive(aBoolean);
     }
 
-    public static String format(String value, String formatterName) {
-        return Formatters.get(formatterName).format(value);
-    }
-
     public static String getTagPrefix() {
         return LIB_NAME + ":" + VERSION + ":";
     }

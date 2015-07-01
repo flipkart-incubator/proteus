@@ -13,7 +13,6 @@
       "type": "TextView",
       "layout_width": "wrap_content",
       "layout_height": "wrap_content",
-      "marginBottom": "5dp",
       "text": "~{{seller.name}} <font color=#6688ee>[{{seller.rating}}/5]</font>"
     },
     {

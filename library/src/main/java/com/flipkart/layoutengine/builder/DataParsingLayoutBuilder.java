@@ -14,7 +14,7 @@ import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.provider.JsonProvider;
-import com.flipkart.layoutengine.toolbox.Formatters;
+import com.flipkart.layoutengine.toolbox.Formatter;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -35,6 +35,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     public static final String TAG = Utils.getTagPrefix() + DataParsingLayoutBuilder.class.getSimpleName();
     public static final String DATA_CONTEXT = "dataContext";
     public static final String DATA_VISIBILITY = "data";
+
+    private Map<String, Formatter> formatter = new HashMap<>();
 
     protected DataParsingLayoutBuilder(Context context) {
         super(context);
@@ -152,7 +154,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
                         String formattedValue = null;
                         try {
-                            formattedValue = Utils.format(Utils.getElementFromData(dataPath,
+                            formattedValue = format(Utils.getElementFromData(dataPath,
                                             parserContext.getDataContext().getDataProvider(),
                                             parserContext.getDataContext().getIndex()).getAsString(),
                                     formatterName);
@@ -253,7 +255,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         DataContext oldDataContext = oldParserContext.getDataContext();
 
         if (oldDataContext.getDataProvider() == null) {
-            Log.e(TAG, "When scope is specified, data provider cannot be null");
+            Log.e(TAG + "#getNewParserContext()", "When scope is specified, data provider cannot be null");
             return oldParserContext;
         }
 
@@ -317,11 +319,23 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         return new DataContext(new JsonProvider(newData), newScope, newReverseScope, oldDataContext, childIndex);
     }
 
-    public void registerFormatter(Formatters.Formatter formatter) {
-        Formatters.add(formatter);
+    private String format(String toFormat, String formatterName) {
+        Formatter formatter = this.formatter.get(formatterName);
+        if (formatter == null) {
+            formatter = Formatter.NOOP;
+        }
+
+        return formatter.format(toFormat);
+    }
+
+    public void registerFormatter(Formatter formatter) {
+        this.formatter.put(formatter.getName(), formatter);
     }
 
     public void unregisterFormatter(String formatterName) {
-        Formatters.remove(formatterName);
+        if (Formatter.NOOP.getName().equals(formatterName)) {
+            return;
+        }
+        this.formatter.remove(formatterName);
     }
 }

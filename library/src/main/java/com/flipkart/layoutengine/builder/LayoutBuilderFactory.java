@@ -1,6 +1,7 @@
 package com.flipkart.layoutengine.builder;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -22,7 +23,14 @@ import com.flipkart.layoutengine.parser.custom.TextViewParser;
 import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
 import com.flipkart.layoutengine.parser.custom.WebViewParser;
 import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.toolbox.Formatter;
 import com.google.gson.JsonObject;
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Factory class for creating Layout builders with different predefined behaviours. This is the
@@ -47,6 +55,7 @@ public class LayoutBuilderFactory {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
             dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(context, viewProvider);
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
+            registerFormatters(dataAndViewParsingLayoutBuilderInstance);
         }
         return dataAndViewParsingLayoutBuilderInstance;
     }
@@ -61,6 +70,7 @@ public class LayoutBuilderFactory {
         if (dataParsingLayoutBuilderInstance == null) {
             dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder(context);
             registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
+            registerFormatters(dataParsingLayoutBuilderInstance);
         }
         return dataParsingLayoutBuilderInstance;
     }
@@ -121,6 +131,84 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("RatingBar", ratingBarParser);
         layoutBuilder.registerHandler("CheckBox", checkBoxParser);
         layoutBuilder.registerHandler("ProgressBar", progressBarParser);
+    }
+
+    protected void registerFormatters(DataParsingLayoutBuilder layoutBuilder) {
+
+        Formatter NumberFormatter = new Formatter() {
+            @Override
+            public String format(String value) {
+                double valueAsNumber;
+                try {
+                    valueAsNumber = Double.parseDouble(value);
+                } catch (NumberFormatException e) {
+                    return value;
+                }
+                NumberFormat numberFormat = new DecimalFormat("#,###");
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
+                    numberFormat.setRoundingMode(RoundingMode.FLOOR);
+                }
+                numberFormat.setMinimumFractionDigits(0);
+                numberFormat.setMaximumFractionDigits(2);
+                return numberFormat.format(valueAsNumber);
+            }
+
+            public String format(int value) {
+                NumberFormat numberFormat = new DecimalFormat("#,###");
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
+                    numberFormat.setRoundingMode(RoundingMode.FLOOR);
+                }
+                numberFormat.setMinimumFractionDigits(0);
+                numberFormat.setMaximumFractionDigits(2);
+                return numberFormat.format(value);
+            }
+
+            @Override
+            public String getName() {
+                return "number";
+            }
+        };
+
+        Formatter DateFormatter = new Formatter() {
+            @Override
+            public String format(String value) {
+                try {
+                    // 2015-06-18 12:01:37
+                    Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(value);
+                    return new SimpleDateFormat("d MMM, E").format(date);
+                } catch (Exception e) {
+                    return  value;
+                }
+            }
+
+            @Override
+            public String getName() {
+                return "date";
+            }
+        };
+
+        Formatter IndexFormatter = new Formatter() {
+            @Override
+            public String format(String value) {
+                int valueAsNumber;
+                try {
+                    valueAsNumber = Integer.parseInt(value);
+                } catch (NumberFormatException e) {
+                    return value;
+                }
+                return String.valueOf(valueAsNumber + 1);
+            }
+
+            @Override
+            public String getName() {
+                return "index";
+            }
+        };
+
+        layoutBuilder.registerFormatter(NumberFormatter);
+        layoutBuilder.registerFormatter(DateFormatter);
+        layoutBuilder.registerFormatter(IndexFormatter);
+
     }
 
 }
