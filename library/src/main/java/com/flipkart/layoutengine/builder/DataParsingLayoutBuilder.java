@@ -178,8 +178,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 // remove the REGEX_PREFIX
                 finalValue = finalValue.substring(1);
 
-                // return as a JSONPrimitive
-                jsonDataValue = Utils.getStringAsJsonElement(finalValue);
+                // return as a JsonPrimitive
+                jsonDataValue = new JsonPrimitive(finalValue);
 
             } else if (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX) {
                 JsonElement elementFromData = null;

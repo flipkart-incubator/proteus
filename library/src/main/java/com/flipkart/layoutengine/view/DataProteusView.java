@@ -12,6 +12,7 @@ import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
 
@@ -98,7 +99,7 @@ public class DataProteusView extends SimpleProteusView {
                     parserContext,
                     binding.getAttributeKey(),
                     null,
-                    Utils.getStringAsJsonElement(binding.getAttributeValue()),
+                    new JsonPrimitive(binding.getAttributeValue()),
                     this,
                     parent,
                     index);
@@ -173,15 +174,15 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     public void set(String dataPath, String newValue, int childIndex) {
-        set(dataPath, Utils.getStringAsJsonElement(newValue), childIndex);
+        set(dataPath, new JsonPrimitive(newValue), childIndex);
     }
 
     public void set(String dataPath, Number newValue, int childIndex) {
-        set(dataPath, Utils.getNumberAsJsonElement(newValue), childIndex);
+        set(dataPath, new JsonPrimitive(newValue), childIndex);
     }
 
     public void set(String dataPath, boolean newValue, int childIndex) {
-        set(dataPath, Utils.getBooleanAsJsonElement(newValue), childIndex);
+        set(dataPath, new JsonPrimitive(newValue), childIndex);
     }
 
     private void updateView(String dataPath) {

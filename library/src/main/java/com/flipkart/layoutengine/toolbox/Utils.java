@@ -3,8 +3,8 @@ package com.flipkart.layoutengine.toolbox;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
-import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.provider.JsonProvider;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -25,7 +25,7 @@ public class Utils {
         // replace CHILD_INDEX_REFERENCE reference with index value
         if (ProteusConstants.CHILD_INDEX_REFERENCE.equals(dataPath)) {
             dataPath = dataPath.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
-            return Utils.getStringAsJsonElement(dataPath);
+            return new JsonPrimitive(dataPath);
         } else {
             return dataProvider.getObject(dataPath, childIndex);
         }
@@ -54,7 +54,7 @@ public class Utils {
         return jsonObject;
     }
 
-    public static JsonElement getStringAsJsonElement(String string) {
+   /* public static JsonElement getStringAsJsonElement(String string) {
         return new JsonPrimitive(string);
     }
 
@@ -64,7 +64,7 @@ public class Utils {
 
     public static JsonElement getBooleanAsJsonElement(Boolean aBoolean) {
         return new JsonPrimitive(aBoolean);
-    }
+    }*/
 
     public static String getTagPrefix() {
         return LIB_NAME + ":" + VERSION + ":";
