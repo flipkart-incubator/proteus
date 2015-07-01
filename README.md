@@ -5,17 +5,12 @@ An android library for achieving granular control over the visual appearance and
 
 Usage:
 
-```java
-JsonObject layout = new JsonObject();   // this layout is the layout sent from server
-LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
+	
 
-ViewGroup parentViewGroup = (ViewGroup)this.getWindow().getDecorView();
-ProteusView proteusView = builder.build(parentViewGroup, layout, null);
+    JsonObject layout = new JsonObject(); // this layout is the layout sent from server
+    LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
+	View view = builder.build((ViewGroup)this.getWindow().getDecorView(),layout); 	// now you have a dynamic view which can be added to decorview
 
-// To get the View call the ProteusView.getView()
-// now you have a dynamic view which can be added to decorview
-View view = proteusView.getView();
-```
 
 Builder types
 =============
@@ -29,13 +24,10 @@ SimpleLayoutBuilder
 -------------------
 This is a layout builder which can parse json to construct an android view out of it. It uses the registered handlers to convert the json string to a view and then assign attributes. You can also assign a callback to get callbacks for unknown views and unknown attributes.
 
-Example :
+Example : 
 
-```java
-LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
-View view = proteusView.getView();
-```
+    LayoutBuilder builder = new DefaultLayoutBuilderFactory().createSimpleLayoutBuilder(MainActivity.this);
+	View view = builder.build((ViewGroup)MainActivity.this.getWindow().getDecorView(),layout);
 
 DataParsingLayoutBuilder
 ------------------------
@@ -43,16 +35,8 @@ A layout builder built on top of simple layout builder which can additionally pa
 
 Example :
 
-```java
-LayoutBuilder builder = new DefaultLayoutBuilderFactory()
-    .createDataParsingLayoutBuilder(MainActivity.this, new GsonProvider(dataJsonObject));
-
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
-// or
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, newDataJsonObject);
-
-View view = proteusView.getView();
-```
+    LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataParsingLayoutBuilder(MainActivity.this, new GsonProvider(getResponse().getData()));
+    builder.build((ViewGroup)MainActivity.this.getWindow().getDecorView(),layout);
 
 DataAndViewParsingLayoutBuilder
 ------------------------
@@ -60,37 +44,8 @@ A layout builder built on top of data parsing layout builder which can make view
 
 Example :
 
-```java
-LayoutBuilder builder = new DefaultLayoutBuilderFactory()
-    .createDataParsingLayoutBuilder(MainActivity.this,
-        new GsonProvider(dataJsonObject),
-        new GsonProvider(layoutJsonObject));
-
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
-// or
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, newDataJsonObject);
-
-View view = proteusView.getView();
-```
-
-Updating a view
-----------------
-
-You can update a View created by Proteus with new data for the bindings. Using the update method does not re-create the view, but only updates the properties and attributes of the View.
-
-Example:
-
-```java
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
-View view = proteusView.getView();
-
-// some where else
-View view = proteusView.updateView(newDataJsonObject);
-
-// `view` is a reference to the old instance of the View associated with this ProteusView
-// with updated data bindings.
-
-```
+    LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataParsingLayoutBuilder(MainActivity.this, new GsonProvider(getResponse().getData()),new GsonProvider(getResponse().getViews()));
+    builder.build((ViewGroup)MainActivity.this.getWindow().getDecorView(),layout);
 
 One click XML to JSON conversion
 --------------------------------

@@ -16,13 +16,19 @@ import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.google.gson.JsonElement;
+import com.nineoldandroids.view.ViewHelper;
 
 import java.util.HashMap;
 
 /**
- * @author kiran.kumar
+ * Created by kiran.kumar on 12/05/14.
+ *
+ * @attr Tests
  */
 public class ViewParser<T extends View> extends Parser<T> {
+
+
+    private static final String TAG = ViewParser.class.getSimpleName();
 
     public ViewParser(Class viewClass) {
         super(viewClass);
@@ -30,13 +36,13 @@ public class ViewParser<T extends View> extends Parser<T> {
 
     protected void prepareHandlers(final Context context) {
 
-        addHandler(Attributes.View.OnClick, new EventProcessor<T>(context) {
+        addHandler(Attributes.View.OnClick , new EventProcessor<T>(context) {
             @Override
-            public void setOnEventListener(final T view, final ParserContext parserContext, final JsonElement attributeValue) {
+            public void setOnEventListener(final T view, final ParserContext parserContext, final JsonElement attribueValue) {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fireEvent(view, parserContext, EventType.OnClick, attributeValue);
+                          fireEvent(view, parserContext, EventType.OnClick, attribueValue);
                     }
                 });
             }
@@ -73,7 +79,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.Weight, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                LinearLayout.LayoutParams layoutParams;
+                LinearLayout.LayoutParams layoutParams = null;
                 try {
                     layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
                     layoutParams.weight = Float.parseFloat(attributeValue);
@@ -213,12 +219,14 @@ public class ViewParser<T extends View> extends Parser<T> {
                 view.setLayoutParams(layoutParams);
             }
         });
+
         addHandler(Attributes.View.Alpha, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setAlpha(Float.parseFloat(attributeValue));
+                ViewHelper.setAlpha(view, Float.parseFloat(attributeValue));
             }
         });
+
         addHandler(Attributes.View.Visibility, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
@@ -226,20 +234,23 @@ public class ViewParser<T extends View> extends Parser<T> {
                 view.setVisibility(ParseHelper.parseVisibility(attributeValue));
             }
         });
+
         addHandler(Attributes.View.Id, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
 
-                view.setId(IdGenerator.getInstance().getUnique(attributeValue));
+                    view.setId(IdGenerator.getInstance().getUnique(attributeValue));
 
             }
         });
+
         addHandler(Attributes.View.ContentDescription, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 view.setContentDescription(attributeValue);
             }
         });
+
         addHandler(Attributes.View.Clickable, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
@@ -247,6 +258,7 @@ public class ViewParser<T extends View> extends Parser<T> {
                 view.setClickable(clickable);
             }
         });
+
         addHandler(Attributes.View.Tag, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
@@ -254,7 +266,7 @@ public class ViewParser<T extends View> extends Parser<T> {
             }
         });
 
-        final HashMap<String, Integer> relativeLayoutParams = new HashMap<>();
+        final HashMap<String, Integer> relativeLayoutParams = new HashMap<String, Integer>();
         relativeLayoutParams.put(Attributes.View.Above.getName(), RelativeLayout.ABOVE);
         relativeLayoutParams.put(Attributes.View.AlignBaseline.getName(), RelativeLayout.ALIGN_BASELINE);
         relativeLayoutParams.put(Attributes.View.AlignBottom.getName(), RelativeLayout.ALIGN_BOTTOM);
@@ -269,7 +281,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         relativeLayoutParams.put(Attributes.View.AlignRight.getName(), RelativeLayout.ALIGN_RIGHT);
         relativeLayoutParams.put(Attributes.View.AlignStart.getName(), RelativeLayout.ALIGN_START);
         relativeLayoutParams.put(Attributes.View.AlignTop.getName(), RelativeLayout.ALIGN_TOP);
-
+        //relativeLayoutParams.put("alignWithParentIfMissing",RelativeLayout.ALIGN_PARENT_IF_MISSING); // not supported as rule
         relativeLayoutParams.put(Attributes.View.Below.getName(), RelativeLayout.BELOW);
         relativeLayoutParams.put(Attributes.View.CenterHorizontal.getName(), RelativeLayout.CENTER_HORIZONTAL);
         relativeLayoutParams.put(Attributes.View.CenterInParent.getName(), RelativeLayout.CENTER_IN_PARENT);
@@ -278,6 +290,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         relativeLayoutParams.put(Attributes.View.ToLeftOf.getName(), RelativeLayout.LEFT_OF);
         relativeLayoutParams.put(Attributes.View.ToRightOf.getName(), RelativeLayout.RIGHT_OF);
         relativeLayoutParams.put(Attributes.View.ToStartOf.getName(), RelativeLayout.START_OF);
+
 
         StringAttributeProcessor<T> relativeLayoutProcessor = new StringAttributeProcessor<T>() {
             @Override
@@ -320,6 +333,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.CenterHorizontal, relativeLayoutBooleanProcessor);
         addHandler(Attributes.View.CenterInParent, relativeLayoutBooleanProcessor);
         addHandler(Attributes.View.CenterVertical, relativeLayoutBooleanProcessor);
+
 
     }
 }

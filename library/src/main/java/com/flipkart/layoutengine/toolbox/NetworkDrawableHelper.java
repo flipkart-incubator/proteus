@@ -57,17 +57,18 @@ public class NetworkDrawableHelper {
         }
 
         if (loadImmediately) {
-            startSyncLoad(url, view);
+            startSyncLoad(url);
 
         } else {
             lock = null;
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
-                startAsyncLoad(url, view);
-            } else {
+                startAsyncLoad(url);
+            }
+            else {
                 view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
                     @Override
                     public void onViewAttachedToWindow(final View view) {
-                        startAsyncLoad(url, view);
+                        startAsyncLoad(url);
                     }
 
                     @Override
@@ -77,21 +78,21 @@ public class NetworkDrawableHelper {
                 });
             }
         }
+
     }
 
     /**
      * Warning : This method will only work if called from non main thread.
-     *
      * @param url
      */
-    private void startSyncLoad(String url, View view) {
-        Future<Bitmap> future = bitmapLoader.getBitmap(url, view);
+    private void startSyncLoad(String url) {
+        Future<Bitmap> future = bitmapLoader.getBitmap(url);
         try {
-            Bitmap bitmap = future.get(10, TimeUnit.SECONDS);
-            callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap));
+            Bitmap bitmap = future.get(10, TimeUnit.SECONDS );
+            callback.onDrawableLoad(url,convertBitmapToDrawable(bitmap));
         } catch (Exception e) {
             e.printStackTrace();
-            callback.onDrawableError(url, e.getLocalizedMessage(), null);
+            callback.onDrawableError(url,e.getLocalizedMessage(), null);
         }
     }
 
@@ -108,13 +109,14 @@ public class NetworkDrawableHelper {
 
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmapOriginal, 0, 0, width, height, matrix, true);
 
-        return new BitmapDrawable(context.getResources(), resizedBitmap);
+        return new BitmapDrawable(context.getResources(),resizedBitmap);
     }
+
 
     private void cancelLoad() {
     }
 
-    private void startAsyncLoad(final String url, View view) {
+    private void startAsyncLoad(final String url) {
 
         bitmapLoader.getBitmap(url, new ImageLoaderCallBack() {
             @Override
@@ -126,22 +128,19 @@ public class NetworkDrawableHelper {
             }
 
             @Override
-            public void handled() {
-            }
-
-            @Override
             public void onErrorReceived(String errorMessage, Drawable errorDrawable) {
                 if (callback != null) {
                     callback.onDrawableError(url, errorMessage, errorDrawable);
                 }
 
             }
-        }, view);
+        });
+
     }
 
     public interface DrawableCallback {
-        void onDrawableLoad(String url, Drawable drawable);
+    public void onDrawableLoad(String url, Drawable drawable);
 
-        void onDrawableError(String url, String reason, Drawable errorDrawable);
-    }
+    public void onDrawableError(String url, String reason, Drawable errorDrawable);
+}
 }

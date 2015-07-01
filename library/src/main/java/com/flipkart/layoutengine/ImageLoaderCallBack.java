@@ -10,16 +10,12 @@ public interface ImageLoaderCallBack {
 
     /**
      * Used for asynchronous image loading and when response is not null
-     *
      * @param bitmap
      */
     public void onResponse(Bitmap bitmap);
 
-    public void handled();
-
     /**
      * Used when response returned from client is due to an error
-     *
      * @param errorMessage
      */
     public void onErrorReceived(String errorMessage, Drawable errorDrawable);

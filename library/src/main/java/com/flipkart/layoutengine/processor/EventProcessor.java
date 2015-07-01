@@ -9,8 +9,11 @@ import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.google.gson.JsonElement;
 
 /**
- * Use this as the base processor for handling events like OnClick , OnLongClick , OnTouch etc.
  * Created by prateek.dixit on 20/11/14.
+ */
+
+/**
+ * Use this as the base processor for handling events like OnClick , OnLongClick , OnTouch etc.
  */
 
 public abstract class EventProcessor<T> extends AttributeProcessor<T> {
