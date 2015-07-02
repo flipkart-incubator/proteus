@@ -12,8 +12,8 @@ import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.LayoutHandler;
-import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.provider.JsonProvider;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Formatter;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.DataProteusView;
@@ -156,7 +156,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         try {
                             formattedValue = format(Utils.getElementFromData(dataPath,
                                             parserContext.getDataContext().getDataProvider(),
-                                            parserContext.getDataContext().getIndex()).getAsString(),
+                                            parserContext.getDataContext().getIndex()),
                                     formatterName);
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                             Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
@@ -319,7 +319,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         return new DataContext(new JsonProvider(newData), newScope, newReverseScope, oldDataContext, childIndex);
     }
 
-    private String format(String toFormat, String formatterName) {
+    private String format(JsonElement toFormat, String formatterName) {
         Formatter formatter = this.formatter.get(formatterName);
         if (formatter == null) {
             formatter = Formatter.NOOP;

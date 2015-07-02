@@ -5,10 +5,13 @@ import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.ProteusConstants;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,17 +57,20 @@ public class Utils {
         return jsonObject;
     }
 
-   /* public static JsonElement getStringAsJsonElement(String string) {
-        return new JsonPrimitive(string);
+    public static String getStringFromArray(JsonArray array, String delimiter) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < array.size(); i++) {
+            if (array.get(i).isJsonPrimitive()) {
+                sb.append(array.get(i).getAsString());
+            } else {
+                sb.append(array.get(i).toString());
+            }
+            if (i < array.size() - 1) {
+                sb.append(delimiter + " ");
+            }
+        }
+        return sb.toString();
     }
-
-    public static JsonElement getNumberAsJsonElement(Number number) {
-        return new JsonPrimitive(number);
-    }
-
-    public static JsonElement getBooleanAsJsonElement(Boolean aBoolean) {
-        return new JsonPrimitive(aBoolean);
-    }*/
 
     public static String getTagPrefix() {
         return LIB_NAME + ":" + VERSION + ":";
