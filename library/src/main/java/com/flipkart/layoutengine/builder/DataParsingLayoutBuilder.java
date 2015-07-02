@@ -141,7 +141,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                     parserContext.getDataContext().getIndex()).getAsString());
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                             Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
-                            e.printStackTrace();
                             finalValue = dataPath;
                             failed = true;
                         }
@@ -160,7 +159,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                     formatterName);
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                             Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
-                            e.printStackTrace();
                             formattedValue = dataPath;
                             failed = true;
                         }
@@ -189,7 +187,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             childIndex);
                 } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                     Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
-                    e.printStackTrace();
                     failed = true;
                     elementFromData = new JsonPrimitive(0);
                 }

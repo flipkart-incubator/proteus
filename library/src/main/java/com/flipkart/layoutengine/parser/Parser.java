@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.processor.AttributeProcessor;
+import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -27,7 +28,7 @@ import java.util.Map;
  */
 public abstract class Parser<T extends View> implements LayoutHandler<T> {
 
-    private static final String TAG = Parser.class.getSimpleName();
+    private static final String TAG = Utils.getTagPrefix() + Parser.class.getSimpleName();
     protected final Class<T> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<String, AttributeProcessor>();
 
@@ -35,7 +36,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
         this.viewClass = viewClass;
     }
 
-    protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<Class<?>, Constructor<? extends View>>();
+    protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<>();
 
     @Override
     public void prepare(Context context) {
@@ -59,7 +60,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
                 v.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e(TAG + "#getContextConstructor()", e.getMessage());
         }
 
         return (T) v;
