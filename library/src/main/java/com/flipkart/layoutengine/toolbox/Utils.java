@@ -66,7 +66,7 @@ public class Utils {
                 sb.append(array.get(i).toString());
             }
             if (i < array.size() - 1) {
-                sb.append(delimiter + " ");
+                sb.append(delimiter).append(" ");
             }
         }
         return sb.toString();
