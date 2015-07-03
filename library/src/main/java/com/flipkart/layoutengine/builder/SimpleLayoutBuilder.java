@@ -169,8 +169,12 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             List<ProteusView> childrenToAdd = new ArrayList<>();
             JsonObject childLayout = null;
             if (childViewElement != null) {
-                childLayout = onChildTypeLayoutRequired(context, childViewElement.getAsString(),
-                        currentViewJsonObject, proteusViewToReturn);
+                if (childViewElement.isJsonObject()) {
+                    childLayout = childViewElement.getAsJsonObject();
+                } else {
+                    childLayout = onChildTypeLayoutRequired(context, childViewElement.getAsString(),
+                            currentViewJsonObject, proteusViewToReturn);
+                }
             }
             for (int i = 0; i < children.size(); i++) {
                 JsonObject childObject = children.get(i).getAsJsonObject();
