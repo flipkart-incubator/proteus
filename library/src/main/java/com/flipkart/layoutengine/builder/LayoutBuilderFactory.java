@@ -24,6 +24,9 @@ import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
 import com.flipkart.layoutengine.parser.custom.WebViewParser;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.Formatter;
+import com.flipkart.layoutengine.toolbox.Utils;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.math.RoundingMode;
@@ -31,6 +34,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Factory class for creating Layout builders with different predefined behaviours. This is the
@@ -137,12 +141,12 @@ public class LayoutBuilderFactory {
 
         Formatter NumberFormatter = new Formatter() {
             @Override
-            public String format(String value) {
+            public String format(JsonElement elementValue) {
                 double valueAsNumber;
                 try {
-                    valueAsNumber = Double.parseDouble(value);
+                    valueAsNumber = Double.parseDouble(elementValue.getAsString());
                 } catch (NumberFormatException e) {
-                    return value;
+                    return elementValue.toString();
                 }
                 NumberFormat numberFormat = new DecimalFormat("#,###");
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
@@ -153,16 +157,6 @@ public class LayoutBuilderFactory {
                 return numberFormat.format(valueAsNumber);
             }
 
-            public String format(int value) {
-                NumberFormat numberFormat = new DecimalFormat("#,###");
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
-                    numberFormat.setRoundingMode(RoundingMode.FLOOR);
-                }
-                numberFormat.setMinimumFractionDigits(0);
-                numberFormat.setMaximumFractionDigits(2);
-                return numberFormat.format(value);
-            }
-
             @Override
             public String getName() {
                 return "number";
@@ -171,13 +165,13 @@ public class LayoutBuilderFactory {
 
         Formatter DateFormatter = new Formatter() {
             @Override
-            public String format(String value) {
+            public String format(JsonElement elementValue) {
                 try {
                     // 2015-06-18 12:01:37
-                    Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(value);
+                    Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(elementValue.getAsString());
                     return new SimpleDateFormat("d MMM, E").format(date);
                 } catch (Exception e) {
-                    return  value;
+                    return  elementValue.toString();
                 }
             }
 
@@ -189,12 +183,12 @@ public class LayoutBuilderFactory {
 
         Formatter IndexFormatter = new Formatter() {
             @Override
-            public String format(String value) {
+            public String format(JsonElement elementValue) {
                 int valueAsNumber;
                 try {
-                    valueAsNumber = Integer.parseInt(value);
+                    valueAsNumber = Integer.parseInt(elementValue.getAsString());
                 } catch (NumberFormatException e) {
-                    return value;
+                    return elementValue.toString();
                 }
                 return String.valueOf(valueAsNumber + 1);
             }
@@ -205,9 +199,26 @@ public class LayoutBuilderFactory {
             }
         };
 
+        Formatter joinFormatter = new Formatter() {
+            @Override
+            public String format(JsonElement elementValue) {
+                if (elementValue.isJsonArray()) {
+                    return Utils.getStringFromArray(elementValue.getAsJsonArray(), ",");
+                } else {
+                    return elementValue.toString();
+                }
+            }
+
+            @Override
+            public String getName() {
+                return "join";
+            }
+        };
+
         layoutBuilder.registerFormatter(NumberFormatter);
         layoutBuilder.registerFormatter(DateFormatter);
         layoutBuilder.registerFormatter(IndexFormatter);
+        layoutBuilder.registerFormatter(joinFormatter);
 
     }
 

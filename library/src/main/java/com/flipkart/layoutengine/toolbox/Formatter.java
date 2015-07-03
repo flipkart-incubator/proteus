@@ -1,5 +1,7 @@
 package com.flipkart.layoutengine.toolbox;
 
+import com.google.gson.JsonElement;
+
 /**
  * @author Aditya Sharat on 18-05-2015.
  */
@@ -7,8 +9,11 @@ public abstract class Formatter {
 
     public static final Formatter NOOP = new Formatter() {
         @Override
-        public String format(String value) {
-            return value;
+        public String format(JsonElement elementValue) {
+            if (elementValue.isJsonPrimitive()) {
+                return elementValue.getAsString();
+            }
+            return elementValue.toString();
         }
 
         @Override
@@ -17,7 +22,7 @@ public abstract class Formatter {
         }
     };
 
-    public abstract String format(String value);
+    public abstract String format(JsonElement elementValue);
 
     public abstract String getName();
 }
