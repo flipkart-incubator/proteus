@@ -8,6 +8,16 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
 
+    <item android:id="@+id/action_new_data_1"
+        android:title="@string/action_new_data_1"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/action_new_data_2"
+        android:title="@string/action_new_data_2"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
     <item android:id="@+id/action_refresh_layout"
         android:title="@string/action_update_layout"
         android:orderInCategory="100"

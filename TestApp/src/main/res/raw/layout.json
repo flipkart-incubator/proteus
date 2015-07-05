@@ -1,197 +1,203 @@
 {
-  "type": "LinearLayout",
-  "android": "http://schemas.android.com/apk/res/android",
+  "type": "ScrollView",
   "layout_width": "match_parent",
-  "layout_height": "wrap_content",
-  "background": "#ffffff",
-  "orientation": "vertical",
-  "padding": "16dp",
-  "dataContext": {
-    "sellers": "sellers_1",
-    "product": "product"
-  },
+  "layout_height": "match_parent",
   "children": [
     {
       "type": "LinearLayout",
-      "android": "http://schemas.android.com/apk/res/android",
       "layout_width": "match_parent",
       "layout_height": "wrap_content",
       "background": "#ffffff",
       "orientation": "vertical",
-      "paddingBottom": "16dp",
-      "paddingLeft": "16dp",
-      "paddingRight": "16dp",
-      "paddingTop": "16dp",
+      "padding": "16dp",
+      "dataContext": {
+        "sellers": "sellers_1",
+        "product": "product"
+      },
       "children": [
         {
-          "type": "TextView",
-          "layout_width": "wrap_content",
-          "layout_height": "wrap_content",
-          "layout_marginBottom": "10dp",
-          "text": "$product.title",
-          "textColor": "#444444"
-        },
-        {
-          "type": "TextView",
-          "layout_width": "wrap_content",
-          "layout_height": "wrap_content",
-          "layout_marginBottom": "10dp",
-          "text": "~({{product.subTitle}})",
-          "textColor": "#444444"
-        },
-        {
-          "type": "TextView",
-          "layout_width": "wrap_content",
-          "layout_height": "wrap_content",
-          "layout_marginBottom": "10dp",
-          "text": "~({{product.float}}$(number))",
-          "textColor": "#444444"
-        },
-        {
           "type": "LinearLayout",
-          "layout_width": "wrap_content",
+          "android": "http://schemas.android.com/apk/res/android",
+          "layout_width": "match_parent",
           "layout_height": "wrap_content",
-          "orientation": "horizontal",
+          "background": "#ffffff",
+          "orientation": "vertical",
+          "paddingBottom": "16dp",
+          "paddingLeft": "16dp",
+          "paddingRight": "16dp",
+          "paddingTop": "16dp",
           "children": [
             {
-              "type": "RatingBar",
+              "type": "TextView",
               "layout_width": "wrap_content",
-              "layout_height": "12dp",
-              "layout_marginLeft": "5dp",
-              "focusableInTouchMode": "false",
-              "isIndicator": "true",
-              "numStars": "5",
-              "minHeight": "22dp",
-              "layout_marginTop": "3dp",
-              "maxHeight": "22dp",
-              "progressDrawable": {
-                "type": "layer-list",
-                "children": [
-                  {
-                    "type": "item",
-                    "id": "@+android:id/background",
-                    "drawable": "@drawable/rating_star_grey"
-                  },
-                  {
-                    "type": "item",
-                    "id": "@+android:id/secondaryProgress",
-                    "drawable": "@drawable/rating_star_grey"
-                  },
-                  {
-                    "type": "item",
-                    "id": "@+android:id/progress",
-                    "drawable": "@drawable/rating_star"
-                  }
-                ]
-              },
-              "rating": "$product.rating.averageRating"
+              "layout_height": "wrap_content",
+              "layout_marginBottom": "10dp",
+              "text": "$product.title",
+              "textColor": "#444444"
             },
             {
               "type": "TextView",
               "layout_width": "wrap_content",
               "layout_height": "wrap_content",
-              "text": "~({{product.rating.ratingCount}})",
+              "layout_marginBottom": "10dp",
+              "text": "~({{product.subTitle}})",
+              "textColor": "#444444"
+            },
+            {
+              "type": "TextView",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "layout_marginBottom": "10dp",
+              "text": "~({{product.float}}$(number))",
+              "textColor": "#444444"
+            },
+            {
+              "type": "LinearLayout",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "orientation": "horizontal",
+              "children": [
+                {
+                  "type": "RatingBar",
+                  "layout_width": "wrap_content",
+                  "layout_height": "12dp",
+                  "layout_marginLeft": "5dp",
+                  "focusableInTouchMode": "false",
+                  "isIndicator": "true",
+                  "numStars": "5",
+                  "minHeight": "22dp",
+                  "layout_marginTop": "3dp",
+                  "maxHeight": "22dp",
+                  "progressDrawable": {
+                    "type": "layer-list",
+                    "children": [
+                      {
+                        "type": "item",
+                        "id": "@+android:id/background",
+                        "drawable": "@drawable/rating_star_grey"
+                      },
+                      {
+                        "type": "item",
+                        "id": "@+android:id/secondaryProgress",
+                        "drawable": "@drawable/rating_star_grey"
+                      },
+                      {
+                        "type": "item",
+                        "id": "@+android:id/progress",
+                        "drawable": "@drawable/rating_star"
+                      }
+                    ]
+                  },
+                  "rating": "$product.rating.averageRating"
+                },
+                {
+                  "type": "TextView",
+                  "layout_width": "wrap_content",
+                  "layout_height": "wrap_content",
+                  "text": "~({{product.rating.ratingCount}})",
+                  "textColor": "#444444"
+                }
+              ]
+            },
+            {
+              "type": "ProgressBar",
+              "layout_width": "match_parent",
+              "layout_height": "wrap_content",
+              "progressTint": "#88aa33",
+              "progress": "$product.rating.4",
+              "max": "$product.rating.ratingCount"
+            },
+            {
+              "type": "TextView",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "layout_marginBottom": "10dp",
+              "text": "~({{product.date}}$(date))",
+              "textColor": "#444444"
+            },
+            {
+              "type": "TextView",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "layout_marginBottom": "80dp",
+              "visibility": "data",
+              "text": "~({{product.dateNull}}$(date))",
+              "textColor": "#444444"
+            },
+            {
+              "type": "TextView",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "layout_marginBottom": "10dp",
+              "text": "~({{product.date.no-such-path}}$(date))",
+              "textColor": "#444444"
+            },
+            {
+              "type": "TextView",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "layout_marginBottom": "10dp",
+              "text": "~{{product.tags}}$(join)",
+              "textColor": "#444444"
+            },
+            {
+              "type": "TextView",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "layout_marginBottom": "10dp",
+              "text": "~({{sellers.$length}} sellers)",
+              "textColor": "#444444"
+            },
+            {
+              "type": "TextView",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "layout_marginBottom": "10dp",
+              "text": "~({{sellers_1[3].name}} sellers)",
               "textColor": "#444444"
             }
           ]
         },
         {
-          "type": "ProgressBar",
+          "type": "LinearLayout",
+          "android": "http://schemas.android.com/apk/res/android",
           "layout_width": "match_parent",
           "layout_height": "wrap_content",
-          "progressTint": "#88aa33",
-          "progress": "$product.rating.4",
-          "max": "$product.rating.ratingCount"
-        },
-        {
-          "type": "TextView",
-          "layout_width": "wrap_content",
-          "layout_height": "wrap_content",
-          "layout_marginBottom": "10dp",
-          "text": "~({{product.date}}$(date))",
-          "textColor": "#444444"
-        },
-        {
-          "type": "TextView",
-          "layout_width": "wrap_content",
-          "layout_height": "wrap_content",
-          "layout_marginBottom": "80dp",
-          "visibility" : "data",
-          "text": "~({{product.dateNull}}$(date))",
-          "textColor": "#444444"
-        },
-        {
-          "type": "TextView",
-          "layout_width": "wrap_content",
-          "layout_height": "wrap_content",
-          "layout_marginBottom": "10dp",
-          "text": "~({{product.date.no-such-path}}$(date))",
-          "textColor": "#444444"
-        },
-        {
-          "type": "TextView",
-          "layout_width": "wrap_content",
-          "layout_height": "wrap_content",
-          "layout_marginBottom": "10dp",
-          "text": "~{{product.tags}}$(join)",
-          "textColor": "#444444"
-        },
-        {
-          "type": "TextView",
-          "layout_width": "wrap_content",
-          "layout_height": "wrap_content",
-          "layout_marginBottom": "10dp",
-          "text": "~({{sellers.$length}} sellers)",
-          "textColor": "#444444"
-        },
-        {
-          "type": "TextView",
-          "layout_width": "wrap_content",
-          "layout_height": "wrap_content",
-          "layout_marginBottom": "10dp",
-          "text": "~({{sellers_1[3].name}} sellers)",
-          "textColor": "#444444"
+          "orientation": "vertical",
+          "children": "sellers",
+          "childType": {
+            "type": "LinearLayout",
+            "android": "http://schemas.android.com/apk/res/android",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "dataContext": {
+              "seller": "sellers[$index]",
+              "product": "product"
+            },
+            "orientation": "vertical",
+            "children": [
+              {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "~ {{$index}}$(index) {{seller.name}} [{{seller.rating}}/5]"
+              },
+              {
+                "type": "TextView",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "~Rs. {{seller.price}}$(number)"
+              },
+              {
+                "type": "TextView",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "text": "$product.title"
+              }
+            ]
+          }
         }
       ]
-    },
-    {
-      "type": "LinearLayout",
-      "android": "http://schemas.android.com/apk/res/android",
-      "layout_width": "match_parent",
-      "layout_height": "wrap_content",
-      "orientation": "vertical",
-      "children": "sellers",
-      "childType": {
-        "type": "LinearLayout",
-        "android": "http://schemas.android.com/apk/res/android",
-        "layout_width": "match_parent",
-        "layout_height": "wrap_content",
-        "dataContext": {
-          "seller": "sellers[$index]",
-          "product": "product"
-        },
-        "orientation": "vertical",
-        "children": [
-          {
-            "type": "TextView",
-            "layout_width": "wrap_content",
-            "layout_height": "wrap_content",
-            "text": "~ {{$index}}$(index) {{seller.name}} [{{seller.rating}}/5]"
-          },
-          {
-            "type": "TextView",
-            "layout_width": "match_parent",
-            "layout_height": "wrap_content",
-            "text": "~Rs. {{seller.price}}$(number)"
-          },
-          {
-            "type": "TextView",
-            "layout_width": "match_parent",
-            "layout_height": "wrap_content",
-            "text": "$product.title"
-          }
-        ]
-      }
     }
   ]
 }

@@ -1,0 +1,32 @@
+{
+  "product": {
+    "title": "Intel Core i7, 4th Gen",
+    "subTitle": "2.7 GHz, Turbo boost upto 3.2GHz",
+    "rating": {
+      "averageRating": 4.56257,
+      "ratingCount": 271,
+      "4": 150
+    },
+    "tags": ["Hi", "there!", "I'm", "Proteus", "updated."],
+    "date": "2015-06-18 12:01:37",
+    "dateNull": null,
+    "float": 4.56257
+  },
+  "sellers_1": [
+    {
+      "name": "Retailer 1.1",
+      "price": 13200,
+      "rating": 3.2
+    },
+    {
+      "name": "Retailer 2.1",
+      "price": 13800,
+      "rating": 4.3
+    },
+    {
+      "name": "Retailer 3",
+      "price": 10000,
+      "rating": 3.2
+    }
+  ]
+}

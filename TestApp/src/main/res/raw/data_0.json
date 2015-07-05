@@ -1,10 +1,10 @@
 {
   "product": {
-    "title": "Intel Core i7, 4th Gen",
-    "subTitle": "2.7 GHz, Turbo boost upto 3.2GHz",
+    "title": "Intel Xenon, 4th Gen",
+    "subTitle": "4.0 GHz",
     "rating": {
-      "averageRating": 4.56257,
-      "ratingCount": 271,
+      "averageRating": 4.94584,
+      "ratingCount": 2071,
       "4": 150
     },
     "tags": ["Hi", "there!", "I'm", "Proteus"],

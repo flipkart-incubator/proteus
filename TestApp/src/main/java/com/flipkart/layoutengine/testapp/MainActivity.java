@@ -145,6 +145,28 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
         long startTime, stopTime, elapsedTime;
         switch (id) {
+            case R.id.action_new_data_1:
+                startTime = System.currentTimeMillis();
+
+                JsonObject newData = getJsonFromFile(R.raw.data_1).getAsJsonObject();
+                this.proteusView.updateData(newData);
+
+                stopTime = System.currentTimeMillis();
+                elapsedTime = stopTime - startTime;
+
+                Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
+                return true;
+            case R.id.action_new_data_2:
+                startTime = System.currentTimeMillis();
+
+                JsonObject newData2 = getJsonFromFile(R.raw.data_2).getAsJsonObject();
+                this.proteusView.updateData(newData2);
+
+                stopTime = System.currentTimeMillis();
+                elapsedTime = stopTime - startTime;
+
+                Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
+                return true;
             case R.id.action_refresh_data:
                 startTime = System.currentTimeMillis();
 
