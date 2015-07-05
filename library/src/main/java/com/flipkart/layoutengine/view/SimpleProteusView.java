@@ -16,9 +16,12 @@ import java.util.ArrayList;
  */
 public class SimpleProteusView implements ProteusView {
     protected ProteusView parent;
-    private View view;
+    protected View view;
     protected int index;
     protected ArrayList<ProteusView> children;
+    protected String childType;
+    protected boolean hasChildTypeLayout = false;
+    protected JsonObject childTypeLayout;
 
     public SimpleProteusView(View view, int index, ProteusView parent) {
         this.view = view;
@@ -49,7 +52,7 @@ public class SimpleProteusView implements ProteusView {
             this.children = new ArrayList<>();
         }
         this.children.add(proteusView);
-        if (view !=null && proteusView.getView() != null) {
+        if (view != null && proteusView.getView() != null) {
             ((ViewGroup) view).addView(proteusView.getView());
         }
     }
@@ -73,7 +76,46 @@ public class SimpleProteusView implements ProteusView {
         parent.addView(view.getView(), index);
     }
 
+    @Override
+    public void removeView() {
+        if (getParent() != null && getParent().getView() != null && view != null) {
+            ((ViewGroup) getParent().getView()).removeView(view);
+        }
+    }
+
+    public void removeChild(int childIndex) {
+        if (children != null && childIndex < children.size()) {
+            SimpleProteusView proteusView = ((SimpleProteusView)getChildren().get(childIndex));
+            proteusView.removeView();
+            getChildren().remove(childIndex);
+        }
+    }
+
     protected View updateDataImpl(JsonObject data) {
         return this.view;
+    }
+
+    public String getChildType() {
+        return childType;
+    }
+
+    public void setChildType(String childType) {
+        this.childType = childType;
+    }
+
+    public JsonObject getChildTypeLayout() {
+        return childTypeLayout;
+    }
+
+    public void setChildTypeLayout(JsonObject childTypeLayout) {
+        this.childTypeLayout = childTypeLayout;
+    }
+
+    public boolean hasChildTypeLayout() {
+        return hasChildTypeLayout;
+    }
+
+    public void hasChildTypeLayout(boolean hasChildTypeLayout) {
+        this.hasChildTypeLayout = hasChildTypeLayout;
     }
 }

@@ -10,6 +10,7 @@ import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.toolbox.Utils;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -26,6 +27,8 @@ public class DataProteusView extends SimpleProteusView {
 
     public static final String TAG = Utils.getTagPrefix() + DataProteusView.class.getSimpleName();
     private boolean isViewUpdating = false;
+    private boolean hasDataDrivenChildren;
+    private String dataPathForChildren;
 
     /**
      * This Array holds a to the {@link Binding}s of this {@link DataProteusView}.
@@ -35,9 +38,18 @@ public class DataProteusView extends SimpleProteusView {
 
     public DataProteusView(ProteusView proteusView) {
         super(proteusView.getView(), proteusView.getIndex(), proteusView.getParent());
+
         this.children = proteusView.getChildren();
+
+        SimpleProteusView simpleProteusView = (SimpleProteusView) proteusView;
+        this.hasChildTypeLayout = simpleProteusView.hasChildTypeLayout();
+        this.childTypeLayout = simpleProteusView.getChildTypeLayout();
+
         if (proteusView instanceof DataProteusView) {
-            parserContext = ((DataProteusView) proteusView).getParserContext();
+            DataProteusView dataProteusView = (DataProteusView) proteusView;
+            parserContext = dataProteusView.getParserContext();
+            hasDataDrivenChildren = dataProteusView.hasDataDrivenChildren();
+            dataPathForChildren = dataProteusView.getDataPathForChildren();
         }
     }
 
@@ -61,7 +73,9 @@ public class DataProteusView extends SimpleProteusView {
     protected View updateDataImpl(JsonObject data) {
         this.isViewUpdating = true;
 
-        updateDataContext(data);
+        if (data != null) {
+            updateDataContext(data);
+        }
 
         if (this.bindings != null) {
             for (Binding binding : this.bindings) {
@@ -69,11 +83,14 @@ public class DataProteusView extends SimpleProteusView {
             }
         }
 
-        if (getChildren() != null) {
-            for (ProteusView proteusView : getChildren()) {
-                proteusView.updateData(data);
+        if (children != null && hasDataDrivenChildren) {
+            updateChildrenFromData();
+        } else if (children != null) {
+            for (ProteusView proteusView : children) {
+                proteusView.updateData(null);
             }
         }
+
         this.isViewUpdating = false;
         return this.getView();
     }
@@ -81,6 +98,36 @@ public class DataProteusView extends SimpleProteusView {
     private void updateDataContext(JsonObject newData) {
         JsonObject oldData = parserContext.getDataContext().getDataProvider().getData().getAsJsonObject();
         Utils.merge(oldData, newData);
+    }
+
+    private void updateChildrenFromData() {
+        JsonArray childrenDataArray = new JsonArray();
+        try {
+            childrenDataArray = Utils.getElementFromData(dataPathForChildren,
+                    parserContext.getDataContext().getDataProvider(), index).getAsJsonArray();
+        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
+            Log.e(TAG + "#updateChildrenFromData()", e.getMessage());
+        }
+
+        if (children.size() > childrenDataArray.size()) {
+            while (children.size() > childrenDataArray.size()) {
+                ProteusView proteusView = children.remove(children.size() - 1);
+                proteusView.removeView();
+            }
+        }
+        for (int index = 0; index < childrenDataArray.size(); index++) {
+            if (index < children.size()) {
+                children.get(index).updateData(null);
+            } else {
+                if (hasChildTypeLayout) {
+                    DataProteusView proteusView = (DataProteusView) parserContext.getLayoutBuilder().build(view,
+                            childTypeLayout,
+                            parserContext.getDataContext().getDataProvider().getData().getAsJsonObject(),
+                            index);
+                    addChild(proteusView);
+                }
+            }
+        }
     }
 
     /**
@@ -205,5 +252,21 @@ public class DataProteusView extends SimpleProteusView {
         }
 
         this.isViewUpdating = false;
+    }
+
+    public boolean hasDataDrivenChildren() {
+        return hasDataDrivenChildren;
+    }
+
+    public void hasDataDrivenChildren(boolean hasDataDrivenChildren) {
+        this.hasDataDrivenChildren = hasDataDrivenChildren;
+    }
+
+    public String getDataPathForChildren() {
+        return dataPathForChildren;
+    }
+
+    public void setDataPathForChildren(String dataPathForChildren) {
+        this.dataPathForChildren = dataPathForChildren;
     }
 }

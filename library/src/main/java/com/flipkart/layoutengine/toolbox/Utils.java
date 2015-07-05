@@ -32,17 +32,50 @@ public class Utils {
         }
     }
 
-    public static JsonObject merge(JsonObject x, JsonObject y) {
-        for (Map.Entry<String, JsonElement> entry : y.entrySet()) {
-            String key = entry.getKey();
-            JsonElement oldDataElement = x.get(key);
-            JsonElement newDataElement = y.get(key);
+    public static JsonObject merge(JsonObject oldJson, JsonObject newJson) {
+        String key;
+        JsonElement oldDataElement;
+        JsonElement newDataElement;
+        JsonArray oldArray;
+        JsonArray newArray;
+        JsonElement oldArrayItem;
+        JsonElement newArrayItem;
+
+        for (Map.Entry<String, JsonElement> entry : newJson.entrySet()) {
+            key = entry.getKey();
+            oldDataElement = oldJson.get(key);
+            newDataElement = newJson.get(key);
             if (oldDataElement != null && oldDataElement.isJsonObject() && newDataElement != null) {
-                newDataElement = merge(entry.getValue().getAsJsonObject(), newDataElement.getAsJsonObject());
+                newDataElement = merge(oldDataElement.getAsJsonObject(), newDataElement.getAsJsonObject());
+            } else if (oldDataElement != null && oldDataElement.isJsonArray() && newDataElement != null) {
+                oldArray = oldDataElement.getAsJsonArray();
+                newArray = newDataElement.getAsJsonArray();
+
+                if (oldArray.size() > newArray.size()) {
+                    while (oldArray.size() > newArray.size()) {
+                        oldArray.remove(oldArray.size() - 1);
+                    }
+                }
+
+                for (int index = 0; index < newArray.size(); index++) {
+                    if (index < oldArray.size()) {
+                        oldArrayItem = oldArray.get(index);
+                        newArrayItem = newArray.get(index);
+                        if (oldArrayItem.isJsonObject() && newArrayItem.isJsonObject()) {
+                            oldArray.set(index, merge(oldArrayItem.getAsJsonObject(), newArrayItem.getAsJsonObject()));
+                        } else {
+                            oldArray.set(index, newArrayItem);
+                        }
+                    } else {
+                        oldArray.add(newArray.get(index));
+                    }
+                }
+
+                newDataElement = oldArray;
             }
-            x.add(key, newDataElement);
+            oldJson.add(key, newDataElement);
         }
-        return x;
+        return oldJson;
     }
 
     public static JsonObject addElements(JsonObject jsonObject, Set<Map.Entry<String, JsonElement>> members, boolean override) {

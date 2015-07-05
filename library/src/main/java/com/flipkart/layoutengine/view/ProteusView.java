@@ -66,4 +66,6 @@ public interface ProteusView {
      * @param view The {@link ProteusView} to use for the replacement
      */
     void replaceView(ProteusView view);
+
+    void removeView();
 }

@@ -43,11 +43,15 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected JsonArray parseChildren(LayoutHandler handler, ParserContext parserContext,
-                                      JsonElement childrenElement, int childIndex) {
+    protected JsonArray parseChildren(LayoutHandler handler, ParserContext parserContext, ProteusView view,
+                                      JsonObject parentViewJson, JsonElement childrenElement, int childIndex) {
+
+        DataProteusView dataProteusView = (DataProteusView) view;
+
         if (childrenElement.isJsonPrimitive()) {
             String attributeValue = childrenElement.getAsString();
             if (attributeValue != null && !"".equals(attributeValue)) {
+                dataProteusView.setDataPathForChildren(parserContext.getDataContext().getScope().get(attributeValue));
                 try {
                     childrenElement = Utils.getElementFromData(attributeValue,
                             parserContext.getDataContext().getDataProvider(),
@@ -57,8 +61,21 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     childrenElement = new JsonArray();
                 }
             }
+
+            dataProteusView.hasDataDrivenChildren(true);
+            JsonElement childViewElement = parentViewJson.get(CHILD_TYPE);
+            if (childViewElement != null) {
+                if (childViewElement.isJsonObject()) {
+                    JsonObject childLayout = childViewElement.getAsJsonObject();
+                    dataProteusView.setChildTypeLayout(childLayout);
+                    dataProteusView.hasChildTypeLayout(true);
+                } else {
+                    dataProteusView.setChildType(childViewElement.getAsString());
+                    dataProteusView.hasChildTypeLayout(false);
+                }
+            }
         }
-        return super.parseChildren(handler, parserContext, childrenElement, childIndex);
+        return super.parseChildren(handler, parserContext, view, parentViewJson, childrenElement, childIndex);
     }
 
     @Override

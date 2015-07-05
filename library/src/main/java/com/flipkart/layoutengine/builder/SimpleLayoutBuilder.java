@@ -162,7 +162,8 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         JsonElement childrenElement = currentViewJsonObject.get(CHILDREN);
         JsonArray children = null;
         if (childrenElement != null) {
-            children = parseChildren(handler, context, childrenElement, childIndex);
+            children = parseChildren(handler, context, proteusViewToReturn, currentViewJsonObject,
+                    childrenElement, childIndex);
         }
 
         if (children != null && children.size() > 0) {
@@ -208,8 +209,8 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         // nothing to do here
     }
 
-    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context,
-                                      JsonElement childrenElement, int childIndex) {
+    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, ProteusView view,
+                                      JsonObject parentViewJson, JsonElement childrenElement, int childIndex) {
         return handler.parseChildren(context, childrenElement, childIndex);
     }
 
