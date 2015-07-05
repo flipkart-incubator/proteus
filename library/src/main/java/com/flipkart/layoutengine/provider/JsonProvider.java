@@ -11,8 +11,8 @@ import com.google.gson.JsonPrimitive;
  * Created by kirankumar on 24/06/14.
  */
 public class JsonProvider implements Provider {
-    private JsonElement rootElement;
 
+    private JsonElement rootElement;
 
     public JsonProvider(JsonElement jsonElement) {
         this.rootElement = jsonElement;
@@ -56,12 +56,20 @@ public class JsonProvider implements Provider {
                 tempArray = elementToReturn.getAsJsonArray();
                 if (tempArray != null) {
                     if (ProteusConstants.CHILD_INDEX_REFERENCE.equals(segment)) {
-                        elementToReturn = tempArray.get(childIndex);
+                        if (childIndex < tempArray.size()) {
+                            elementToReturn = tempArray.get(childIndex);
+                        } else {
+                            throw new NoSuchDataPathException(path + "@[" + childIndex + "]");
+                        }
                     } else if (ProteusConstants.ARRAY_DATA_LENGTH_REFERENCE.equals(segment)) {
                         elementToReturn = new JsonPrimitive(tempArray.size());
                     } else {
                         int index = Integer.parseInt(segment);
-                        elementToReturn = tempArray.get(index);
+                        if (index < tempArray.size()) {
+                            elementToReturn = tempArray.get(index);
+                        } else {
+                            throw new NoSuchDataPathException(path + "@[" + index + "]");
+                        }
                     }
                 } else {
                     throw new NoSuchDataPathException(path);
