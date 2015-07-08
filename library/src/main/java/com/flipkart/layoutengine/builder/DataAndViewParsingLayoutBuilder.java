@@ -52,7 +52,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
     public void updateLayoutProvider(JsonObject newViewProvider) {
         if (viewProvider != null && viewProvider.getData() != null) {
-            JsonObject viewProviderData = Utils.merge(viewProvider.getData().getAsJsonObject(), newViewProvider);
+            JsonElement viewProviderData = Utils.merge(viewProvider.getData(), newViewProvider);
             viewProvider.setData(viewProviderData);
         } else {
             viewProvider = new JsonProvider(newViewProvider);

@@ -1,5 +1,7 @@
 package com.flipkart.layoutengine.toolbox;
 
+import android.util.Log;
+
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
@@ -7,6 +9,7 @@ import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -18,7 +21,7 @@ import java.util.Set;
  */
 public class Utils {
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "2.6.12-SNAPSHOT";
+    public static final String VERSION = "2.6.18-SNAPSHOT";
     public static final String TAG = getTagPrefix() + Utils.class.getSimpleName();
 
     public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
@@ -32,24 +35,35 @@ public class Utils {
         }
     }
 
-    public static JsonObject merge(JsonObject oldJson, JsonObject newJson) {
-        String key;
-        JsonElement oldDataElement;
+    public static JsonElement merge(JsonElement oldJson, JsonElement newJson) {
+
         JsonElement newDataElement;
         JsonArray oldArray;
         JsonArray newArray;
         JsonElement oldArrayItem;
         JsonElement newArrayItem;
+        JsonObject oldObject;
 
-        for (Map.Entry<String, JsonElement> entry : newJson.entrySet()) {
-            key = entry.getKey();
-            oldDataElement = oldJson.get(key);
-            newDataElement = newJson.get(key);
-            if (oldDataElement != null && oldDataElement.isJsonObject() && newDataElement != null) {
-                newDataElement = merge(oldDataElement.getAsJsonObject(), newDataElement.getAsJsonObject());
-            } else if (oldDataElement != null && oldDataElement.isJsonArray() && newDataElement != null) {
-                oldArray = oldDataElement.getAsJsonArray();
-                newArray = newDataElement.getAsJsonArray();
+        if (oldJson == null || oldJson.isJsonNull()) {
+            return newJson;
+        }
+
+        if (newJson == null) {
+            newJson = JsonNull.INSTANCE;
+            return newJson;
+        }
+
+        if (newJson.isJsonPrimitive() ||newJson.isJsonNull()) {
+            return newJson;
+        }
+
+        if (newJson.isJsonArray()) {
+
+            if (!oldJson.isJsonArray()) {
+                return newJson;
+            } else {
+                oldArray = oldJson.getAsJsonArray();
+                newArray = newJson.getAsJsonArray();
 
                 if (oldArray.size() > newArray.size()) {
                     while (oldArray.size() > newArray.size()) {
@@ -61,29 +75,54 @@ public class Utils {
                     if (index < oldArray.size()) {
                         oldArrayItem = oldArray.get(index);
                         newArrayItem = newArray.get(index);
-                        if (oldArrayItem.isJsonObject() && newArrayItem.isJsonObject()) {
-                            oldArray.set(index, merge(oldArrayItem.getAsJsonObject(), newArrayItem.getAsJsonObject()));
-                        } else {
-                            oldArray.set(index, newArrayItem);
-                        }
+                        oldArray.set(index, merge(oldArrayItem, newArrayItem));
                     } else {
                         oldArray.add(newArray.get(index));
                     }
                 }
-
-                newDataElement = oldArray;
             }
-            oldJson.add(key, newDataElement);
+
+        } else if (newJson.isJsonObject()) {
+
+            if (!oldJson.isJsonObject()) {
+                return newJson;
+            } else {
+                oldObject = oldJson.getAsJsonObject();
+                for (Map.Entry<String, JsonElement> entry : newJson.getAsJsonObject().entrySet()) {
+                    newDataElement = merge(oldObject.get(entry.getKey()), entry.getValue());
+                    oldObject.add(entry.getKey(), newDataElement);
+                }
+            }
+
+        } else {
+            return newJson;
         }
+
         return oldJson;
     }
 
     public static JsonObject addElements(JsonObject jsonObject, Set<Map.Entry<String, JsonElement>> members, boolean override) {
         for (Map.Entry<String, JsonElement> entry : members) {
-            if (override && jsonObject.get(entry.getKey()) != null) {
+            if (!override && jsonObject.get(entry.getKey()) != null) {
                 break;
             }
             jsonObject.add(entry.getKey(), entry.getValue());
+
+            /*if (override) {
+                if (!jsonObject.get(entry.getKey()).isJsonPrimitive() && !entry.getValue().isJsonPrimitive()) {
+                    JsonElement merged = Utils.merge(jsonObject.get(entry.getKey()), entry.getValue());
+                    jsonObject.add(entry.getKey(), merged);
+                } else {
+                    jsonObject.add(entry.getKey(), entry.getValue());
+                }
+                break;
+            }
+
+            if (jsonObject.get(entry.getKey()) == null) {
+                jsonObject.add(entry.getKey(), entry.getValue());
+            } else {
+                break;
+            }*/
         }
         return jsonObject;
     }
