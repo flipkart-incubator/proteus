@@ -3,6 +3,8 @@ package com.flipkart.layoutengine.testapp;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,18 +12,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DataAndViewParsingLayoutBuilder;
+import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
@@ -44,14 +48,28 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
+            this.gson = new Gson();
             createView();
+            //createRecyclerView();
         }
     }
 
+    private void createRecyclerView() {
+        View view = getLayoutInflater().inflate(R.layout.activity_main, new LinearLayout(this));
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        final JsonArray specs = getJsonFromFile(R.raw.specifications).getAsJsonArray();
+        final JsonObject specsLayout = getJsonFromFile(R.raw.spec_layout).getAsJsonObject();
+        if (recyclerView != null) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(new ProteusViewHolderAdapter(specs,
+                    new LayoutBuilderFactory().getDataParsingLayoutBuilder(this),
+                    specsLayout));
+        }
+        setContentView(view);
+    }
+
     private void createView() {
-        this.gson = new Gson();
 
         JsonObject layoutData = getJsonFromFile(R.raw.layout).getAsJsonObject();
         layout = layoutData;
@@ -216,5 +234,49 @@ public class MainActivity extends ActionBarActivity {
         InputStream inputStream = getResources().openRawResource(resId);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         return gson.fromJson(reader, JsonElement.class);
+    }
+
+    public class ProteusViewHolderAdapter extends RecyclerView.Adapter<ProteusViewHolderAdapter.ProteusViewHolder> {
+
+        private final JsonArray specs;
+        private final LayoutBuilder layoutBuilder;
+        private final JsonObject layout;
+
+        public ProteusViewHolderAdapter(JsonArray specs, LayoutBuilder layoutBuilder, JsonObject layout) {
+            this.specs = specs;
+            this.layoutBuilder = layoutBuilder;
+            this.layout = layout;
+        }
+
+        @Override
+        public ProteusViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+            DataProteusView proteusView = (DataProteusView) layoutBuilder.build(viewGroup, layout,
+                    new JsonObject(), 0);
+            return new ProteusViewHolder(proteusView);
+        }
+
+        @Override
+        public void onBindViewHolder(ProteusViewHolder viewHolder, int i) {
+            viewHolder.getProteusItemView().updateData(specs.get(i).getAsJsonObject());
+        }
+
+        @Override
+        public int getItemCount() {
+            return specs.size();
+        }
+
+        public class ProteusViewHolder extends RecyclerView.ViewHolder {
+
+            private final ProteusView proteusItemView;
+
+            public ProteusViewHolder(ProteusView itemView) {
+                super(itemView.getView());
+                this.proteusItemView = itemView;
+            }
+
+            public ProteusView getProteusItemView() {
+                return proteusItemView;
+            }
+        }
     }
 }

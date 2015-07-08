@@ -1,0 +1,448 @@
+[
+  {
+    "action": null,
+    "value": {
+      "type": "ProductSpecificationValue",
+      "key": "GENERAL FEATURES",
+      "attributes": [
+        {
+          "name": "Brand",
+          "values": [
+            "Motorola"
+          ]
+        },
+        {
+          "name": "Handset Color",
+          "values": [
+            "Black"
+          ]
+        },
+        {
+          "name": "Business Features",
+          "values": [
+            "Document Viewer, Document Editor"
+          ]
+        },
+        {
+          "name": "Form",
+          "values": [
+            "Bar"
+          ]
+        },
+        {
+          "name": "SIM Size",
+          "values": [
+            "Nano SIM"
+          ]
+        },
+        {
+          "name": "Call Features",
+          "values": [
+            "Loudspeaker"
+          ]
+        },
+        {
+          "name": "Model Name",
+          "values": [
+            "Moto X (2nd Generation)"
+          ]
+        },
+        {
+          "name": "Touch Screen",
+          "values": [
+            "Yes, Capacitive"
+          ]
+        },
+        {
+          "name": "SIM Type",
+          "values": [
+            "Single Sim, GSM"
+          ]
+        },
+        {
+          "name": "Model ID",
+          "values": [
+            "XT1092"
+          ]
+        },
+        {
+          "name": "In the Box",
+          "values": [
+            "Headset, Handset with Inbuilt Battery, User Manual, Charger"
+          ]
+        }
+      ]
+    },
+    "fixed": false
+  },
+  {
+    "action": null,
+    "value": {
+      "type": "ProductSpecificationValue",
+      "key": "Multimedia",
+      "attributes": [
+        {
+          "name": "Video Player",
+          "values": [
+            "Yes, HD"
+          ]
+        },
+        {
+          "name": "Ringtone",
+          "values": [
+            "MP3"
+          ]
+        },
+        {
+          "name": "FM",
+          "values": [
+            "No"
+          ]
+        },
+        {
+          "name": "Music Player",
+          "values": [
+            "Yes, Supports MP3"
+          ]
+        }
+      ]
+    },
+    "fixed": false
+  },
+  {
+    "action": null,
+    "value": {
+      "type": "ProductSpecificationValue",
+      "key": "Camera",
+      "attributes": [
+        {
+          "name": "Video Recording",
+          "values": [
+            "Yes"
+          ]
+        },
+        {
+          "name": "Flash",
+          "values": [
+            "Dual LED"
+          ]
+        },
+        {
+          "name": "Other Camera Features",
+          "values": [
+            "F2.25, Dual LED Ring Flash"
+          ]
+        },
+        {
+          "name": "HD Recording",
+          "values": [
+            "HD"
+          ]
+        },
+        {
+          "name": "Rear Camera",
+          "values": [
+            "Yes, 13 MP"
+          ]
+        },
+        {
+          "name": "Front Facing Camera",
+          "values": [
+            "Yes, 2 MP"
+          ]
+        }
+      ]
+    },
+    "fixed": false
+  },
+  {
+    "action": null,
+    "value": {
+      "type": "ProductSpecificationValue",
+      "key": "Internet & Connectivity",
+      "attributes": [
+        {
+          "name": "Audio Jack",
+          "values": [
+            "3.5 mm"
+          ]
+        },
+        {
+          "name": "Preinstalled Browser",
+          "values": [
+            "Android"
+          ]
+        },
+        {
+          "name": "Bluetooth",
+          "values": [
+            "Yes, v4, Supported Profiles (LE)"
+          ]
+        },
+        {
+          "name": "Navigation Technology",
+          "values": [
+            "with Google Maps"
+          ]
+        },
+        {
+          "name": "NFC",
+          "values": [
+            "Yes"
+          ]
+        },
+        {
+          "name": "Wifi",
+          "values": [
+            "Yes, 802.11 a/ac/b/g/n"
+          ]
+        },
+        {
+          "name": "Internet Features",
+          "values": [
+            "Email"
+          ]
+        },
+        {
+          "name": "EDGE",
+          "values": [
+            "Yes"
+          ]
+        },
+        {
+          "name": "GPRS",
+          "values": [
+            "Yes"
+          ]
+        },
+        {
+          "name": "Tethering",
+          "values": [
+            "Wi-fi Hotspot"
+          ]
+        },
+        {
+          "name": "USB Connectivity",
+          "values": [
+            "Yes"
+          ]
+        },
+        {
+          "name": "3G",
+          "values": [
+            "Yes"
+          ]
+        }
+      ]
+    },
+    "fixed": false
+  },
+  {
+    "action": null,
+    "value": {
+      "type": "ProductSpecificationValue",
+      "key": "Other Features",
+      "attributes": [
+        {
+          "name": "Sensors",
+          "values": [
+            "Gyroscope, Accelerometer, Compass, Proximity Sensor"
+          ]
+        },
+        {
+          "name": "Phone Book Memory",
+          "values": [
+            "Yes"
+          ]
+        },
+        {
+          "name": "SMS Memory",
+          "values": [
+            "Yes"
+          ]
+        },
+        {
+          "name": "Call Memory",
+          "values": [
+            "Yes"
+          ]
+        },
+        {
+          "name": "SAR Value",
+          "values": [
+            "At the Head 0.726 W/Kg, At the Body 1.28 W/Kg"
+          ]
+        },
+        {
+          "name": "Important Apps",
+          "values": [
+            "Moto Connect, Moto Migrate"
+          ]
+        },
+        {
+          "name": "Additional Features",
+          "values": [
+            "Integrated Handsfree, Mode Vibrator, Calendar Function, Alarm Watch Function, Vibration Alarm, Stopwatch, Lock Terminal, DTMF Support, Clock, Date, Wi-Fi Direct, Wi-Fi Security, Voice Recorder, Wi-Fi Hotspot: Maximum Number of Connections 8, Missed Call and SMS Reminder, Voice Input"
+          ]
+        }
+      ]
+    },
+    "fixed": false
+  },
+  {
+    "action": null,
+    "value": {
+      "type": "ProductSpecificationValue",
+      "key": "Warranty",
+      "attributes": [
+        {
+          "name": "Warranty Summary",
+          "values": [
+            "1 year manufacturer warranty for Phone and for in the box accessories"
+          ]
+        }
+      ]
+    },
+    "fixed": false
+  },
+  {
+    "action": null,
+    "value": {
+      "type": "ProductSpecificationValue",
+      "key": "Dimensions",
+      "attributes": [
+        {
+          "name": "Weight",
+          "values": [
+            "144 g"
+          ]
+        },
+        {
+          "name": "Size",
+          "values": [
+            "72.4x140.8x9.97 mm"
+          ]
+        }
+      ]
+    },
+    "fixed": false
+  },
+  {
+    "action": null,
+    "value": {
+      "type": "ProductSpecificationValue",
+      "key": "Display",
+      "attributes": [
+        {
+          "name": "Resolution",
+          "values": [
+            "Full HD, 1920 x 1080 Pixels"
+          ]
+        },
+        {
+          "name": "Other Display Features",
+          "values": [
+            "Corning Gorilla Glass 3, Automatic Image Rotation, Date and Time Visualization, Dual Touch Capacitive Touchscreen Technology"
+          ]
+        },
+        {
+          "name": "Type",
+          "values": [
+            "OLED"
+          ]
+        },
+        {
+          "name": "Color",
+          "values": [
+            "16 M"
+          ]
+        },
+        {
+          "name": "Size",
+          "values": [
+            "5.2 inch"
+          ]
+        }
+      ]
+    },
+    "fixed": false
+  },
+  {
+    "action": null,
+    "value": {
+      "type": "ProductSpecificationValue",
+      "key": "Battery",
+      "attributes": [
+        {
+          "name": "Type",
+          "values": [
+            "Li-Ion, 2300 mAh"
+          ]
+        }
+      ]
+    },
+    "fixed": false
+  },
+  {
+    "action": null,
+    "value": {
+      "type": "ProductSpecificationValue",
+      "key": "Memory and Storage",
+      "attributes": [
+        {
+          "name": "Memory",
+          "values": [
+            "2 GB RAM"
+          ]
+        },
+        {
+          "name": "Internal",
+          "values": [
+            "16 GB"
+          ]
+        },
+        {
+          "name": "User Memory",
+          "values": [
+            "10 GB"
+          ]
+        }
+      ]
+    },
+    "fixed": false
+  },
+  {
+    "action": null,
+    "value": {
+      "type": "ProductSpecificationValue",
+      "key": "Platform",
+      "attributes": [
+        {
+          "name": "Operating Freq",
+          "values": [
+            "GSM - 850, 900, 1800, 1900; UMTS - 2100; 4G - LTE"
+          ]
+        },
+        {
+          "name": "Graphics",
+          "values": [
+            "Adreno 330"
+          ]
+        },
+        {
+          "name": "OS",
+          "values": [
+            "Android v4.4.4 (KitKat), Upgradable to v5.0 (Lollipop)(OTA Upgrade)"
+          ]
+        },
+        {
+          "name": "Processor",
+          "values": [
+            "2.5 GHz + Qualcomm Snapdragon 801 MSM8974-AC, Quad Core"
+          ]
+        }
+      ]
+    },
+    "fixed": false
+  }
+]

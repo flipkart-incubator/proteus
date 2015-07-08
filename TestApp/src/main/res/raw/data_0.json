@@ -12,16 +12,5 @@
     "dateNull": null,
     "float": 4.56257
   },
-  "sellers_1": [
-    {
-      "name": "Retailer 1",
-      "price": 13100,
-      "rating": 3.2
-    },
-    {
-      "name": "Retailer 2",
-      "price": 14100,
-      "rating": 4.3
-    }
-  ]
+  "sellers_1": []
 }

@@ -1,0 +1,66 @@
+{
+  "type": "LinearLayout",
+  "layout_width": "match_parent",
+  "layout_height": "wrap_content",
+  "orientation": "vertical",
+  "dataContext": {
+    "SPECIFICATION": "value"
+  },
+  "children": [
+    {
+      "type": "TextView",
+      "layout_width": "match_parent",
+      "layout_height": "wrap_content",
+      "textSize": "18sp",
+      "text": "$SPECIFICATION.key"
+    },
+    {
+      "type": "View",
+      "layout_width": "match_parent",
+      "layout_height": "1dp",
+      "background": "#000000",
+      "layout_marginBottom": "5dp",
+      "layout_marginTop": "5dp"
+    },
+    {
+      "type": "LinearLayout",
+      "layout_width": "match_parent",
+      "layout_height": "wrap_content",
+      "orientation": "vertical",
+      "children": "$SPECIFICATION.attributes.$length",
+      "childType": {
+        "type": "LinearLayout",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "orientation": "horizontal",
+        "dataContext": {
+          "ATTRIBUTE": "SPECIFICATION.attributes[$index]"
+        },
+        "children": [
+          {
+            "type": "TextView",
+            "layout_width": "100dp",
+            "layout_height": "wrap_content",
+            "textSize": "14sp",
+            "text": "$ATTRIBUTE.name"
+          },
+          {
+            "type": "TextView",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "textSize": "13sp",
+            "text": "~{{ATTRIBUTE.values}}$(join)"
+          }
+        ]
+      }
+    },
+    {
+      "type": "View",
+      "layout_width": "match_parent",
+      "layout_height": "1dp",
+      "background": "#000000",
+      "layout_marginBottom": "5dp",
+      "layout_marginTop": "5dp"
+    }
+  ]
+}

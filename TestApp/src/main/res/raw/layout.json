@@ -17,7 +17,6 @@
       "children": [
         {
           "type": "LinearLayout",
-          "android": "http://schemas.android.com/apk/res/android",
           "layout_width": "match_parent",
           "layout_height": "wrap_content",
           "background": "#ffffff",
@@ -160,19 +159,16 @@
         },
         {
           "type": "LinearLayout",
-          "android": "http://schemas.android.com/apk/res/android",
           "layout_width": "match_parent",
           "layout_height": "wrap_content",
           "orientation": "vertical",
-          "children": "sellers",
+          "children": "$sellers.$length",
           "childType": {
             "type": "LinearLayout",
-            "android": "http://schemas.android.com/apk/res/android",
             "layout_width": "match_parent",
             "layout_height": "wrap_content",
             "dataContext": {
-              "seller": "sellers[$index]",
-              "product": "product"
+              "seller": "sellers[$index]"
             },
             "orientation": "vertical",
             "children": [
@@ -187,12 +183,6 @@
                 "layout_width": "match_parent",
                 "layout_height": "wrap_content",
                 "text": "~Rs. {{seller.price}}$(number)"
-              },
-              {
-                "type": "TextView",
-                "layout_width": "match_parent",
-                "layout_height": "wrap_content",
-                "text": "$product.title"
               }
             ]
           }
