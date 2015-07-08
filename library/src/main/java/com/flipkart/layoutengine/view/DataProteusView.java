@@ -6,6 +6,8 @@ import android.view.View;
 import com.flipkart.layoutengine.DataContext;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
+import com.flipkart.layoutengine.builder.DataParsingLayoutBuilder;
+import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
@@ -26,9 +28,10 @@ import java.util.ArrayList;
 public class DataProteusView extends SimpleProteusView {
 
     public static final String TAG = Utils.getTagPrefix() + DataProteusView.class.getSimpleName();
+
     private boolean isViewUpdating = false;
-    private boolean hasDataDrivenChildren;
     private String dataPathForChildren;
+    private JsonObject childLayout;
 
     /**
      * This Array holds a to the {@link Binding}s of this {@link DataProteusView}.
@@ -37,19 +40,14 @@ public class DataProteusView extends SimpleProteusView {
     private ParserContext parserContext;
 
     public DataProteusView(ProteusView proteusView) {
-        super(proteusView.getView(), proteusView.getIndex(), proteusView.getParent());
-
-        this.children = proteusView.getChildren();
-
-        SimpleProteusView simpleProteusView = (SimpleProteusView) proteusView;
-        this.hasChildTypeLayout = simpleProteusView.hasChildTypeLayout();
-        this.childTypeLayout = simpleProteusView.getChildTypeLayout();
+        super(proteusView.getView(), proteusView.getIndex(), proteusView.getChildren(), proteusView.getParent());
 
         if (proteusView instanceof DataProteusView) {
             DataProteusView dataProteusView = (DataProteusView) proteusView;
             parserContext = dataProteusView.getParserContext();
-            hasDataDrivenChildren = dataProteusView.hasDataDrivenChildren();
+            bindings = dataProteusView.getBindings();
             dataPathForChildren = dataProteusView.getDataPathForChildren();
+            childLayout = dataProteusView.getChildLayout();
         }
     }
 
@@ -72,18 +70,27 @@ public class DataProteusView extends SimpleProteusView {
     @Override
     protected View updateDataImpl(JsonObject data) {
         this.isViewUpdating = true;
+        JsonObject copyOfData = null;
 
         if (data != null) {
-            updateDataContext(data);
+            copyOfData = LayoutBuilderFactory.GSON.fromJson(data.toString(), JsonObject.class);
         }
 
+        // update the data context so all child views can refer to new data
+        updateDataContext(copyOfData);
+
+        // update the bindings of this view
         if (this.bindings != null) {
             for (Binding binding : this.bindings) {
                 this.handleBinding(binding);
             }
         }
 
-        if (children != null && hasDataDrivenChildren) {
+        // update the child views
+        if (dataPathForChildren != null) {
+            if (children == null) {
+                children = new ArrayList<>();
+            }
             updateChildrenFromData();
         } else if (children != null) {
             for (ProteusView proteusView : children) {
@@ -96,8 +103,23 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     private void updateDataContext(JsonObject newData) {
-        JsonObject oldData = parserContext.getDataContext().getDataProvider().getData().getAsJsonObject();
-        Utils.merge(oldData, newData);
+
+        DataContext dataContext = parserContext.getDataContext();
+
+        if (newData != null) {
+            JsonObject oldData = parserContext.getDataContext().getDataProvider().getData().getAsJsonObject();
+            Utils.merge(oldData, newData);
+        }
+
+        if (dataContext.isDataContextFailed()) {
+            DataParsingLayoutBuilder layoutBuilder = (DataParsingLayoutBuilder) parserContext.getLayoutBuilder();
+            DataContext newDataContext = layoutBuilder.getNewDataContext(
+                    LayoutBuilderFactory.GSON.fromJson(
+                            LayoutBuilderFactory.GSON.toJson(dataContext.getScope()), JsonObject.class),
+                    dataContext, index, newData);
+
+            parserContext.setDataContext(newDataContext);
+        }
     }
 
     private void updateChildrenFromData() {
@@ -115,13 +137,14 @@ public class DataProteusView extends SimpleProteusView {
                 proteusView.removeView();
             }
         }
+
         for (int index = 0; index < childrenDataArray.size(); index++) {
             if (index < children.size()) {
                 children.get(index).updateData(null);
             } else {
-                if (hasChildTypeLayout) {
+                if (childLayout != null) {
                     DataProteusView proteusView = (DataProteusView) parserContext.getLayoutBuilder().build(view,
-                            childTypeLayout,
+                            childLayout,
                             parserContext.getDataContext().getDataProvider().getData().getAsJsonObject(),
                             index);
                     addChild(proteusView);
@@ -254,19 +277,19 @@ public class DataProteusView extends SimpleProteusView {
         this.isViewUpdating = false;
     }
 
-    public boolean hasDataDrivenChildren() {
-        return hasDataDrivenChildren;
-    }
-
-    public void hasDataDrivenChildren(boolean hasDataDrivenChildren) {
-        this.hasDataDrivenChildren = hasDataDrivenChildren;
-    }
-
     public String getDataPathForChildren() {
         return dataPathForChildren;
     }
 
     public void setDataPathForChildren(String dataPathForChildren) {
         this.dataPathForChildren = dataPathForChildren;
+    }
+
+    public void setChildLayout(JsonObject childLayout) {
+        this.childLayout = childLayout;
+    }
+
+    public JsonObject getChildLayout() {
+        return childLayout;
     }
 }

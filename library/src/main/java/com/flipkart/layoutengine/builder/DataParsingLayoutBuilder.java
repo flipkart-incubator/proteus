@@ -19,12 +19,13 @@ import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.view.SimpleProteusView;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -32,10 +33,8 @@ import java.util.regex.Matcher;
  * A layout builder which can parse data bindings before passing it on to {@link SimpleLayoutBuilder}
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
-    public static final String TAG = Utils.getTagPrefix() + DataParsingLayoutBuilder.class.getSimpleName();
-    public static final String DATA_CONTEXT = "dataContext";
-    public static final String DATA_VISIBILITY = "data";
 
+    public static final String TAG = Utils.getTagPrefix() + DataParsingLayoutBuilder.class.getSimpleName();
     private Map<String, Formatter> formatter = new HashMap<>();
 
     protected DataParsingLayoutBuilder(Context context) {
@@ -43,43 +42,61 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected JsonArray parseChildren(LayoutHandler handler, ParserContext parserContext, ProteusView view,
-                                      JsonObject parentViewJson, JsonElement childrenElement, int childIndex) {
+    protected List<ProteusView> parseChildren(LayoutHandler handler, ParserContext context,
+                                              ProteusView view, JsonObject parentViewJson, int childIndex) {
 
-        DataProteusView dataProteusView = (DataProteusView) view;
+        JsonElement childrenElement = parentViewJson.get(ProteusConstants.CHILDREN);
 
-        if (childrenElement.isJsonPrimitive()) {
-            String attributeValue = childrenElement.getAsString();
-            if (attributeValue != null && !"".equals(attributeValue)) {
-                dataProteusView.setDataPathForChildren(parserContext.getDataContext().getScope().get(attributeValue));
-                try {
-                    childrenElement = Utils.getElementFromData(attributeValue,
-                            parserContext.getDataContext().getDataProvider(),
-                            childIndex);
-                } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                    Log.e(TAG + "#parseChildren()", e.getMessage());
-                    childrenElement = new JsonArray();
-                }
+        if (childrenElement != null &&
+                childrenElement.isJsonPrimitive() &&
+                childrenElement.getAsString().charAt(0) == ProteusConstants.DATA_PREFIX) {
+
+            String dataPathLength = childrenElement.getAsString().substring(1);
+            String dataPath = dataPathLength.substring(0, dataPathLength.lastIndexOf("."));
+            int length;
+            try {
+                JsonElement elementFromData = Utils.getElementFromData(dataPathLength,
+                        context.getDataContext().getDataProvider(),
+                        childIndex);
+                length = Integer.parseInt(elementFromData.getAsString());
+            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
+                Log.e(TAG + "#parseChildren()", e.getMessage());
+                length = 0;
+            } catch (NumberFormatException e) {
+                Log.e(TAG + "#parseChildren()", childrenElement.getAsString() +
+                        " is not a number. layout: " +
+                        parentViewJson.toString());
+                length = 0;
             }
 
-            dataProteusView.hasDataDrivenChildren(true);
-            JsonElement childViewElement = parentViewJson.get(CHILD_TYPE);
-            if (childViewElement != null) {
-                if (childViewElement.isJsonObject()) {
-                    JsonObject childLayout = childViewElement.getAsJsonObject();
-                    dataProteusView.setChildTypeLayout(childLayout);
-                    dataProteusView.hasChildTypeLayout(true);
-                } else {
-                    dataProteusView.setChildType(childViewElement.getAsString());
-                    dataProteusView.hasChildTypeLayout(false);
+            // get the child type
+            JsonElement childTypeElement = parentViewJson.get(ProteusConstants.CHILD_TYPE);
+
+            if (childTypeElement != null) {
+                List<ProteusView> childrenView = new ArrayList<>();
+                JsonObject childLayout = getChildLayout(childTypeElement, context, parentViewJson, view);
+
+                DataProteusView proteusView = (DataProteusView) view;
+                proteusView.setChildLayout(childLayout);
+                proteusView.setDataPathForChildren(dataPath);
+
+                for (int i = 0; i < length; i++) {
+                    ProteusView childView = buildImpl(context, view, childLayout, null, i);
+                    if (childView != null && childView.getView() != null) {
+                        childrenView.add(childView);
+                    }
                 }
+
+                return childrenView;
             }
         }
-        return super.parseChildren(handler, parserContext, view, parentViewJson, childrenElement, childIndex);
+
+        return super.parseChildren(handler, context, view, parentViewJson, childIndex);
     }
 
     @Override
     public ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex) {
+        //JsonObject copyOfData = LayoutBuilderFactory.GSON.fromJson(data.toString(), JsonObject.class);
         return super.build(parent, layout, data, childIndex);
     }
 
@@ -106,7 +123,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                    JsonElement jsonDataValue, ProteusView associatedProteusView,
                                    ProteusView parent, int childIndex) {
         if (jsonDataValue.isJsonPrimitive()) {
-            if (DATA_CONTEXT.equals(attributeName)) {
+            if (ProteusConstants.DATA_CONTEXT.equals(attributeName)) {
                 return true;
             }
             jsonDataValue = this.findAndReplaceValues(jsonDataValue,
@@ -168,7 +185,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         String dataPath = regexMatcher.group(1);
                         String formatterName = regexMatcher.group(2);
 
-                        String formattedValue = null;
+                        String formattedValue;
                         try {
                             formattedValue = format(Utils.getElementFromData(dataPath,
                                             parserContext.getDataContext().getDataProvider(),
@@ -197,7 +214,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 jsonDataValue = new JsonPrimitive(finalValue);
 
             } else if (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX) {
-                JsonElement elementFromData = null;
+                JsonElement elementFromData;
                 try {
                     elementFromData = Utils.getElementFromData(attributeValue.substring(1),
                             parserContext.getDataContext().getDataProvider(),
@@ -225,7 +242,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 if (viewJsonObject != null && !viewJsonObject.isJsonNull()
                         && viewJsonObject.get(Attributes.View.Visibility.getName()) != null) {
                     String visibility = viewJsonObject.get(Attributes.View.Visibility.getName()).getAsString();
-                    if (DATA_VISIBILITY.equals(visibility)) {
+                    if (ProteusConstants.DATA_VISIBILITY.equals(visibility)) {
                         associatedProteusView.getView().setVisibility(View.INVISIBLE);
                     }
                 } else {
@@ -260,7 +277,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                                 final JsonObject currentViewJsonObject,
                                                 final int childIndex) {
 
-        JsonElement scopeElement = currentViewJsonObject.get(DATA_CONTEXT);
+        JsonElement scopeElement = currentViewJsonObject.get(ProteusConstants.DATA_CONTEXT);
 
         if (scopeElement == null) {
             return oldParserContext;
@@ -273,7 +290,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             return oldParserContext;
         }
 
-        DataContext newDataContext = getNewDataContext(scopeElement.getAsJsonObject(), oldDataContext, childIndex);
+        DataContext newDataContext = getNewDataContext(scopeElement.getAsJsonObject(), oldDataContext,
+                childIndex, null);
         ParserContext newParserContext = oldParserContext.clone();
         newParserContext.setDataContext(newDataContext);
 
@@ -290,14 +308,17 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         ((DataProteusView) proteusView).setParserContext(parserContext);
     }
 
-    private DataContext getNewDataContext(JsonObject currentScope, DataContext oldDataContext, int childIndex) {
+    public DataContext getNewDataContext(JsonObject currentScope, DataContext oldDataContext, int childIndex,
+                                         JsonObject reBuildData) {
         Map<String, String> newScope = new HashMap<>();
+        Map<String, String> failedScope = new HashMap<>();
         JsonObject newData = new JsonObject();
         Map<String, String> oldScope = oldDataContext.getScope();
         Map<String, String> oldReverseScope = oldDataContext.getReverseScopeMap();
         Map<String, String> newReverseScope = new HashMap<>();
         JsonProvider oldDataProvider = oldDataContext.getDataProvider();
         JsonObject oldData = oldDataProvider.getData().getAsJsonObject();
+        boolean dataContextFailed = false;
 
         if (oldData == null) {
             oldData = new JsonObject();
@@ -310,8 +331,11 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             try {
                 data = Utils.getElementFromData(value, oldDataProvider, childIndex);
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                Log.e(TAG + "#getNewDataContext()", e.getMessage());
-                data = entry.getValue();
+                Log.e(TAG + "#getNewDataContext()", "failed to create scope. '" + key +
+                        "' : '" + value + "'. " + e.getMessage());
+                dataContextFailed = true;
+                failedScope.put(key, value);
+                data = new JsonObject();
             }
 
             newData.add(key, data);
@@ -328,9 +352,15 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             newReverseScope.putAll(oldReverseScope);
         }
 
-        Utils.addElements(newData, oldData.entrySet(), false);
+        if (reBuildData != null) {
+            Utils.merge(newData, reBuildData);
+            Utils.addElements(newData, oldData.entrySet(), false);
+        } else {
+            Utils.addElements(newData, oldData.entrySet(), true);
+        }
 
-        return new DataContext(new JsonProvider(newData), newScope, newReverseScope, oldDataContext, childIndex);
+        return new DataContext(new JsonProvider(newData), newScope, newReverseScope, oldDataContext,
+                childIndex, dataContextFailed);
     }
 
     private String format(JsonElement toFormat, String formatterName) {

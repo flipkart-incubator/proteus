@@ -25,6 +25,7 @@ import com.flipkart.layoutengine.parser.custom.WebViewParser;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.Formatter;
 import com.flipkart.layoutengine.toolbox.Utils;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -42,6 +43,8 @@ import java.util.Map;
  * {@link LayoutBuilderFactory#getSimpleLayoutBuilder(android.content.Context)}
  */
 public class LayoutBuilderFactory {
+
+    public static final Gson GSON = new Gson();
 
     private SimpleLayoutBuilder simpleLayoutBuilderInstance;
     private DataParsingLayoutBuilder dataParsingLayoutBuilderInstance;

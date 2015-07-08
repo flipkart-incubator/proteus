@@ -11,7 +11,7 @@ public class ParserContext implements Cloneable {
     private DataContext dataContext;
 
     public ParserContext() {
-        this.dataContext = new DataContext(null, null, null, null, 0);
+        this.dataContext = new DataContext(null, null, null, null, 0, false);
     }
 
     public LayoutBuilder getLayoutBuilder() {

@@ -15,13 +15,11 @@ import java.util.ArrayList;
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
  */
 public class SimpleProteusView implements ProteusView {
+
     protected ProteusView parent;
     protected View view;
     protected int index;
     protected ArrayList<ProteusView> children;
-    protected String childType;
-    protected boolean hasChildTypeLayout = false;
-    protected JsonObject childTypeLayout;
 
     public SimpleProteusView(View view, int index, ProteusView parent) {
         this.view = view;
@@ -29,11 +27,19 @@ public class SimpleProteusView implements ProteusView {
         this.parent = parent;
     }
 
+    public SimpleProteusView(View view, int index, ArrayList<ProteusView> children, ProteusView parent) {
+        this.view = view;
+        this.index = index;
+        this.parent = parent;
+        this.children = children;
+    }
+
     @Override
     public View getView() {
         return this.view;
     }
 
+    @Override
     public int getIndex() {
         return this.index;
     }
@@ -71,9 +77,11 @@ public class SimpleProteusView implements ProteusView {
     public void replaceView(ProteusView view) {
         this.children = view.getChildren();
         ViewGroup parent = (ViewGroup) this.view.getParent();
-        int index = parent.indexOfChild(this.view);
-        parent.removeView(this.view);
-        parent.addView(view.getView(), index);
+        if (parent != null) {
+            int index = parent.indexOfChild(this.view);
+            parent.removeView(this.view);
+            parent.addView(view.getView(), index);
+        }
     }
 
     @Override
@@ -83,9 +91,10 @@ public class SimpleProteusView implements ProteusView {
         }
     }
 
+    @Override
     public void removeChild(int childIndex) {
         if (children != null && childIndex < children.size()) {
-            SimpleProteusView proteusView = ((SimpleProteusView)getChildren().get(childIndex));
+            ProteusView proteusView = getChildren().get(childIndex);
             proteusView.removeView();
             getChildren().remove(childIndex);
         }
@@ -93,29 +102,5 @@ public class SimpleProteusView implements ProteusView {
 
     protected View updateDataImpl(JsonObject data) {
         return this.view;
-    }
-
-    public String getChildType() {
-        return childType;
-    }
-
-    public void setChildType(String childType) {
-        this.childType = childType;
-    }
-
-    public JsonObject getChildTypeLayout() {
-        return childTypeLayout;
-    }
-
-    public void setChildTypeLayout(JsonObject childTypeLayout) {
-        this.childTypeLayout = childTypeLayout;
-    }
-
-    public boolean hasChildTypeLayout() {
-        return hasChildTypeLayout;
-    }
-
-    public void hasChildTypeLayout(boolean hasChildTypeLayout) {
-        this.hasChildTypeLayout = hasChildTypeLayout;
     }
 }

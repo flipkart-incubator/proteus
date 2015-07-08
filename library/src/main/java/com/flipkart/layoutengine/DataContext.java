@@ -17,18 +17,21 @@ import java.util.regex.Pattern;
  */
 public class DataContext {
 
+    private boolean isDataContextFailed;
     private JsonProvider dataProvider;
     private Map<String, String> reverseScope;
     private Map<String, String> scope;
     private DataContext parent;
     private int index;
 
-    public DataContext(JsonProvider dataProvider, Map<String, String> scope, Map<String, String> reverseScope, DataContext parent, int index) {
+    public DataContext(JsonProvider dataProvider, Map<String, String> scope, Map<String, String> reverseScope,
+                       DataContext parent, int index, boolean isDataContextFailed) {
         this.dataProvider = dataProvider;
         this.reverseScope = reverseScope;
         this.scope = scope;
         this.parent = parent;
         this.index = index;
+        this.isDataContextFailed = isDataContextFailed;
     }
 
     public Map<String, String> getReverseScopeMap() {
@@ -99,5 +102,13 @@ public class DataContext {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public boolean isDataContextFailed() {
+        return isDataContextFailed;
+    }
+
+    public void setIsDataContextFailed(boolean dataContextFailed) {
+        this.isDataContextFailed = dataContextFailed;
     }
 }

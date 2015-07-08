@@ -68,4 +68,7 @@ public interface ProteusView {
     void replaceView(ProteusView view);
 
     void removeView();
+
+    void removeChild(int childIndex);
+
 }

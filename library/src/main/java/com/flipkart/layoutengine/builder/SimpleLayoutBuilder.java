@@ -29,9 +29,6 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     public static final String TAG = Utils.getTagPrefix() + SimpleLayoutBuilder.class.getSimpleName();
 
-    public static final String TYPE = "type";
-    public static final String CHILDREN = "children";
-    public static final String CHILD_TYPE = "childType";
 
     private HashMap<String, LayoutHandler<View>> layoutHandlers = new HashMap<>();
     protected LayoutBuilderCallback listener;
@@ -92,7 +89,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     protected ProteusView buildImpl(ParserContext context, final ProteusView parent,
                                     final JsonObject currentViewJsonObject, View existingView,
                                     final int childIndex) {
-        JsonElement viewTypeElement = currentViewJsonObject.get(TYPE);
+        JsonElement viewTypeElement = currentViewJsonObject.get(ProteusConstants.TYPE);
         String viewType;
 
         if (viewTypeElement != null) {
@@ -127,8 +124,8 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
          * Parsing each attribute and setting it on the view.
          */
         for (Map.Entry<String, JsonElement> entry : currentViewJsonObject.entrySet()) {
-            if (TYPE.equals(entry.getKey()) || CHILDREN.equals(entry.getKey())
-                    || CHILD_TYPE.equals(entry.getKey())) {
+            if (ProteusConstants.TYPE.equals(entry.getKey()) || ProteusConstants.CHILDREN.equals(entry.getKey())
+                    || ProteusConstants.CHILD_TYPE.equals(entry.getKey())) {
                 continue;
             }
 
@@ -158,46 +155,16 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         /**
          * Processing the children.
          */
-        JsonElement childViewElement = currentViewJsonObject.get(CHILD_TYPE);
-        JsonElement childrenElement = currentViewJsonObject.get(CHILDREN);
-        JsonArray children = null;
-        if (childrenElement != null) {
-            children = parseChildren(handler, context, proteusViewToReturn, currentViewJsonObject,
-                    childrenElement, childIndex);
+        List<ProteusView> childrenToAdd = parseChildren(handler, context, proteusViewToReturn, currentViewJsonObject, childIndex);
+        if (childrenToAdd == null) {
+            return proteusViewToReturn;
         }
 
-        if (children != null && children.size() > 0) {
-            List<ProteusView> childrenToAdd = new ArrayList<>();
-            JsonObject childLayout = null;
-            if (childViewElement != null) {
-                if (childViewElement.isJsonObject()) {
-                    childLayout = childViewElement.getAsJsonObject();
-                } else {
-                    childLayout = onChildTypeLayoutRequired(context, childViewElement.getAsString(),
-                            currentViewJsonObject, proteusViewToReturn);
-                }
-            }
-            for (int i = 0; i < children.size(); i++) {
-                JsonObject childObject = children.get(i).getAsJsonObject();
-                if (childLayout == null && childViewElement != null) {
-                    // propagate the value of 'childView' to the recursive calls
-                    childObject.add(TYPE, childViewElement);
-                } else if (childLayout != null) {
-                    childObject = childLayout;
-                }
-                // build the child views
-                ProteusView childView = buildImpl(context, proteusViewToReturn, childObject, null, i);
-                // add the child view to the array of children
-                if (childView != null) {
-                    childrenToAdd.add(childView);
-                }
-            }
-
-            // add the children to the root view group
-            if (childrenToAdd.size() > 0) {
-                handler.addChildren(context, proteusViewToReturn, childrenToAdd, currentViewJsonObject);
-            }
+        // add the children to the root view group
+        if (childrenToAdd.size() > 0) {
+            handler.addChildren(context, proteusViewToReturn, childrenToAdd, currentViewJsonObject);
         }
+
         return proteusViewToReturn;
     }
 
@@ -209,9 +176,88 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         // nothing to do here
     }
 
-    protected JsonArray parseChildren(LayoutHandler handler, ParserContext context, ProteusView view,
-                                      JsonObject parentViewJson, JsonElement childrenElement, int childIndex) {
-        return handler.parseChildren(context, childrenElement, childIndex);
+    protected List<ProteusView> parseChildren(LayoutHandler handler, ParserContext context, ProteusView view,
+                                              JsonObject parentViewJson, int childIndex) {
+
+        JsonElement childrenElement = parentViewJson.get(ProteusConstants.CHILDREN);
+
+        if (childrenElement == null) {
+            return null;
+        }
+
+        List<ProteusView> childrenView = new ArrayList<>();
+
+        if (childrenElement.isJsonArray()) {
+            JsonArray children = handler.parseChildren(context, childrenElement, childIndex);
+            for (int i = 0; i < children.size(); i++) {
+
+                // get layout of child
+                JsonObject childObject = children.get(i).getAsJsonObject();
+
+                // build the child view
+                ProteusView childView = buildImpl(context, view, childObject, null, i);
+
+                // add the child view to the array of children
+                if (childView != null) {
+                    childrenView.add(childView);
+                }
+            }
+
+        } else if (childrenElement.isJsonPrimitive()) {
+            int length;
+
+            try {
+                length = Integer.parseInt(childrenElement.getAsString());
+            } catch (NumberFormatException e) {
+                Log.e(TAG + "#parseChildren()", childrenElement.getAsString() +
+                        " is not a number. layout: " +
+                        parentViewJson.toString());
+                return null;
+            }
+
+            // get the child type
+            JsonElement childTypeElement = parentViewJson.get(ProteusConstants.CHILD_TYPE);
+
+            if (childTypeElement == null) {
+                return null;
+            }
+
+            JsonObject childLayout = getChildLayout(childTypeElement, context, parentViewJson, view);
+
+            for (int i = 0; i < length; i++) {
+                ProteusView childView = buildImpl(context, view, childLayout, null, i);
+                if (childView != null && childView.getView() != null) {
+                    childrenView.add(childView);
+                }
+            }
+        } else {
+            return childrenView;
+        }
+
+        return childrenView;
+    }
+
+    public JsonObject getChildLayout(JsonElement childTypeElement, ParserContext parserContext,
+                                     JsonObject parentViewJson, ProteusView view) {
+        JsonObject childLayout;
+
+        if (childTypeElement.isJsonObject() && !childTypeElement.isJsonNull()) {
+            childLayout = childTypeElement.getAsJsonObject();
+        } else if (childTypeElement.isJsonPrimitive()) {
+            childLayout = onChildTypeLayoutRequired(parserContext,
+                    childTypeElement.getAsString(),
+                    parentViewJson,
+                    view);
+            if (childLayout == null) {
+                childLayout = new JsonObject();
+                childLayout.add(ProteusConstants.TYPE, childTypeElement);
+            }
+        } else {
+            childLayout = new JsonObject();
+            childLayout.add(ProteusConstants.TYPE, childTypeElement);
+        }
+
+        return childLayout;
     }
 
     public boolean handleAttribute(LayoutHandler handler, ParserContext context,
