@@ -63,8 +63,18 @@ public class JsonProvider implements Provider {
                         }
                     } else if (ProteusConstants.ARRAY_DATA_LENGTH_REFERENCE.equals(segment)) {
                         elementToReturn = new JsonPrimitive(tempArray.size());
+                    } else if (ProteusConstants.ARRAY_DATA_LAST_INDEX_REFERENCE.equals(segment)) {
+                        if (tempArray.size() == 0) {
+                            throw new NoSuchDataPathException(path + "@[" + segment + "]");
+                        }
+                        elementToReturn = tempArray.get(tempArray.size() - 1);
                     } else {
-                        int index = Integer.parseInt(segment);
+                        int index;
+                        try {
+                            index = Integer.parseInt(segment);
+                        } catch (NumberFormatException e) {
+                            throw new InvalidDataPathException(path + "@[" + segment + "]");
+                        }
                         if (index < tempArray.size()) {
                             elementToReturn = tempArray.get(index);
                         } else {

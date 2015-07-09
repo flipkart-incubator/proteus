@@ -22,7 +22,7 @@ public class ProteusConstants {
     public static final String DATA_PATH_SIMPLE_DELIMITER = "\\.";
     public static final String CHILD_INDEX_REFERENCE = "$index";
     public static final String ARRAY_DATA_LENGTH_REFERENCE = "$length";
-    public static final String ARRAY_DATA_LAST_REFERENCE = "$last";
+    public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
 
     static final String[] attributeToIgnore = new String[]{"android", "dataContext"};
     public static final Set<String> ATTRIBUTES_TO_IGNORE = new HashSet<>(Arrays.asList(attributeToIgnore));
