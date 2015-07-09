@@ -163,13 +163,13 @@
           "layout_height": "wrap_content",
           "orientation": "vertical",
           "children": "$sellers.$length",
+          "childDataContext": {
+            "seller": "sellers[$index]"
+          },
           "childType": {
             "type": "LinearLayout",
             "layout_width": "match_parent",
             "layout_height": "wrap_content",
-            "dataContext": {
-              "seller": "sellers[$index]"
-            },
             "orientation": "vertical",
             "children": [
               {

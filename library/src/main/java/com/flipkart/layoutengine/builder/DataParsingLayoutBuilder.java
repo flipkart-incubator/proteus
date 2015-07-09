@@ -75,6 +75,14 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             if (childTypeElement != null) {
                 List<ProteusView> childrenView = new ArrayList<>();
                 JsonObject childLayout = getChildLayout(childTypeElement, context, parentViewJson, view);
+                JsonElement childDataContext = childLayout.get(ProteusConstants.CHILD_DATA_CONTEXT);
+                JsonElement childDataContextFromParent = parentViewJson.get(ProteusConstants.CHILD_DATA_CONTEXT);
+
+                if (childDataContextFromParent != null && childDataContext != null) {
+                    Utils.merge(childDataContext, childDataContextFromParent);
+                } else if (childDataContextFromParent != null) {
+                    childLayout.add(ProteusConstants.DATA_CONTEXT, childDataContextFromParent);
+                }
 
                 DataProteusView proteusView = (DataProteusView) view;
                 proteusView.setChildLayout(childLayout);
@@ -311,7 +319,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     public DataContext getNewDataContext(JsonObject currentScope, DataContext oldDataContext, int childIndex,
                                          JsonObject reBuildData) {
         Map<String, String> newScope = new HashMap<>();
-        Map<String, String> failedScope = new HashMap<>();
         JsonObject newData = new JsonObject();
         Map<String, String> oldScope = oldDataContext.getScope();
         Map<String, String> oldReverseScope = oldDataContext.getReverseScopeMap();
@@ -334,7 +341,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 Log.e(TAG + "#getNewDataContext()", "failed to create scope. '" + key +
                         "' : '" + value + "'. " + e.getMessage());
                 dataContextFailed = true;
-                failedScope.put(key, value);
                 data = new JsonObject();
             }
 
