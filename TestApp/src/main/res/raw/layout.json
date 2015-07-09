@@ -152,7 +152,15 @@
               "layout_width": "wrap_content",
               "layout_height": "wrap_content",
               "layout_marginBottom": "10dp",
-              "text": "~({{sellers_1[3].name}} sellers)",
+              "text": "~({{sellers_1[0].name}} sellers)",
+              "textColor": "#444444"
+            },
+            {
+              "type": "TextView",
+              "layout_width": "wrap_content",
+              "layout_height": "wrap_content",
+              "layout_marginBottom": "10dp",
+              "text": "~({{sellers_1[$last].name}})",
               "textColor": "#444444"
             }
           ]
