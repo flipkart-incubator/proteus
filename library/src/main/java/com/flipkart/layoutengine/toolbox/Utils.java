@@ -1,7 +1,5 @@
 package com.flipkart.layoutengine.toolbox;
 
-import android.util.Log;
-
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
@@ -21,7 +19,7 @@ import java.util.Set;
  */
 public class Utils {
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "2.6.21-SNAPSHOT";
+    public static final String VERSION = "2.7.0-SNAPSHOT";
     public static final String TAG = getTagPrefix() + Utils.class.getSimpleName();
 
     public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
@@ -53,7 +51,7 @@ public class Utils {
             return newJson;
         }
 
-        if (newJson.isJsonPrimitive() ||newJson.isJsonNull()) {
+        if (newJson.isJsonPrimitive() || newJson.isJsonNull()) {
             return newJson;
         }
 
@@ -107,22 +105,6 @@ public class Utils {
                 break;
             }
             jsonObject.add(entry.getKey(), entry.getValue());
-
-            /*if (override) {
-                if (!jsonObject.get(entry.getKey()).isJsonPrimitive() && !entry.getValue().isJsonPrimitive()) {
-                    JsonElement merged = Utils.merge(jsonObject.get(entry.getKey()), entry.getValue());
-                    jsonObject.add(entry.getKey(), merged);
-                } else {
-                    jsonObject.add(entry.getKey(), entry.getValue());
-                }
-                break;
-            }
-
-            if (jsonObject.get(entry.getKey()) == null) {
-                jsonObject.add(entry.getKey(), entry.getValue());
-            } else {
-                break;
-            }*/
         }
         return jsonObject;
     }

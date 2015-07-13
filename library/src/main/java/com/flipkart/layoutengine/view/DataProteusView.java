@@ -113,10 +113,9 @@ public class DataProteusView extends SimpleProteusView {
 
         if (dataContext.isDataContextFailed()) {
             DataParsingLayoutBuilder layoutBuilder = (DataParsingLayoutBuilder) parserContext.getLayoutBuilder();
-            DataContext newDataContext = layoutBuilder.getNewDataContext(
-                    LayoutBuilderFactory.GSON.fromJson(
-                            LayoutBuilderFactory.GSON.toJson(dataContext.getScope()), JsonObject.class),
-                    dataContext, index, newData);
+            JsonObject scope = LayoutBuilderFactory.GSON.fromJson(
+                    LayoutBuilderFactory.GSON.toJson(dataContext.getScope()), JsonObject.class);
+            DataContext newDataContext = layoutBuilder.getNewDataContext(scope, dataContext, index, newData);
 
             parserContext.setDataContext(newDataContext);
         }

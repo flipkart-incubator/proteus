@@ -2,7 +2,6 @@
   {
     "action": null,
     "value": {
-      "type": "ProductSpecificationValue",
       "key": "GENERAL FEATURES",
       "attributes": [
         {
@@ -78,7 +77,6 @@
   {
     "action": null,
     "value": {
-      "type": "ProductSpecificationValue",
       "key": "Multimedia",
       "attributes": [
         {
@@ -112,7 +110,6 @@
   {
     "action": null,
     "value": {
-      "type": "ProductSpecificationValue",
       "key": "Camera",
       "attributes": [
         {
@@ -158,7 +155,6 @@
   {
     "action": null,
     "value": {
-      "type": "ProductSpecificationValue",
       "key": "Internet & Connectivity",
       "attributes": [
         {
@@ -240,7 +236,6 @@
   {
     "action": null,
     "value": {
-      "type": "ProductSpecificationValue",
       "key": "Other Features",
       "attributes": [
         {
@@ -292,7 +287,6 @@
   {
     "action": null,
     "value": {
-      "type": "ProductSpecificationValue",
       "key": "Warranty",
       "attributes": [
         {
@@ -308,7 +302,6 @@
   {
     "action": null,
     "value": {
-      "type": "ProductSpecificationValue",
       "key": "Dimensions",
       "attributes": [
         {
@@ -330,7 +323,6 @@
   {
     "action": null,
     "value": {
-      "type": "ProductSpecificationValue",
       "key": "Display",
       "attributes": [
         {
@@ -370,7 +362,6 @@
   {
     "action": null,
     "value": {
-      "type": "ProductSpecificationValue",
       "key": "Battery",
       "attributes": [
         {
@@ -386,7 +377,6 @@
   {
     "action": null,
     "value": {
-      "type": "ProductSpecificationValue",
       "key": "Memory and Storage",
       "attributes": [
         {
@@ -414,7 +404,6 @@
   {
     "action": null,
     "value": {
-      "type": "ProductSpecificationValue",
       "key": "Platform",
       "attributes": [
         {

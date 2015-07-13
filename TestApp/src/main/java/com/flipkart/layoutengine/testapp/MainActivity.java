@@ -50,8 +50,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             this.gson = new Gson();
-            createView();
-            //createRecyclerView();
+            //createView();
+            createRecyclerView();
         }
     }
 
