@@ -261,9 +261,9 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     public boolean handleAttribute(LayoutHandler handler, ParserContext context,
-                                   String attribute, JsonObject jsonObject, JsonElement element,
+                                   String attribute, JsonObject layout, JsonElement element,
                                    ProteusView view, ProteusView parent, int index) {
-        return handler.handleAttribute(context, attribute, jsonObject, element, view, index);
+        return handler.handleAttribute(context, attribute, layout, element, view, index);
     }
 
     protected void onUnknownAttributeEncountered(ParserContext context, String attribute,

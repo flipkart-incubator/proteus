@@ -11,6 +11,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.flipkart.layoutengine.ImageLoaderCallBack;
+import com.google.gson.JsonObject;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
@@ -28,6 +29,7 @@ public class NetworkDrawableHelper {
     private final DrawableCallback callback;
     private final Context context;
     private final BitmapLoader bitmapLoader;
+    private final JsonObject layout;
 
     /**
      * @param context         Android Context
@@ -35,12 +37,16 @@ public class NetworkDrawableHelper {
      * @param url             The url to load
      * @param loadImmediately Set this to true to load the image on the calling thread (synchronous). If false, volley's thread will be used.
      * @param callback        Implement this to get a hold of the loaded bitmap or the error reason.
+     * @param layout
      */
-    public NetworkDrawableHelper(final Context context, final View view, final String url, boolean loadImmediately, DrawableCallback callback, BitmapLoader bitmapLoader) {
+    public NetworkDrawableHelper(final Context context, final View view, final String url,
+                                 boolean loadImmediately, DrawableCallback callback, BitmapLoader bitmapLoader,
+                                 JsonObject layout) {
         this.view = view;
         this.callback = callback;
         this.context = context;
         this.bitmapLoader = bitmapLoader;
+        this.layout = layout;
         init(url, loadImmediately);
 
     }
@@ -136,7 +142,7 @@ public class NetworkDrawableHelper {
                 }
 
             }
-        }, view);
+        }, view, layout);
     }
 
     public interface DrawableCallback {

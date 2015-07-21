@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.view.View;
 
 import com.flipkart.layoutengine.ImageLoaderCallBack;
+import com.google.gson.JsonObject;
 
 import java.util.concurrent.Future;
 
@@ -21,9 +22,9 @@ public interface BitmapLoader {
 
     /**
      * Useful for asynchronous download of bitmap.
-     *
-     * @param imageUrl
+     *  @param imageUrl
      * @param imageLoaderCallBack
+     * @param layout
      */
-    void getBitmap(String imageUrl, ImageLoaderCallBack imageLoaderCallBack, View view);
+    void getBitmap(String imageUrl, ImageLoaderCallBack imageLoaderCallBack, View view, JsonObject layout);
 }

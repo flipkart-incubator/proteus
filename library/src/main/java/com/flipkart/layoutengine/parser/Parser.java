@@ -107,10 +107,11 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, ProteusView view, int childIndex) {
+    public boolean handleAttribute(ParserContext context, String attribute, JsonObject layout,
+                                   JsonElement element, ProteusView view, int childIndex) {
         AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
-            attributeProcessor.handle(context, attribute, element, view.getView());
+            attributeProcessor.handle(context, attribute, element, view.getView(), layout);
             return true;
         }
         return false;

@@ -33,11 +33,11 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
     }
 
     @Override
-    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view) {
+    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
         if (attributeValue.isJsonPrimitive()) {
-            handleString(parserContext, attributeKey, attributeValue.getAsString(), view);
+            handleString(parserContext, attributeKey, attributeValue.getAsString(), view, layout);
         } else {
-            handleElement(parserContext, attributeKey, attributeValue, view);
+            handleElement(parserContext, attributeKey, attributeValue, view, layout);
         }
     }
 
@@ -50,8 +50,10 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
      * @param attributeKey
      * @param attributeValue
      * @param view
+     * @param layout
      */
-    protected void handleElement(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view) {
+    protected void handleElement(ParserContext parserContext, String attributeKey,
+                                 JsonElement attributeValue, T view, JsonObject layout) {
         JsonObject jsonObject = attributeValue.getAsJsonObject();
         JsonElement type = jsonObject.get("type");
         String drawableType = type.getAsString();
@@ -70,7 +72,7 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
                                 stateListDrawable.addState(state.first, drawable);
                             }
                         };
-                        processor.handle(parserContext, attributeKey, new JsonPrimitive(state.second), view);
+                        processor.handle(parserContext, attributeKey, new JsonPrimitive(state.second), view, layout);
                     }
 
                 }
@@ -92,7 +94,7 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
                             onLayerDrawableFinish(view, drawables);
                         }
                     };
-                    processor.handle(parserContext, attributeKey, new JsonPrimitive(layerPair.second), view);
+                    processor.handle(parserContext, attributeKey, new JsonPrimitive(layerPair.second), view, layout);
                 }
             }
         }
@@ -126,8 +128,10 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
      * @param attributeKey
      * @param attributeValue
      * @param view
+     * @param layout
      */
-    protected void handleString(ParserContext parserContext, String attributeKey, final String attributeValue, final T view) {
+    protected void handleString(ParserContext parserContext, String attributeKey,
+                                final String attributeValue, final T view, JsonObject layout) {
         boolean synchronousRendering = parserContext.getLayoutBuilder().isSynchronousRendering();
         if (ParseHelper.isColor(attributeValue)) {
             setDrawable(view, new ColorDrawable(ParseHelper.parseColor(attributeValue)));
@@ -154,7 +158,8 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
                         setDrawable(view, errorDrawable);
                 }
             };
-            new NetworkDrawableHelper(context, view, attributeValue, synchronousRendering, callback, parserContext.getLayoutBuilder().getNetworkDrawableHelper());
+            new NetworkDrawableHelper(context, view, attributeValue, synchronousRendering, callback,
+                    parserContext.getLayoutBuilder().getNetworkDrawableHelper(), layout);
         }
 
     }

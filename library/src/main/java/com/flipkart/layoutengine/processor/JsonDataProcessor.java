@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
  */
 public abstract class JsonDataProcessor<E> extends AttributeProcessor<E> {
     @Override
-    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, E view) {
+    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, E view, JsonObject layout) {
         handleData(parserContext, attributeKey, attributeValue.getAsJsonObject(), view);
     }
 

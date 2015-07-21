@@ -7,6 +7,7 @@ import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * Use this as the base processor for handling events like OnClick , OnLongClick , OnTouch etc.
@@ -21,7 +22,7 @@ public abstract class EventProcessor<T> extends AttributeProcessor<T> {
     }
 
     @Override
-    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view) {
+    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
         setOnEventListener(view,parserContext,attributeValue);
     }
 

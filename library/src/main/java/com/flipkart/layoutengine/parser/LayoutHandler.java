@@ -21,7 +21,8 @@ public interface LayoutHandler<E extends View> {
     E createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject object);
 
     //ask the handler to handle the attributes of the view it created
-    boolean handleAttribute(ParserContext context, String attribute, JsonObject jsonObject, JsonElement element, ProteusView view, int childIndex);
+    boolean handleAttribute(ParserContext context, String attribute, JsonObject layout,
+                            JsonElement element, ProteusView view, int childIndex);
 
     //ask the handler to parse the value of 'children' and return an array of children elements.
     JsonArray parseChildren(ParserContext context, JsonElement element, int childIndex);
