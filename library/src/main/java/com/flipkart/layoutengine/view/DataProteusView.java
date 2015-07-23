@@ -40,7 +40,8 @@ public class DataProteusView extends SimpleProteusView {
     private ParserContext parserContext;
 
     public DataProteusView(ProteusView proteusView) {
-        super(proteusView.getView(), proteusView.getIndex(), proteusView.getChildren(), proteusView.getParent());
+        super(proteusView.getView(), proteusView.getLayout(), proteusView.getIndex(),
+                proteusView.getChildren(), proteusView.getParent());
 
         if (proteusView instanceof DataProteusView) {
             DataProteusView dataProteusView = (DataProteusView) proteusView;
@@ -167,7 +168,7 @@ public class DataProteusView extends SimpleProteusView {
                     binding.getLayoutHandler(),
                     parserContext,
                     binding.getAttributeKey(),
-                    null,
+                    layout,
                     new JsonPrimitive(binding.getAttributeValue()),
                     this,
                     parent,
@@ -188,7 +189,7 @@ public class DataProteusView extends SimpleProteusView {
                     binding.getLayoutHandler(),
                     parserContext,
                     binding.getAttributeKey(),
-                    null,
+                    layout,
                     dataValue,
                     this,
                     parent,

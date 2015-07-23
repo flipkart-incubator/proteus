@@ -71,4 +71,6 @@ public interface ProteusView {
 
     void removeChild(int childIndex);
 
+    JsonObject getLayout();
+
 }

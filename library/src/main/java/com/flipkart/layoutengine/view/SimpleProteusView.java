@@ -17,6 +17,7 @@ import java.util.ArrayList;
 public class SimpleProteusView implements ProteusView {
 
     protected ProteusView parent;
+    protected JsonObject layout;
     protected View view;
     protected int index;
     protected ArrayList<ProteusView> children;
@@ -27,11 +28,19 @@ public class SimpleProteusView implements ProteusView {
         this.parent = parent;
     }
 
-    public SimpleProteusView(View view, int index, ArrayList<ProteusView> children, ProteusView parent) {
+    public SimpleProteusView(View view, JsonObject layout, int index, ArrayList<ProteusView> children, ProteusView parent) {
         this.view = view;
+        this.layout = layout;
         this.index = index;
         this.parent = parent;
         this.children = children;
+    }
+
+    public SimpleProteusView(View view, JsonObject layout, int index, ProteusView parent) {
+        this.view = view;
+        this.layout = layout;
+        this.index = index;
+        this.parent = parent;
     }
 
     @Override
@@ -98,6 +107,11 @@ public class SimpleProteusView implements ProteusView {
             proteusView.removeView();
             getChildren().remove(childIndex);
         }
+    }
+
+    @Override
+    public JsonObject getLayout() {
+        return layout;
     }
 
     protected View updateDataImpl(JsonObject data) {

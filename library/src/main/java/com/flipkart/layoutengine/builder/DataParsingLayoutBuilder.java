@@ -119,10 +119,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Override
     protected ProteusView buildImpl(ParserContext context, final ProteusView parent,
-                                    final JsonObject currentViewJsonObject, View existingView,
+                                    final JsonObject layout, View existingView,
                                     final int childIndex) {
-        context = getNewParserContext(context, currentViewJsonObject, childIndex);
-        return super.buildImpl(context, parent, currentViewJsonObject, existingView, childIndex);
+        context = getNewParserContext(context, layout, childIndex);
+        return super.buildImpl(context, parent, layout, existingView, childIndex);
     }
 
     @Override
@@ -307,8 +307,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ProteusView createProteusViewToReturn(View createdView, int index, ProteusView parent) {
-        return new DataProteusView(new SimpleProteusView(createdView, index, parent));
+    protected ProteusView createProteusViewToReturn(View createdView, JsonObject layout, int index, ProteusView parent) {
+        return new DataProteusView(new SimpleProteusView(createdView, layout, index, parent));
     }
 
     @Override

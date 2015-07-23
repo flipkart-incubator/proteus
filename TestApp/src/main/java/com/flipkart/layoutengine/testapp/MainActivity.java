@@ -1,5 +1,8 @@
 package com.flipkart.layoutengine.testapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBarActivity;
@@ -16,11 +19,13 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.flipkart.layoutengine.EventType;
+import com.flipkart.layoutengine.ImageLoaderCallBack;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DataAndViewParsingLayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
+import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
@@ -29,9 +34,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
+import java.util.concurrent.Future;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -50,8 +59,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             this.gson = new Gson();
-            //createView();
-            createRecyclerView();
+            createView();
+            //createRecyclerView();
         }
     }
 
@@ -83,6 +92,39 @@ public class MainActivity extends ActionBarActivity {
         this.builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, layoutProvider);
 
         builder.setListener(createCallback());
+        builder.setBitmapLoader(new BitmapLoader() {
+            @Override
+            public Future<Bitmap> getBitmap(String imageUrl, View view) {
+                return null;
+            }
+
+            @Override
+            public void getBitmap(final String imageUrl, final ImageLoaderCallBack imageLoaderCallBack, View view, JsonObject layout) {
+                URL url;
+                try {
+                    url = new URL(imageUrl);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                new AsyncTask<URL, Integer, Bitmap>() {
+
+                    @Override
+                    protected Bitmap doInBackground(URL... params) {
+                        try {
+                            return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
+                        } catch (IOException e) {
+                            Log.e("img", e.getMessage());
+                        }
+                        return null;
+                    }
+
+                    protected void onPostExecute(Bitmap result) {
+                        imageLoaderCallBack.onResponse(result);
+                    }
+                }.execute(url);
+            }
+        });
 
         this.container = new FrameLayout(MainActivity.this);
         layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
