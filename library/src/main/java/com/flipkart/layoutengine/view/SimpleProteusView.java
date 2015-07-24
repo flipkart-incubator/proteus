@@ -3,6 +3,7 @@ package com.flipkart.layoutengine.view;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.layoutengine.toolbox.Styles;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class SimpleProteusView implements ProteusView {
     protected View view;
     protected int index;
     protected ArrayList<ProteusView> children;
+    protected Styles styles;
 
     public SimpleProteusView(View view, int index, ProteusView parent) {
         this.view = view;
@@ -112,6 +114,16 @@ public class SimpleProteusView implements ProteusView {
     @Override
     public JsonObject getLayout() {
         return layout;
+    }
+
+    @Override
+    public void setStyles(Styles styles) {
+        this.styles = styles;
+    }
+
+    @Override
+    public Styles getStyles() {
+        return styles;
     }
 
     protected View updateDataImpl(JsonObject data) {

@@ -15,6 +15,7 @@ import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Formatter;
+import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -43,7 +44,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Override
     protected List<ProteusView> parseChildren(LayoutHandler handler, ParserContext context,
-                                              ProteusView view, JsonObject parentViewJson, int childIndex) {
+                                              ProteusView view, JsonObject parentViewJson, int childIndex, Styles styles) {
 
         JsonElement childrenElement = parentViewJson.get(ProteusConstants.CHILDREN);
 
@@ -89,7 +90,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 proteusView.setDataPathForChildren(dataPath);
 
                 for (int i = 0; i < length; i++) {
-                    ProteusView childView = buildImpl(context, view, childLayout, null, i);
+                    ProteusView childView = buildImpl(context, view, childLayout, null, i, styles);
                     if (childView != null && childView.getView() != null) {
                         childrenView.add(childView);
                     }
@@ -99,13 +100,12 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             }
         }
 
-        return super.parseChildren(handler, context, view, parentViewJson, childIndex);
+        return super.parseChildren(handler, context, view, parentViewJson, childIndex, styles);
     }
 
     @Override
-    public ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex) {
-        //JsonObject copyOfData = LayoutBuilderFactory.GSON.fromJson(data.toString(), JsonObject.class);
-        return super.build(parent, layout, data, childIndex);
+    public ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex, Styles styles) {
+        return super.build(parent, layout, data, childIndex, styles);
     }
 
     @Override
@@ -120,9 +120,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     @Override
     protected ProteusView buildImpl(ParserContext context, final ProteusView parent,
                                     final JsonObject layout, View existingView,
-                                    final int childIndex) {
+                                    final int childIndex, Styles styles) {
         context = getNewParserContext(context, layout, childIndex);
-        return super.buildImpl(context, parent, layout, existingView, childIndex);
+        return super.buildImpl(context, parent, layout, existingView, childIndex, styles);
     }
 
     @Override

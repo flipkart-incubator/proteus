@@ -26,6 +26,7 @@ import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
@@ -53,12 +54,14 @@ public class MainActivity extends ActionBarActivity {
     private JsonObject layout;
     private JsonObject data;
     private ViewGroup.LayoutParams layoutParams;
+    private Styles styles;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
             this.gson = new Gson();
+            styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
             createView();
             //createRecyclerView();
         }
@@ -132,7 +135,7 @@ public class MainActivity extends ActionBarActivity {
 
         long startTime = System.currentTimeMillis();
 
-        this.proteusView = (DataProteusView) builder.build(container, layoutData, productData, 0);
+        this.proteusView = (DataProteusView) builder.build(container, layoutData, productData, 0, styles);
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
@@ -253,7 +256,7 @@ public class MainActivity extends ActionBarActivity {
 
                 startTime = System.currentTimeMillis();
 
-                this.proteusView = (DataProteusView) builder.build(container, layout, data, 0);
+                this.proteusView = (DataProteusView) builder.build(container, layout, data, 0, styles);
 
                 stopTime = System.currentTimeMillis();
                 elapsedTime = stopTime - startTime;
@@ -293,7 +296,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public ProteusViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             DataProteusView proteusView = (DataProteusView) layoutBuilder.build(viewGroup, layout,
-                    new JsonObject(), 0);
+                    new JsonObject(), 0, styles);
             return new ProteusViewHolder(proteusView);
         }
 

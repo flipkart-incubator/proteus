@@ -12,6 +12,8 @@ public class ProteusConstants {
     public static final String TYPE = "type";
     public static final String CHILDREN = "children";
     public static final String CHILD_TYPE = "childType";
+    public static final String STYLE = "style";
+    public static final String STYLE_DELIMITER = "\\.";
     public static final String DATA_CONTEXT = "dataContext";
     public static final String CHILD_DATA_CONTEXT = "childDataContext";
     public static final String DATA_VISIBILITY = "data";

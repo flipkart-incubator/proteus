@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.view;
 
 import android.view.View;
 
+import com.flipkart.layoutengine.toolbox.Styles;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -72,5 +73,9 @@ public interface ProteusView {
     void removeChild(int childIndex);
 
     JsonObject getLayout();
+
+    void setStyles(Styles styles);
+
+    Styles getStyles();
 
 }

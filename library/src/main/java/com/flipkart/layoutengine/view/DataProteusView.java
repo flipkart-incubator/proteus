@@ -146,7 +146,7 @@ public class DataProteusView extends SimpleProteusView {
                     DataProteusView proteusView = (DataProteusView) parserContext.getLayoutBuilder().build(view,
                             childLayout,
                             parserContext.getDataContext().getDataProvider().getData().getAsJsonObject(),
-                            index);
+                            index, styles);
                     addChild(proteusView);
                 }
             }
