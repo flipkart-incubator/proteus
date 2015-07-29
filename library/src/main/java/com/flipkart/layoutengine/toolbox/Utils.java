@@ -1,5 +1,6 @@
 package com.flipkart.layoutengine.toolbox;
 
+import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
@@ -19,7 +20,7 @@ import java.util.Set;
  */
 public class Utils {
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "2.7.8-SNAPSHOT";
+    public static final String VERSION = "2.7.9-SNAPSHOT";
     public static final String TAG = getTagPrefix() + Utils.class.getSimpleName();
 
     public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
@@ -43,22 +44,32 @@ public class Utils {
         JsonObject oldObject;
 
         if (oldJson == null || oldJson.isJsonNull()) {
-            return newJson;
+            return LayoutBuilderFactory.GSON.fromJson(newJson, JsonElement.class);
         }
 
-        if (newJson == null) {
+        if (newJson == null || newJson.isJsonNull()) {
             newJson = JsonNull.INSTANCE;
             return newJson;
         }
 
-        if (newJson.isJsonPrimitive() || newJson.isJsonNull()) {
-            return newJson;
+        if (newJson.isJsonPrimitive()) {
+            JsonPrimitive value;
+            if (newJson.getAsJsonPrimitive().isBoolean()) {
+                value = new JsonPrimitive(newJson.getAsBoolean());
+            } else if (newJson.getAsJsonPrimitive().isNumber()) {
+                value = new JsonPrimitive(newJson.getAsNumber());
+            } else if (newJson.getAsJsonPrimitive().isString()) {
+                value = new JsonPrimitive(newJson.getAsString());
+            } else {
+                value = newJson.getAsJsonPrimitive();
+            }
+            return value;
         }
 
         if (newJson.isJsonArray()) {
 
             if (!oldJson.isJsonArray()) {
-                return newJson;
+                return LayoutBuilderFactory.GSON.fromJson(newJson, JsonArray.class);
             } else {
                 oldArray = oldJson.getAsJsonArray();
                 newArray = newJson.getAsJsonArray();
@@ -83,7 +94,7 @@ public class Utils {
         } else if (newJson.isJsonObject()) {
 
             if (!oldJson.isJsonObject()) {
-                return newJson;
+                return LayoutBuilderFactory.GSON.fromJson(newJson, JsonObject.class);
             } else {
                 oldObject = oldJson.getAsJsonObject();
                 for (Map.Entry<String, JsonElement> entry : newJson.getAsJsonObject().entrySet()) {
@@ -93,7 +104,7 @@ public class Utils {
             }
 
         } else {
-            return newJson;
+            return LayoutBuilderFactory.GSON.fromJson(newJson, JsonElement.class);
         }
 
         return oldJson;
