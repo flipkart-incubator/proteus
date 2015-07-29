@@ -65,13 +65,14 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     @Override
     public ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex, Styles styles) {
-        return buildImpl(createParserContext(data), new SimpleProteusView(parent, 0, null),
+        return buildImpl(createParserContext(data, styles), new SimpleProteusView(parent, 0, null),
                 layout, null, childIndex, styles);
     }
 
-    protected ParserContext createParserContext(JsonObject data) {
+    protected ParserContext createParserContext(JsonObject data, Styles styles) {
         ParserContext parserContext = new ParserContext();
         parserContext.setLayoutBuilder(this);
+        parserContext.setStyles(styles);
         return parserContext;
     }
 
@@ -113,7 +114,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         if (existingView == null) {
             ViewGroup parentViewGroup = (ViewGroup) parent.getView();
             createdView = createView(context, parentViewGroup, handler, layout);
-            handler.setupView(parentViewGroup, createdView, layout);
+            handler.setupView(context, parentViewGroup, createdView, layout);
         } else {
             createdView = existingView;
         }

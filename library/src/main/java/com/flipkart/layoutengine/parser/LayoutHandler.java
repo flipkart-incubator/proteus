@@ -27,7 +27,7 @@ public interface LayoutHandler<V extends View> {
 
     boolean canAddChild();
 
-    void setupView(ViewGroup parent, V view, JsonObject layout);
+    void setupView(ParserContext context, ViewGroup parent, V view, JsonObject layout);
 
     void prepare(Context context);
 

@@ -109,8 +109,11 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ParserContext createParserContext(JsonObject data) {
-        ParserContext parserContext = super.createParserContext(data);
+    protected ParserContext createParserContext(JsonObject data, Styles styles) {
+        ParserContext parserContext = super.createParserContext(data, styles);
+        if (styles != null) {
+            parserContext.setStyles(styles);
+        }
         if (data != null) {
             parserContext.getDataContext().setDataProvider(new JsonProvider(data));
         }

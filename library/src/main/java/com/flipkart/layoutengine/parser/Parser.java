@@ -153,7 +153,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     }
 
     @Override
-    public void setupView(ViewGroup parent, T view, JsonObject layout) {
+    public void setupView(ParserContext context, ViewGroup parent, T view, JsonObject layout) {
         // nothing to do here
     }
 }
