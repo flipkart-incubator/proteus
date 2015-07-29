@@ -168,8 +168,7 @@ public class DataProteusView extends SimpleProteusView {
                     binding.getLayoutHandler(),
                     parserContext,
                     binding.getAttributeKey(),
-                    layout,
-                    new JsonPrimitive(binding.getAttributeValue()),
+                    new JsonPrimitive(binding.getAttributeValue()), layout,
                     this,
                     parent,
                     index);
@@ -189,8 +188,7 @@ public class DataProteusView extends SimpleProteusView {
                     binding.getLayoutHandler(),
                     parserContext,
                     binding.getAttributeKey(),
-                    layout,
-                    dataValue,
+                    dataValue, layout,
                     this,
                     parent,
                     index);

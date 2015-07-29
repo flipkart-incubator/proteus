@@ -127,8 +127,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Override
     public boolean handleAttribute(LayoutHandler handler, ParserContext context,
-                                   String attributeName, JsonObject layout,
-                                   JsonElement jsonDataValue, ProteusView associatedProteusView,
+                                   String attributeName, JsonElement jsonDataValue, JsonObject layout,
+                                   ProteusView associatedProteusView,
                                    ProteusView parent, int childIndex) {
         if (jsonDataValue.isJsonPrimitive()) {
             if (ProteusConstants.DATA_CONTEXT.equals(attributeName)) {
@@ -145,8 +145,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         return super.handleAttribute(handler,
                 context,
                 attributeName,
-                layout,
-                jsonDataValue,
+                jsonDataValue, layout,
                 associatedProteusView,
                 parent,
                 childIndex);

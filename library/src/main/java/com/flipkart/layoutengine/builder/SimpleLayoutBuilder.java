@@ -113,7 +113,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         if (existingView == null) {
             ViewGroup parentViewGroup = (ViewGroup) parent.getView();
             createdView = createView(context, parentViewGroup, handler, layout);
-            handler.setupView(parentViewGroup, createdView);
+            handler.setupView(parentViewGroup, createdView, layout);
         } else {
             createdView = existingView;
         }
@@ -141,8 +141,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             handled = handleAttribute(handler,
                     context,
                     attributeName,
-                    layout,
-                    jsonDataValue,
+                    jsonDataValue, layout,
                     createdProteusView,
                     parent,
                     childIndex);
@@ -289,8 +288,8 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             if (layout.has(attribute.getKey())) {
                 continue;
             }
-            boolean handled = handleAttribute(handler, context, attribute.getKey(), layout,
-                    attribute.getValue(), view, parent, index);
+            boolean handled = handleAttribute(handler, context, attribute.getKey(), attribute.getValue(), layout,
+                    view, parent, index);
 
             if (!handled) {
                 onUnknownAttributeEncountered(context,
@@ -304,9 +303,9 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     public boolean handleAttribute(LayoutHandler handler, ParserContext context,
-                                   String attribute, JsonObject layout, JsonElement element,
+                                   String attribute, JsonElement element, JsonObject layout,
                                    ProteusView view, ProteusView parent, int index) {
-        return handler.handleAttribute(context, attribute, layout, element, view, index);
+        return handler.handleAttribute(context, attribute, element, layout, view, index);
     }
 
     protected void onUnknownAttributeEncountered(ParserContext context, String attribute,
