@@ -19,18 +19,21 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
- * This class will help parsing by introducing handlers. Any subclass can use addHandler() method  to specify a callback for an attribute.
+ * This class will help parsing by introducing handlers. Any subclass can use addHandler()
+ * method  to specify a callback for an attribute.
  * This class also creates an instance of the view with the first constructor.
  */
 public abstract class Parser<T extends View> implements LayoutHandler<T> {
 
     private static final String TAG = Utils.getTagPrefix() + Parser.class.getSimpleName();
     protected final Class<T> viewClass;
-    private Map<String, AttributeProcessor> handlers = new HashMap<String, AttributeProcessor>();
+    private Map<String, AttributeProcessor> handlers = new HashMap<>();
 
     public Parser(Class<T> viewClass) {
         this.viewClass = viewClass;
@@ -70,7 +73,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
      * Gets and caches the constructor
      *
      * @param viewClass
-     * @return
+     * @return Constructor of that class
      */
     protected Constructor<? extends T> getContextConstructor(Class<T> viewClass) {
         Constructor<? extends T> constructor = (Constructor<? extends T>) constructorCache.get(viewClass);
@@ -89,7 +92,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent, JsonObject object) {
 
         /**
-         * This whole method is a hack! ... to generate layout params, since no other way exists.
+         * This whole method is a hack! To generate layout params, since no other way exists.
          * Refer : http://stackoverflow.com/questions/7018267/generating-a-layoutparams-based-on-the-type-of-parent
          */
         XmlResourceParser parser = parent.getResources().getLayout(R.layout.layout_params_hack);
@@ -97,18 +100,20 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
             while (parser.nextToken() != XmlPullParser.START_TAG) {
                 // Skip everything until the view tag.
             }
-            ViewGroup.LayoutParams layoutParams = parent.generateLayoutParams(parser);
-            return layoutParams;
+            return parent.generateLayoutParams(parser);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
-
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, JsonObject layout,
-                                   ProteusView view, int childIndex) {
+    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
+                                   JsonObject layout, ProteusView view, int childIndex) {
+
+        if (getIgnoredAttributeSet().contains(attribute)) {
+            return true;
+        }
         AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
             attributeProcessor.handle(context, attribute, element, view.getView(), layout);
@@ -124,6 +129,9 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
 
     protected abstract void prepareHandlers(Context context);
 
+    protected Set<String> getIgnoredAttributeSet() {
+        return new HashSet<>();
+    }
 
     /**
      * This is a base implementation which calls addChild() on the parent.
@@ -132,8 +140,8 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
      * @param children The List of child views which have to be added.
      */
     @Override
-    public void addChildren(ParserContext parserContext, ProteusView parent, List<ProteusView> children,
-                            JsonObject viewLayout) {
+    public void addChildren(ParserContext parserContext, ProteusView parent,
+                            List<ProteusView> children, JsonObject viewLayout) {
         for (ProteusView child : children) {
             parent.addChild(child);
         }
@@ -144,11 +152,8 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
         return element.getAsJsonArray();
     }
 
-
     @Override
     public void setupView(ViewGroup parent, T view, JsonObject layout) {
         // nothing to do here
     }
-
-
 }
