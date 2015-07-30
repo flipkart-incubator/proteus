@@ -74,7 +74,7 @@ public class DataProteusView extends SimpleProteusView {
         JsonObject copyOfData = null;
 
         if (data != null) {
-            copyOfData = LayoutBuilderFactory.GSON.fromJson(data.toString(), JsonObject.class);
+            copyOfData = LayoutBuilderFactory.GSON.fromJson(data, JsonObject.class);
         }
 
         // update the data context so all child views can refer to new data
@@ -109,7 +109,7 @@ public class DataProteusView extends SimpleProteusView {
 
         if (newData != null) {
             JsonObject oldData = parserContext.getDataContext().getDataProvider().getData().getAsJsonObject();
-            Utils.merge(oldData, newData);
+            Utils.merge(oldData, newData, false);
         }
 
         if (dataContext.isDataContextFailed()) {

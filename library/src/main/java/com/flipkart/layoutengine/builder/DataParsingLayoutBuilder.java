@@ -80,7 +80,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 JsonElement childDataContextFromParent = parentViewJson.get(ProteusConstants.CHILD_DATA_CONTEXT);
 
                 if (childDataContextFromParent != null && childDataContext != null) {
-                    Utils.merge(childDataContext, childDataContextFromParent);
+                    Utils.merge(childDataContext, childDataContextFromParent, true);
                 } else if (childDataContextFromParent != null) {
                     childLayout.add(ProteusConstants.DATA_CONTEXT, childDataContextFromParent);
                 }
@@ -361,7 +361,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         }
 
         if (reBuildData != null) {
-            Utils.merge(newData, reBuildData);
+            Utils.merge(newData, reBuildData, false);
             Utils.addElements(newData, oldData.entrySet(), false);
         } else {
             Utils.addElements(newData, oldData.entrySet(), true);

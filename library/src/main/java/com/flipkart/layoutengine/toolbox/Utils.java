@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public class Utils {
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "2.7.9-SNAPSHOT";
+    public static final String VERSION = "2.8.0-SNAPSHOT";
     public static final String TAG = getTagPrefix() + Utils.class.getSimpleName();
 
     public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
@@ -34,7 +34,7 @@ public class Utils {
         }
     }
 
-    public static JsonElement merge(JsonElement oldJson, JsonElement newJson) {
+    public static JsonElement merge(JsonElement oldJson, JsonElement newJson, boolean useCopy) {
 
         JsonElement newDataElement;
         JsonArray oldArray;
@@ -44,7 +44,7 @@ public class Utils {
         JsonObject oldObject;
 
         if (oldJson == null || oldJson.isJsonNull()) {
-            return LayoutBuilderFactory.GSON.fromJson(newJson, JsonElement.class);
+            return useCopy ? LayoutBuilderFactory.GSON.fromJson(newJson, JsonElement.class) : newJson;
         }
 
         if (newJson == null || newJson.isJsonNull()) {
@@ -54,6 +54,9 @@ public class Utils {
 
         if (newJson.isJsonPrimitive()) {
             JsonPrimitive value;
+            if (!useCopy) {
+                return newJson;
+            }
             if (newJson.getAsJsonPrimitive().isBoolean()) {
                 value = new JsonPrimitive(newJson.getAsBoolean());
             } else if (newJson.getAsJsonPrimitive().isNumber()) {
@@ -67,9 +70,8 @@ public class Utils {
         }
 
         if (newJson.isJsonArray()) {
-
             if (!oldJson.isJsonArray()) {
-                return LayoutBuilderFactory.GSON.fromJson(newJson, JsonArray.class);
+                return useCopy ? LayoutBuilderFactory.GSON.fromJson(newJson, JsonArray.class) : newJson;
             } else {
                 oldArray = oldJson.getAsJsonArray();
                 newArray = newJson.getAsJsonArray();
@@ -84,27 +86,24 @@ public class Utils {
                     if (index < oldArray.size()) {
                         oldArrayItem = oldArray.get(index);
                         newArrayItem = newArray.get(index);
-                        oldArray.set(index, merge(oldArrayItem, newArrayItem));
+                        oldArray.set(index, merge(oldArrayItem, newArrayItem, useCopy));
                     } else {
                         oldArray.add(newArray.get(index));
                     }
                 }
             }
-
         } else if (newJson.isJsonObject()) {
-
             if (!oldJson.isJsonObject()) {
-                return LayoutBuilderFactory.GSON.fromJson(newJson, JsonObject.class);
+                return useCopy ? LayoutBuilderFactory.GSON.fromJson(newJson, JsonObject.class) : newJson;
             } else {
                 oldObject = oldJson.getAsJsonObject();
                 for (Map.Entry<String, JsonElement> entry : newJson.getAsJsonObject().entrySet()) {
-                    newDataElement = merge(oldObject.get(entry.getKey()), entry.getValue());
+                    newDataElement = merge(oldObject.get(entry.getKey()), entry.getValue(), useCopy);
                     oldObject.add(entry.getKey(), newDataElement);
                 }
             }
-
         } else {
-            return LayoutBuilderFactory.GSON.fromJson(newJson, JsonElement.class);
+            return useCopy ? LayoutBuilderFactory.GSON.fromJson(newJson, JsonElement.class) : newJson;
         }
 
         return oldJson;

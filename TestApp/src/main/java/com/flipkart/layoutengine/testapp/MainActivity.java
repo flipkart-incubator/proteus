@@ -302,6 +302,8 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public void onBindViewHolder(ProteusViewHolder viewHolder, int i) {
+            i = i;
+            viewHolder = viewHolder;
             viewHolder.getProteusItemView().updateData(specs.get(i).getAsJsonObject());
         }
 
