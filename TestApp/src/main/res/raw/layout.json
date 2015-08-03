@@ -9,7 +9,7 @@
       "layout_height": "wrap_content",
       "background": "#ffffff",
       "orientation": "vertical",
-      "padding": "16dp",
+      "padding": "@dimen/defaultPadding",
       "dataContext": {
         "sellers": "sellers_1",
         "product": "product"
