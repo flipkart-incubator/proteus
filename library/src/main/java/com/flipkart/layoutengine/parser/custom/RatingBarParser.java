@@ -21,7 +21,7 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
     }
 
     @Override
-    protected void prepareHandlers(Context context) {
+    protected void prepareHandlers(final Context context) {
         super.prepareHandlers(context);
         addHandler(Attributes.RatingBar.NumStars, new StringAttributeProcessor<T>() {
             @Override
@@ -50,7 +50,7 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
         addHandler(Attributes.RatingBar.MinHeight, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setMinimumHeight(ParseHelper.parseDimension(attributeValue));
+                view.setMinimumHeight(ParseHelper.parseDimension(attributeValue, context));
             }
         });
 

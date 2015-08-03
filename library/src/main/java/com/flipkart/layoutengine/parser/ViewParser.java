@@ -57,7 +57,7 @@ public class ViewParser<T extends View> extends Parser<T> {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                layoutParams.height = ParseHelper.parseDimension(attributeValue);
+                layoutParams.height = ParseHelper.parseDimension(attributeValue, context);
                 view.setLayoutParams(layoutParams);
             }
         });
@@ -65,7 +65,7 @@ public class ViewParser<T extends View> extends Parser<T> {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                layoutParams.width = ParseHelper.parseDimension(attributeValue);
+                layoutParams.width = ParseHelper.parseDimension(attributeValue, context);
                 view.setLayoutParams(layoutParams);
             }
         });
@@ -110,35 +110,35 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.Padding, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                int dimension = ParseHelper.parseDimension(attributeValue);
+                int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(dimension, dimension, dimension, dimension);
             }
         });
         addHandler(Attributes.View.PaddingLeft, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                int dimension = ParseHelper.parseDimension(attributeValue);
+                int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(dimension, view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
             }
         });
         addHandler(Attributes.View.PaddingTop, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                int dimension = ParseHelper.parseDimension(attributeValue);
+                int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(view.getPaddingLeft(), dimension, view.getPaddingRight(), view.getPaddingBottom());
             }
         });
         addHandler(Attributes.View.PaddingRight, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                int dimension = ParseHelper.parseDimension(attributeValue);
+                int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), dimension, view.getPaddingBottom());
             }
         });
         addHandler(Attributes.View.PaddingBottom, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                int dimension = ParseHelper.parseDimension(attributeValue);
+                int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), dimension);
             }
         });
@@ -146,7 +146,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.Margin, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                int dimension = ParseHelper.parseDimension(attributeValue);
+                int dimension = ParseHelper.parseDimension(attributeValue, context);
                 ViewGroup.MarginLayoutParams layoutParams;
                 try {
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -160,7 +160,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.MarginLeft, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                int dimension = ParseHelper.parseDimension(attributeValue);
+                int dimension = ParseHelper.parseDimension(attributeValue, context);
                 ViewGroup.MarginLayoutParams layoutParams;
                 try {
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -174,7 +174,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.MarginTop, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                int dimension = ParseHelper.parseDimension(attributeValue);
+                int dimension = ParseHelper.parseDimension(attributeValue, context);
                 ViewGroup.MarginLayoutParams layoutParams;
                 try {
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -188,7 +188,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.MarginRight, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                int dimension = ParseHelper.parseDimension(attributeValue);
+                int dimension = ParseHelper.parseDimension(attributeValue, context);
                 ViewGroup.MarginLayoutParams layoutParams;
                 try {
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -202,7 +202,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.MarginBottom, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                int dimension = ParseHelper.parseDimension(attributeValue);
+                int dimension = ParseHelper.parseDimension(attributeValue, context);
                 ViewGroup.MarginLayoutParams layoutParams;
                 try {
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();

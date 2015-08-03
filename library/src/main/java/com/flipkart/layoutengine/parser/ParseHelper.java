@@ -1,5 +1,6 @@
 package com.flipkart.layoutengine.parser;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -111,9 +113,8 @@ public class ParseHelper {
         return returnValue;
     }
 
-    public static int parseDimension(String dimension) {
-
-        int dimensionInPixels = 0;
+    public static int parseDimension(String dimension, Context context) {
+        int dimensionInPixels;
         if ("match_parent".equals(dimension) || "fill_parent".equals(dimension)) {
             dimensionInPixels = ViewGroup.LayoutParams.MATCH_PARENT;
         } else if ("wrap_content".equals(dimension)) {
@@ -123,7 +124,24 @@ public class ParseHelper {
             dimensionInPixels = dpToPx(Float.parseFloat(dimension));
         } else if (dimension.endsWith("px") || dimension.endsWith("sp")) {
             dimension = dimension.substring(0, dimension.length() - 2);
-            dimensionInPixels = Integer.parseInt(dimension);
+            try {
+                dimensionInPixels = Integer.parseInt(dimension);
+            } catch (NumberFormatException e) {
+                Log.e(Utils.getTagPrefix() + ".ParseHelper",
+                        dimension + " is NAN. Error: " + e.getMessage());
+                dimensionInPixels = 0;
+            }
+        } else if (dimension.startsWith("@dimen/")) {
+            try {
+                int resourceId = context.getResources().getIdentifier(dimension, "dimen", context.getPackageName());
+                dimensionInPixels = (int) context.getResources().getDimension(resourceId);
+            } catch (Exception e) {
+                Log.e(Utils.getTagPrefix() + ".ParseHelper",
+                        "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                dimensionInPixels = 0;
+            }
+        } else {
+            dimensionInPixels = 0;
         }
 
         return dimensionInPixels;

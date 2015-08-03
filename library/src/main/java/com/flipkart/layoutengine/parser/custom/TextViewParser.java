@@ -26,7 +26,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
     }
 
     @Override
-    protected void prepareHandlers(Context context) {
+    protected void prepareHandlers(final Context context) {
         super.prepareHandlers(context);
         addHandler(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
             @Override
@@ -38,14 +38,14 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         addHandler(Attributes.TextView.DrawablePadding,new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setCompoundDrawablePadding(ParseHelper.parseDimension(attributeValue));
+                view.setCompoundDrawablePadding(ParseHelper.parseDimension(attributeValue, context));
             }
         });
 
         addHandler(Attributes.TextView.TextSize,new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setTextSize(ParseHelper.parseDimension(attributeValue));
+                view.setTextSize(ParseHelper.parseDimension(attributeValue, context));
             }
         });
         addHandler(Attributes.TextView.Gravity,new StringAttributeProcessor<T>() {
