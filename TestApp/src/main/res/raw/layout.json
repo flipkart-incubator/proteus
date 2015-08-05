@@ -9,7 +9,8 @@
       "layout_height": "wrap_content",
       "background": "#ffffff",
       "orientation": "vertical",
-      "padding": "@dimen/defaultPadding",
+      "marginTop":"?Theme_AppCompat:actionBarSize",
+      "padding": "?Theme_AppCompat:actionBarSize",
       "dataContext": {
         "sellers": "sellers_1",
         "product": "product"

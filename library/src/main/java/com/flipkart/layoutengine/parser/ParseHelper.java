@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.parser;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -31,6 +33,9 @@ import java.util.Set;
 public class ParseHelper {
 
     private static final String TAG = ParseHelper.class.getSimpleName();
+
+    private static Map<String, Integer> styleMap = new HashMap<>();
+    private static Map<String, Integer> attributeMap = new HashMap<>();
 
     public static int parseGravity(String attributeValue) {
         String[] gravities = attributeValue.split("\\|");
@@ -135,6 +140,28 @@ public class ParseHelper {
             try {
                 int resourceId = context.getResources().getIdentifier(dimension, "dimen", context.getPackageName());
                 dimensionInPixels = (int) context.getResources().getDimension(resourceId);
+            } catch (Exception e) {
+                Log.e(Utils.getTagPrefix() + ".ParseHelper",
+                        "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                dimensionInPixels = 0;
+            }
+        } else if (dimension.startsWith("?")) {
+            try {
+                String [] dimenArr = dimension.substring(1, dimension.length()).split(":");
+                String style = dimenArr[0];
+                String attr = dimenArr[1];
+                Integer styleId = styleMap.get(style);
+                if(styleId == null) {
+                    styleId = R.style.class.getField(style).getInt(null);
+                    styleMap.put(style, styleId);
+                }
+                Integer attrId = attributeMap.get(attr);
+                if(attrId == null) {
+                    attrId = R.attr.class.getField(attr).getInt(null);
+                    attributeMap.put(attr, attrId);
+                }
+                TypedArray a = context.getTheme().obtainStyledAttributes(styleId, new int[]{attrId});
+                dimensionInPixels = a.getDimensionPixelSize(0, 0);
             } catch (Exception e) {
                 Log.e(Utils.getTagPrefix() + ".ParseHelper",
                         "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
