@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.webkit.URLUtil;
@@ -26,6 +27,7 @@ import java.util.List;
  */
 public abstract class ResourceReferenceProcessor<T extends View> extends AttributeProcessor<T> {
 
+    private static final String TAG = ResourceReferenceProcessor.class.getSimpleName();
     private Context context;
 
     public ResourceReferenceProcessor(Context context) {
@@ -36,8 +38,11 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
     public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
         if (attributeValue.isJsonPrimitive()) {
             handleString(parserContext, attributeKey, attributeValue.getAsString(), view, layout);
-        } else {
+        } else if (attributeValue.isJsonObject()) {
             handleElement(parserContext, attributeKey, attributeValue, view, layout);
+        } else {
+            Log.e(TAG + ".handle()", "Resource for key: " + attributeKey
+                    + " must be a primitive or an object. value -> " + attributeValue.toString());
         }
     }
 
@@ -54,7 +59,9 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
      */
     protected void handleElement(ParserContext parserContext, String attributeKey,
                                  JsonElement attributeValue, T view, JsonObject layout) {
+
         JsonObject jsonObject = attributeValue.getAsJsonObject();
+
         JsonElement type = jsonObject.get("type");
         String drawableType = type.getAsString();
         if ("selector".equals(drawableType)) {
