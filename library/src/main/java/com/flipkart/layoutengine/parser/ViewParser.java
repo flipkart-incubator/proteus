@@ -12,10 +12,12 @@ import android.widget.RelativeLayout;
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.processor.EventProcessor;
+import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 
@@ -76,7 +78,7 @@ public class ViewParser<T extends View> extends Parser<T> {
                 LinearLayout.LayoutParams layoutParams;
                 try {
                     layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
-                    layoutParams.weight = Float.parseFloat(attributeValue);
+                    layoutParams.weight = ParseHelper.parseFloat(attributeValue);
                     view.setLayoutParams(layoutParams);
 
                 } catch (ClassCastException ex) {
@@ -216,13 +218,13 @@ public class ViewParser<T extends View> extends Parser<T> {
         addHandler(Attributes.View.Alpha, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setAlpha(Float.parseFloat(attributeValue));
+                view.setAlpha(ParseHelper.parseFloat(attributeValue));
             }
         });
-        addHandler(Attributes.View.Visibility, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.Visibility, new JsonDataProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                //noinspection ResourceType
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+                // noinspection ResourceType
                 view.setVisibility(ParseHelper.parseVisibility(attributeValue));
             }
         });

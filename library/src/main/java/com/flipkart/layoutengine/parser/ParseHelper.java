@@ -37,6 +37,30 @@ public class ParseHelper {
     private static Map<String, Integer> styleMap = new HashMap<>();
     private static Map<String, Integer> attributeMap = new HashMap<>();
 
+    public static int parseInt(String attributeValue) {
+        int number;
+        try {
+            number = Integer.parseInt(attributeValue);
+        } catch (NumberFormatException e) {
+            Log.e(Utils.getTagPrefix() + ".ParseHelper",
+                    attributeValue + " is NAN. Error: " + e.getMessage());
+            number = 0;
+        }
+        return number;
+    }
+
+    public static float parseFloat(String attributeValue) {
+        float number;
+        try {
+            number = Float.parseFloat(attributeValue);
+        } catch (NumberFormatException e) {
+            Log.e(Utils.getTagPrefix() + ".ParseHelper",
+                    attributeValue + " is NAN. Error: " + e.getMessage());
+            number = 0;
+        }
+        return number;
+    }
+
     public static int parseGravity(String attributeValue) {
         String[] gravities = attributeValue.split("\\|");
         int returnGravity = Gravity.NO_GRAVITY;
@@ -101,8 +125,22 @@ public class ParseHelper {
         return returnValue;
     }
 
-    public static int parseVisibility(String attributeValue) {
-        int returnValue = View.VISIBLE;
+    public static int parseVisibility(JsonElement element) {
+        String attributeValue;
+        int returnValue;
+
+        if (element.isJsonPrimitive()) {
+            if (!element.getAsString().equals("") && !element.getAsString().equals("false")) {
+                attributeValue = "visible";
+            } else {
+                attributeValue = "gone";
+            }
+        } else if (element.isJsonNull()) {
+            attributeValue = "gone";
+        } else {
+            attributeValue = "visible";
+        }
+
         if ("visible".equals(attributeValue)) {
             returnValue = View.VISIBLE;
         } else if ("invisible".equals(attributeValue)) {
@@ -113,6 +151,8 @@ public class ParseHelper {
             returnValue = View.VISIBLE;
         } else if ("false".equals(attributeValue)) {
             returnValue = View.GONE;
+        } else {
+            returnValue = View.VISIBLE;
         }
 
         return returnValue;
@@ -126,7 +166,7 @@ public class ParseHelper {
             dimensionInPixels = ViewGroup.LayoutParams.WRAP_CONTENT;
         } else if (dimension.endsWith("dp")) {
             dimension = dimension.substring(0, dimension.length() - 2);
-            dimensionInPixels = dpToPx(Float.parseFloat(dimension));
+            dimensionInPixels = dpToPx(ParseHelper.parseFloat(dimension));
         } else if (dimension.endsWith("px") || dimension.endsWith("sp")) {
             dimension = dimension.substring(0, dimension.length() - 2);
             try {
@@ -147,16 +187,16 @@ public class ParseHelper {
             }
         } else if (dimension.startsWith("?")) {
             try {
-                String [] dimenArr = dimension.substring(1, dimension.length()).split(":");
+                String[] dimenArr = dimension.substring(1, dimension.length()).split(":");
                 String style = dimenArr[0];
                 String attr = dimenArr[1];
                 Integer styleId = styleMap.get(style);
-                if(styleId == null) {
+                if (styleId == null) {
                     styleId = R.style.class.getField(style).getInt(null);
                     styleMap.put(style, styleId);
                 }
                 Integer attrId = attributeMap.get(attr);
-                if(attrId == null) {
+                if (attrId == null) {
                     attrId = R.attr.class.getField(attr).getInt(null);
                     attributeMap.put(attr, attrId);
                 }

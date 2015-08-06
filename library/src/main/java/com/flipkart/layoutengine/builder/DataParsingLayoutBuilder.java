@@ -21,6 +21,7 @@ import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.view.SimpleProteusView;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -161,7 +162,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         boolean failed = false;
         String attributeValue = jsonDataValue.getAsString();
-        DataProteusView associatedProteusView = (DataProteusView) proteusView;
+        DataProteusView dataProteusView = (DataProteusView) proteusView;
 
         if (attributeValue != null && !"".equals(attributeValue) &&
                 (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX ||
@@ -209,7 +210,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         finalValue = finalValue.replace(matchedString, formattedValue);
                         bindingName = dataPath;
                     }
-                    addBinding(associatedProteusView,
+                    addBinding(dataProteusView,
                             bindingName,
                             attributeName,
                             attributeValue,
@@ -232,13 +233,13 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                     Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
                     failed = true;
-                    elementFromData = new JsonPrimitive(0);
+                    elementFromData = JsonNull.INSTANCE;
                 }
 
                 if (elementFromData != null) {
                     jsonDataValue = elementFromData;
                 }
-                addBinding(associatedProteusView,
+                addBinding(dataProteusView,
                         attributeValue.substring(1),
                         attributeName,
                         attributeValue,
@@ -247,19 +248,19 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             }
         }
 
-        if (associatedProteusView.getView() != null) {
+        if (dataProteusView.getView() != null) {
             if (failed) {
                 if (viewJsonObject != null && !viewJsonObject.isJsonNull()
                         && viewJsonObject.get(Attributes.View.Visibility.getName()) != null) {
                     String visibility = viewJsonObject.get(Attributes.View.Visibility.getName()).getAsString();
                     if (ProteusConstants.DATA_VISIBILITY.equals(visibility)) {
-                        associatedProteusView.getView().setVisibility(View.INVISIBLE);
+                        dataProteusView.getView().setVisibility(View.INVISIBLE);
                     }
                 } else {
-                    associatedProteusView.getView().setVisibility(View.GONE);
+                    dataProteusView.getView().setVisibility(View.GONE);
                 }
-            } else if (associatedProteusView.isViewUpdating()) {
-                associatedProteusView.getView().setVisibility(View.VISIBLE);
+            } else if (dataProteusView.isViewUpdating()) {
+                dataProteusView.getView().setVisibility(View.VISIBLE);
             }
         }
 

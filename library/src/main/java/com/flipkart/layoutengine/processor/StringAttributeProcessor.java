@@ -10,8 +10,13 @@ import com.google.gson.JsonObject;
 public abstract class StringAttributeProcessor<E> extends AttributeProcessor<E> {
     @Override
     public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, E view, JsonObject layout) {
-       handle(parserContext,attributeKey,attributeValue.getAsString(),view);
+        if (attributeValue.isJsonPrimitive()) {
+            handle(parserContext, attributeKey, attributeValue.getAsString(), view);
+        } else {
+            handle(parserContext, attributeKey, attributeValue.toString(), view);
+        }
     }
+
     public abstract void handle(ParserContext parserContext, String attributeKey, String attributeValue, E view);
 
 }

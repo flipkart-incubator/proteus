@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
+import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
@@ -26,14 +27,14 @@ public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends Wrappab
         addHandler(Attributes.FrameLayout.HeightRatio,new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setAspectRatioHeight(Integer.parseInt(attributeValue));
+                view.setAspectRatioHeight(ParseHelper.parseInt(attributeValue));
 
             }
         });
         addHandler(Attributes.FrameLayout.WidthRatio,new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setAspectRatioWidth(Integer.parseInt(attributeValue));
+                view.setAspectRatioWidth(ParseHelper.parseInt(attributeValue));
 
             }
         });

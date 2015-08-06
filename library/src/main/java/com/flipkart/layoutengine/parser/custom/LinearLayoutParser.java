@@ -64,7 +64,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
 
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-                    view.setDividerPadding(Integer.parseInt(attributeValue));
+                    view.setDividerPadding(ParseHelper.parseInt(attributeValue));
                 }
             }
         });
@@ -76,6 +76,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
 
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
                     int dividerMode = ParseHelper.parseDividerMode(attributeValue);
+                    // noinspection ResourceType
                     view.setShowDividers(dividerMode);
                 }
             }

@@ -26,13 +26,13 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
         addHandler(Attributes.RatingBar.NumStars, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setNumStars(Integer.parseInt(attributeValue));
+                view.setNumStars(ParseHelper.parseInt(attributeValue));
             }
         });
         addHandler(Attributes.RatingBar.Rating, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setRating(Float.parseFloat(attributeValue));
+                view.setRating(ParseHelper.parseFloat(attributeValue));
             }
         });
         addHandler(Attributes.RatingBar.IsIndicator, new StringAttributeProcessor<T>() {
@@ -44,7 +44,7 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
         addHandler(Attributes.RatingBar.StepSize, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setStepSize(Float.parseFloat(attributeValue));
+                view.setStepSize(ParseHelper.parseFloat(attributeValue));
             }
         });
         addHandler(Attributes.RatingBar.MinHeight, new StringAttributeProcessor<T>() {
@@ -61,9 +61,5 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
                 view.setProgressDrawable(drawable);
             }
         });
-
-
     }
-
-
 }
