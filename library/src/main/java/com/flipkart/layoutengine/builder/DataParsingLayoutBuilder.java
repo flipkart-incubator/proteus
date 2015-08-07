@@ -21,7 +21,6 @@ import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.view.SimpleProteusView;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -233,7 +232,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                     Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
                     failed = true;
-                    elementFromData = JsonNull.INSTANCE;
+                    elementFromData = new JsonPrimitive(ProteusConstants.DATA_NULL);
                 }
 
                 if (elementFromData != null) {

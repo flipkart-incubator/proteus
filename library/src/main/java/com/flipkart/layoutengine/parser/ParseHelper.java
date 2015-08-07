@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.flipkart.layoutengine.library.R;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -130,8 +131,10 @@ public class ParseHelper {
         int returnValue;
 
         if (element.isJsonPrimitive()) {
-            if (!element.getAsString().equals("") && !element.getAsString().equals("false")) {
-                attributeValue = "visible";
+            if (!element.getAsString().equals("")
+                    && !element.getAsString().equals("false")
+                    && !element.getAsString().equals(ProteusConstants.DATA_NULL)) {
+                attributeValue = element.getAsString();
             } else {
                 attributeValue = "gone";
             }

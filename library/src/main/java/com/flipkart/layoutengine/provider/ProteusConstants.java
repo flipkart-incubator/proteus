@@ -17,6 +17,7 @@ public class ProteusConstants {
     public static final String DATA_CONTEXT = "dataContext";
     public static final String CHILD_DATA_CONTEXT = "childDataContext";
     public static final String DATA_VISIBILITY = "data";
+    public static final String DATA_NULL = "null";
     public static final Character DATA_PREFIX = '$';
     public static final Character REGEX_PREFIX = '~';
     public static final Pattern REGEX_PATTERN = Pattern.compile("\\{\\{(\\S+?)\\}\\}\\$\\((.+?)\\)|\\{\\{(\\S+?)\\}\\}");
