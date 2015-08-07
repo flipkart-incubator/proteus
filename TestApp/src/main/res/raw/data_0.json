@@ -10,7 +10,8 @@
     "tags": ["Hi", "there!", "I'm", "Proteus"],
     "date": "2015-06-18 12:01:37",
     "dateNull": null,
-    "float": 4.56257
+    "float": 4.56257,
+    "isFK": null
   },
   "sellers_1": []
 }

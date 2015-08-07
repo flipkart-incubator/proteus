@@ -36,7 +36,8 @@
               "type": "ImageView",
               "src": "http://img5a.flixcart.com/www/promos/new/20150521-151534-flipkart-logo.png",
               "layout_height": "wrap_content",
-              "layout_width": "wrap_content"
+              "layout_width": "wrap_content",
+              "visibility": "$product.isFK"
             },
             {
               "type": "TextView",
