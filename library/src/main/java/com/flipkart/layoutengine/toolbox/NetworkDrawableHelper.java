@@ -64,24 +64,9 @@ public class NetworkDrawableHelper {
 
         if (loadImmediately) {
             startSyncLoad(url, view);
-
         } else {
             lock = null;
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB_MR1) {
-                startAsyncLoad(url, view);
-            } else {
-                view.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-                    @Override
-                    public void onViewAttachedToWindow(final View view) {
-                        startAsyncLoad(url, view);
-                    }
-
-                    @Override
-                    public void onViewDetachedFromWindow(View view) {
-                        cancelLoad();
-                    }
-                });
-            }
+            startAsyncLoad(url, view);
         }
     }
 
