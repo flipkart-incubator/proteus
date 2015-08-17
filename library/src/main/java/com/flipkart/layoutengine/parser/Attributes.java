@@ -68,7 +68,7 @@ public class Attributes {
         public static Attribute ContentDescription = new Attribute("contentDescription");
         public static Attribute Clickable = new Attribute("clickable");
         public static Attribute OnClick = new Attribute("onClick");
-
+        public static Attribute Border = new Attribute("border");
     }
 
     public static class Webview {

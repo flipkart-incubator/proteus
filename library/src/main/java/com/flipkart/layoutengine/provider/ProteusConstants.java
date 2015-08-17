@@ -27,4 +27,9 @@ public class ProteusConstants {
     public static final String ARRAY_DATA_LENGTH_REFERENCE = "$length";
     public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
     public static final Set<String> ATTRIBUTES_TO_IGNORE = new HashSet<>(Arrays.asList(new String[]{"android", "dataContext"}));
+
+    public static final String ATTRIBUTE_BORDER_WIDTH = "width";
+    public static final String ATTRIBUTE_BORDER_COLOR = "color";
+    public static final String ATTRIBUTE_BORDER_RADIUS = "radius";
+    public static final String ATTRIBUTE_BG_COLOR = "bgColor";
 }

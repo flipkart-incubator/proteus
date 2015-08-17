@@ -134,6 +134,20 @@ public class Utils {
         return sb.toString();
     }
 
+    public static String getPropertyAsString(JsonObject object, String property) {
+        JsonElement element = object.get(property);
+        String string;
+        if (element == null) {
+            return null;
+        }
+        if (!element.isJsonNull() && element.isJsonPrimitive()) {
+            string = element.getAsString();
+        } else {
+            string = element.toString();
+        }
+        return string;
+    }
+
     public static String getTagPrefix() {
         return LIB_NAME + ":" + VERSION + ":";
     }

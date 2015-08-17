@@ -1,7 +1,9 @@
 package com.flipkart.layoutengine.parser;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,9 @@ import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
+import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -253,6 +257,51 @@ public class ViewParser<T extends View> extends Parser<T> {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 view.setTag(attributeValue);
+            }
+        });
+        addHandler(Attributes.View.Border, new JsonDataProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+                if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
+                    return;
+                }
+
+                int cornerRadius = 0, borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
+                JsonObject data = attributeValue.getAsJsonObject();
+
+                String value = Utils.getPropertyAsString(data, ProteusConstants.ATTRIBUTE_BG_COLOR);
+                if (value != null && !value.equals("-1")) {
+                    bgColor = ParseHelper.parseColor(value);
+                }
+
+                value = Utils.getPropertyAsString(data, ProteusConstants.ATTRIBUTE_BORDER_COLOR);
+                if (value != null) {
+                    borderColor = ParseHelper.parseColor(value);
+                }
+
+                value = Utils.getPropertyAsString(data, ProteusConstants.ATTRIBUTE_BORDER_RADIUS);
+                if (value != null) {
+                    cornerRadius = ParseHelper.parseDimension(value, context);
+                }
+
+                value = Utils.getPropertyAsString(data, ProteusConstants.ATTRIBUTE_BORDER_WIDTH);
+                if (value != null) {
+                    borderWidth = ParseHelper.parseDimension(value, context);
+                }
+
+                GradientDrawable border = new GradientDrawable();
+                border.setCornerRadius(cornerRadius);
+                border.setShape(GradientDrawable.RECTANGLE);
+                border.setStroke(borderWidth, borderColor);
+                if (bgColor != -1) {
+                    border.setColor(bgColor);
+                }
+
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    view.setBackgroundDrawable(border);
+                } else {
+                    view.setBackground(border);
+                }
             }
         });
 
