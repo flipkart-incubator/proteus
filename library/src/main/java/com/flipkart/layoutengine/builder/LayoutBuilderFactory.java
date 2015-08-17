@@ -140,7 +140,7 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("RatingBar", ratingBarParser);
         layoutBuilder.registerHandler("CheckBox", checkBoxParser);
         layoutBuilder.registerHandler("ProgressBar", progressBarParser);
-        layoutBuilder.registerHandler("HorizontalProgressBarParser", horizontalProgressBarParser);
+        layoutBuilder.registerHandler("HorizontalProgressBar", horizontalProgressBarParser);
     }
 
     protected void registerFormatters(DataParsingLayoutBuilder layoutBuilder) {
