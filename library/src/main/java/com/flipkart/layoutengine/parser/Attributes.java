@@ -129,6 +129,7 @@ public class Attributes {
         public static Attribute Divider = new Attribute("divider");
         public static Attribute DividerPadding = new Attribute("dividerPadding");
         public static Attribute ShowDividers = new Attribute("showDividers");
+        public static Attribute WeightSum = new Attribute("weightSum");
     }
 
     public static class ListView {

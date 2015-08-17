@@ -25,14 +25,12 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
     @Override
     protected void prepareHandlers(Context context) {
         super.prepareHandlers(context);
-        addHandler(Attributes.LinearLayout.Orientation,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.LinearLayout.Orientation, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                if("horizontal".equals(attributeValue)) {
+                if ("horizontal".equals(attributeValue)) {
                     view.setOrientation(LinearLayout.HORIZONTAL);
-                }
-                else
-                {
+                } else {
                     view.setOrientation(LinearLayout.VERTICAL);
                 }
             }
@@ -47,7 +45,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             }
         });
 
-        addHandler(Attributes.LinearLayout.Divider , new ResourceReferenceProcessor<T>(context) {
+        addHandler(Attributes.LinearLayout.Divider, new ResourceReferenceProcessor<T>(context) {
             @SuppressLint("NewApi")
             @Override
             public void setDrawable(T view, Drawable drawable) {
@@ -58,7 +56,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             }
         });
 
-        addHandler(Attributes.LinearLayout.DividerPadding,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.LinearLayout.DividerPadding, new StringAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
@@ -69,7 +67,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             }
         });
 
-        addHandler(Attributes.LinearLayout.ShowDividers,new StringAttributeProcessor<T>() 	{
+        addHandler(Attributes.LinearLayout.ShowDividers, new StringAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
@@ -79,6 +77,14 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
                     // noinspection ResourceType
                     view.setShowDividers(dividerMode);
                 }
+            }
+        });
+
+        addHandler(Attributes.LinearLayout.WeightSum, new StringAttributeProcessor<T>() {
+            @SuppressLint("NewApi")
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                view.setWeightSum(ParseHelper.parseFloat(attributeValue));
             }
         });
     }
