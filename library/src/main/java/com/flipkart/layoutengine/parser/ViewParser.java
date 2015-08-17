@@ -30,6 +30,11 @@ import java.util.HashMap;
  */
 public class ViewParser<T extends View> extends Parser<T> {
 
+    public static final String ATTRIBUTE_BORDER_WIDTH = "width";
+    public static final String ATTRIBUTE_BORDER_COLOR = "color";
+    public static final String ATTRIBUTE_BORDER_RADIUS = "radius";
+    public static final String ATTRIBUTE_BG_COLOR = "bgColor";
+
     public ViewParser(Class viewClass) {
         super(viewClass);
     }
@@ -269,22 +274,22 @@ public class ViewParser<T extends View> extends Parser<T> {
                 int cornerRadius = 0, borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
                 JsonObject data = attributeValue.getAsJsonObject();
 
-                String value = Utils.getPropertyAsString(data, ProteusConstants.ATTRIBUTE_BG_COLOR);
+                String value = Utils.getPropertyAsString(data, ATTRIBUTE_BG_COLOR);
                 if (value != null && !value.equals("-1")) {
                     bgColor = ParseHelper.parseColor(value);
                 }
 
-                value = Utils.getPropertyAsString(data, ProteusConstants.ATTRIBUTE_BORDER_COLOR);
+                value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_COLOR);
                 if (value != null) {
                     borderColor = ParseHelper.parseColor(value);
                 }
 
-                value = Utils.getPropertyAsString(data, ProteusConstants.ATTRIBUTE_BORDER_RADIUS);
+                value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_RADIUS);
                 if (value != null) {
                     cornerRadius = ParseHelper.parseDimension(value, context);
                 }
 
-                value = Utils.getPropertyAsString(data, ProteusConstants.ATTRIBUTE_BORDER_WIDTH);
+                value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_WIDTH);
                 if (value != null) {
                     borderWidth = ParseHelper.parseDimension(value, context);
                 }
