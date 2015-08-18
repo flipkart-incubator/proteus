@@ -19,9 +19,8 @@ import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
     private static final String TAG = ImageViewParser.class.getSimpleName();
 
-    public ImageViewParser(Parser<T> parentParser)
-    {
-        super(ImageView.class,parentParser);
+    public ImageViewParser(Parser<T> parentParser) {
+        super(ImageView.class, parentParser);
     }
 
     @Override
@@ -35,14 +34,12 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
             }
         });
 
-
-
-        addHandler(Attributes.ImageView.ScaleType,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.ImageView.ScaleType, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 ImageView.ScaleType scaleType = null;
                 scaleType = ParseHelper.parseScaleType(attributeValue);
-                if(scaleType != null)
+                if (scaleType != null)
                     view.setScaleType(scaleType);
             }
         });
@@ -50,12 +47,9 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
         addHandler(Attributes.ImageView.AdjustViewBounds, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                if("true".equals(attributeValue))
-                {
+                if ("true".equals(attributeValue)) {
                     view.setAdjustViewBounds(true);
-                }
-                else
-                {
+                } else {
                     view.setAdjustViewBounds(false);
                 }
             }
