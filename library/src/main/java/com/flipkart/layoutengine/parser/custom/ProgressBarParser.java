@@ -36,13 +36,13 @@ public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T>
         addHandler(Attributes.ProgressBar.Max, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setMax((int) Double.parseDouble(attributeValue));
+                view.setMax((int) ParseHelper.parseDouble(attributeValue));
             }
         });
         addHandler(Attributes.ProgressBar.Progress, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setProgress((int) Double.parseDouble(attributeValue));
+                view.setProgress((int) ParseHelper.parseDouble(attributeValue));
             }
         });
         addHandler(Attributes.ProgressBar.ProgressTint, new JsonDataProcessor<T>() {

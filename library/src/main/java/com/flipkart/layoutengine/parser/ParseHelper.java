@@ -62,6 +62,18 @@ public class ParseHelper {
         return number;
     }
 
+    public static double parseDouble(String attributeValue) {
+        double number;
+        try {
+            number = Double.parseDouble(attributeValue);
+        } catch (NumberFormatException e) {
+            Log.e(Utils.getTagPrefix() + ".ParseHelper",
+                    attributeValue + " is NAN. Error: " + e.getMessage());
+            number = 0;
+        }
+        return number;
+    }
+
     public static int parseGravity(String attributeValue) {
         String[] gravities = attributeValue.split("\\|");
         int returnGravity = Gravity.NO_GRAVITY;
