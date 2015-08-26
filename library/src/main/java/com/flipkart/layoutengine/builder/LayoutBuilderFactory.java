@@ -3,7 +3,6 @@ package com.flipkart.layoutengine.builder;
 import android.content.Context;
 import android.os.Build;
 import android.view.View;
-import android.widget.ProgressBar;
 
 import com.flipkart.layoutengine.parser.ViewParser;
 import com.flipkart.layoutengine.parser.custom.ButtonParser;
@@ -23,11 +22,8 @@ import com.flipkart.layoutengine.parser.custom.ScrollViewParser;
 import com.flipkart.layoutengine.parser.custom.TextViewParser;
 import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
 import com.flipkart.layoutengine.parser.custom.WebViewParser;
-import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.Formatter;
 import com.flipkart.layoutengine.toolbox.Utils;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -36,7 +32,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Factory class for creating Layout builders with different predefined behaviours. This is the
@@ -61,7 +56,7 @@ public class LayoutBuilderFactory {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
             dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(context, viewProvider);
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
-            registerFormatters(dataAndViewParsingLayoutBuilderInstance);
+            registerFormatter(dataAndViewParsingLayoutBuilderInstance);
         }
         return dataAndViewParsingLayoutBuilderInstance;
     }
@@ -76,7 +71,7 @@ public class LayoutBuilderFactory {
         if (dataParsingLayoutBuilderInstance == null) {
             dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder(context);
             registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
-            registerFormatters(dataParsingLayoutBuilderInstance);
+            registerFormatter(dataParsingLayoutBuilderInstance);
         }
         return dataParsingLayoutBuilderInstance;
     }
@@ -141,7 +136,7 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("HorizontalProgressBar", horizontalProgressBarParser);
     }
 
-    protected void registerFormatters(DataParsingLayoutBuilder layoutBuilder) {
+    protected void registerFormatter(DataParsingLayoutBuilder layoutBuilder) {
 
         Formatter NumberFormatter = new Formatter() {
             @Override
@@ -175,7 +170,7 @@ public class LayoutBuilderFactory {
                     Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(elementValue.getAsString());
                     return new SimpleDateFormat("d MMM, E").format(date);
                 } catch (Exception e) {
-                    return  elementValue.toString();
+                    return elementValue.toString();
                 }
             }
 
@@ -223,7 +218,5 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerFormatter(DateFormatter);
         layoutBuilder.registerFormatter(IndexFormatter);
         layoutBuilder.registerFormatter(joinFormatter);
-
     }
-
 }
