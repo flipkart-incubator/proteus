@@ -45,8 +45,6 @@ import java.util.Map;
  */
 public class LayoutBuilderFactory {
 
-    public static final Gson GSON = new Gson();
-
     private SimpleLayoutBuilder simpleLayoutBuilderInstance;
     private DataParsingLayoutBuilder dataParsingLayoutBuilderInstance;
     private DataAndViewParsingLayoutBuilder dataAndViewParsingLayoutBuilderInstance;

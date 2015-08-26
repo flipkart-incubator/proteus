@@ -6,6 +6,7 @@ import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.ProteusConstants;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -33,7 +34,7 @@ public class Utils {
         }
     }
 
-    public static JsonElement merge(JsonElement oldJson, JsonElement newJson, boolean useCopy) {
+    public static JsonElement merge(JsonElement oldJson, JsonElement newJson, boolean useCopy, Gson gson) {
 
         JsonElement newDataElement;
         JsonArray oldArray;
@@ -43,7 +44,7 @@ public class Utils {
         JsonObject oldObject;
 
         if (oldJson == null || oldJson.isJsonNull()) {
-            return useCopy ? LayoutBuilderFactory.GSON.fromJson(newJson, JsonElement.class) : newJson;
+            return useCopy ? gson.fromJson(newJson, JsonElement.class) : newJson;
         }
 
         if (newJson == null || newJson.isJsonNull()) {
@@ -70,7 +71,7 @@ public class Utils {
 
         if (newJson.isJsonArray()) {
             if (!oldJson.isJsonArray()) {
-                return useCopy ? LayoutBuilderFactory.GSON.fromJson(newJson, JsonArray.class) : newJson;
+                return useCopy ? gson.fromJson(newJson, JsonArray.class) : newJson;
             } else {
                 oldArray = oldJson.getAsJsonArray();
                 newArray = newJson.getAsJsonArray();
@@ -85,7 +86,7 @@ public class Utils {
                     if (index < oldArray.size()) {
                         oldArrayItem = oldArray.get(index);
                         newArrayItem = newArray.get(index);
-                        oldArray.set(index, merge(oldArrayItem, newArrayItem, useCopy));
+                        oldArray.set(index, merge(oldArrayItem, newArrayItem, useCopy, gson));
                     } else {
                         oldArray.add(newArray.get(index));
                     }
@@ -93,29 +94,29 @@ public class Utils {
             }
         } else if (newJson.isJsonObject()) {
             if (!oldJson.isJsonObject()) {
-                return useCopy ? LayoutBuilderFactory.GSON.fromJson(newJson, JsonObject.class) : newJson;
+                return useCopy ? gson.fromJson(newJson, JsonObject.class) : newJson;
             } else {
                 oldObject = oldJson.getAsJsonObject();
                 for (Map.Entry<String, JsonElement> entry : newJson.getAsJsonObject().entrySet()) {
-                    newDataElement = merge(oldObject.get(entry.getKey()), entry.getValue(), useCopy);
+                    newDataElement = merge(oldObject.get(entry.getKey()), entry.getValue(), useCopy, gson);
                     oldObject.add(entry.getKey(), newDataElement);
                 }
             }
         } else {
-            return useCopy ? LayoutBuilderFactory.GSON.fromJson(newJson, JsonElement.class) : newJson;
+            return useCopy ? gson.fromJson(newJson, JsonElement.class) : newJson;
         }
 
         return oldJson;
     }
 
-    public static JsonObject addElements(JsonObject jsonObject, JsonObject members, boolean override) {
-        for (Map.Entry<String, JsonElement> entry : members.entrySet()) {
-            if (!override && jsonObject.get(entry.getKey()) != null) {
+    public static JsonObject addElements(JsonObject destination, JsonObject source, boolean override) {
+        for (Map.Entry<String, JsonElement> entry : source.entrySet()) {
+            if (!override && destination.get(entry.getKey()) != null) {
                 break;
             }
-            jsonObject.add(entry.getKey(), entry.getValue());
+            destination.add(entry.getKey(), entry.getValue());
         }
-        return jsonObject;
+        return destination;
     }
 
     public static String getStringFromArray(JsonArray array, String delimiter) {
