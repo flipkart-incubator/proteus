@@ -298,9 +298,7 @@ public class ViewParser<T extends View> extends Parser<T> {
                 border.setCornerRadius(cornerRadius);
                 border.setShape(GradientDrawable.RECTANGLE);
                 border.setStroke(borderWidth, borderColor);
-                if (bgColor != -1) {
-                    border.setColor(bgColor);
-                }
+                border.setColor(bgColor);
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                     view.setBackgroundDrawable(border);
