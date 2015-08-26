@@ -234,9 +234,12 @@ public class ParseHelper {
     }
 
     public static int parseColor(String color) {
-
-        return Color.parseColor(color);
-
+        try {
+            return Color.parseColor(color);
+        } catch (IllegalArgumentException ex) {
+            Log.e(TAG, "Invalid color : " + color + ". Using #000000");
+            return Color.BLACK;
+        }
     }
 
     public static Integer parseId(String id) {
@@ -245,9 +248,7 @@ public class ParseHelper {
         } catch (NumberFormatException ex) {
             ex.printStackTrace();
         }
-
         return null;
-
     }
 
     public static boolean parseBoolean(String trueOrFalse) {
