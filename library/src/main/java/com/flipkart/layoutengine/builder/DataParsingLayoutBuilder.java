@@ -268,10 +268,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private void addBinding(DataProteusView dataProteusView, String bindingName, String attributeName,
                             String attributeValue, LayoutHandler handler, boolean hasRegEx) {
-        // check if the view is in update mode
-        // if not that means that the update flow
-        // is running and we must not add more bindings
-        // for they will be duplicates
+        // check if the view is in update mode if not that means that the update flow
+        // is running and we must not add more bindings for they will be duplicates
         if (!dataProteusView.isViewUpdating()) {
             Binding binding = new Binding(handler,
                     bindingName,
@@ -315,42 +313,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         ((DataProteusView) proteusView).setParserContext(parserContext);
     }
 
-   /* public DataContext getNewDataContext(JsonObject currentScope, DataContext oldDataContext, int childIndex) {
-        JsonObject newScope = new JsonObject();
-        JsonObject newReverseScope = new JsonObject();
-        JsonObject newData = new JsonObject();
-        JsonProvider oldDataProvider = oldDataContext.getDataProvider();
-        JsonObject oldData = oldDataProvider.getData().getAsJsonObject();
-
-        if (oldData == null) {
-            oldData = new JsonObject();
-        }
-
-        for (Map.Entry<String, JsonElement> entry : currentScope.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue().getAsString();
-            JsonElement data;
-            try {
-                data = Utils.getElementFromData(value, oldDataProvider, childIndex);
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                Log.e(TAG + "#getNewDataContext()", "failed to create scope. '" + key +
-                        "' : '" + value + "'. " + e.getMessage());
-                data = new JsonObject();
-            }
-
-            newData.add(key, data);
-            newScope.add(key, entry.getValue());
-            String unAliasedValue = value.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
-            newReverseScope.add(unAliasedValue, new JsonPrimitive(key));
-        }
-
-        Utils.addElements(newData, oldData, true);
-
-        DataContext newDataContext = new DataContext(new JsonProvider(newData), newScope, newReverseScope, childIndex);
-        oldDataContext.addChild(newDataContext);
-        return newDataContext;
-    }*/
-
     private String format(JsonElement toFormat, String formatterName) {
         Formatter formatter = this.formatter.get(formatterName);
         if (formatter == null) {
@@ -369,5 +331,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             return;
         }
         this.formatter.remove(formatterName);
+    }
+
+    public void getFormatter(String formatterName) {
+        this.formatter.get(formatterName);
     }
 }
