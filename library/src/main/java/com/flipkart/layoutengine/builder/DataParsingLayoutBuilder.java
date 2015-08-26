@@ -287,21 +287,18 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                                 final JsonObject currentViewJsonObject,
                                                 final int childIndex) {
 
-        JsonElement scopeElement = currentViewJsonObject.get(ProteusConstants.DATA_CONTEXT);
-
-        if (scopeElement == null) {
+        JsonElement scope = currentViewJsonObject.get(ProteusConstants.DATA_CONTEXT);
+        if (scope == null || scope.isJsonNull()) {
             return oldParserContext;
         }
 
         DataContext oldDataContext = oldParserContext.getDataContext();
-
         if (oldDataContext.getDataProvider() == null) {
             Log.e(TAG + "#getNewParserContext()", "When scope is specified, data provider cannot be null");
             return oldParserContext;
         }
 
-        DataContext newDataContext = getNewDataContext(scopeElement.getAsJsonObject(), oldDataContext,
-                childIndex, null);
+        DataContext newDataContext = oldDataContext.createChildDataContext(scope.getAsJsonObject(), childIndex);
         ParserContext newParserContext = oldParserContext.clone();
         newParserContext.setDataContext(newDataContext);
 
@@ -318,16 +315,12 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         ((DataProteusView) proteusView).setParserContext(parserContext);
     }
 
-    public DataContext getNewDataContext(JsonObject currentScope, DataContext oldDataContext, int childIndex,
-                                         JsonObject reBuildData) {
-        Map<String, String> newScope = new HashMap<>();
+   /* public DataContext getNewDataContext(JsonObject currentScope, DataContext oldDataContext, int childIndex) {
+        JsonObject newScope = new JsonObject();
+        JsonObject newReverseScope = new JsonObject();
         JsonObject newData = new JsonObject();
-        Map<String, String> oldScope = oldDataContext.getScope();
-        Map<String, String> oldReverseScope = oldDataContext.getReverseScopeMap();
-        Map<String, String> newReverseScope = new HashMap<>();
         JsonProvider oldDataProvider = oldDataContext.getDataProvider();
         JsonObject oldData = oldDataProvider.getData().getAsJsonObject();
-        boolean dataContextFailed = false;
 
         if (oldData == null) {
             oldData = new JsonObject();
@@ -342,34 +335,21 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                 Log.e(TAG + "#getNewDataContext()", "failed to create scope. '" + key +
                         "' : '" + value + "'. " + e.getMessage());
-                dataContextFailed = true;
                 data = new JsonObject();
             }
 
             newData.add(key, data);
-            newScope.put(key, value);
-            String unaliasedValue = value.replace(ProteusConstants.CHILD_INDEX_REFERENCE,
-                    String.valueOf(childIndex));
-            newReverseScope.put(unaliasedValue, key);
-        }
-        if (oldScope != null) {
-            newScope.putAll(oldScope);
+            newScope.add(key, entry.getValue());
+            String unAliasedValue = value.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
+            newReverseScope.add(unAliasedValue, new JsonPrimitive(key));
         }
 
-        if (oldReverseScope != null) {
-            newReverseScope.putAll(oldReverseScope);
-        }
+        Utils.addElements(newData, oldData, true);
 
-        if (reBuildData != null) {
-            Utils.merge(newData, reBuildData, false);
-            Utils.addElements(newData, oldData.entrySet(), false);
-        } else {
-            Utils.addElements(newData, oldData.entrySet(), true);
-        }
-
-        return new DataContext(new JsonProvider(newData), newScope, newReverseScope, oldDataContext,
-                childIndex, dataContextFailed);
-    }
+        DataContext newDataContext = new DataContext(new JsonProvider(newData), newScope, newReverseScope, childIndex);
+        oldDataContext.addChild(newDataContext);
+        return newDataContext;
+    }*/
 
     private String format(JsonElement toFormat, String formatterName) {
         Formatter formatter = this.formatter.get(formatterName);

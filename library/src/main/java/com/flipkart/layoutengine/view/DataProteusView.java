@@ -6,8 +6,6 @@ import android.view.View;
 import com.flipkart.layoutengine.DataContext;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
-import com.flipkart.layoutengine.builder.DataParsingLayoutBuilder;
-import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
@@ -71,14 +69,11 @@ public class DataProteusView extends SimpleProteusView {
     @Override
     protected View updateDataImpl(JsonObject data) {
         this.isViewUpdating = true;
-        JsonObject copyOfData = null;
-
-        if (data != null) {
-            copyOfData = LayoutBuilderFactory.GSON.fromJson(data, JsonObject.class);
-        }
 
         // update the data context so all child views can refer to new data
-        updateDataContext(copyOfData);
+        if (data != null) {
+            updateDataContext(data);
+        }
 
         // update the bindings of this view
         if (this.bindings != null) {
@@ -103,23 +98,8 @@ public class DataProteusView extends SimpleProteusView {
         return this.getView();
     }
 
-    private void updateDataContext(JsonObject newData) {
-
-        DataContext dataContext = parserContext.getDataContext();
-
-        if (newData != null) {
-            JsonObject oldData = parserContext.getDataContext().getDataProvider().getData().getAsJsonObject();
-            Utils.merge(oldData, newData, false);
-        }
-
-        if (dataContext.isDataContextFailed()) {
-            DataParsingLayoutBuilder layoutBuilder = (DataParsingLayoutBuilder) parserContext.getLayoutBuilder();
-            JsonObject scope = LayoutBuilderFactory.GSON.fromJson(
-                    LayoutBuilderFactory.GSON.toJson(dataContext.getScope()), JsonObject.class);
-            DataContext newDataContext = layoutBuilder.getNewDataContext(scope, dataContext, index, newData);
-
-            parserContext.setDataContext(newDataContext);
-        }
+    private void updateDataContext(JsonObject data) {
+        parserContext.getDataContext().updateDataContext(data);
     }
 
     private void updateChildrenFromData() {
@@ -128,7 +108,7 @@ public class DataProteusView extends SimpleProteusView {
             childrenDataArray = Utils.getElementFromData(dataPathForChildren,
                     parserContext.getDataContext().getDataProvider(), index).getAsJsonArray();
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-            Log.e(TAG + "#updateChildrenFromData()", e.getMessage());
+            Log.e(TAG + "#updateChildrenFromData", e.getMessage());
         }
 
         if (children.size() > childrenDataArray.size()) {
@@ -138,15 +118,17 @@ public class DataProteusView extends SimpleProteusView {
             }
         }
 
+        JsonObject data = parserContext.getDataContext().getDataProvider().getData().getAsJsonObject();
         for (int index = 0; index < childrenDataArray.size(); index++) {
             if (index < children.size()) {
-                children.get(index).updateData(null);
+                children.get(index).updateData(data);
             } else {
                 if (childLayout != null) {
-                    DataProteusView proteusView = (DataProteusView) parserContext.getLayoutBuilder().build(view,
-                            childLayout,
-                            parserContext.getDataContext().getDataProvider().getData().getAsJsonObject(),
-                            index, styles);
+                    DataProteusView proteusView = (DataProteusView) parserContext
+                            .getLayoutBuilder().build(view,
+                                    childLayout,
+                                    data,
+                                    index, styles);
                     addChild(proteusView);
                 }
             }

@@ -13,14 +13,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Aditya Sharat
  */
 public class Utils {
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "2.8.10-SNAPSHOT";
+    public static final String VERSION = "2.9.0-SNAPSHOT";
     public static final String TAG = getTagPrefix() + Utils.class.getSimpleName();
 
     public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
@@ -109,8 +108,8 @@ public class Utils {
         return oldJson;
     }
 
-    public static JsonObject addElements(JsonObject jsonObject, Set<Map.Entry<String, JsonElement>> members, boolean override) {
-        for (Map.Entry<String, JsonElement> entry : members) {
+    public static JsonObject addElements(JsonObject jsonObject, JsonObject members, boolean override) {
+        for (Map.Entry<String, JsonElement> entry : members.entrySet()) {
             if (!override && jsonObject.get(entry.getKey()) != null) {
                 break;
             }

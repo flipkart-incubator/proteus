@@ -13,7 +13,7 @@ public class ParserContext implements Cloneable {
     private Styles styles;
 
     public ParserContext() {
-        this.dataContext = new DataContext(null, null, null, null, 0, false);
+        this.dataContext = new DataContext();
     }
 
     public LayoutBuilder getLayoutBuilder() {

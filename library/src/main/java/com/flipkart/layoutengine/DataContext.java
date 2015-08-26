@@ -1,14 +1,20 @@
 package com.flipkart.layoutengine;
 
+import android.util.Log;
+
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
-import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.provider.JsonProvider;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -17,29 +23,34 @@ import java.util.regex.Pattern;
  */
 public class DataContext {
 
-    private boolean isDataContextFailed;
+    public static final String TAG = Utils.getTagPrefix() + DataContext.class.getSimpleName();
+
+    private List<DataContext> children;
     private JsonProvider dataProvider;
-    private Map<String, String> reverseScope;
-    private Map<String, String> scope;
-    private DataContext parent;
+    private JsonObject reverseScope;
+    private JsonObject scope;
     private int index;
 
-    public DataContext(JsonProvider dataProvider, Map<String, String> scope, Map<String, String> reverseScope,
-                       DataContext parent, int index, boolean isDataContextFailed) {
-        this.dataProvider = dataProvider;
-        this.reverseScope = reverseScope;
-        this.scope = scope;
-        this.parent = parent;
-        this.index = index;
-        this.isDataContextFailed = isDataContextFailed;
+    public DataContext() {
+        this.scope = new JsonObject();
+        this.reverseScope = new JsonObject();
+        this.children = new ArrayList<>();
     }
 
-    public Map<String, String> getReverseScopeMap() {
+    public JsonObject getScope() {
+        return scope;
+    }
+
+    public JsonObject getReverseScopeMap() {
         return reverseScope;
     }
 
-    public void setReverseScopeMap(Map<String, String> reverseScopeMap) {
-        this.reverseScope = reverseScopeMap;
+    public void setScope(JsonObject scope) {
+        this.scope = scope;
+    }
+
+    public void setReverseScope(JsonObject reverseScope) {
+        this.reverseScope = reverseScope;
     }
 
     public JsonProvider getDataProvider() {
@@ -48,22 +59,6 @@ public class DataContext {
 
     public void setDataProvider(JsonProvider dataProvider) {
         this.dataProvider = dataProvider;
-    }
-
-    public DataContext getParent() {
-        return parent;
-    }
-
-    public void setParent(DataContext parent) {
-        this.parent = parent;
-    }
-
-    public Map<String, String> getScope() {
-        return scope;
-    }
-
-    public void setScope(Map<String, String> scope) {
-        this.scope = scope;
     }
 
     public JsonElement get(String dataPath, int childIndex) {
@@ -77,7 +72,78 @@ public class DataContext {
         }
     }
 
-    public static String getAliasedDataPath(String dataPath, Map<String, String> reverseScope, boolean isBindingPath) {
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public List<DataContext> getChildren() {
+        return children;
+    }
+
+    public void addChild(DataContext dataContext) {
+        this.children.add(dataContext);
+    }
+
+    public DataContext createChildDataContext(JsonObject scope, int childIndex) {
+        DataContext dataContext = updateDataContext(new DataContext(), dataProvider, scope, childIndex);
+        this.addChild(dataContext);
+        return dataContext;
+    }
+
+    public void updateDataContext(JsonObject data) {
+        JsonProvider dataProvider = new JsonProvider(data);
+        updateDataContext(this, dataProvider, scope, index);
+
+        for (DataContext child : children) {
+            child.updateDataContext(this.dataProvider.getData().getAsJsonObject());
+        }
+    }
+
+    public static DataContext updateDataContext(DataContext dataContext, JsonProvider dataProvider,
+                                                JsonObject scope, int childIndex) {
+        JsonObject reverseScope = new JsonObject();
+        JsonObject newData = new JsonObject();
+        JsonObject data = dataProvider.getData().getAsJsonObject();
+
+        if (data == null) {
+            data = new JsonObject();
+        }
+
+        for (Map.Entry<String, JsonElement> entry : scope.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue().getAsString();
+            JsonElement element;
+            try {
+                element = Utils.getElementFromData(value, dataProvider, childIndex);
+            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                Log.e(TAG + "#getNewDataContext()", "failed to create scope. '" + key +
+                        "' : '" + value + "'. " + e.getMessage());
+                element = new JsonObject();
+            }
+
+            newData.add(key, element);
+            String unAliasedValue = value.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
+            reverseScope.add(unAliasedValue, new JsonPrimitive(key));
+        }
+
+        Utils.addElements(newData, data, true);
+
+        if (dataContext.getDataProvider() == null) {
+            dataContext.setDataProvider(new JsonProvider(newData));
+        } else {
+            dataContext.getDataProvider().setData(newData);
+        }
+        dataContext.setScope(scope);
+        dataContext.setReverseScope(reverseScope);
+        dataContext.setIndex(childIndex);
+        return dataContext;
+    }
+
+    public static String getAliasedDataPath(String dataPath, JsonObject reverseScope, boolean isBindingPath) {
         String[] segments;
         if (isBindingPath) {
             segments = dataPath.split(ProteusConstants.DATA_PATH_DELIMITER);
@@ -88,27 +154,11 @@ public class DataContext {
         if (reverseScope == null) {
             return dataPath;
         }
-        String alias = reverseScope.get(segments[0]);
+        String alias = Utils.getPropertyAsString(reverseScope, segments[0]);
         if (alias == null) {
             return dataPath;
         }
 
         return dataPath.replaceFirst(Pattern.quote(segments[0]), alias);
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public boolean isDataContextFailed() {
-        return isDataContextFailed;
-    }
-
-    public void setIsDataContextFailed(boolean dataContextFailed) {
-        this.isDataContextFailed = dataContextFailed;
     }
 }
