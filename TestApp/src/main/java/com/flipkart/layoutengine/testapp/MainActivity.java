@@ -63,8 +63,8 @@ public class MainActivity extends ActionBarActivity {
         if (savedInstanceState == null) {
             this.gson = new Gson();
             styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
-            createView();
-            //createRecyclerView();
+            //createView();
+            createRecyclerView();
         }
     }
 

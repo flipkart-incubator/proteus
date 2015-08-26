@@ -130,7 +130,7 @@ public class DataContext {
             reverseScope.add(unAliasedValue, new JsonPrimitive(key));
         }
 
-        Utils.addElements(newData, data, true);
+        Utils.addElements(newData, data, false);
 
         if (dataContext.getDataProvider() == null) {
             dataContext.setDataProvider(new JsonProvider(newData));
