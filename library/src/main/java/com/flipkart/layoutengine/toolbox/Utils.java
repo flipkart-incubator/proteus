@@ -19,7 +19,7 @@ import java.util.Map;
  */
 public class Utils {
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "2.9.1-SNAPSHOT";
+    public static final String VERSION = "2.9.2-SNAPSHOT";
     public static final String TAG = getTagPrefix() + Utils.class.getSimpleName();
 
     public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
@@ -111,7 +111,7 @@ public class Utils {
     public static JsonObject addElements(JsonObject destination, JsonObject source, boolean override) {
         for (Map.Entry<String, JsonElement> entry : source.entrySet()) {
             if (!override && destination.get(entry.getKey()) != null) {
-                break;
+                continue;
             }
             destination.add(entry.getKey(), entry.getValue());
         }
