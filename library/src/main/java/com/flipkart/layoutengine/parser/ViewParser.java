@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -17,7 +18,6 @@ import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
-import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
@@ -29,6 +29,8 @@ import java.util.HashMap;
  * @author kiran.kumar
  */
 public class ViewParser<T extends View> extends Parser<T> {
+
+    private String TAG = Utils.getTagPrefix() + ViewParser.class.getSimpleName();
 
     public static final String ATTRIBUTE_BORDER_WIDTH = "width";
     public static final String ATTRIBUTE_BORDER_COLOR = "color";
@@ -85,15 +87,13 @@ public class ViewParser<T extends View> extends Parser<T> {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 LinearLayout.LayoutParams layoutParams;
-                try {
+                if (view.getLayoutParams() instanceof LinearLayout.LayoutParams) {
                     layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
                     layoutParams.weight = ParseHelper.parseFloat(attributeValue);
                     view.setLayoutParams(layoutParams);
-
-                } catch (ClassCastException ex) {
-                    throw new IllegalArgumentException(attributeKey + " is only supported for linear containers");
+                } else {
+                    Log.e(TAG, attributeKey + " is only supported for linear containers");
                 }
-
             }
         });
 
