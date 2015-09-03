@@ -67,7 +67,6 @@ public class Attributes {
         public static Attribute StepSize = new Attribute("stepSize");
         public static Attribute ProgressDrawable = new Attribute("progressDrawable");
         public static Attribute MinHeight = new Attribute("minHeight");
-        public static Attribute MaxHeight = new Attribute("maxHeight");
     }
 
     public static class TextView {
@@ -97,7 +96,6 @@ public class Attributes {
     }
 
     public static class FrameLayout {
-        public static Attribute Gravity = new Attribute("gravity");
         public static Attribute HeightRatio = new Attribute("heightRatio");
         public static Attribute WidthRatio = new Attribute("widthRatio");
     }
@@ -114,36 +112,6 @@ public class Attributes {
         public static Attribute DividerPadding = new Attribute("dividerPadding");
         public static Attribute ShowDividers = new Attribute("showDividers");
         public static Attribute WeightSum = new Attribute("weightSum");
-    }
-
-    public static class ListView {
-        /**
-         * XML attributes inherited from {@link android.widget.AbsListView}
-         */
-        public static Attribute CacheColorHint = new Attribute("cacheColorHint");
-        public static Attribute ChoiceMode = new Attribute("choiceMode");
-        public static Attribute DrawSelectorOnTop = new Attribute("drawSelectorOnTop");
-        public static Attribute FastScrollEnabled = new Attribute("fastScrollEnabled");
-        public static Attribute ListSelector = new Attribute("listSelector");
-        public static Attribute ScrollingCache = new Attribute("scrollingCache");
-        public static Attribute SmoothScrollbar = new Attribute("smoothScrollbar");
-        public static Attribute StackFromBottom = new Attribute("stackFromBottom");
-        public static Attribute TextFilterEnabled = new Attribute("textFilterEnabled");
-        public static Attribute TranscriptMode = new Attribute("transcriptMode");
-        /**
-         * XML attributes of {@link android.widget.ListView}
-         */
-        public static Attribute Divider = new Attribute("divider");
-        public static Attribute DividerHeight = new Attribute("dividerHeight");
-        public static Attribute Entries = new Attribute("entries");
-        public static Attribute FooterDividersEnabled = new Attribute("footerDividersEnabled");
-        public static Attribute HeaderDividersEnabled = new Attribute("headerDividersEnabled");
-
-        /**
-         * XML attribute for the {@link android.widget.ListView} Adapter layout and data
-         */
-        public static Attribute ListViewData = new Attribute("listViewData");
-
     }
 
     public static class NetworkImageView {

@@ -53,7 +53,6 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
                 view.setMinimumHeight(ParseHelper.parseDimension(attributeValue, context));
             }
         });
-
         addHandler(Attributes.RatingBar.ProgressDrawable, new ResourceReferenceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
