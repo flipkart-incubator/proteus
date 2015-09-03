@@ -8,24 +8,9 @@ public class Attributes {
 
     public static class View {
 
-        /**
-         * @serialField weight
-         */
         public static Attribute Weight = new Attribute("layout_weight");
-
-        /**
-         * @serialField width
-         */
         public static Attribute Width = new Attribute("layout_width");
-
-        /**
-         * @serialField background
-         */
         public static Attribute Background = new Attribute("background");
-
-        /**
-         * @serialField height
-         */
         public static Attribute Height = new Attribute("layout_height");
         public static Attribute LayoutGravity = new Attribute("layout_gravity");
         public static Attribute Gravity = new Attribute("gravity");
@@ -71,9 +56,8 @@ public class Attributes {
         public static Attribute Border = new Attribute("border");
     }
 
-    public static class Webview {
+    public static class WebView {
         public static Attribute Url = new Attribute("url");
-
     }
 
     public static class RatingBar {
