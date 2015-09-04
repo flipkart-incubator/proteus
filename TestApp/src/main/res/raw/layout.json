@@ -2,6 +2,7 @@
   "type": "ScrollView",
   "layout_width": "match_parent",
   "layout_height": "match_parent",
+  "scrollbars": "none",
   "children": [
     {
       "type": "LinearLayout",
@@ -37,7 +38,7 @@
               "src": "http://img5a.flixcart.com/www/promos/new/20150521-151534-flipkart-logo.png",
               "layout_height": "wrap_content",
               "layout_width": "wrap_content",
-              "visibility": "$product.isFK"
+              "invisibility": "$product.isFK"
             },
             {
               "type": "TextView",
