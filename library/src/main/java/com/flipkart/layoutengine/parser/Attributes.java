@@ -26,6 +26,7 @@ public class Attributes {
         public static Attribute MarginBottom = new Attribute("layout_marginBottom");
         public static Attribute Alpha = new Attribute("alpha");
         public static Attribute Visibility = new Attribute("visibility");
+        public static Attribute Invisibility = new Attribute("invisibility");
         public static Attribute Id = new Attribute("id");
         public static Attribute Tag = new Attribute("tag");
         public static Attribute Above = new Attribute("layout_above");

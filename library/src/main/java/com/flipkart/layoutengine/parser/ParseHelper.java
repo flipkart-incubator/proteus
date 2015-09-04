@@ -173,6 +173,33 @@ public class ParseHelper {
         return returnValue;
     }
 
+    public static int parseInvisibility(JsonElement element) {
+        String attributeValue;
+        int returnValue;
+
+        if (element.isJsonPrimitive() &&
+                (element.getAsString().equals("") ||
+                        element.getAsString().equals("false") ||
+                        element.getAsString().equals(ProteusConstants.DATA_NULL))
+                ) {
+            attributeValue = "visible";
+        } else if (element.isJsonNull()) {
+            attributeValue = "visible";
+        } else {
+            attributeValue = "gone";
+        }
+
+        if ("visible".equals(attributeValue)) {
+            returnValue = View.VISIBLE;
+        } else if ("gone".equals(attributeValue)) {
+            returnValue = View.GONE;
+        } else {
+            returnValue = View.VISIBLE;
+        }
+
+        return returnValue;
+    }
+
     public static int parseDimension(String dimension, Context context) {
         int dimensionInPixels;
         if ("match_parent".equals(dimension) || "fill_parent".equals(dimension)) {

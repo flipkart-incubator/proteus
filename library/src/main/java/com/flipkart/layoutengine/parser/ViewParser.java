@@ -54,7 +54,6 @@ public class ViewParser<T extends View> extends Parser<T> {
                 });
             }
         });
-
         addHandler(Attributes.View.Background, new ResourceReferenceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
@@ -65,7 +64,6 @@ public class ViewParser<T extends View> extends Parser<T> {
                 }
             }
         });
-
         addHandler(Attributes.View.Height, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
@@ -82,7 +80,6 @@ public class ViewParser<T extends View> extends Parser<T> {
                 view.setLayoutParams(layoutParams);
             }
         });
-
         addHandler(Attributes.View.Weight, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
@@ -96,7 +93,6 @@ public class ViewParser<T extends View> extends Parser<T> {
                 }
             }
         });
-
         addHandler(Attributes.View.LayoutGravity, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
@@ -113,11 +109,8 @@ public class ViewParser<T extends View> extends Parser<T> {
                 } else {
                     throw new IllegalArgumentException(attributeKey + " is only supported for linearlayout and framelayout containers");
                 }
-
-
             }
         });
-
         addHandler(Attributes.View.Padding, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
@@ -153,7 +146,6 @@ public class ViewParser<T extends View> extends Parser<T> {
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), dimension);
             }
         });
-
         addHandler(Attributes.View.Margin, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
@@ -235,6 +227,13 @@ public class ViewParser<T extends View> extends Parser<T> {
             public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
                 // noinspection ResourceType
                 view.setVisibility(ParseHelper.parseVisibility(attributeValue));
+            }
+        });
+        addHandler(Attributes.View.Invisibility, new JsonDataProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+                // noinspection ResourceType
+                view.setVisibility(ParseHelper.parseInvisibility(attributeValue));
             }
         });
         addHandler(Attributes.View.Id, new StringAttributeProcessor<T>() {
