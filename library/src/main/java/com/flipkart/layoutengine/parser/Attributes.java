@@ -119,6 +119,10 @@ public class Attributes {
         public static Attribute ImageUrl = new Attribute("imageUrl");
     }
 
+    public static class ScrollView {
+        public static Attribute Scrollbars = new Attribute("scrollbars");
+    }
+
     public static class HorizontalScrollView {
         public static Attribute FillViewPort = new Attribute("fillViewPort");
     }
