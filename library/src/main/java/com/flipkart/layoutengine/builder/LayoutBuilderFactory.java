@@ -105,7 +105,7 @@ public class LayoutBuilderFactory {
         LinearLayoutParser linearLayoutParser = new LinearLayoutParser(viewParser);
         FrameLayoutParser frameLayoutParser = new FrameLayoutParser(viewParser);
         ScrollViewParser scrollViewParser = new ScrollViewParser(viewParser);
-        HorizontalScrollViewParser horizontalScrollViewParser = new HorizontalScrollViewParser(scrollViewParser);
+        HorizontalScrollViewParser horizontalScrollViewParser = new HorizontalScrollViewParser(viewParser);
         TextViewParser textViewParser = new TextViewParser(viewParser);
         EditTextParser editTextParser = new EditTextParser(textViewParser);
         ButtonParser buttonParser = new ButtonParser(textViewParser);
