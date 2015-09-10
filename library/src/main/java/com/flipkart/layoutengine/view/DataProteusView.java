@@ -51,12 +51,15 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     @Override
-    public void replaceView(ProteusView view) {
-        if (view instanceof DataProteusView) {
-            DataProteusView dataProteusView = (DataProteusView) view;
+    public void replaceView(ProteusView proteusView) {
+        if (proteusView instanceof DataProteusView) {
+            DataProteusView dataProteusView = (DataProteusView) proteusView;
             this.bindings = dataProteusView.getBindings();
+            this.childLayout = dataProteusView.getChildLayout();
+            this.dataPathForChildren = dataProteusView.getDataPathForChildren();
+            this.parserContext = dataProteusView.getParserContext();
         }
-        super.replaceView(view);
+        super.replaceView(proteusView);
     }
 
     public void addBinding(Binding binding) {
