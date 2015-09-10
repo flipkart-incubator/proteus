@@ -59,7 +59,12 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 JsonElement elementFromData = Utils.getElementFromData(dataPathLength,
                         context.getDataContext().getDataProvider(),
                         childIndex);
-                length = Integer.parseInt(elementFromData.getAsString());
+                String attributeValue = elementFromData.getAsString();
+                if (ProteusConstants.DATA_NULL.equals(attributeValue)) {
+                    length = 0;
+                } else {
+                    length = Integer.parseInt(attributeValue);
+                }
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
                 Log.e(TAG + "#parseChildren()", e.getMessage());
                 length = 0;

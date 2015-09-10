@@ -60,8 +60,7 @@
               "layout_width": "wrap_content",
               "layout_height": "wrap_content",
               "layout_marginBottom": "10dp",
-              "text": "~({{product.subTitle}})",
-              "textColor": "#444444"
+              "html": "~<font color=#440044>({{product.subTitle}})</font>"
             },
             {
               "type": "TextView",

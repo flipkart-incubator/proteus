@@ -40,6 +40,9 @@ public class ParseHelper {
 
     public static int parseInt(String attributeValue) {
         int number;
+        if (ProteusConstants.DATA_NULL.equals(attributeValue)) {
+            return 0;
+        }
         try {
             number = Integer.parseInt(attributeValue);
         } catch (NumberFormatException e) {
@@ -52,6 +55,9 @@ public class ParseHelper {
 
     public static float parseFloat(String attributeValue) {
         float number;
+        if (ProteusConstants.DATA_NULL.equals(attributeValue)) {
+            return 0;
+        }
         try {
             number = Float.parseFloat(attributeValue);
         } catch (NumberFormatException e) {
@@ -64,6 +70,9 @@ public class ParseHelper {
 
     public static double parseDouble(String attributeValue) {
         double number;
+        if (ProteusConstants.DATA_NULL.equals(attributeValue)) {
+            return 0;
+        }
         try {
             number = Double.parseDouble(attributeValue);
         } catch (NumberFormatException e) {
@@ -270,10 +279,13 @@ public class ParseHelper {
     }
 
     public static Integer parseId(String id) {
+        if (ProteusConstants.DATA_NULL.equals(id)) {
+            return null;
+        }
         try {
             return Integer.valueOf(id);
         } catch (NumberFormatException ex) {
-            ex.printStackTrace();
+            Log.e(TAG, id + " is not a valid resource ID.");
         }
         return null;
     }

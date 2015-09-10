@@ -1,10 +1,11 @@
 package com.flipkart.layoutengine.parser.custom;
 
+import android.content.Context;
+
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
-import com.flipkart.layoutengine.processor.AttributeProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 
 /**
@@ -16,15 +17,19 @@ public class WebViewParser<T extends android.webkit.WebView> extends WrappablePa
     }
 
     @Override
-    protected void addHandler(Attributes.Attribute key, AttributeProcessor<T> handler) {
-        super.addHandler(key, handler);
-        addHandler(Attributes.WebView.Url,new StringAttributeProcessor<T>() {
+    protected void prepareHandlers(final Context context) {
+        super.prepareHandlers(context);
+        addHandler(Attributes.WebView.Url, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 view.loadUrl(attributeValue);
             }
         });
+        addHandler(Attributes.WebView.HTML, new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                view.loadData(attributeValue, "text/html", "UTF-8");
+            }
+        });
     }
-
-
 }

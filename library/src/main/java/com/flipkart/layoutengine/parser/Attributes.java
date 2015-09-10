@@ -59,6 +59,7 @@ public class Attributes {
 
     public static class WebView {
         public static Attribute Url = new Attribute("url");
+        public static Attribute HTML = new Attribute("html");
     }
 
     public static class RatingBar {
@@ -73,6 +74,7 @@ public class Attributes {
     public static class TextView {
         public static Attribute Gravity = new Attribute("gravity");
         public static Attribute Text = new Attribute("text");
+        public static Attribute HTML = new Attribute("html");
         public static Attribute TextSize = new Attribute("textSize");
         public static Attribute TextColor = new Attribute("textColor");
         public static Attribute DrawableLeft = new Attribute("drawableLeft");

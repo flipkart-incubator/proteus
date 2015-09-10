@@ -28,10 +28,16 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
     @Override
     protected void prepareHandlers(final Context context) {
         super.prepareHandlers(context);
-        addHandler(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.HTML, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
                 view.setText(Html.fromHtml(attributeValue));
+            }
+        });
+        addHandler(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                view.setText(attributeValue);
             }
         });
 

@@ -228,7 +228,12 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             int length;
 
             try {
-                length = Integer.parseInt(childrenElement.getAsString());
+                String attributeValue = childrenElement.getAsString();
+                if (ProteusConstants.DATA_NULL.equals(attributeValue)) {
+                    length = 0;
+                } else {
+                    length = Integer.parseInt(attributeValue);
+                }
             } catch (NumberFormatException e) {
                 Log.e(TAG + "#parseChildren()", childrenElement.getAsString() +
                         " is not a number. layout: " +
