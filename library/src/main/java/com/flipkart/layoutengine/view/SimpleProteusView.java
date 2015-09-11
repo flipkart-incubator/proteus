@@ -28,6 +28,7 @@ public class SimpleProteusView implements ProteusView {
         this.view = view;
         this.index = index;
         this.parent = parent;
+        this.children = new ArrayList<>();
     }
 
     public SimpleProteusView(View view, JsonObject layout, int index, List<ProteusView> children, ProteusView parent) {
@@ -106,13 +107,17 @@ public class SimpleProteusView implements ProteusView {
         }
         if (parent.getChildren() != null && index < parent.getChildren().size()) {
             parent.removeView(index).destroy();
+            parent.addView(child, index);
         } else {
             ViewGroup parentViewGroup = (ViewGroup) this.view.getParent();
+            if (parentViewGroup == null) {
+                return;
+            }
             int index = parentViewGroup.indexOfChild(this.view);
             parentViewGroup.removeView(this.view);
             parentViewGroup.addView(child.getView(), index);
+            parent.getChildren().add(child);
         }
-        parent.addView(child, index);
     }
 
     @Override
