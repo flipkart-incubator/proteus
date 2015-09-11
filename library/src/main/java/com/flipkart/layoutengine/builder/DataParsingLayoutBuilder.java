@@ -111,7 +111,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    public ProteusView build(ProteusView parent, JsonObject layout, JsonObject data, int childIndex, Styles styles) {
+    public ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex, Styles styles) {
         return super.build(parent, layout, data, childIndex, styles);
     }
 

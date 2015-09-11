@@ -29,7 +29,6 @@ import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
-import com.flipkart.layoutengine.view.SimpleProteusView;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -136,8 +135,8 @@ public class MainActivity extends ActionBarActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
         long startTime = System.currentTimeMillis();
-        SimpleProteusView ppv = new SimpleProteusView(container, 0, null);
-        this.proteusView = (DataProteusView) builder.build(ppv, layoutData, productData, 0, styles);
+
+        this.proteusView = (DataProteusView) builder.build(container, layoutData, productData, 0, styles);
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
@@ -257,8 +256,8 @@ public class MainActivity extends ActionBarActivity {
                 builder.updateLayoutProvider(layoutProvider);
 
                 startTime = System.currentTimeMillis();
-                SimpleProteusView ppv = new SimpleProteusView(container, 0, null);
-                this.proteusView = (DataProteusView) builder.build(ppv, layout, data, 0, styles);
+
+                this.proteusView = (DataProteusView) builder.build(container, layout, data, 0, styles);
 
                 stopTime = System.currentTimeMillis();
                 elapsedTime = stopTime - startTime;
@@ -297,8 +296,7 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public ProteusViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            SimpleProteusView ppv = new SimpleProteusView(container, 0, null);
-            DataProteusView proteusView = (DataProteusView) layoutBuilder.build(ppv, layout,
+            DataProteusView proteusView = (DataProteusView) layoutBuilder.build(viewGroup, layout,
                     new JsonObject(), 0, styles);
             return new ProteusViewHolder(proteusView);
         }
