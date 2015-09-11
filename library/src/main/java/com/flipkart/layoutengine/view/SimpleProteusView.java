@@ -7,10 +7,10 @@ import com.flipkart.layoutengine.toolbox.Styles;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * A {@link ProteusView} implementation for simple views associated with a
- * {@link android.view.View} built using a
+ * A {@link ProteusView} implementation built using a
  * {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
  *
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
@@ -21,7 +21,7 @@ public class SimpleProteusView implements ProteusView {
     protected JsonObject layout;
     protected View view;
     protected int index;
-    protected ArrayList<ProteusView> children;
+    protected List<ProteusView> children;
     protected Styles styles;
 
     public SimpleProteusView(View view, int index, ProteusView parent) {
@@ -30,7 +30,7 @@ public class SimpleProteusView implements ProteusView {
         this.parent = parent;
     }
 
-    public SimpleProteusView(View view, JsonObject layout, int index, ArrayList<ProteusView> children, ProteusView parent) {
+    public SimpleProteusView(View view, JsonObject layout, int index, List<ProteusView> children, ProteusView parent) {
         this.view = view;
         this.layout = layout;
         this.index = index;
@@ -61,59 +61,63 @@ public class SimpleProteusView implements ProteusView {
     }
 
     @Override
-    public void addChild(ProteusView proteusView) {
-        if (proteusView == null) {
+    public void unsetParent() {
+        this.parent = null;
+    }
+
+    @Override
+    public void addView(ProteusView child, int index) {
+        if (child == null) {
             return;
         }
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
-        this.children.add(proteusView);
-        if (view != null && proteusView.getView() != null) {
-            ((ViewGroup) view).addView(proteusView.getView());
+        if (index < 0) {
+            index = this.children.size();
+        }
+        this.children.add(index, child);
+        if (view != null && child.getView() != null) {
+            ((ViewGroup) view).addView(child.getView(), index);
         }
     }
 
     @Override
-    public ArrayList<ProteusView> getChildren() {
+    public void addView(ProteusView child) {
+        addView(child, -1);
+    }
+
+    @Override
+    public List<ProteusView> getChildren() {
         return this.children;
     }
 
     @Override
-    public View updateData(JsonObject data) {
-        return updateDataImpl(data);
-    }
-
-    @Override
-    public void replaceView(ProteusView proteusView) {
-        this.children = proteusView.getChildren();
-        this.layout = proteusView.getLayout();
-        this.styles = proteusView.getStyles();
-        ViewGroup parent = (ViewGroup) this.view.getParent();
-        if (parent != null && proteusView.getView() != null) {
-            int index = parent.indexOfChild(this.view);
-            if (proteusView.getView().getParent() != null) {
-                ((ViewGroup)proteusView.getView().getParent()).removeView(proteusView.getView());
+    public void replaceView(ProteusView child) {
+        this.children = child.getChildren();
+        this.layout = child.getLayout();
+        this.styles = child.getStyles();
+        if (parent != null) {
+            // remove the parent if the child view already has one
+            if (child.getView().getParent() != null) {
+                ((ViewGroup) child.getView().getParent()).removeView(child.getView());
             }
-            parent.removeView(this.view);
-            parent.addView(proteusView.getView(), index);
+            parent.removeView(index).destroy();
+            parent.addView(child, index);
         }
     }
 
     @Override
     public void removeView() {
-        if (getParent() != null && getParent().getView() != null && view != null) {
-            ((ViewGroup) getParent().getView()).removeView(view);
-        }
+        destroy();
     }
 
     @Override
-    public void removeChild(int childIndex) {
-        if (children != null && childIndex < children.size()) {
-            ProteusView proteusView = getChildren().get(childIndex);
-            proteusView.removeView();
-            getChildren().remove(childIndex);
-        }
+    public ProteusView removeView(int childIndex) {
+        ((ViewGroup) view).removeViewAt(childIndex);
+        ProteusView child = children.remove(childIndex);
+        child.unsetParent();
+        return child;
     }
 
     @Override
@@ -131,7 +135,24 @@ public class SimpleProteusView implements ProteusView {
         return styles;
     }
 
+    @Override
+    public View updateData(JsonObject data) {
+        return updateDataImpl(data);
+    }
+
     protected View updateDataImpl(JsonObject data) {
         return this.view;
+    }
+
+    @Override
+    public void destroy() {
+        if (parent != null && parent.getView() != null && view != null) {
+            parent.removeView(index);
+            parent = null;
+        }
+        view = null;
+        children = null;
+        layout = null;
+        styles = null;
     }
 }

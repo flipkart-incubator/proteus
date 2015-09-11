@@ -25,7 +25,7 @@ public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
     public void addChildren(ParserContext parserContext, ProteusView parent,
                             final List<ProteusView> children, JsonObject viewLayout) {
 
-        //not calling super since it calls addChild(). addchild() on viewpager wont work.
+        //not calling super since it calls addView(). addchild() on viewpager wont work.
         PagerAdapter adapter = parserContext.getLayoutBuilder()
                 .getListener()
                 .onPagerAdapterRequired(parserContext, parent, children, viewLayout);

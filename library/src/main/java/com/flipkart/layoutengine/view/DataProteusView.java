@@ -51,15 +51,15 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     @Override
-    public void replaceView(ProteusView proteusView) {
-        if (proteusView instanceof DataProteusView) {
-            DataProteusView dataProteusView = (DataProteusView) proteusView;
+    public void replaceView(ProteusView child) {
+        if (child instanceof DataProteusView) {
+            DataProteusView dataProteusView = (DataProteusView) child;
             this.bindings = dataProteusView.getBindings();
             this.childLayout = dataProteusView.getChildLayout();
             this.dataPathForChildren = dataProteusView.getDataPathForChildren();
             this.parserContext = dataProteusView.getParserContext();
         }
-        super.replaceView(proteusView);
+        super.replaceView(child);
     }
 
     public void addBinding(Binding binding) {
@@ -116,8 +116,8 @@ public class DataProteusView extends SimpleProteusView {
 
         if (children.size() > childrenDataArray.size()) {
             while (children.size() > childrenDataArray.size()) {
-                ProteusView proteusView = children.remove(children.size() - 1);
-                proteusView.removeView();
+                ProteusView proteusView = removeView(children.size() - 1);
+                proteusView.destroy();
             }
         }
 
@@ -132,7 +132,7 @@ public class DataProteusView extends SimpleProteusView {
                                     childLayout,
                                     data,
                                     index, styles);
-                    addChild(proteusView);
+                    addView(proteusView);
                 }
             }
         }
@@ -274,5 +274,13 @@ public class DataProteusView extends SimpleProteusView {
 
     public JsonObject getChildLayout() {
         return childLayout;
+    }
+
+    @Override
+    public void destroy() {
+        childLayout = null;
+        dataPathForChildren = null;
+        parserContext = null;
+        super.destroy();
     }
 }
