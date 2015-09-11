@@ -101,7 +101,7 @@ public class SimpleProteusView implements ProteusView {
         if (child.getView().getParent() != null) {
             ((ViewGroup) child.getView().getParent()).removeView(child.getView());
         }
-        if (parent == null || child.getView() == null) {
+        if (parent == null || parent.getView() == null || child.getView() == null) {
             return;
         }
         if (parent.getChildren() != null && index < parent.getChildren().size()) {
