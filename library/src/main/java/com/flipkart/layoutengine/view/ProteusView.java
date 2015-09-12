@@ -1,6 +1,5 @@
 package com.flipkart.layoutengine.view;
 
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.layoutengine.toolbox.Styles;
@@ -95,18 +94,10 @@ public interface ProteusView {
      *
      * @param childIndex the index of the object to remove.
      * @return the removed object.
+     * @throws NullPointerException      if {@code children == null}
      * @throws IndexOutOfBoundsException if {@code location < 0 || location >= size()}
      */
-    @Nullable
     ProteusView removeView(int childIndex);
-
-    /**
-     * Removes the child view from this {@code ProteusView}.
-     *
-     * @param child the child view to remove.
-     * @return the removed object.
-     */
-    void removeView(ProteusView child);
 
     /**
      * Returns the layout used to build this {@link ProteusView}

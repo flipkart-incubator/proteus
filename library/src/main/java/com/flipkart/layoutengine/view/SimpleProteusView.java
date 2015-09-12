@@ -107,11 +107,10 @@ public class SimpleProteusView implements ProteusView {
             ((ViewGroup) child.getView().getParent()).removeView(child.getView());
         }
 
-        if (parent != null && parent.getView() != null) {
-            ProteusView oldChild = parent.removeView(index);
-            if (oldChild != null ) {
-                oldChild.destroy();
-            }
+        if (parent != null
+                && parent.getView() != null
+                && index < parent.getChildren().size()) {
+            parent.removeView(index).destroy();
             parent.addView(child, index);
         } else {
             ViewGroup parentView = (ViewGroup) this.view.getParent();
@@ -120,12 +119,8 @@ public class SimpleProteusView implements ProteusView {
             }
             int index = parentView.indexOfChild(this.view);
             parentView.removeView(this.view);
-            parentView.addView(child.getView());
-            if (index < parent.getChildren().size()) {
-                parent.getChildren().add(index, child);
-            } else {
-                parent.getChildren().add(child);
-            }
+            parentView.addView(child.getView(), index);
+            parent.getChildren().add(child);
         }
         this.children = child.getChildren();
         this.layout = child.getLayout();
@@ -139,31 +134,10 @@ public class SimpleProteusView implements ProteusView {
 
     @Override
     public ProteusView removeView(int childIndex) {
-        ViewGroup group = (ViewGroup) view;
-        if (childIndex < group.getChildCount()) {
-            group.removeViewAt(childIndex);
-        }
-        if (childIndex < this.children.size()) {
-            ProteusView child = children.remove(childIndex);
-            child.unsetParent();
-            return child;
-        }
-        return null;
-    }
-
-    public void removeView(ProteusView child) {
-        if (child != null) {
-            int index = this.children.indexOf(child);
-            if (index >= 0) {
-                this.children.remove(index);
-            }
-            if (child.getView() != null) {
-                index = ((ViewGroup)this.view).indexOfChild(child.getView());
-                if (index >= 0) {
-                    ((ViewGroup)this.view).removeViewAt(index);
-                }
-            }
-        }
+        ((ViewGroup) view).removeViewAt(childIndex);
+        ProteusView child = children.remove(childIndex);
+        child.unsetParent();
+        return child;
     }
 
     @Override
