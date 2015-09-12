@@ -100,7 +100,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         addHandler(Attributes.TextView.MaxLines,new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-                view.setMaxLines(Integer.valueOf(attributeValue));
+                view.setMaxLines(ParseHelper.parseInt(attributeValue));
             }
         });
 
