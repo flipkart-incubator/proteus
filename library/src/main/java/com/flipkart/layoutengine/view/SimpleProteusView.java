@@ -56,6 +56,10 @@ public class SimpleProteusView implements ProteusView {
         return this.index;
     }
 
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
     @Override
     public ProteusView getParent() {
         return this.parent;
@@ -68,19 +72,18 @@ public class SimpleProteusView implements ProteusView {
 
     @Override
     public void addView(ProteusView child, int index) {
-        if (child == null) {
+        if (child == null || child.getView() == null || this.view == null) {
             return;
         }
         if (this.children == null) {
             this.children = new ArrayList<>();
         }
-        if (index < 0) {
+        if (index < 0 || index >= this.children.size()) {
             index = this.children.size();
+            this.setIndex(index);
         }
         this.children.add(index, child);
-        if (view != null && child.getView() != null) {
-            ((ViewGroup) view).addView(child.getView(), index);
-        }
+        ((ViewGroup) view).addView(child.getView(), index);
     }
 
     @Override
@@ -95,29 +98,33 @@ public class SimpleProteusView implements ProteusView {
 
     @Override
     public void replaceView(ProteusView child) {
-        this.children = child.getChildren();
-        this.layout = child.getLayout();
-        this.styles = child.getStyles();
+        if (child.getView() == null) {
+            return;
+        }
+
         // remove the parent if the child view already has one
         if (child.getView().getParent() != null) {
             ((ViewGroup) child.getView().getParent()).removeView(child.getView());
         }
-        if (parent == null || parent.getView() == null || child.getView() == null) {
-            return;
-        }
-        if (parent.getChildren() != null && index < parent.getChildren().size()) {
+
+        if (parent != null
+                && parent.getView() != null
+                && index < parent.getChildren().size()) {
             parent.removeView(index).destroy();
             parent.addView(child, index);
         } else {
-            ViewGroup parentViewGroup = (ViewGroup) this.view.getParent();
-            if (parentViewGroup == null) {
+            ViewGroup parentView = (ViewGroup) this.view.getParent();
+            if (parentView == null) {
                 return;
             }
-            int index = parentViewGroup.indexOfChild(this.view);
-            parentViewGroup.removeView(this.view);
-            parentViewGroup.addView(child.getView(), index);
+            int index = parentView.indexOfChild(this.view);
+            parentView.removeView(this.view);
+            parentView.addView(child.getView(), index);
             parent.getChildren().add(child);
         }
+        this.children = child.getChildren();
+        this.layout = child.getLayout();
+        this.styles = child.getStyles();
     }
 
     @Override

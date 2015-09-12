@@ -34,6 +34,12 @@ public interface ProteusView {
     int getIndex();
 
     /**
+     * Sets the index of the proteus view in the parent
+     * @param index the index to be set
+     */
+    void setIndex(int index);
+
+    /**
      * @return the parent {@link ProteusView} of this {@link ProteusView}.
      */
     ProteusView getParent();
