@@ -28,7 +28,6 @@ public class SimpleProteusView implements ProteusView {
         this.view = view;
         this.index = index;
         this.parent = parent;
-        this.children = new ArrayList<>();
     }
 
     public SimpleProteusView(View view, JsonObject layout, int index, List<ProteusView> children, ProteusView parent) {
