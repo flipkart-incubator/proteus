@@ -69,14 +69,14 @@ public interface LayoutBuilder {
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and an optional
      * data {@link JsonObject} for binding.
      *
-     * @param parent     The intended parent view for the {@link View} that will be built.
+     * @param parent     The intended parent view for the {@link ProteusView} that will be built.
      * @param layout     The {@link JsonObject} which defines the layout for the {@link View} to be built.
      * @param data       The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
      * @param childIndex The index of this view in its parent. Pass 0 if it has no parent.
      * @param styles
      * @return A {@link ProteusView} with the built view, an array of its children and optionally its bindings.
      */
-    ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex, Styles styles);
+    ProteusView build(ProteusView parent, JsonObject layout, JsonObject data, int childIndex, Styles styles);
 
     /**
      * Used to set a callback object to handle unknown view types and unknown attributes and other

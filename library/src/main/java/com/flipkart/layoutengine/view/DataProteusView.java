@@ -128,10 +128,7 @@ public class DataProteusView extends SimpleProteusView {
             } else {
                 if (childLayout != null) {
                     DataProteusView proteusView = (DataProteusView) parserContext
-                            .getLayoutBuilder().build(view,
-                                    childLayout,
-                                    data,
-                                    index, styles);
+                            .getLayoutBuilder().build(this, childLayout, data, index, styles);
                     addView(proteusView);
                 }
             }
@@ -139,13 +136,12 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     /**
-     * Updates the Binding with new data. It uses a {@link com.flipkart.layoutengine.binding.Binding}
-     * to get the associated {@link android.view.View}, {@link com.flipkart.layoutengine.builder.LayoutBuilder},
+     * Updates the Binding with new data. It uses a {@link Binding}
+     * to get the associated {@link View}, {@link com.flipkart.layoutengine.builder.LayoutBuilder},
      * and {@link com.flipkart.layoutengine.parser.LayoutHandler} to update the value of the bound
      * attribute with the new value fetched from the new data object passed.
      *
-     * @param binding The property name to update mapped to its
-     *                {@link com.flipkart.layoutengine.binding.Binding}
+     * @param binding The property name to update mapped to its {@link Binding}
      */
     private void handleBinding(Binding binding) {
         if (binding.hasRegEx()) {
