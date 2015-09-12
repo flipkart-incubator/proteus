@@ -85,18 +85,13 @@ public class SimpleProteusView implements ProteusView {
     }
 
     @Override
-    public void replaceView(ProteusView proteusView) {
-        this.children = proteusView.getChildren();
-        this.layout = proteusView.getLayout();
-        this.styles = proteusView.getStyles();
+    public void replaceView(ProteusView view) {
+        this.children = view.getChildren();
         ViewGroup parent = (ViewGroup) this.view.getParent();
-        if (parent != null && proteusView.getView() != null) {
+        if (parent != null) {
             int index = parent.indexOfChild(this.view);
-            if (proteusView.getView().getParent() != null) {
-                ((ViewGroup)proteusView.getView().getParent()).removeView(proteusView.getView());
-            }
             parent.removeView(this.view);
-            parent.addView(proteusView.getView(), index);
+            parent.addView(view.getView(), index);
         }
     }
 
