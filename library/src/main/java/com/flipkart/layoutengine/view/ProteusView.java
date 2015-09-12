@@ -5,7 +5,7 @@ import android.view.View;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.google.gson.JsonObject;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * A wrapper class to update the views build by a {@link com.flipkart.layoutengine.builder.LayoutBuilder}.
@@ -24,7 +24,7 @@ import java.util.List;
 public interface ProteusView {
 
     /**
-     * @return the view {@link android.view.View} wrapped by the {@link ProteusView}
+     * @return reference to the view {@link android.view.View} wrapped by the {@link ProteusView}
      */
     View getView();
 
@@ -38,84 +38,44 @@ public interface ProteusView {
      */
     ProteusView getParent();
 
-    void unsetParent();
-
     /**
      * Adds a child {@link ProteusView}.
      *
-     * @param child The {@link ProteusView} to add as a child.
+     * @param view The {@link ProteusView} to add as a child.
      */
-    void addView(ProteusView child);
-
-    /**
-     * Adds a child view at the specified index
-     *
-     * @param child the child view to add
-     * @param index the position at which to add the child
-     */
-    void addView(ProteusView child, int index);
+    void addChild(ProteusView view);
 
     /**
      * @return the list of children.
      */
-    List<ProteusView> getChildren();
+    ArrayList<ProteusView> getChildren();
 
     /**
      * Updates the data associated with view wrapped by the {@link ProteusView}
-     * with new {@link JsonObject} object.
+     * with new {@link org.json.JSONObject} object.
      *
-     * @param data new {@link JsonObject} object which will used to update the view.
+     * @param data new {@link org.json.JSONObject} object which will used to update the view.
      * @return reference to the updated view {@link android.view.View} wrapped by the
      * {@link ProteusView}
      */
     View updateData(JsonObject data);
 
     /**
-     * Replaces the {@link ProteusView} in the hierarchy.
+     * Replace the {@link View}, {@link com.flipkart.layoutengine.binding.Binding} and children
+     * associated to this {@link ProteusView}.
      *
      * @param view The {@link ProteusView} to use for the replacement
      */
     void replaceView(ProteusView view);
 
-    /**
-     * Deprecated, use {@link ProteusView#destroy()} instead
-     */
-    @Deprecated
     void removeView();
 
-    /**
-     * Removes the child view at the specified location from this {@code ProteusView}.
-     *
-     * @param childIndex the index of the object to remove.
-     * @return the removed object.
-     * @throws NullPointerException      if {@code children == null}
-     * @throws IndexOutOfBoundsException if {@code location < 0 || location >= size()}
-     */
-    ProteusView removeView(int childIndex);
+    void removeChild(int childIndex);
 
-    /**
-     * Returns the layout used to build this {@link ProteusView}
-     *
-     * @return Returns the layout used to build this {@link ProteusView}
-     */
     JsonObject getLayout();
 
-    /**
-     * Returns the {@link Styles} used in this {@link ProteusView}
-     *
-     * @param styles Returns the {@link Styles} used in this {@link ProteusView}
-     */
     void setStyles(Styles styles);
 
-    /**
-     * Returns the current {@link Styles} used in this {@link ProteusView}
-     *
-     * @return Returns the current {@link Styles} used in this {@link ProteusView}
-     */
     Styles getStyles();
 
-    /**
-     * Removes this {@link ProteusView} from the hierarchy and releases resources;
-     */
-    void destroy();
 }
