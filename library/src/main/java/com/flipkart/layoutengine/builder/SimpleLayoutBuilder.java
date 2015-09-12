@@ -168,8 +168,9 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             String[] styleSet = layout.get(ProteusConstants.STYLE).getAsString().split(ProteusConstants.STYLE_DELIMITER);
 
             for (String styleName : styleSet) {
-                processStyle(styles.getStyle(styleName), layout, createdProteusView, handler, context,
-                        parent, childIndex);
+                if (styles.hasStyle(styleName)) {
+                    processStyle(styles.getStyle(styleName), layout, createdProteusView, handler, context, parent, childIndex);
+                }
             }
         }
 

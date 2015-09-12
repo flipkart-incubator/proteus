@@ -52,11 +52,14 @@ public class DataProteusView extends SimpleProteusView {
 
     @Override
     public void replaceView(ProteusView view) {
+        super.replaceView(view);
         if (view instanceof DataProteusView) {
             DataProteusView dataProteusView = (DataProteusView) view;
             this.bindings = dataProteusView.getBindings();
+            this.parserContext = dataProteusView.getParserContext();
+            this.childLayout = dataProteusView.getChildLayout();
+            this.dataPathForChildren = dataProteusView.getDataPathForChildren();
         }
-        super.replaceView(view);
     }
 
     public void addBinding(Binding binding) {
@@ -114,7 +117,8 @@ public class DataProteusView extends SimpleProteusView {
         if (children.size() > childrenDataArray.size()) {
             while (children.size() > childrenDataArray.size()) {
                 ProteusView proteusView = children.remove(children.size() - 1);
-                proteusView.removeView();
+                unsetParent(proteusView.getView());
+                proteusView.destroy();
             }
         }
 
@@ -124,12 +128,9 @@ public class DataProteusView extends SimpleProteusView {
                 children.get(index).updateData(data);
             } else {
                 if (childLayout != null) {
-                    DataProteusView proteusView = (DataProteusView) parserContext
-                            .getLayoutBuilder().build(view,
-                                    childLayout,
-                                    data,
-                                    index, styles);
-                    addChild(proteusView);
+                    DataProteusView child = (DataProteusView) parserContext.getLayoutBuilder().build(view,
+                            childLayout, data, index, styles);
+                    addView(child);
                 }
             }
         }
@@ -271,5 +272,13 @@ public class DataProteusView extends SimpleProteusView {
 
     public JsonObject getChildLayout() {
         return childLayout;
+    }
+
+    @Override
+    public void destroy() {
+        super.destroy();
+        childLayout = null;
+        parserContext = null;
+        dataPathForChildren = null;
     }
 }
