@@ -122,7 +122,7 @@ public class DataContext {
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                 Log.e(TAG + "#getNewDataContext()", "failed to create scope. '" + key +
                         "' : '" + value + "'. " + e.getMessage());
-                element = new JsonObject();
+                element = entry.getValue();
             }
 
             newData.add(key, element);
