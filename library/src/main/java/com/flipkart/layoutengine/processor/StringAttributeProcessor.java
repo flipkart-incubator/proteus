@@ -17,6 +17,12 @@ public abstract class StringAttributeProcessor<E> extends AttributeProcessor<E> 
         }
     }
 
+    /**
+     * @param parserContext
+     * @param attributeKey
+     * @param attributeValue
+     * @param view
+     */
     public abstract void handle(ParserContext parserContext, String attributeKey, String attributeValue, E view);
 
 }

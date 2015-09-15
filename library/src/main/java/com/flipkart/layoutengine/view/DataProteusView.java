@@ -9,6 +9,7 @@ import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -165,13 +166,14 @@ public class DataProteusView extends SimpleProteusView {
                 if (getView() != null) {
                     getView().setVisibility(View.GONE);
                 }
-                return;
+                dataValue = new JsonPrimitive(ProteusConstants.DATA_NULL);
             }
             parserContext.getLayoutBuilder().handleAttribute(
                     binding.getLayoutHandler(),
                     parserContext,
                     binding.getAttributeKey(),
-                    dataValue, layout,
+                    dataValue,
+                    layout,
                     this,
                     parent,
                     index);

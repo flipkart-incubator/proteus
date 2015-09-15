@@ -90,7 +90,7 @@ public class Attributes {
         public static Attribute TextStyle = new Attribute("textStyle");
         public static Attribute SingleLine = new Attribute("singleLine");
         public static Attribute TextAllCaps = new Attribute("textAllCaps");
-
+        public static Attribute Hint = new Attribute("hint");
     }
 
     public static class CheckBox {

@@ -72,7 +72,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
-                view.setCompoundDrawablesWithIntrinsicBounds(drawable,compoundDrawables[1],compoundDrawables[2],compoundDrawables[3]);
+                view.setCompoundDrawablesWithIntrinsicBounds(drawable, compoundDrawables[1], compoundDrawables[2], compoundDrawables[3]);
             }
         });
         addHandler(Attributes.TextView.DrawableTop,new ResourceReferenceProcessor<T>(context) {
@@ -155,6 +155,12 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                     view.setAllCaps(ParseHelper.parseBoolean(attributeValue));
                 }
+            }
+        });
+        addHandler(Attributes.TextView.Hint,new StringAttributeProcessor<T>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+                view.setHint(attributeValue);
             }
         });
     }
