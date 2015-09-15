@@ -63,7 +63,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
                 v.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
-            Log.e(TAG + "#getContextConstructor()", e.getMessage());
+            Log.e(TAG + "#createView()", e.getMessage());
         }
 
         return (T) v;
