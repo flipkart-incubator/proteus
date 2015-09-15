@@ -252,21 +252,22 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         handler,
                         false);
             }
-        }
 
-        if (dataProteusView.getView() != null) {
-            if (failed) {
-                if (viewJsonObject != null && !viewJsonObject.isJsonNull()
-                        && viewJsonObject.get(Attributes.View.Visibility.getName()) != null) {
-                    String visibility = viewJsonObject.get(Attributes.View.Visibility.getName()).getAsString();
-                    if (ProteusConstants.DATA_VISIBILITY.equals(visibility)) {
-                        dataProteusView.getView().setVisibility(View.INVISIBLE);
+            if (dataProteusView.getView() != null) {
+                if (failed) {
+                    if (viewJsonObject != null
+                            && !viewJsonObject.isJsonNull()
+                            && viewJsonObject.get(Attributes.View.Visibility.getName()) != null) {
+                        String visibility = viewJsonObject.get(Attributes.View.Visibility.getName()).getAsString();
+                        if (ProteusConstants.DATA_VISIBILITY.equals(visibility)) {
+                            dataProteusView.getView().setVisibility(View.INVISIBLE);
+                        }
+                    } else {
+                        dataProteusView.getView().setVisibility(View.GONE);
                     }
-                } else {
-                    dataProteusView.getView().setVisibility(View.GONE);
+                } else if (dataProteusView.isViewUpdating()) {
+                    dataProteusView.getView().setVisibility(View.VISIBLE);
                 }
-            } else if (dataProteusView.isViewUpdating()) {
-                dataProteusView.getView().setVisibility(View.VISIBLE);
             }
         }
 
