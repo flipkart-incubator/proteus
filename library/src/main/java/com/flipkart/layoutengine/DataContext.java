@@ -120,9 +120,9 @@ public class DataContext {
             try {
                 element = Utils.getElementFromData(value, dataProvider, childIndex);
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                Log.e(TAG + "#getNewDataContext()", "failed to create scope. '" + key +
-                        "' : '" + value + "'. " + e.getMessage());
-                element = entry.getValue();
+                Log.e(TAG + "#getNewDataContext()", "could not find: '" + value +
+                        "' for '" + key + "'. ERROR: " + e.getMessage());
+                element = new JsonObject();
             }
 
             newData.add(key, element);
