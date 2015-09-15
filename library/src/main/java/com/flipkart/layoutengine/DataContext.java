@@ -115,22 +115,19 @@ public class DataContext {
 
         for (Map.Entry<String, JsonElement> entry : scope.entrySet()) {
             String key = entry.getKey();
-            if (entry.getValue().isJsonPrimitive()) {
-                JsonElement element;
-                String value = entry.getValue().getAsString();
-                try {
-                    element = Utils.getElementFromData(value, dataProvider, childIndex);
-                } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                    Log.e(TAG + "#getNewDataContext()", "could not find '" + value +
-                            "' for '" + key + "'. ERROR: " + e.getMessage());
-                    element = new JsonObject();
-                }
-                newData.add(key, element);
-                String unAliasedValue = value.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
-                reverseScope.add(unAliasedValue, new JsonPrimitive(key));
-            } else {
-                newData.add(key, entry.getValue());
+            String value = entry.getValue().getAsString();
+            JsonElement element;
+            try {
+                element = Utils.getElementFromData(value, dataProvider, childIndex);
+            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                Log.e(TAG + "#getNewDataContext()", "failed to create scope. '" + key +
+                        "' : '" + value + "'. " + e.getMessage());
+                element = entry.getValue();
             }
+
+            newData.add(key, element);
+            String unAliasedValue = value.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
+            reverseScope.add(unAliasedValue, new JsonPrimitive(key));
         }
 
         Utils.addElements(newData, data, false);
