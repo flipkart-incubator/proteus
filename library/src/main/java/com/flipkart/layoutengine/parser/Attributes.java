@@ -7,7 +7,6 @@ package com.flipkart.layoutengine.parser;
 public class Attributes {
 
     public static class View {
-
         public static Attribute Weight = new Attribute("layout_weight");
         public static Attribute Width = new Attribute("layout_width");
         public static Attribute Background = new Attribute("background");
@@ -133,11 +132,23 @@ public class Attributes {
         public static Attribute Progress = new Attribute("progress");
         public static Attribute Max = new Attribute("max");
         public static Attribute ProgressTint = new Attribute("progressTint");
-
     }
 
     public static class Attribute {
-        private String name;
+        public enum PRIORITY {
+            HIGHEST(0),
+            HIGH(1000),
+            MEDIUM(2000),
+            LOW(3000),
+            LOWEST(4000);
+            public final int value;
+
+            PRIORITY(int i) {
+                value = i;
+            }
+        }
+
+        private final String name;
 
         public Attribute(String name) {
             this.name = name;
@@ -147,9 +158,8 @@ public class Attributes {
             return name;
         }
 
-        public void setName(String name) {
-            this.name = name;
+        public int getPriority() {
+            return PRIORITY.HIGHEST.value;
         }
     }
-
 }
