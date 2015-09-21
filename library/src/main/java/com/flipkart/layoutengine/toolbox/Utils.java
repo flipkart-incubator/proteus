@@ -151,6 +151,10 @@ public class Utils {
 
     @NonNull
     public static String getLayoutIdentifier(JsonObject layout) {
+        String noLayoutId = "no ID or TAG.";
+        if (layout == null) {
+            return noLayoutId;
+        }
         String value = Utils.getPropertyAsString(layout, ProteusConstants.ID);
         if (value != null) {
             return "ID: " + value + ".";
@@ -159,7 +163,7 @@ public class Utils {
         if (value != null) {
             return "TAG: " + value + ".";
         }
-        return "no ID or TAG.";
+        return noLayoutId;
     }
 
     public static String getTagPrefix() {
