@@ -10,6 +10,8 @@ import java.util.regex.Pattern;
  */
 public class ProteusConstants {
     public static final String TYPE = "type";
+    public static final String ID = "if";
+    public static final String TAG = "tag";
     public static final String CHILDREN = "children";
     public static final String CHILD_TYPE = "childType";
     public static final String STYLE = "style";

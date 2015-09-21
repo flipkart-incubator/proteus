@@ -44,9 +44,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Override
     protected List<ProteusView> parseChildren(LayoutHandler handler, ParserContext context,
-                                              ProteusView view, JsonObject parentViewJson, int childIndex, Styles styles) {
+                                              ProteusView view, JsonObject parentLayout, int childIndex, Styles styles) {
 
-        JsonElement childrenElement = parentViewJson.get(ProteusConstants.CHILDREN);
+        Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
+        JsonElement childrenElement = parentLayout.get(ProteusConstants.CHILDREN);
 
         if (childrenElement != null &&
                 childrenElement.isJsonPrimitive() &&
@@ -71,18 +72,18 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             } catch (NumberFormatException e) {
                 Log.e(TAG + "#parseChildren()", childrenElement.getAsString() +
                         " is not a number. layout: " +
-                        parentViewJson.toString());
+                        parentLayout.toString());
                 length = 0;
             }
 
             // get the child type
-            JsonElement childTypeElement = parentViewJson.get(ProteusConstants.CHILD_TYPE);
+            JsonElement childTypeElement = parentLayout.get(ProteusConstants.CHILD_TYPE);
 
             if (childTypeElement != null) {
                 List<ProteusView> childrenView = new ArrayList<>();
-                JsonObject childLayout = getChildLayout(childTypeElement, context, parentViewJson, view);
+                JsonObject childLayout = getChildLayout(childTypeElement, context, parentLayout, view);
                 JsonElement childDataContext = childLayout.get(ProteusConstants.CHILD_DATA_CONTEXT);
-                JsonElement childDataContextFromParent = parentViewJson.get(ProteusConstants.CHILD_DATA_CONTEXT);
+                JsonElement childDataContextFromParent = parentLayout.get(ProteusConstants.CHILD_DATA_CONTEXT);
 
                 if (childDataContextFromParent != null && childDataContext != null) {
                     Utils.addElements(childDataContext.getAsJsonObject(),
@@ -107,7 +108,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             }
         }
 
-        return super.parseChildren(handler, context, view, parentViewJson, childIndex, styles);
+        return super.parseChildren(handler, context, view, parentLayout, childIndex, styles);
     }
 
     @Override
@@ -140,6 +141,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                    String attributeName, JsonElement jsonDataValue, JsonObject layout,
                                    ProteusView associatedProteusView,
                                    ProteusView parent, int childIndex) {
+        Log.d(TAG, "Handle '" + attributeName + "' : " + jsonDataValue.toString()
+                + " for view with " + Utils.getLayoutIdentifier(layout));
         if (jsonDataValue.isJsonPrimitive()) {
             if (ProteusConstants.DATA_CONTEXT.equals(attributeName)) {
                 return true;

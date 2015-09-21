@@ -16,11 +16,7 @@ public class Styles extends HashMap<String, Map<String, JsonElement>> {
         return this.get(name);
     }
 
-    public boolean hasStyle(String name) {
+    public boolean contains(String name) {
         return this.containsKey(name);
-    }
-
-    public void putStyle(String name, Map<String, JsonElement> style) {
-        this.put(name, style);
     }
 }

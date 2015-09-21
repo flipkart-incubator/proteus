@@ -72,20 +72,19 @@ public class DataProteusView extends SimpleProteusView {
 
     @Override
     protected View updateDataImpl(JsonObject data) {
+        Log.d(TAG, "START: update data " + (data != null ? "(top-level)" : "")
+                + "for view with " + Utils.getLayoutIdentifier(layout));
         this.isViewUpdating = true;
-
         // update the data context so all child views can refer to new data
         if (data != null) {
             updateDataContext(data);
         }
-
         // update the bindings of this view
         if (this.bindings != null) {
             for (Binding binding : this.bindings) {
                 this.handleBinding(binding);
             }
         }
-
         // update the child views
         if (dataPathForChildren != null) {
             if (children == null) {
@@ -99,6 +98,8 @@ public class DataProteusView extends SimpleProteusView {
         }
 
         this.isViewUpdating = false;
+        Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "")
+                + "for view with " + Utils.getLayoutIdentifier(layout));
         return this.getView();
     }
 

@@ -1,5 +1,7 @@
 package com.flipkart.layoutengine.toolbox;
 
+import android.support.annotation.NonNull;
+
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
@@ -19,7 +21,7 @@ import java.util.Map;
  */
 public class Utils {
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "2.9.20-SNAPSHOT";
+    public static final String VERSION = "2.9.21-SNAPSHOT";
     public static final String TAG = getTagPrefix() + Utils.class.getSimpleName();
 
     public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
@@ -145,6 +147,19 @@ public class Utils {
             string = element.toString();
         }
         return string;
+    }
+
+    @NonNull
+    public static String getLayoutIdentifier(JsonObject layout) {
+        String value = Utils.getPropertyAsString(layout, ProteusConstants.ID);
+        if (value != null) {
+            return "ID: " + value + ".";
+        }
+        value = Utils.getPropertyAsString(layout, ProteusConstants.TAG);
+        if (value != null) {
+            return "TAG: " + value + ".";
+        }
+        return "no ID or TAG.";
     }
 
     public static String getTagPrefix() {
