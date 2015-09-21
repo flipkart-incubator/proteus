@@ -114,7 +114,7 @@ public class LayoutBuilderFactory {
         RatingBarParser ratingBarParser = new RatingBarParser(viewParser);
         CheckBoxParser checkBoxParser = new CheckBoxParser(buttonParser);
         ProgressBarParser progressBarParser = new ProgressBarParser(viewParser);
-        HorizontalProgressBarParser horizontalProgressBarParser = new HorizontalProgressBarParser(viewParser);
+        HorizontalProgressBarParser horizontalProgressBarParser = new HorizontalProgressBarParser(progressBarParser);
 
         layoutBuilder.registerHandler("View", viewParser);
         layoutBuilder.registerHandler("RelativeLayout", relativeLayoutParser);
