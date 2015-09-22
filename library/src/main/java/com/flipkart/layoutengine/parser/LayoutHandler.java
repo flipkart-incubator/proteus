@@ -22,14 +22,17 @@ public interface LayoutHandler<V extends View> {
     boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
                             JsonObject layout, ProteusView view, int childIndex);
 
-
     JsonArray parseChildren(ParserContext context, JsonElement element, int childIndex);
-
-    boolean canAddChild();
 
     void setupView(ParserContext context, ViewGroup parent, V view, JsonObject layout);
 
     void prepare(Context context);
 
+    /**
+     * This is a base implementation which calls addView() on the parent.
+     *
+     * @param parent   The view group into which the child will be added.
+     * @param children The List of child views which have to be added.
+     */
     void addChildren(ParserContext parserContext, ProteusView parent, List<ProteusView> children, JsonObject viewLayout);
 }

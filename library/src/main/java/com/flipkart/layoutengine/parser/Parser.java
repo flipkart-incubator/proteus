@@ -122,23 +122,12 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
         return false;
     }
 
-    @Override
-    public boolean canAddChild() {
-        return false;
-    }
-
     protected abstract void prepareHandlers(Context context);
 
     protected Set<String> getIgnoredAttributeSet() {
         return new HashSet<>();
     }
 
-    /**
-     * This is a base implementation which calls addView() on the parent.
-     *
-     * @param parent   The view group into which the child will be added.
-     * @param children The List of child views which have to be added.
-     */
     @Override
     public void addChildren(ParserContext parserContext, ProteusView parent,
                             List<ProteusView> children, JsonObject viewLayout) {

@@ -98,7 +98,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 proteusView.setDataPathForChildren(dataPath);
 
                 for (int i = 0; i < length; i++) {
-                    ProteusView childView = buildImpl(context, view, childLayout, null, i, styles);
+                    ProteusView childView = buildImpl(context, view, childLayout, i, styles);
                     if (childView != null && childView.getView() != null) {
                         childrenView.add(childView);
                     }
@@ -130,10 +130,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Override
     protected ProteusView buildImpl(ParserContext context, final ProteusView parent,
-                                    final JsonObject layout, View existingView,
-                                    final int childIndex, Styles styles) {
+                                    final JsonObject layout, final int childIndex, Styles styles) {
         context = getNewParserContext(context, layout, childIndex);
-        return super.buildImpl(context, parent, layout, existingView, childIndex, styles);
+        return super.buildImpl(context, parent, layout, childIndex, styles);
     }
 
     @Override
