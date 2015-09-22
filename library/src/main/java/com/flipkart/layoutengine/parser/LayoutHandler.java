@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -17,10 +18,20 @@ import java.util.List;
  */
 public interface LayoutHandler<V extends View> {
 
-    V createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject object);
+    /**
+     * Create the View
+     *
+     * @param parserContext {@link ParserContext}
+     * @param context       {@link Context}
+     * @param parent        {@link ViewGroup}
+     * @param layout        {@link JsonObject}
+     * @return A {@link View}
+     */
+    V createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject layout);
 
-    boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
-                            JsonObject layout, ProteusView view, int childIndex);
+
+    boolean handleAttribute(ParserContext context, LayoutBuilder layoutBuilder, String attribute,
+                            JsonElement element, JsonObject layout, ProteusView view, int childIndex);
 
     JsonArray parseChildren(ParserContext context, JsonElement element, int childIndex);
 

@@ -282,7 +282,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
                                    String attribute, JsonElement element, JsonObject layout,
                                    ProteusView view, ProteusView parent, int index) {
         Log.d(TAG, "Handle '" + attribute + "' : " + element.toString() + " for view with " + Utils.getLayoutIdentifier(layout));
-        return handler.handleAttribute(context, attribute, element, layout, view, index);
+        return handler.handleAttribute(context, this, attribute, element, layout, view, index);
     }
 
     protected void onUnknownAttributeEncountered(ParserContext context, String attribute,
