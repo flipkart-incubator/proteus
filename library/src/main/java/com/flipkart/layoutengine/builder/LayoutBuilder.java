@@ -29,12 +29,6 @@ public interface LayoutBuilder {
      * @param viewType remove {@link LayoutHandler} for the specified view type.
      */
     void unregisterHandler(String viewType);
-
-    /**
-     * Un-Register all {@link LayoutHandler} registered using {@link LayoutBuilder#registerHandler}.
-     */
-    void unregisterAllHandlers();
-
     /**
      * Returns the {@link LayoutHandler} for the specified view type.
      *
