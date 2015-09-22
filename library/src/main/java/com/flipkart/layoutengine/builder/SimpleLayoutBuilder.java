@@ -246,10 +246,8 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         if (childTypeElement.isJsonObject() && !childTypeElement.isJsonNull()) {
             childLayout = childTypeElement.getAsJsonObject();
         } else if (childTypeElement.isJsonPrimitive()) {
-            childLayout = onChildTypeLayoutRequired(parserContext,
-                    childTypeElement.getAsString(),
-                    parentLayout,
-                    view);
+            childLayout = onChildTypeLayoutRequired(parserContext, childTypeElement.getAsString(),
+                    parentLayout, view);
             if (childLayout == null) {
                 childLayout = new JsonObject();
                 childLayout.add(ProteusConstants.TYPE, childTypeElement);
