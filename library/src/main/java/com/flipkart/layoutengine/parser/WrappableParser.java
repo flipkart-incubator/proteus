@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -29,11 +28,11 @@ public class WrappableParser<T extends View> extends Parser<T> {
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, LayoutBuilder layoutBuilder, String attribute,
-                                   JsonElement element, JsonObject layout, ProteusView view, int childIndex) {
-        boolean handled = super.handleAttribute(context, layoutBuilder, attribute, element, layout, view, childIndex);
+    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, JsonObject layout,
+                                   ProteusView view, int childIndex) {
+        boolean handled = super.handleAttribute(context, attribute, element, layout, view, childIndex);
         if (wrappedParser != null && !handled) {
-            handled = wrappedParser.handleAttribute(context, layoutBuilder, attribute, element, layout, view, childIndex);
+            handled = wrappedParser.handleAttribute(context, attribute, element, layout, view, childIndex);
         }
         return handled;
     }

@@ -14,7 +14,6 @@ import android.widget.RelativeLayout;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
@@ -225,14 +224,14 @@ public class ViewParser<T extends View> extends Parser<T> {
         });
         addHandler(Attributes.View.Visibility, new JsonDataProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, LayoutBuilder layoutBuilder, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
                 // noinspection ResourceType
                 view.setVisibility(ParseHelper.parseVisibility(attributeValue));
             }
         });
         addHandler(Attributes.View.Invisibility, new JsonDataProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, LayoutBuilder layoutBuilder, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
                 // noinspection ResourceType
                 view.setVisibility(ParseHelper.parseInvisibility(attributeValue));
             }
@@ -266,7 +265,7 @@ public class ViewParser<T extends View> extends Parser<T> {
         });
         addHandler(Attributes.View.Border, new JsonDataProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, LayoutBuilder layoutBuilder, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
                 if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
                     return;
                 }

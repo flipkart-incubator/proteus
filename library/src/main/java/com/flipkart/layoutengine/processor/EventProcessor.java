@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -23,7 +22,7 @@ public abstract class EventProcessor<T> extends AttributeProcessor<T> {
     }
 
     @Override
-    public void handle(ParserContext parserContext, LayoutBuilder layoutBuilder, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
         setOnEventListener(view,parserContext,attributeValue);
     }
 

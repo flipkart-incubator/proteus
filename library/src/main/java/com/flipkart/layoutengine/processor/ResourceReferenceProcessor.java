@@ -12,7 +12,6 @@ import android.view.View;
 import android.webkit.URLUtil;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.toolbox.NetworkDrawableHelper;
 import com.google.gson.JsonArray;
@@ -36,12 +35,11 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
     }
 
     @Override
-    public void handle(ParserContext parserContext, LayoutBuilder layoutBuilder,
-                       String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
         if (attributeValue.isJsonPrimitive()) {
             handleString(parserContext, attributeKey, attributeValue.getAsString(), view, layout);
         } else if (attributeValue.isJsonObject()) {
-            handleElement(parserContext, layoutBuilder, attributeKey, attributeValue, view, layout);
+            handleElement(parserContext, attributeKey, attributeValue, view, layout);
         } else {
             Log.e(TAG + ".handle()", "Resource for key: " + attributeKey
                     + " must be a primitive or an object. value -> " + attributeValue.toString());
@@ -54,14 +52,13 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
      * Override this to handle more types of drawables
      *
      * @param parserContext
-     * @param layoutBuilder
      * @param attributeKey
      * @param attributeValue
      * @param view
      * @param layout
      */
-    protected void handleElement(ParserContext parserContext, LayoutBuilder layoutBuilder,
-                                 String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+    protected void handleElement(ParserContext parserContext, String attributeKey,
+                                 JsonElement attributeValue, T view, JsonObject layout) {
 
         JsonObject jsonObject = attributeValue.getAsJsonObject();
 
@@ -82,14 +79,14 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
                                 stateListDrawable.addState(state.first, drawable);
                             }
                         };
-                        processor.handle(parserContext, layoutBuilder, attributeKey,
-                                new JsonPrimitive(state.second), view, layout);
+                        processor.handle(parserContext, attributeKey, new JsonPrimitive(state.second), view, layout);
                     }
+
                 }
             }
             setDrawable(view, stateListDrawable);
         } else if ("layer-list".equals(drawableType)) {
-            final List<Pair<Integer, Drawable>> drawables = new ArrayList<>();
+            final List<Pair<Integer, Drawable>> drawables = new ArrayList<Pair<Integer, Drawable>>();
             JsonElement childrenElement = jsonObject.get("children");
             if (childrenElement != null) {
                 JsonArray children = childrenElement.getAsJsonArray();
@@ -104,8 +101,7 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
                             onLayerDrawableFinish(view, drawables);
                         }
                     };
-                    processor.handle(parserContext, layoutBuilder, attributeKey,
-                            new JsonPrimitive(layerPair.second), view, layout);
+                    processor.handle(parserContext, attributeKey, new JsonPrimitive(layerPair.second), view, layout);
                 }
             }
         }

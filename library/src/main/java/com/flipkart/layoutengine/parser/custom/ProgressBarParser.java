@@ -11,7 +11,6 @@ import android.view.Gravity;
 import android.widget.ProgressBar;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
@@ -48,7 +47,7 @@ public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T>
         });
         addHandler(Attributes.ProgressBar.ProgressTint, new JsonDataProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, LayoutBuilder layoutBuilder, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
                 if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
                     return;
                 }

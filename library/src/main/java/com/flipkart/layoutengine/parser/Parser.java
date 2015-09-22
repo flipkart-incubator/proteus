@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.processor.AttributeProcessor;
 import com.flipkart.layoutengine.toolbox.Utils;
@@ -30,13 +29,13 @@ import java.util.Set;
  * method  to specify a callback for an attribute.
  * This class also creates an instance of the view with the first constructor.
  */
-public abstract class Parser<V extends View> implements LayoutHandler<V> {
+public abstract class Parser<T extends View> implements LayoutHandler<T> {
 
     private static final String TAG = Utils.getTagPrefix() + Parser.class.getSimpleName();
-    protected final Class<V> viewClass;
+    protected final Class<T> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
 
-    public Parser(Class<V> viewClass) {
+    public Parser(Class<T> viewClass) {
         this.viewClass = viewClass;
     }
 
@@ -49,25 +48,25 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
         }
     }
 
-    protected void addHandler(Attributes.Attribute key, AttributeProcessor<V> handler) {
+    protected void addHandler(Attributes.Attribute key, AttributeProcessor<T> handler) {
         handlers.put(key.getName(), handler);
     }
 
     @Override
-    public V createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject layout) {
+    public T createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject object) {
         View v = null;
         try {
             Constructor<? extends View> constructor = getContextConstructor(viewClass);
             if (constructor != null) {
                 v = constructor.newInstance(context);
-                ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent, layout);
+                ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent, object);
                 v.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
             Log.e(TAG + "#createView()", e.getMessage());
         }
 
-        return (V) v;
+        return (T) v;
     }
 
     /**
@@ -76,8 +75,8 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
      * @param viewClass
      * @return Constructor of that class
      */
-    protected Constructor<? extends V> getContextConstructor(Class<? extends V> viewClass) {
-        Constructor<? extends V> constructor = (Constructor<? extends V>) constructorCache.get(viewClass);
+    protected Constructor<? extends T> getContextConstructor(Class<T> viewClass) {
+        Constructor<? extends T> constructor = (Constructor<? extends T>) constructorCache.get(viewClass);
         if (constructor == null) {
             try {
                 constructor = viewClass.getDeclaredConstructor(Context.class);
@@ -90,7 +89,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
         return constructor;
     }
 
-    protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent, JsonObject layout) {
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent, JsonObject object) {
 
         /**
          * This whole method is a hack! To generate layout params, since no other way exists.
@@ -109,7 +108,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, LayoutBuilder layoutBuilder, String attribute, JsonElement element,
+    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
                                    JsonObject layout, ProteusView view, int childIndex) {
 
         if (getIgnoredAttributeSet().contains(attribute)) {
@@ -117,7 +116,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
         }
         AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
-            attributeProcessor.handle(context, layoutBuilder, attribute, element, view.getView(), layout);
+            attributeProcessor.handle(context, attribute, element, view.getView(), layout);
             return true;
         }
         return false;
@@ -143,7 +142,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
     }
 
     @Override
-    public void setupView(ParserContext context, ViewGroup parent, V view, JsonObject layout) {
+    public void setupView(ParserContext context, ViewGroup parent, T view, JsonObject layout) {
         // nothing to do here
     }
 }
