@@ -89,7 +89,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
         return constructor;
     }
 
-    protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent, JsonObject object) {
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent, JsonObject layout) {
 
         /**
          * This whole method is a hack! To generate layout params, since no other way exists.

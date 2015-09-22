@@ -28,8 +28,8 @@ public class WrappableParser<T extends View> extends Parser<T> {
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, JsonObject layout,
-                                   ProteusView view, int childIndex) {
+    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
+                                   JsonObject layout, ProteusView view, int childIndex) {
         boolean handled = super.handleAttribute(context, attribute, element, layout, view, childIndex);
         if (wrappedParser != null && !handled) {
             handled = wrappedParser.handleAttribute(context, attribute, element, layout, view, childIndex);

@@ -15,6 +15,7 @@ public abstract class AttributeProcessor<E> {
      * @param view
      * @param layout
      */
-    public abstract void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, E view, JsonObject layout);
+    public abstract void handle(ParserContext parserContext, String attributeKey,
+                                JsonElement attributeValue, E view, JsonObject layout);
 
 }

@@ -17,19 +17,22 @@ import com.google.gson.JsonObject;
 public abstract class EventProcessor<T> extends AttributeProcessor<T> {
 
     private Context context;
+
     public EventProcessor(Context context) {
         this.context = context;
     }
 
     @Override
-    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
-        setOnEventListener(view,parserContext,attributeValue);
+    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue,
+                       T view, JsonObject layout) {
+        setOnEventListener(view, parserContext, attributeValue);
     }
 
     public abstract void setOnEventListener(T view, ParserContext parserContext, JsonElement attributeValue);
 
     /**
      * This delegates Event with required attributes to client
+     *
      * @param parserContext
      * @param eventType
      * @param view

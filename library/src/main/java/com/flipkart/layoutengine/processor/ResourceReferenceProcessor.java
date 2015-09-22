@@ -86,7 +86,7 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
             }
             setDrawable(view, stateListDrawable);
         } else if ("layer-list".equals(drawableType)) {
-            final List<Pair<Integer, Drawable>> drawables = new ArrayList<Pair<Integer, Drawable>>();
+            final List<Pair<Integer, Drawable>> drawables = new ArrayList<>();
             JsonElement childrenElement = jsonObject.get("children");
             if (childrenElement != null) {
                 JsonArray children = childrenElement.getAsJsonArray();
