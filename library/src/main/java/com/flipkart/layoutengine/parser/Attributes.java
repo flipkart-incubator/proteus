@@ -136,19 +136,6 @@ public class Attributes {
 
     public static class Attribute {
 
-        public enum PRIORITY {
-            HIGHEST(0),
-            HIGH(1000),
-            MEDIUM(2000),
-            LOW(3000),
-            LOWEST(4000);
-
-            public final int value;
-            PRIORITY(int i) {
-                value = i;
-            }
-        }
-
         private final String name;
 
         public Attribute(String name) {
@@ -157,10 +144,6 @@ public class Attributes {
 
         public String getName() {
             return name;
-        }
-
-        public int getPriority() {
-            return PRIORITY.HIGHEST.value;
         }
     }
 }
