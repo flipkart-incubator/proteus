@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class Utils {
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "2.9.23-SNAPSHOT";
+    public static final String VERSION = "2.9.24-SNAPSHOT";
     public static final String TAG = getTagPrefix() + Utils.class.getSimpleName();
 
     public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
@@ -167,7 +167,10 @@ public class Utils {
     }
 
     public static String getTagPrefix() {
-        return LIB_NAME + ":" + VERSION + ":";
+        return LIB_NAME + ":";
     }
 
+    public static String getVersion() {
+        return VERSION;
+    }
 }
