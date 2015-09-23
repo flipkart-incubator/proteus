@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class ProteusConstants {
 
     public static final String TYPE = "type";
-    public static final String ID = "if";
+    public static final String ID = "id";
     public static final String TAG = "tag";
 
     public static final String CHILDREN = "children";
