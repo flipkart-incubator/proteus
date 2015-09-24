@@ -32,7 +32,7 @@ public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
             try {
                 viewElement = viewProvider.getObject(viewType, childIndex);
             } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG_ERROR, e.getMessage());
             }
         }
         if (viewElement != null) {

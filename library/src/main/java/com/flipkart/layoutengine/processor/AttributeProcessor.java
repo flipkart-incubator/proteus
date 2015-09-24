@@ -9,13 +9,11 @@ import com.google.gson.JsonObject;
  */
 public abstract class AttributeProcessor<E> {
     /**
-     * @param parserContext
-     * @param attributeKey
-     * @param attributeValue
-     * @param view
-     * @param layout
+     * @param parserContext  * @param attributeKey Attribute Key
+     * @param attributeValue Attribute Value
+     * @param view           View
+     * @param layout         Layout
      */
-    public abstract void handle(ParserContext parserContext, String attributeKey,
-                                JsonElement attributeValue, E view, JsonObject layout);
+    public abstract void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, E view, JsonObject layout);
 
 }

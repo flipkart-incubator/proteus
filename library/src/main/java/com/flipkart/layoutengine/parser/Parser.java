@@ -29,13 +29,12 @@ import java.util.Set;
  * method  to specify a callback for an attribute.
  * This class also creates an instance of the view with the first constructor.
  */
-public abstract class Parser<T extends View> implements LayoutHandler<T> {
+public abstract class Parser<V extends View> implements LayoutHandler<V> {
 
-    private static final String TAG = Utils.getTagPrefix() + Parser.class.getSimpleName();
-    protected final Class<T> viewClass;
+    protected final Class<V> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
 
-    public Parser(Class<T> viewClass) {
+    public Parser(Class<V> viewClass) {
         this.viewClass = viewClass;
     }
 
@@ -48,25 +47,25 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
         }
     }
 
-    protected void addHandler(Attributes.Attribute key, AttributeProcessor<T> handler) {
+    protected void addHandler(Attributes.Attribute key, AttributeProcessor<V> handler) {
         handlers.put(key.getName(), handler);
     }
 
     @Override
-    public T createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject object) {
+    public V createView(ParserContext parserContext, Context context, ProteusView parent, JsonObject layout) {
         View v = null;
         try {
             Constructor<? extends View> constructor = getContextConstructor(viewClass);
             if (constructor != null) {
                 v = constructor.newInstance(context);
-                ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent, object);
+                ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams((ViewGroup) parent.getView(), layout);
                 v.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
-            Log.e(TAG + "#createView()", e.getMessage());
+            Log.e(Utils.TAG_ERROR + "#createView()", e.getMessage());
         }
 
-        return (T) v;
+        return (V) v;
     }
 
     /**
@@ -75,15 +74,15 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
      * @param viewClass
      * @return Constructor of that class
      */
-    protected Constructor<? extends T> getContextConstructor(Class<T> viewClass) {
-        Constructor<? extends T> constructor = (Constructor<? extends T>) constructorCache.get(viewClass);
+    protected Constructor<? extends V> getContextConstructor(Class<V> viewClass) {
+        Constructor<? extends V> constructor = (Constructor<? extends V>) constructorCache.get(viewClass);
         if (constructor == null) {
             try {
                 constructor = viewClass.getDeclaredConstructor(Context.class);
                 constructorCache.put(viewClass, constructor);
-                Log.d(TAG, "constructor for " + viewClass + " was created and put into cache");
+                Log.d(Utils.TAG_DEBUG, "constructor for " + viewClass + " was created and put into cache");
             } catch (NoSuchMethodException e) {
-                e.printStackTrace();
+                Log.e(Utils.TAG_ERROR, e.getMessage());
             }
         }
         return constructor;
@@ -97,6 +96,8 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
          */
         XmlResourceParser parser = parent.getResources().getLayout(R.layout.layout_params_hack);
         try {
+
+            //noinspection StatementWithEmptyBody
             while (parser.nextToken() != XmlPullParser.START_TAG) {
                 // Skip everything until the view tag.
             }
@@ -142,7 +143,7 @@ public abstract class Parser<T extends View> implements LayoutHandler<T> {
     }
 
     @Override
-    public void setupView(ParserContext context, ViewGroup parent, T view, JsonObject layout) {
+    public void setupView(ParserContext context, ProteusView parent, V view, JsonObject layout) {
         // nothing to do here
     }
 }

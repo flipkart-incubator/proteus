@@ -9,6 +9,7 @@ import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 12/05/14.
@@ -23,14 +24,14 @@ public class HorizontalScrollViewParser<T extends HorizontalScrollView> extends 
         super.prepareHandlers(context);
         addHandler(Attributes.HorizontalScrollView.FillViewPort, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 boolean fillViewPort = ParseHelper.parseBoolean(attributeValue);
                 view.setFillViewport(fillViewPort);
             }
         });
         addHandler(Attributes.ScrollView.Scrollbars, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 if ("none".equals(attributeValue)) {
                     view.setHorizontalScrollBarEnabled(false);
                     view.setVerticalScrollBarEnabled(false);

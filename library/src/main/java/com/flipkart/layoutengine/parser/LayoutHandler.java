@@ -17,14 +17,14 @@ import java.util.List;
  */
 public interface LayoutHandler<V extends View> {
 
-    V createView(ParserContext parserContext, Context context, ViewGroup parent, JsonObject object);
+    V createView(ParserContext parserContext, Context context, ProteusView parent, JsonObject layout);
 
     boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
                             JsonObject layout, ProteusView view, int childIndex);
 
     JsonArray parseChildren(ParserContext context, JsonElement element, int childIndex);
 
-    void setupView(ParserContext context, ViewGroup parent, V view, JsonObject layout);
+    void setupView(ParserContext context, ProteusView parent, V view, JsonObject layout);
 
     void prepare(Context context);
 

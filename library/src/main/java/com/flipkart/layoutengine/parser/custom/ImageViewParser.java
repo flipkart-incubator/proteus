@@ -11,6 +11,7 @@ import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.google.gson.JsonObject;
 
 
 /**
@@ -36,7 +37,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
 
         addHandler(Attributes.ImageView.ScaleType, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 ImageView.ScaleType scaleType = null;
                 scaleType = ParseHelper.parseScaleType(attributeValue);
                 if (scaleType != null)
@@ -46,7 +47,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
 
         addHandler(Attributes.ImageView.AdjustViewBounds, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 if ("true".equals(attributeValue)) {
                     view.setAdjustViewBounds(true);
                 } else {

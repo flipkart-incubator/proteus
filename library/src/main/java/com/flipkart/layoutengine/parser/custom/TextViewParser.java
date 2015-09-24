@@ -15,6 +15,7 @@ import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 12/05/14.
@@ -30,40 +31,40 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         super.prepareHandlers(context);
         addHandler(Attributes.TextView.HTML, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 view.setText(Html.fromHtml(attributeValue));
             }
         });
         addHandler(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 view.setText(attributeValue);
             }
         });
 
         addHandler(Attributes.TextView.DrawablePadding,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 view.setCompoundDrawablePadding(ParseHelper.parseDimension(attributeValue, context));
             }
         });
 
         addHandler(Attributes.TextView.TextSize,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 view.setTextSize(ParseHelper.parseDimension(attributeValue, context));
             }
         });
         addHandler(Attributes.TextView.Gravity,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 view.setGravity(ParseHelper.parseGravity(attributeValue));
             }
         });
 
         addHandler(Attributes.TextView.TextColor,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 view.setTextColor(ParseHelper.parseColor(attributeValue));
             }
         });
@@ -99,14 +100,14 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
 
         addHandler(Attributes.TextView.MaxLines,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 view.setMaxLines(ParseHelper.parseInt(attributeValue));
             }
         });
 
         addHandler(Attributes.TextView.Ellipsize,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 Enum ellipsize = ParseHelper.parseEllipsize(attributeValue);
                 view.setEllipsize((android.text.TextUtils.TruncateAt) ellipsize);
                }
@@ -114,7 +115,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
 
         addHandler(Attributes.TextView.PaintFlags,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 if(attributeValue.equals("strike"))
                     view.setPaintFlags(view.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
@@ -122,21 +123,21 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
 
         addHandler(Attributes.TextView.Prefix,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                     view.setText(attributeValue + view.getText());
             }
         });
 
         addHandler(Attributes.TextView.Suffix,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 view.setText(view.getText() + attributeValue);
             }
         });
 
         addHandler(Attributes.TextView.TextStyle,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 int typeface = ParseHelper.parseTypeFace(attributeValue);
                 view.setTypeface(Typeface.defaultFromStyle(typeface));
             }
@@ -144,14 +145,14 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
 
         addHandler(Attributes.TextView.SingleLine,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 view.setSingleLine(ParseHelper.parseBoolean(attributeValue));
             }
         });
 
         addHandler(Attributes.TextView.TextAllCaps,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
                     view.setAllCaps(ParseHelper.parseBoolean(attributeValue));
                 }
@@ -159,7 +160,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         });
         addHandler(Attributes.TextView.Hint,new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 view.setHint(attributeValue);
             }
         });

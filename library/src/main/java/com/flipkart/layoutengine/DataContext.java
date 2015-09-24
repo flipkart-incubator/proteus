@@ -23,8 +23,6 @@ import java.util.regex.Pattern;
  */
 public class DataContext {
 
-    public static final String TAG = Utils.getTagPrefix() + DataContext.class.getSimpleName();
-
     private List<DataContext> children;
     private JsonProvider dataProvider;
     private JsonObject reverseScope;
@@ -120,7 +118,7 @@ public class DataContext {
             try {
                 element = Utils.getElementFromData(value, dataProvider, childIndex);
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                Log.e(TAG + "#getNewDataContext()", "could not find: '" + value +
+                Log.e(Utils.TAG_ERROR + "#getNewDataContext()", "could not find: '" + value +
                         "' for '" + key + "'. ERROR: " + e.getMessage());
                 element = new JsonObject();
             }

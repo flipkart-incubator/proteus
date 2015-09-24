@@ -35,7 +35,6 @@ import java.util.regex.Matcher;
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
-    public static final String TAG = Utils.getTagPrefix() + DataParsingLayoutBuilder.class.getSimpleName();
     private Map<String, Formatter> formatter = new HashMap<>();
 
     protected DataParsingLayoutBuilder(Context context) {
@@ -46,7 +45,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     protected List<ProteusView> parseChildren(LayoutHandler handler, ParserContext context,
                                               ProteusView view, JsonObject parentLayout, int childIndex, Styles styles) {
 
-        Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
+        Log.d(TAG_DEBUG, "Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
         JsonElement childrenElement = parentLayout.get(ProteusConstants.CHILDREN);
 
         if (childrenElement != null &&
@@ -67,10 +66,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     length = Integer.parseInt(attributeValue);
                 }
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-                Log.e(TAG + "#parseChildren()", e.getMessage());
+                Log.e(TAG_ERROR + "#parseChildren()", e.getMessage());
                 length = 0;
             } catch (NumberFormatException e) {
-                Log.e(TAG + "#parseChildren()", childrenElement.getAsString() +
+                Log.e(TAG_ERROR + "#parseChildren()", childrenElement.getAsString() +
                         " is not a number. layout: " +
                         parentLayout.toString());
                 length = 0;
@@ -129,10 +128,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ProteusView buildImpl(ParserContext context, final ProteusView parent,
+    protected ProteusView buildImpl(ParserContext parserContext, final ProteusView parent,
                                     final JsonObject layout, final int childIndex, Styles styles) {
-        context = getNewParserContext(context, layout, childIndex);
-        return super.buildImpl(context, parent, layout, childIndex, styles);
+        parserContext = getNewParserContext(parserContext, layout, childIndex);
+        return super.buildImpl(parserContext, parent, layout, childIndex, styles);
     }
 
     @Override
@@ -140,7 +139,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                    String attributeName, JsonElement jsonDataValue, JsonObject layout,
                                    ProteusView associatedProteusView,
                                    ProteusView parent, int childIndex) {
-        Log.d(TAG, "Handle '" + attributeName + "' : " + jsonDataValue.toString()
+        Log.d(TAG_DEBUG, "Handle '" + attributeName + "' : " + jsonDataValue.toString()
                 + " for view with " + Utils.getLayoutIdentifier(layout));
         if (jsonDataValue.isJsonPrimitive()) {
             if (ProteusConstants.DATA_CONTEXT.equals(attributeName)) {
@@ -193,7 +192,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                     parserContext.getDataContext().getDataProvider(),
                                     parserContext.getDataContext().getIndex()).getAsString());
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
+                            Log.e(TAG_ERROR + "#findAndReplaceValues()", e.getMessage());
                             finalValue = dataPath;
                             failed = true;
                         }
@@ -211,7 +210,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                             parserContext.getDataContext().getIndex()),
                                     formatterName);
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
+                            Log.e(TAG_ERROR + "#findAndReplaceValues()", e.getMessage());
                             formattedValue = dataPath;
                             failed = true;
                         }
@@ -239,7 +238,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             parserContext.getDataContext().getDataProvider(),
                             childIndex);
                 } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                    Log.e(TAG + "#findAndReplaceValues()", e.getMessage());
+                    Log.e(TAG_ERROR + "#findAndReplaceValues()", e.getMessage());
                     failed = true;
                     elementFromData = new JsonPrimitive(ProteusConstants.DATA_NULL);
                 }
@@ -302,7 +301,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         DataContext oldDataContext = oldParserContext.getDataContext();
         if (oldDataContext.getDataProvider() == null) {
-            Log.e(TAG + "#getNewParserContext()", "When scope is specified, data provider cannot be null");
+            Log.e(TAG_ERROR + "#getNewParserContext()", "When scope is specified, data provider cannot be null");
             return oldParserContext;
         }
 
@@ -314,12 +313,12 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ProteusView createProteusViewToReturn(View createdView, JsonObject layout, int index, ProteusView parent) {
+    protected ProteusView createProteusView(View createdView, JsonObject layout, int index, ProteusView parent) {
         return new DataProteusView(new SimpleProteusView(createdView, layout, index, parent));
     }
 
     @Override
-    protected void prepareView(ProteusView proteusView, ParserContext parserContext) {
+    protected void prepareProteusView(ProteusView proteusView, ParserContext parserContext) {
         ((DataProteusView) proteusView).setParserContext(parserContext);
     }
 

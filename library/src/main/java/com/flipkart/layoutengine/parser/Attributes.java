@@ -1,5 +1,7 @@
 package com.flipkart.layoutengine.parser;
 
+import com.flipkart.layoutengine.parser.Attributes.Attribute.Priority;
+
 /**
  * @author kirankumar
  * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
@@ -54,6 +56,12 @@ public class Attributes {
         public static Attribute Clickable = new Attribute("clickable");
         public static Attribute OnClick = new Attribute("onClick");
         public static Attribute Border = new Attribute("border");
+
+        /**
+         * Meta Attributes
+         */
+        public static Attribute Children = new Attribute("children", Priority.LOWEST);
+        public static Attribute Style = new Attribute("style", Priority.LOW);
     }
 
     public static class WebView {
@@ -136,31 +144,39 @@ public class Attributes {
 
     public static class Attribute {
 
-        public enum PRIORITY {
-            HIGHEST(0),
-            HIGH(1000),
-            MEDIUM(2000),
-            LOW(3000),
-            LOWEST(4000);
+        public static class Priority {
+            public static Priority HIGHEST = new Priority(0);
+            public static Priority HIGH = new Priority(1000);
+            public static Priority MEDIUM = new Priority(2000);
+            public static Priority LOW = new Priority(3000);
+            public static Priority LOWEST = new Priority(4000);
 
             public final int value;
-            PRIORITY(int i) {
+
+            public Priority(int i) {
                 value = i;
             }
         }
 
         private final String name;
+        private final Priority priority;
 
         public Attribute(String name) {
             this.name = name;
+            this.priority = Priority.HIGH;
+        }
+
+        public Attribute(String name, Priority priority) {
+            this.name = name;
+            this.priority = priority;
         }
 
         public String getName() {
             return name;
         }
 
-        public int getPriority() {
-            return PRIORITY.HIGHEST.value;
+        public Priority getPriority() {
+            return this.priority;
         }
     }
 }

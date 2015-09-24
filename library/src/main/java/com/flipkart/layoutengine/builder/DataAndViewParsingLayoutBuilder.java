@@ -20,7 +20,6 @@ import com.google.gson.JsonObject;
  */
 public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
-    public static final String TAG = Utils.getTagPrefix() + DataAndViewParsingLayoutBuilder.class.getSimpleName();
     private Provider viewProvider;
 
     protected DataAndViewParsingLayoutBuilder(Context context, JsonObject viewProvider) {
@@ -37,7 +36,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
             try {
                 viewElement = viewProvider.getObject(viewType, childIndex);
             } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(Utils.TAG_ERROR, e.getMessage());
             }
         }
         if (viewElement != null) {

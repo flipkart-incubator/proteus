@@ -9,6 +9,7 @@ import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kirankumar on 10/07/14.
@@ -26,7 +27,7 @@ public class RelativeLayoutParser<T extends RelativeLayout> extends WrappablePar
         addHandler(Attributes.View.Gravity,new StringAttributeProcessor<T>() {
 
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
                 view.setGravity(ParseHelper.parseGravity(attributeValue));
             }
         });

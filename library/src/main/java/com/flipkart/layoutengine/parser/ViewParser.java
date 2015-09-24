@@ -28,9 +28,7 @@ import java.util.HashMap;
 /**
  * @author kiran.kumar
  */
-public class ViewParser<T extends View> extends Parser<T> {
-
-    private String TAG = Utils.getTagPrefix() + ViewParser.class.getSimpleName();
+public class ViewParser<V extends View> extends Parser<V> {
 
     public static final String ATTRIBUTE_BORDER_WIDTH = "width";
     public static final String ATTRIBUTE_BORDER_COLOR = "color";
@@ -43,9 +41,9 @@ public class ViewParser<T extends View> extends Parser<T> {
 
     protected void prepareHandlers(final Context context) {
 
-        addHandler(Attributes.View.OnClick, new EventProcessor<T>(context) {
+        addHandler(Attributes.View.OnClick, new EventProcessor<V>(context) {
             @Override
-            public void setOnEventListener(final T view, final ParserContext parserContext, final JsonElement attributeValue) {
+            public void setOnEventListener(final V view, final ParserContext parserContext, final JsonElement attributeValue) {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -54,9 +52,9 @@ public class ViewParser<T extends View> extends Parser<T> {
                 });
             }
         });
-        addHandler(Attributes.View.Background, new ResourceReferenceProcessor<T>(context) {
+        addHandler(Attributes.View.Background, new ResourceReferenceProcessor<V>(context) {
             @Override
-            public void setDrawable(T view, Drawable drawable) {
+            public void setDrawable(V view, Drawable drawable) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                     view.setBackgroundDrawable(drawable);
                 } else {
@@ -64,38 +62,38 @@ public class ViewParser<T extends View> extends Parser<T> {
                 }
             }
         });
-        addHandler(Attributes.View.Height, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.Height, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
                 layoutParams.height = ParseHelper.parseDimension(attributeValue, context);
                 view.setLayoutParams(layoutParams);
             }
         });
-        addHandler(Attributes.View.Width, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.Width, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
                 layoutParams.width = ParseHelper.parseDimension(attributeValue, context);
                 view.setLayoutParams(layoutParams);
             }
         });
-        addHandler(Attributes.View.Weight, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.Weight, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 LinearLayout.LayoutParams layoutParams;
                 if (view.getLayoutParams() instanceof LinearLayout.LayoutParams) {
                     layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
                     layoutParams.weight = ParseHelper.parseFloat(attributeValue);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    Log.e(TAG, attributeKey + " is only supported for linear containers");
+                    Log.e(Utils.TAG_ERROR, attributeKey + " is only supported for LinearLayouts");
                 }
             }
         });
-        addHandler(Attributes.View.LayoutGravity, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.LayoutGravity, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
 
                 if (layoutParams instanceof LinearLayout.LayoutParams) {
@@ -107,165 +105,163 @@ public class ViewParser<T extends View> extends Parser<T> {
                     linearLayoutParams.gravity = ParseHelper.parseGravity(attributeValue);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    throw new IllegalArgumentException(attributeKey + " is only supported for linearlayout and framelayout containers");
+                    Log.e(Utils.TAG_ERROR, attributeKey + " is only supported for LinearLayout and FrameLayout");
                 }
             }
         });
-        addHandler(Attributes.View.Padding, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.Padding, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(dimension, dimension, dimension, dimension);
             }
         });
-        addHandler(Attributes.View.PaddingLeft, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.PaddingLeft, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(dimension, view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
             }
         });
-        addHandler(Attributes.View.PaddingTop, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.PaddingTop, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(view.getPaddingLeft(), dimension, view.getPaddingRight(), view.getPaddingBottom());
             }
         });
-        addHandler(Attributes.View.PaddingRight, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.PaddingRight, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), dimension, view.getPaddingBottom());
             }
         });
-        addHandler(Attributes.View.PaddingBottom, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.PaddingBottom, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), dimension);
             }
         });
-        addHandler(Attributes.View.Margin, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.Margin, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
-                ViewGroup.MarginLayoutParams layoutParams;
-                try {
+                if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                    ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-                } catch (ClassCastException ex) {
-                    throw new IllegalArgumentException("margins can only be applied to views with parent viewgroups");
+                    layoutParams.setMargins(dimension, dimension, dimension, dimension);
+                    view.setLayoutParams(layoutParams);
+                } else {
+                    Log.e(Utils.TAG_ERROR, "margins can only be applied to views with parent ViewGroup");
                 }
-                layoutParams.setMargins(dimension, dimension, dimension, dimension);
-                view.setLayoutParams(layoutParams);
             }
         });
-        addHandler(Attributes.View.MarginLeft, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.MarginLeft, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
-                ViewGroup.MarginLayoutParams layoutParams;
-                try {
+                if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                    ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-                } catch (ClassCastException ex) {
-                    throw new IllegalArgumentException("margins can only be applied to views with parent viewgroups");
+                    layoutParams.setMargins(dimension, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
+                    view.setLayoutParams(layoutParams);
+                } else {
+                    Log.e(Utils.TAG_ERROR, "margins can only be applied to views with parent ViewGroup");
                 }
-                layoutParams.setMargins(dimension, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
-                view.setLayoutParams(layoutParams);
             }
         });
-        addHandler(Attributes.View.MarginTop, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.MarginTop, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
-                ViewGroup.MarginLayoutParams layoutParams;
-                try {
+                if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                    ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-                } catch (ClassCastException ex) {
-                    throw new IllegalArgumentException("margins can only be applied to views with parent viewgroups");
+                    layoutParams.setMargins(layoutParams.leftMargin, dimension, layoutParams.rightMargin, layoutParams.bottomMargin);
+                    view.setLayoutParams(layoutParams);
+                } else {
+                    Log.e(Utils.TAG_ERROR, "margins can only be applied to views with parent ViewGroup");
                 }
-                layoutParams.setMargins(layoutParams.leftMargin, dimension, layoutParams.rightMargin, layoutParams.bottomMargin);
-                view.setLayoutParams(layoutParams);
             }
         });
-        addHandler(Attributes.View.MarginRight, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.MarginRight, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
-                ViewGroup.MarginLayoutParams layoutParams;
-                try {
+                if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                    ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-                } catch (ClassCastException ex) {
-                    throw new IllegalArgumentException("margins can only be applied to views with parent viewgroups");
+                    layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, dimension, layoutParams.bottomMargin);
+                    view.setLayoutParams(layoutParams);
+                } else {
+                    Log.e(Utils.TAG_ERROR, "margins can only be applied to views with parent ViewGroup");
                 }
-                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, dimension, layoutParams.bottomMargin);
-                view.setLayoutParams(layoutParams);
             }
         });
-        addHandler(Attributes.View.MarginBottom, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.MarginBottom, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
-                ViewGroup.MarginLayoutParams layoutParams;
-                try {
+                if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                    ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
-                } catch (ClassCastException ex) {
-                    throw new IllegalArgumentException("margins can only be applied to views with parent viewgroups");
+                    layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, dimension);
+                    view.setLayoutParams(layoutParams);
+                } else {
+                    Log.e(Utils.TAG_ERROR, "margins can only be applied to views with parent ViewGroup");
                 }
-                layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, dimension);
-                view.setLayoutParams(layoutParams);
             }
         });
-        addHandler(Attributes.View.Alpha, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.Alpha, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 view.setAlpha(ParseHelper.parseFloat(attributeValue));
             }
         });
-        addHandler(Attributes.View.Visibility, new JsonDataProcessor<T>() {
+        addHandler(Attributes.View.Visibility, new JsonDataProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, V view, JsonObject layout) {
                 // noinspection ResourceType
                 view.setVisibility(ParseHelper.parseVisibility(attributeValue));
             }
         });
-        addHandler(Attributes.View.Invisibility, new JsonDataProcessor<T>() {
+        addHandler(Attributes.View.Invisibility, new JsonDataProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, V view, JsonObject layout) {
                 // noinspection ResourceType
                 view.setVisibility(ParseHelper.parseInvisibility(attributeValue));
             }
         });
-        addHandler(Attributes.View.Id, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.Id, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
-
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 view.setId(IdGenerator.getInstance().getUnique(attributeValue));
-
             }
         });
-        addHandler(Attributes.View.ContentDescription, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.ContentDescription, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 view.setContentDescription(attributeValue);
             }
         });
-        addHandler(Attributes.View.Clickable, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.Clickable, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 boolean clickable = ParseHelper.parseBoolean(attributeValue);
                 view.setClickable(clickable);
             }
         });
-        addHandler(Attributes.View.Tag, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.Tag, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 view.setTag(attributeValue);
             }
         });
-        addHandler(Attributes.View.Border, new JsonDataProcessor<T>() {
+        addHandler(Attributes.View.Border, new JsonDataProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, V view, JsonObject layout) {
                 if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
                     return;
                 }
@@ -332,18 +328,18 @@ public class ViewParser<T extends View> extends Parser<T> {
         relativeLayoutParams.put(Attributes.View.ToRightOf.getName(), RelativeLayout.RIGHT_OF);
         relativeLayoutParams.put(Attributes.View.ToStartOf.getName(), RelativeLayout.START_OF);
 
-        StringAttributeProcessor<T> relativeLayoutProcessor = new StringAttributeProcessor<T>() {
+        StringAttributeProcessor<V> relativeLayoutProcessor = new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int id = IdGenerator.getInstance().getUnique(attributeValue);
                 Integer rule = relativeLayoutParams.get(attributeKey);
                 ParseHelper.addRelativeLayoutRule(view, rule, id);
             }
         };
 
-        StringAttributeProcessor<T> relativeLayoutBooleanProcessor = new StringAttributeProcessor<T>() {
+        StringAttributeProcessor<V> relativeLayoutBooleanProcessor = new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 int trueOrFalse = ParseHelper.parseRelativeLayoutBoolean(attributeValue);
                 ParseHelper.addRelativeLayoutRule(view, relativeLayoutParams.get(attributeKey), trueOrFalse);
             }
