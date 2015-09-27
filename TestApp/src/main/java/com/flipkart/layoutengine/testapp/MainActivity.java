@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
@@ -15,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.flipkart.layoutengine.EventType;
@@ -32,7 +30,6 @@ import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
@@ -61,41 +58,23 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState == null) {
-            this.gson = new Gson();
+            gson = new Gson();
             styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
             createView();
-            //createRecyclerView();
         }
-    }
-
-    private void createRecyclerView() {
-        View view = getLayoutInflater().inflate(R.layout.activity_main, new LinearLayout(this));
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        final JsonArray specs = getJsonFromFile(R.raw.specifications).getAsJsonArray();
-        final JsonObject specsLayout = getJsonFromFile(R.raw.spec_layout).getAsJsonObject();
-        if (recyclerView != null) {
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(new ProteusViewHolderAdapter(specs,
-                    new LayoutBuilderFactory().getDataParsingLayoutBuilder(this),
-                    specsLayout));
-        }
-        setContentView(view);
     }
 
     private void createView() {
 
-        JsonObject layoutData = getJsonFromFile(R.raw.layout).getAsJsonObject();
-        layout = layoutData;
-        JsonObject productData = getJsonFromFile(R.raw.data_0).getAsJsonObject();
-        data = productData;
+        JsonObject layoutProvider = getJsonFromFile(R.raw.layout_provider).getAsJsonObject();
 
-        JsonElement sellerWidget = getJsonFromFile(R.raw.layout_seller_widget_0);
-        JsonObject layoutProvider = new JsonObject();
-        layoutProvider.add("SellerWidget", sellerWidget);
+        layout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
+        data = getJsonFromFile(R.raw.data_1).getAsJsonObject();
 
-        this.builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, layoutProvider);
+        builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, layoutProvider);
 
         builder.setListener(createCallback());
+
         builder.setBitmapLoader(new BitmapLoader() {
             @Override
             public Future<Bitmap> getBitmap(String imageUrl, View view) {
@@ -103,7 +82,7 @@ public class MainActivity extends ActionBarActivity {
             }
 
             @Override
-            public void getBitmap(final String imageUrl, final ImageLoaderCallBack imageLoaderCallBack, View view, JsonObject layout) {
+            public void getBitmap(String imageUrl, final ImageLoaderCallBack callback, View view, JsonObject layout) {
                 URL url;
                 try {
                     url = new URL(imageUrl);
@@ -118,36 +97,35 @@ public class MainActivity extends ActionBarActivity {
                         try {
                             return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
                         } catch (IOException e) {
-                            Log.e("img", e.getMessage());
+                            e.printStackTrace();
                         }
                         return null;
                     }
 
                     protected void onPostExecute(Bitmap result) {
-                        imageLoaderCallBack.onResponse(result);
+                        callback.onResponse(result);
                     }
                 }.execute(url);
             }
         });
 
-        this.container = new FrameLayout(MainActivity.this);
-        layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
+        container = new FrameLayout(MainActivity.this);
+        layoutParams = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+        );
 
         long startTime = System.currentTimeMillis();
 
-        this.proteusView = (DataProteusView) builder.build(container, layoutData, productData, 0, styles);
+        proteusView = (DataProteusView) builder.build(container, layout, data, 0, styles);
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
 
         Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
 
-        View view = proteusView.getView();
-        if (view != null) {
-            container.addView(view, layoutParams);
-        }
-        MainActivity.this.setContentView(container);
+        container.addView(proteusView.getView(), layoutParams);
+        setContentView(container);
     }
 
     private LayoutBuilderCallback createCallback() {
@@ -155,13 +133,13 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element,
-                                           JsonObject object, View view, int childIndex) {
-                Log.i("unknown-attib", attribute + " in " + object.toString());
+                                           JsonObject layout, View view, int childIndex) {
+                Log.i("unknown-attribute", attribute + " in " + layout.toString());
             }
 
             @Override
-            public ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject object,
-                                                 ProteusView parent, int childIndex) {
+            public ProteusView onUnknownViewType(ParserContext context, String viewType,
+                                                 JsonObject object, ProteusView parent, int childIndex) {
                 return null;
             }
 
@@ -210,67 +188,11 @@ public class MainActivity extends ActionBarActivity {
         long startTime, stopTime, elapsedTime;
         switch (id) {
             case R.id.action_new_data_1:
-                startTime = System.currentTimeMillis();
-
-                JsonObject newData = getJsonFromFile(R.raw.data_1).getAsJsonObject();
-                this.proteusView.updateData(newData);
-
-                stopTime = System.currentTimeMillis();
-                elapsedTime = stopTime - startTime;
-
-                Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
                 return true;
+
             case R.id.action_new_data_2:
-                startTime = System.currentTimeMillis();
-
-                JsonObject newData2 = getJsonFromFile(R.raw.data_2).getAsJsonObject();
-                this.proteusView.updateData(newData2);
-
-                stopTime = System.currentTimeMillis();
-                elapsedTime = stopTime - startTime;
-
-                Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
-                return true;
-            case R.id.action_refresh_data:
-                startTime = System.currentTimeMillis();
-
-                this.proteusView.set("product.title", "Intel Core i7 5400K", 0);
-                this.proteusView.set("product.rating.averageRating", 2.854, 0);
-                this.proteusView.set("product.rating.ratingCount", 126, 0);
-                this.proteusView.set("sellers_1[0].price", 18800, 0);
-                this.proteusView.set("sellers_1[1].price", 17100, 0);
-                this.proteusView.set("product.dateNull", "2018-01-01 12:01:37", 0);
-
-                JsonElement je = this.proteusView.get("sellers_1[0].price", -1);
-
-                stopTime = System.currentTimeMillis();
-                elapsedTime = stopTime - startTime;
-
-                Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
                 return true;
 
-            case R.id.action_refresh_layout:
-                JsonElement sellerWidget = getJsonFromFile(R.raw.layout_seller_widget_1);
-                JsonObject layoutProvider = new JsonObject();
-                layoutProvider.add("SellerWidget", sellerWidget);
-                builder.updateLayoutProvider(layoutProvider);
-
-                startTime = System.currentTimeMillis();
-
-                this.proteusView = (DataProteusView) builder.build(container, layout, data, 0, styles);
-
-                stopTime = System.currentTimeMillis();
-                elapsedTime = stopTime - startTime;
-
-                Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
-
-                View view = proteusView.getView();
-                if (view != null) {
-                    container.addView(view, layoutParams);
-                }
-                MainActivity.this.setContentView(container);
-
-                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -303,8 +225,6 @@ public class MainActivity extends ActionBarActivity {
 
         @Override
         public void onBindViewHolder(ProteusViewHolder viewHolder, int i) {
-            i = i;
-            viewHolder = viewHolder;
             viewHolder.getProteusItemView().updateData(specs.get(i).getAsJsonObject());
         }
 

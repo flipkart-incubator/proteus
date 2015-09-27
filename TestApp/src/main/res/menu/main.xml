@@ -1,25 +1,32 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.flipkart.layoutengine.testapp.MainActivity" >
-    
-    <item android:id="@+id/action_refresh_data"
-        android:title="@string/action_update_data"
-        android:orderInCategory="100"
-        app:showAsAction="never" />
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <item android:id="@+id/action_new_data_1"
-        android:title="@string/action_new_data_1"
+    <item
+        android:id="@+id/action_get_set_data"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        android:title="Get/Set Data"
+        app:showAsAction="never"
+        tools:ignore="HardcodedText" />
 
-    <item android:id="@+id/action_new_data_2"
-        android:title="@string/action_new_data_2"
+    <item
+        android:id="@+id/action_new_data_1"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        android:title="New Data #1"
+        app:showAsAction="never"
+        tools:ignore="HardcodedText" />
 
-    <item android:id="@+id/action_refresh_layout"
-        android:title="@string/action_update_layout"
+    <item
+        android:id="@+id/action_new_data_2"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        android:title="New Data #2"
+        app:showAsAction="never"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/action_new_data_3"
+        android:orderInCategory="100"
+        android:title="New Data #3"
+        app:showAsAction="never"
+        tools:ignore="HardcodedText" />
 </menu>

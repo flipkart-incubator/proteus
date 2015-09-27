@@ -2,6 +2,7 @@
   "type": "ScrollView",
   "layout_width": "match_parent",
   "layout_height": "match_parent",
+  "background": "#fefefe",
   "scrollbars": "none",
   "children": [
     {
