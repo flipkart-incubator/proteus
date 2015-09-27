@@ -1,6 +1,12 @@
 package com.flipkart.layoutengine.parser;
 
 import com.flipkart.layoutengine.parser.Attributes.Attribute.Priority;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author kirankumar
@@ -178,5 +184,43 @@ public class Attributes {
         public Priority getPriority() {
             return this.priority;
         }
+    }
+
+    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
+
+        JsonObject output = new JsonObject();
+        JsonObject types = new JsonObject();
+        JsonObject priorities = new JsonObject();
+        Map<Integer, String> map = new HashMap<>();
+
+        Field[] fields = Priority.class.getFields();
+        for (Field field : fields) {
+            if (field.getName().equals("value")) {
+                continue;
+            }
+            Priority priority = (Priority) Priority.class.getField(field.getName()).get(new Priority(0));
+            priorities.addProperty(field.getName(), priority.value);
+            map.put(priority.value, field.getName());
+        }
+
+        Class<?>[] list = Attributes.class.getDeclaredClasses();
+        for (Class type : list) {
+            JsonObject attributes = new JsonObject();
+            if (type.equals(Attribute.class)) {
+                continue;
+            }
+            for (Field field : type.getFields()) {
+                Attribute attribute = (Attribute) type.getField(field.getName()).get(null);
+                JsonObject value = new JsonObject();
+                value.addProperty("priority", map.get(attribute.getPriority().value));
+                attributes.add(attribute.getName(), value);
+            }
+            types.add(type.getSimpleName(), attributes);
+        }
+
+        output.add("types", types);
+        output.add("priority", priorities);
+
+        System.out.println(output.toString());
     }
 }
