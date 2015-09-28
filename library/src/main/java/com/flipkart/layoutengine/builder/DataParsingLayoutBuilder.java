@@ -136,44 +136,36 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Override
     public boolean handleAttribute(LayoutHandler handler, ParserContext context,
-                                   String attributeName, JsonElement jsonDataValue, JsonObject layout,
-                                   ProteusView associatedProteusView,
+                                   String attributeName, JsonElement element,
+                                   JsonObject layout, ProteusView proteusView,
                                    ProteusView parent, int childIndex) {
-        Log.d(TAG_DEBUG, "Handle '" + attributeName + "' : " + jsonDataValue.toString()
-                + " for view with " + Utils.getLayoutIdentifier(layout));
-        if (jsonDataValue.isJsonPrimitive()) {
-            if (ProteusConstants.DATA_CONTEXT.equals(attributeName)) {
-                return true;
-            }
-            jsonDataValue = this.findAndReplaceValues(jsonDataValue,
-                    context,
-                    handler,
-                    attributeName,
-                    associatedProteusView,
-                    layout,
-                    childIndex);
+
+        if (ProteusConstants.DATA_CONTEXT.equals(attributeName)) {
+            return true;
         }
-        return super.handleAttribute(handler,
-                context,
-                attributeName,
-                jsonDataValue, layout,
-                associatedProteusView,
-                parent,
-                childIndex);
+        if (element.isJsonPrimitive()) {
+            element = this.findAndReplaceValues(element, context, handler, attributeName,
+                    proteusView, layout, childIndex);
+        }
+        return super.handleAttribute(handler, context, attributeName, element, layout,
+                proteusView, parent, childIndex);
     }
 
-    private JsonElement findAndReplaceValues(JsonElement jsonDataValue, ParserContext parserContext,
+    private JsonElement findAndReplaceValues(JsonElement element, ParserContext parserContext,
                                              LayoutHandler handler, String attributeName,
-                                             ProteusView proteusView, JsonObject viewJsonObject,
+                                             ProteusView proteusView, JsonObject layout,
                                              int childIndex) {
 
         boolean failed = false;
-        String attributeValue = jsonDataValue.getAsString();
+        String attributeValue = element.getAsString();
         DataProteusView dataProteusView = (DataProteusView) proteusView;
 
         if (attributeValue != null && !"".equals(attributeValue) &&
                 (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX ||
                         attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX)) {
+
+            Log.d(TAG_DEBUG, "Find '" + element.toString() + "' for " + attributeName
+                    + " for view with " + Utils.getLayoutIdentifier(layout));
 
             if (attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX) {
                 Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(attributeValue);
@@ -229,7 +221,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 finalValue = finalValue.substring(1);
 
                 // return as a JsonPrimitive
-                jsonDataValue = new JsonPrimitive(finalValue);
+                element = new JsonPrimitive(finalValue);
 
             } else if (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX) {
                 JsonElement elementFromData;
@@ -244,7 +236,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 }
 
                 if (elementFromData != null) {
-                    jsonDataValue = elementFromData;
+                    element = elementFromData;
                 }
                 addBinding(dataProteusView,
                         attributeValue.substring(1),
@@ -256,10 +248,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
             if (dataProteusView.getView() != null) {
                 if (failed) {
-                    if (viewJsonObject != null
-                            && !viewJsonObject.isJsonNull()
-                            && viewJsonObject.get(Attributes.View.Visibility.getName()) != null) {
-                        String visibility = viewJsonObject.get(Attributes.View.Visibility.getName()).getAsString();
+                    if (layout != null
+                            && !layout.isJsonNull()
+                            && layout.get(Attributes.View.Visibility.getName()) != null) {
+                        String visibility = layout.get(Attributes.View.Visibility.getName()).getAsString();
                         if (ProteusConstants.DATA_VISIBILITY.equals(visibility)) {
                             dataProteusView.getView().setVisibility(View.INVISIBLE);
                         }
@@ -272,7 +264,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             }
         }
 
-        return jsonDataValue;
+        return element;
     }
 
     private void addBinding(DataProteusView dataProteusView, String bindingName, String attributeName,
