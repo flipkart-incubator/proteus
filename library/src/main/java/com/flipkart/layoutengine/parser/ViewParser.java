@@ -303,6 +303,14 @@ public class ViewParser<V extends View> extends Parser<V> {
             }
         });
 
+        addHandler(Attributes.View.Enable, new StringAttributeProcessor<V>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+                boolean enabled = ParseHelper.parseBoolean(attributeValue);
+                view.setEnabled(enabled);
+            }
+        });
+
         final HashMap<String, Integer> relativeLayoutParams = new HashMap<>();
         relativeLayoutParams.put(Attributes.View.Above.getName(), RelativeLayout.ABOVE);
         relativeLayoutParams.put(Attributes.View.AlignBaseline.getName(), RelativeLayout.ALIGN_BASELINE);
@@ -369,6 +377,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         addHandler(Attributes.View.CenterHorizontal, relativeLayoutBooleanProcessor);
         addHandler(Attributes.View.CenterInParent, relativeLayoutBooleanProcessor);
         addHandler(Attributes.View.CenterVertical, relativeLayoutBooleanProcessor);
+
 
     }
 }

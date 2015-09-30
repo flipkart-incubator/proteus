@@ -66,8 +66,11 @@ public class Attributes {
         /**
          * Meta Attributes
          */
+        public static Attribute Type = new Attribute("type", Priority.HIGHEST);
+        public static Attribute DataContext = new Attribute("dataContext", Priority.HIGHEST);
         public static Attribute Children = new Attribute("children", Priority.LOWEST);
-        public static Attribute Style = new Attribute("style", Priority.LOW);
+        public static Attribute Enable = new Attribute("enable", Priority.LOW);
+        public static Attribute Style = new Attribute("style", Priority.MEDIUM);
     }
 
     public static class WebView {
