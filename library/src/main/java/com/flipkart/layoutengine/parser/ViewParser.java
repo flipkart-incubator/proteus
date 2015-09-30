@@ -18,7 +18,9 @@ import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
+import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -308,6 +310,22 @@ public class ViewParser<V extends View> extends Parser<V> {
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
                 boolean enabled = ParseHelper.parseBoolean(attributeValue);
                 view.setEnabled(enabled);
+            }
+        });
+
+        addHandler(Attributes.View.Style, new StringAttributeProcessor<V>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+                Styles styles = parserContext.getStyles();
+                if (styles == null) {
+                    return;
+                }
+                String[] styleSet = layout.get(ProteusConstants.STYLE).getAsString().split(ProteusConstants.STYLE_DELIMITER);
+                for (String styleName : styleSet) {
+                    if (styles.contains(styleName)) {
+                        processStyle(styles.getStyle(styleName), layout, proteusView, handler, parserContext, parent, childIndex);
+                    }
+                }
             }
         });
 
