@@ -13,6 +13,7 @@ import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonObject;
 
 /**
@@ -28,7 +29,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
         super.prepareHandlers(context);
         addHandler(Attributes.LinearLayout.Orientation, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 if ("horizontal".equals(attributeValue)) {
                     view.setOrientation(LinearLayout.HORIZONTAL);
                 } else {
@@ -39,7 +40,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
 
         addHandler(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
 
                 view.setGravity(ParseHelper.parseGravity(attributeValue));
 
@@ -60,7 +61,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
         addHandler(Attributes.LinearLayout.DividerPadding, new StringAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
 
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
                     view.setDividerPadding(ParseHelper.parseInt(attributeValue));
@@ -71,7 +72,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
         addHandler(Attributes.LinearLayout.ShowDividers, new StringAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
 
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
                     int dividerMode = ParseHelper.parseDividerMode(attributeValue);
@@ -84,7 +85,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
         addHandler(Attributes.LinearLayout.WeightSum, new StringAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setWeightSum(ParseHelper.parseFloat(attributeValue));
             }
         });

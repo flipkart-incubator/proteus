@@ -7,6 +7,7 @@ import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonObject;
 
 /**
@@ -22,13 +23,13 @@ public class WebViewParser<T extends android.webkit.WebView> extends WrappablePa
         super.prepareHandlers(context);
         addHandler(Attributes.WebView.Url, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.loadUrl(attributeValue);
             }
         });
         addHandler(Attributes.WebView.HTML, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.loadData(attributeValue, "text/html", "UTF-8");
             }
         });

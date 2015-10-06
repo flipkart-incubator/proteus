@@ -14,6 +14,7 @@ import android.webkit.URLUtil;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.toolbox.NetworkDrawableHelper;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * Use this as the base processor for references like @drawable or remote resources with http:// urls.
  */
-public abstract class ResourceReferenceProcessor<T extends View> extends AttributeProcessor<T> {
+public abstract class ResourceReferenceProcessor<V extends View> extends AttributeProcessor<V> {
 
     private static final String TAG = ResourceReferenceProcessor.class.getSimpleName();
     private Context context;
@@ -35,11 +36,12 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
     }
 
     @Override
-    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue,
+                       V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
         if (attributeValue.isJsonPrimitive()) {
-            handleString(parserContext, attributeKey, attributeValue.getAsString(), view, layout);
+            handleString(parserContext, attributeKey, attributeValue.getAsString(), view, proteusView, parent, layout, index);
         } else if (attributeValue.isJsonObject()) {
-            handleElement(parserContext, attributeKey, attributeValue, view, layout);
+            handleElement(parserContext, attributeKey, attributeValue, view, proteusView, parent, layout, index);
         } else {
             Log.e(TAG + ".handle()", "Resource for key: " + attributeKey
                     + " must be a primitive or an object. value -> " + attributeValue.toString());
@@ -50,15 +52,17 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
      * This block handles different drawables.
      * Selector and LayerListDrawable are handled here.
      * Override this to handle more types of drawables
-     *
-     * @param parserContext
+     *  @param parserContext
      * @param attributeKey
      * @param attributeValue
      * @param view
+     * @param proteusView
+     * @param parent
      * @param layout
      */
     protected void handleElement(ParserContext parserContext, String attributeKey,
-                                 JsonElement attributeValue, T view, JsonObject layout) {
+                                 JsonElement attributeValue, V view, ProteusView proteusView,
+                                 ProteusView parent, JsonObject layout, int index) {
 
         JsonObject jsonObject = attributeValue.getAsJsonObject();
 
@@ -73,13 +77,13 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
                     JsonObject child = childElement.getAsJsonObject();
                     final Pair<int[], String> state = ParseHelper.parseState(child);
                     if (state != null) {
-                        ResourceReferenceProcessor<T> processor = new ResourceReferenceProcessor<T>(context) {
+                        ResourceReferenceProcessor<V> processor = new ResourceReferenceProcessor<V>(context) {
                             @Override
-                            public void setDrawable(T view, Drawable drawable) {
+                            public void setDrawable(V view, Drawable drawable) {
                                 stateListDrawable.addState(state.first, drawable);
                             }
                         };
-                        processor.handle(parserContext, attributeKey, new JsonPrimitive(state.second), view, layout);
+                        processor.handle(parserContext, attributeKey, new JsonPrimitive(state.second), view, proteusView, parent, layout, index);
                     }
 
                 }
@@ -94,20 +98,20 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
                     JsonObject child = childElement.getAsJsonObject();
                     final Pair<Integer, String> layerPair = ParseHelper.parseLayer(child);
 
-                    ResourceReferenceProcessor<T> processor = new ResourceReferenceProcessor<T>(context) {
+                    ResourceReferenceProcessor<V> processor = new ResourceReferenceProcessor<V>(context) {
                         @Override
-                        public void setDrawable(T view, Drawable drawable) {
+                        public void setDrawable(V view, Drawable drawable) {
                             drawables.add(new Pair<>(layerPair.first, drawable));
                             onLayerDrawableFinish(view, drawables);
                         }
                     };
-                    processor.handle(parserContext, attributeKey, new JsonPrimitive(layerPair.second), view, layout);
+                    processor.handle(parserContext, attributeKey, new JsonPrimitive(layerPair.second), view, proteusView, parent, layout, index);
                 }
             }
         }
     }
 
-    private void onLayerDrawableFinish(T view, List<Pair<Integer, Drawable>> drawables) {
+    private void onLayerDrawableFinish(V view, List<Pair<Integer, Drawable>> drawables) {
         Drawable[] drawableContainer = new Drawable[drawables.size()];
         // iterate and create an array of drawables to be used for the constructor
         for (int i = 0; i < drawables.size(); i++) {
@@ -130,15 +134,16 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
 
     /**
      * Any string based drawables are handled here. Color, local resource and remote image urls.
-     *
-     * @param parserContext
+     *  @param parserContext
      * @param attributeKey
      * @param attributeValue
      * @param view
+     * @param proteusView
+     * @param parent
      * @param layout
      */
-    protected void handleString(ParserContext parserContext, String attributeKey,
-                                final String attributeValue, final T view, JsonObject layout) {
+    protected void handleString(ParserContext parserContext, String attributeKey, final String attributeValue,
+                                final V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
         boolean synchronousRendering = parserContext.getLayoutBuilder().isSynchronousRendering();
         if (ParseHelper.isColor(attributeValue)) {
             setDrawable(view, new ColorDrawable(ParseHelper.parseColor(attributeValue)));
@@ -171,6 +176,6 @@ public abstract class ResourceReferenceProcessor<T extends View> extends Attribu
 
     }
 
-    public abstract void setDrawable(T view, Drawable drawable);
+    public abstract void setDrawable(V view, Drawable drawable);
 
 }

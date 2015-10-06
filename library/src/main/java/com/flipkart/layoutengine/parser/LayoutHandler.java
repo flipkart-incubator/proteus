@@ -20,7 +20,7 @@ public interface LayoutHandler<V extends View> {
     V createView(ParserContext parserContext, Context context, ProteusView parent, JsonObject layout);
 
     boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
-                            JsonObject layout, ProteusView view, int childIndex);
+                            JsonObject layout, V view, ProteusView proteusView, ProteusView parent, int childIndex);
 
     JsonArray parseChildren(ParserContext context, JsonElement element, int childIndex);
 

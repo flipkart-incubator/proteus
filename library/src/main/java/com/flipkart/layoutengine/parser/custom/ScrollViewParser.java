@@ -8,6 +8,7 @@ import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonObject;
 
 /**
@@ -23,7 +24,7 @@ public class ScrollViewParser<T extends ScrollView> extends WrappableParser<T> {
         super.prepareHandlers(context);
         addHandler(Attributes.ScrollView.Scrollbars, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 if ("none".equals(attributeValue)) {
                     view.setHorizontalScrollBarEnabled(false);
                     view.setVerticalScrollBarEnabled(false);

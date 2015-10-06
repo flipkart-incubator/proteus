@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
@@ -22,10 +23,12 @@ import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.toolbox.Utils;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author kiran.kumar
@@ -66,7 +69,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.Height, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
                 layoutParams.height = ParseHelper.parseDimension(attributeValue, context);
                 view.setLayoutParams(layoutParams);
@@ -74,7 +77,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.Width, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
                 layoutParams.width = ParseHelper.parseDimension(attributeValue, context);
                 view.setLayoutParams(layoutParams);
@@ -82,7 +85,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.Weight, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 LinearLayout.LayoutParams layoutParams;
                 if (view.getLayoutParams() instanceof LinearLayout.LayoutParams) {
                     layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
@@ -95,7 +98,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.LayoutGravity, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
 
                 if (layoutParams instanceof LinearLayout.LayoutParams) {
@@ -113,42 +116,42 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.Padding, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(dimension, dimension, dimension, dimension);
             }
         });
         addHandler(Attributes.View.PaddingLeft, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(dimension, view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
             }
         });
         addHandler(Attributes.View.PaddingTop, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(view.getPaddingLeft(), dimension, view.getPaddingRight(), view.getPaddingBottom());
             }
         });
         addHandler(Attributes.View.PaddingRight, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), dimension, view.getPaddingBottom());
             }
         });
         addHandler(Attributes.View.PaddingBottom, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), dimension);
             }
         });
         addHandler(Attributes.View.Margin, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
@@ -162,7 +165,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.MarginLeft, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
@@ -176,7 +179,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.MarginTop, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
@@ -190,7 +193,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.MarginRight, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
@@ -204,7 +207,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.MarginBottom, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int dimension = ParseHelper.parseDimension(attributeValue, context);
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
@@ -218,52 +221,52 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.Alpha, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setAlpha(ParseHelper.parseFloat(attributeValue));
             }
         });
         addHandler(Attributes.View.Visibility, new JsonDataProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 // noinspection ResourceType
                 view.setVisibility(ParseHelper.parseVisibility(attributeValue));
             }
         });
         addHandler(Attributes.View.Invisibility, new JsonDataProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 // noinspection ResourceType
                 view.setVisibility(ParseHelper.parseInvisibility(attributeValue));
             }
         });
         addHandler(Attributes.View.Id, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setId(IdGenerator.getInstance().getUnique(attributeValue));
             }
         });
         addHandler(Attributes.View.ContentDescription, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setContentDescription(attributeValue);
             }
         });
         addHandler(Attributes.View.Clickable, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 boolean clickable = ParseHelper.parseBoolean(attributeValue);
                 view.setClickable(clickable);
             }
         });
         addHandler(Attributes.View.Tag, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setTag(attributeValue);
             }
         });
         addHandler(Attributes.View.Border, new JsonDataProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
                     return;
                 }
@@ -307,7 +310,7 @@ public class ViewParser<V extends View> extends Parser<V> {
 
         addHandler(Attributes.View.Enable, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 boolean enabled = ParseHelper.parseBoolean(attributeValue);
                 view.setEnabled(enabled);
             }
@@ -315,16 +318,29 @@ public class ViewParser<V extends View> extends Parser<V> {
 
         addHandler(Attributes.View.Style, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 Styles styles = parserContext.getStyles();
+                LayoutHandler handler = parserContext.getLayoutBuilder().getHandler(Utils.getPropertyAsString(layout, ProteusConstants.TYPE));
                 if (styles == null) {
                     return;
                 }
-                String[] styleSet = layout.get(ProteusConstants.STYLE).getAsString().split(ProteusConstants.STYLE_DELIMITER);
+                String[] styleSet = attributeValue.split(ProteusConstants.STYLE_DELIMITER);
                 for (String styleName : styleSet) {
                     if (styles.contains(styleName)) {
-                        processStyle(styles.getStyle(styleName), layout, proteusView, handler, parserContext, parent, childIndex);
+                        process(styles.getStyle(styleName), layout, proteusView,  (handler != null ? handler : ViewParser.this),
+                                parserContext.getLayoutBuilder(), parserContext, parent, index);
                     }
+                }
+            }
+
+            private void process(Map<String, JsonElement> style, JsonObject layout, ProteusView proteusView, LayoutHandler handler,
+                                 LayoutBuilder builder, ParserContext parserContext, ProteusView parent, int index) {
+                for (Map.Entry<String, JsonElement> attribute : style.entrySet()) {
+                    if (layout.has(attribute.getKey())) {
+                        continue;
+                    }
+                    builder.handleAttribute(handler, parserContext, attribute.getKey(), attribute.getValue(),
+                            layout, proteusView, parent, index);
                 }
             }
         });
@@ -356,7 +372,7 @@ public class ViewParser<V extends View> extends Parser<V> {
 
         StringAttributeProcessor<V> relativeLayoutProcessor = new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int id = IdGenerator.getInstance().getUnique(attributeValue);
                 Integer rule = relativeLayoutParams.get(attributeKey);
                 ParseHelper.addRelativeLayoutRule(view, rule, id);
@@ -365,7 +381,7 @@ public class ViewParser<V extends View> extends Parser<V> {
 
         StringAttributeProcessor<V> relativeLayoutBooleanProcessor = new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int trueOrFalse = ParseHelper.parseRelativeLayoutBoolean(attributeValue);
                 ParseHelper.addRelativeLayoutRule(view, relativeLayoutParams.get(attributeKey), trueOrFalse);
             }

@@ -114,8 +114,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         for (Map.Entry<String, JsonElement> entry : layout.entrySet()) {
             if (ProteusConstants.TYPE.equals(entry.getKey())
                     || ProteusConstants.CHILDREN.equals(entry.getKey())
-                    || ProteusConstants.CHILD_TYPE.equals(entry.getKey())
-                    || ProteusConstants.STYLE.equals(entry.getKey())) {
+                    || ProteusConstants.CHILD_TYPE.equals(entry.getKey())) {
                 continue;
             }
 
@@ -126,21 +125,6 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             if (!handled) {
                 onUnknownAttributeEncountered(parserContext, attributeName, element, layout,
                         view, childIndex);
-            }
-        }
-
-        /**
-         * Process the Styles
-         */
-        if (styles != null
-                && layout.has(ProteusConstants.STYLE)
-                && !layout.get(ProteusConstants.STYLE).isJsonNull()
-                && layout.get(ProteusConstants.STYLE).isJsonPrimitive()) {
-            String[] styleSet = layout.get(ProteusConstants.STYLE).getAsString().split(ProteusConstants.STYLE_DELIMITER);
-            for (String styleName : styleSet) {
-                if (styles.contains(styleName)) {
-                    processStyle(styles.getStyle(styleName), layout, proteusView, handler, parserContext, parent, childIndex);
-                }
             }
         }
 
@@ -261,27 +245,11 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         return childLayout;
     }
 
-    private void processStyle(Map<String, JsonElement> style, JsonObject layout, ProteusView view,
-                              LayoutHandler handler, ParserContext context, ProteusView parent, int index) {
-
-        for (Map.Entry<String, JsonElement> attribute : style.entrySet()) {
-            if (layout.has(attribute.getKey())) {
-                continue;
-            }
-            boolean handled = handleAttribute(handler, context, attribute.getKey(),
-                    attribute.getValue(), layout, view, parent, index);
-            if (!handled) {
-                onUnknownAttributeEncountered(context, attribute.getKey(), attribute.getValue(),
-                        layout, view.getView(), index);
-            }
-        }
-    }
-
     public boolean handleAttribute(LayoutHandler handler, ParserContext context,
                                    String attribute, JsonElement element, JsonObject layout,
                                    ProteusView view, ProteusView parent, int index) {
         Log.d(TAG_DEBUG, "Handle '" + attribute + "' : " + element.toString() + " for view with " + Utils.getLayoutIdentifier(layout));
-        return handler.handleAttribute(context, attribute, element, layout, view, index);
+        return handler.handleAttribute(context, attribute, element, layout, view.getView(), view, parent, index);
     }
 
     protected void onUnknownAttributeEncountered(ParserContext context, String attribute,

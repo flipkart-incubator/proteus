@@ -18,6 +18,7 @@ import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.toolbox.Utils;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -35,19 +36,19 @@ public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T>
         super.prepareHandlers(context);
         addHandler(Attributes.ProgressBar.Max, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setMax((int) ParseHelper.parseDouble(attributeValue));
             }
         });
         addHandler(Attributes.ProgressBar.Progress, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setProgress((int) ParseHelper.parseDouble(attributeValue));
             }
         });
         addHandler(Attributes.ProgressBar.ProgressTint, new JsonDataProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
+            public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
                     return;
                 }
