@@ -1,7 +1,6 @@
 package com.flipkart.layoutengine.parser;
 
 import com.flipkart.layoutengine.parser.Attributes.Attribute.Priority;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.lang.reflect.Field;

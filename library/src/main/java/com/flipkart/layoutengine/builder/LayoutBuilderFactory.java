@@ -96,6 +96,7 @@ public class LayoutBuilderFactory {
      *
      * @param layoutBuilder The layout builder which will have handlers registered to it.
      */
+    @SuppressWarnings("unchecked")
     protected void registerBuiltInHandlers(LayoutBuilder layoutBuilder) {
         ViewParser viewParser = new ViewParser(View.class);
         ImageViewParser imageViewParser = new ImageViewParser(viewParser);

@@ -1,5 +1,6 @@
 package com.flipkart.layoutengine.widgets;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -11,13 +12,14 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
 import android.graphics.drawable.shapes.Shape;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.RatingBar;
 
 /**
  * Rating bar code is full of bugs. For width of rating bar to be set correctly, sample tile width should be set
- * But since tilefy method is private and we are doing tilefication ourselves, sample tile should be maintained by us
+ * But since tilefy method is private and we are doing tile-fication ourselves, sample tile should be maintained by us
  * Created by kirankumar on 04/12/14.
  */
 public class FixedRatingBar extends RatingBar {
@@ -27,6 +29,7 @@ public class FixedRatingBar extends RatingBar {
         super(context, attrs, defStyleAttr);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public FixedRatingBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }

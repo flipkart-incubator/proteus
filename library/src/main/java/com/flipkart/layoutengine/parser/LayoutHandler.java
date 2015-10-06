@@ -2,7 +2,6 @@ package com.flipkart.layoutengine.parser;
 
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.view.ProteusView;

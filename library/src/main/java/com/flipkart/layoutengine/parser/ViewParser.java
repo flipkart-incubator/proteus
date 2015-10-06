@@ -61,6 +61,7 @@ public class ViewParser<V extends View> extends Parser<V> {
             @Override
             public void setDrawable(V view, Drawable drawable) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    //noinspection deprecation
                     view.setBackgroundDrawable(drawable);
                 } else {
                     view.setBackground(drawable);
@@ -301,6 +302,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 border.setColor(bgColor);
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    //noinspection deprecation
                     view.setBackgroundDrawable(border);
                 } else {
                     view.setBackground(border);

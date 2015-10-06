@@ -65,6 +65,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
             Log.e(Utils.TAG_ERROR + "#createView()", e.getMessage());
         }
 
+        //noinspection unchecked
         return (V) v;
     }
 
@@ -75,6 +76,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
      * @return Constructor of that class
      */
     protected Constructor<? extends V> getContextConstructor(Class<V> viewClass) {
+        //noinspection unchecked
         Constructor<? extends V> constructor = (Constructor<? extends V>) constructorCache.get(viewClass);
         if (constructor == null) {
             try {
@@ -118,6 +120,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
         }
         AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
+            //noinspection unchecked
             attributeProcessor.handle(context, attribute, element, view, proteusView, parent, layout, childIndex);
             return true;
         }

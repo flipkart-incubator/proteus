@@ -151,6 +151,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected void setupView(ParserContext parserContext, ProteusView parent, View view,
                              LayoutHandler handler, JsonObject layout) {
+        //noinspection unchecked
         handler.setupView(parserContext, parent, view, layout);
     }
 
@@ -249,6 +250,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
                                    String attribute, JsonElement element, JsonObject layout,
                                    ProteusView view, ProteusView parent, int index) {
         Log.d(TAG_DEBUG, "Handle '" + attribute + "' : " + element.toString() + " for view with " + Utils.getLayoutIdentifier(layout));
+        //noinspection unchecked
         return handler.handleAttribute(context, attribute, element, layout, view.getView(), view, parent, index);
     }
 
