@@ -310,7 +310,7 @@ public class ViewParser<V extends View> extends Parser<V> {
             }
         });
 
-        addHandler(Attributes.View.Enable, new StringAttributeProcessor<V>() {
+        addHandler(Attributes.View.Enabled, new StringAttributeProcessor<V>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 boolean enabled = ParseHelper.parseBoolean(attributeValue);

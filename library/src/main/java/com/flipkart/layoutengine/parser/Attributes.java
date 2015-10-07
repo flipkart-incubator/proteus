@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * @author kirankumar
- * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
+ * @author aditya.sharat
  */
 public class Attributes {
 
@@ -68,7 +68,7 @@ public class Attributes {
         public static Attribute Type = new Attribute("type", Priority.HIGHEST);
         public static Attribute DataContext = new Attribute("dataContext", Priority.HIGHEST);
         public static Attribute Children = new Attribute("children", Priority.LOWEST);
-        public static Attribute Enable = new Attribute("enable", Priority.LOW);
+        public static Attribute Enabled = new Attribute("enabled", Priority.LOW);
         public static Attribute Style = new Attribute("style", Priority.MEDIUM);
     }
 
@@ -191,7 +191,6 @@ public class Attributes {
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
 
         JsonObject output = new JsonObject();
-        JsonObject types = new JsonObject();
         JsonObject priorities = new JsonObject();
         Map<Integer, String> map = new HashMap<>();
 
@@ -205,9 +204,9 @@ public class Attributes {
             map.put(priority.value, field.getName());
         }
 
+        JsonObject attributes = new JsonObject();
         Class<?>[] list = Attributes.class.getDeclaredClasses();
         for (Class type : list) {
-            JsonObject attributes = new JsonObject();
             if (type.equals(Attribute.class)) {
                 continue;
             }
@@ -217,10 +216,9 @@ public class Attributes {
                 value.addProperty("priority", map.get(attribute.getPriority().value));
                 attributes.add(attribute.getName(), value);
             }
-            types.add(type.getSimpleName(), attributes);
         }
 
-        output.add("types", types);
+        output.add("all", attributes);
         output.add("priority", priorities);
 
         System.out.println(output.toString());
