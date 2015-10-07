@@ -1,8 +1,15 @@
 package com.flipkart.layoutengine.parser;
 
+import com.flipkart.layoutengine.parser.Attributes.Attribute.Priority;
+import com.google.gson.JsonObject;
+
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author kirankumar
- * @author Aditya Sharat {@literal <aditya.sharat@flipkart.com>}
+ * @author aditya.sharat
  */
 public class Attributes {
 
@@ -54,6 +61,15 @@ public class Attributes {
         public static Attribute Clickable = new Attribute("clickable");
         public static Attribute OnClick = new Attribute("onClick");
         public static Attribute Border = new Attribute("border");
+
+        /**
+         * Meta Attributes
+         */
+        public static Attribute Type = new Attribute("type", Priority.HIGHEST);
+        public static Attribute DataContext = new Attribute("dataContext", Priority.HIGHEST);
+        public static Attribute Children = new Attribute("children", Priority.LOWEST);
+        public static Attribute Enabled = new Attribute("enabled", Priority.LOW);
+        public static Attribute Style = new Attribute("style", Priority.MEDIUM);
     }
 
     public static class WebView {
@@ -136,31 +152,75 @@ public class Attributes {
 
     public static class Attribute {
 
-        public enum PRIORITY {
-            HIGHEST(0),
-            HIGH(1000),
-            MEDIUM(2000),
-            LOW(3000),
-            LOWEST(4000);
+        public static class Priority {
+            public static Priority HIGHEST = new Priority(0);
+            public static Priority HIGH = new Priority(1000);
+            public static Priority MEDIUM = new Priority(2000);
+            public static Priority LOW = new Priority(3000);
+            public static Priority LOWEST = new Priority(4000);
 
             public final int value;
-            PRIORITY(int i) {
+
+            public Priority(int i) {
                 value = i;
             }
         }
 
         private final String name;
+        private final Priority priority;
 
         public Attribute(String name) {
             this.name = name;
+            this.priority = Priority.HIGH;
+        }
+
+        public Attribute(String name, Priority priority) {
+            this.name = name;
+            this.priority = priority;
         }
 
         public String getName() {
             return name;
         }
 
-        public int getPriority() {
-            return PRIORITY.HIGHEST.value;
+        public Priority getPriority() {
+            return this.priority;
         }
+    }
+
+    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
+
+        JsonObject output = new JsonObject();
+        JsonObject priorities = new JsonObject();
+        Map<Integer, String> map = new HashMap<>();
+
+        Field[] fields = Priority.class.getFields();
+        for (Field field : fields) {
+            if (field.getName().equals("value")) {
+                continue;
+            }
+            Priority priority = (Priority) Priority.class.getField(field.getName()).get(new Priority(0));
+            priorities.addProperty(field.getName(), priority.value);
+            map.put(priority.value, field.getName());
+        }
+
+        JsonObject attributes = new JsonObject();
+        Class<?>[] list = Attributes.class.getDeclaredClasses();
+        for (Class type : list) {
+            if (type.equals(Attribute.class)) {
+                continue;
+            }
+            for (Field field : type.getFields()) {
+                Attribute attribute = (Attribute) type.getField(field.getName()).get(null);
+                JsonObject value = new JsonObject();
+                value.addProperty("priority", map.get(attribute.getPriority().value));
+                attributes.add(attribute.getName(), value);
+            }
+        }
+
+        output.add("all", attributes);
+        output.add("priority", priorities);
+
+        System.out.println(output.toString());
     }
 }

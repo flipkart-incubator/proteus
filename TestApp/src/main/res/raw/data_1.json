@@ -1,33 +1,17 @@
 {
   "product": {
-    "title": "Intel Core i7, 4th Gen",
-    "subTitle": "2.7 GHz, Turbo boost upto 3.2GHz",
+    "title": "Intel Xenon, 4th Gen",
+    "subTitle": "4.0 GHz",
     "rating": {
-      "averageRating": 4.56257,
-      "ratingCount": 271,
+      "averageRating": 4.94584,
+      "ratingCount": 2071,
       "4": 150
     },
-    "tags": ["Hi", "there!", "I'm", "Proteus", "updated."],
+    "tags": ["Hi", "there!", "I'm", "Proteus"],
     "date": "2015-06-18 12:01:37",
     "dateNull": null,
     "float": 4.56257,
-    "isFK": true
+    "isFK": null
   },
-  "sellers_1": [
-    {
-      "name": "Retailer 1.1",
-      "price": 13200,
-      "rating": 3.2
-    },
-    {
-      "name": "Retailer 2.1",
-      "price": 13800,
-      "rating": 4.3
-    },
-    {
-      "name": "Retailer 3",
-      "price": 10000,
-      "rating": 3.2
-    }
-  ]
+  "sellers_1": []
 }

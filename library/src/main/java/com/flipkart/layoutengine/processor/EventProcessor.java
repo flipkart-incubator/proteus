@@ -6,6 +6,7 @@ import android.view.View;
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -17,19 +18,22 @@ import com.google.gson.JsonObject;
 public abstract class EventProcessor<T> extends AttributeProcessor<T> {
 
     private Context context;
+
     public EventProcessor(Context context) {
         this.context = context;
     }
 
     @Override
-    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, JsonObject layout) {
-        setOnEventListener(view,parserContext,attributeValue);
+    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue,
+                       T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+        setOnEventListener(view, parserContext, attributeValue);
     }
 
     public abstract void setOnEventListener(T view, ParserContext parserContext, JsonElement attributeValue);
 
     /**
      * This delegates Event with required attributes to client
+     *
      * @param parserContext
      * @param eventType
      * @param view

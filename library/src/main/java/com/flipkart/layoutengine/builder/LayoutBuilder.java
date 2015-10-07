@@ -21,7 +21,7 @@ public interface LayoutBuilder {
      * @param viewType The name of the view type.
      * @param handler  The {@link LayoutHandler} to use while building this view type.
      */
-    void registerHandler(String viewType, LayoutHandler<View> handler);
+    void registerHandler(String viewType, LayoutHandler handler);
 
     /**
      * Un-Register the {@link LayoutHandler} registered using {@link LayoutBuilder#registerHandler}.

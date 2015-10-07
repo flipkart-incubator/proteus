@@ -26,19 +26,19 @@ public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Override
     protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
-                                                   ProteusView parent, JsonObject viewJsonObject, int childIndex) {
+                                                   ProteusView parent, JsonObject layout, int childIndex) {
         JsonElement viewElement = null;
         if (viewProvider != null) {
             try {
                 viewElement = viewProvider.getObject(viewType, childIndex);
             } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(TAG_ERROR, e.getMessage());
             }
         }
         if (viewElement != null) {
             JsonObject viewLayoutObject = viewElement.getAsJsonObject();
-            return buildImpl(context, parent, viewLayoutObject, null, childIndex, parent.getStyles());
+            return buildImpl(context, parent, viewLayoutObject, childIndex, parent.getStyles());
         }
-        return super.onUnknownViewEncountered(context, viewType, parent, viewJsonObject, childIndex);
+        return super.onUnknownViewEncountered(context, viewType, parent, layout, childIndex);
     }
 }

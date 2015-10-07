@@ -13,14 +13,14 @@ public interface ImageLoaderCallBack {
      *
      * @param bitmap
      */
-    public void onResponse(Bitmap bitmap);
+    void onResponse(Bitmap bitmap);
 
-    public void handled();
+    void handled();
 
     /**
      * Used when response returned from client is due to an error
      *
      * @param errorMessage
      */
-    public void onErrorReceived(String errorMessage, Drawable errorDrawable);
+    void onErrorReceived(String errorMessage, Drawable errorDrawable);
 }

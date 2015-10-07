@@ -11,11 +11,11 @@ import com.google.gson.JsonObject;
 /**
  * @author kirankumar
  */
-public class WrappableParser<T extends View> extends Parser<T> {
+public class WrappableParser<V extends View> extends Parser<V> {
 
-    private final Parser<T> wrappedParser;
+    private final Parser<V> wrappedParser;
 
-    public WrappableParser(Class viewClass, Parser<T> wrappedParser) {
+    public WrappableParser(Class viewClass, Parser<V> wrappedParser) {
         super(viewClass);
         this.wrappedParser = wrappedParser;
     }
@@ -28,11 +28,12 @@ public class WrappableParser<T extends View> extends Parser<T> {
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element, JsonObject layout,
-                                   ProteusView view, int childIndex) {
-        boolean handled = super.handleAttribute(context, attribute, element, layout, view, childIndex);
+    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
+                                   JsonObject layout, V view, ProteusView proteusView, ProteusView parent, int childIndex) {
+
+        boolean handled = super.handleAttribute(context, attribute, element, layout, view, proteusView, parent, childIndex);
         if (wrappedParser != null && !handled) {
-            handled = wrappedParser.handleAttribute(context, attribute, element, layout, view, childIndex);
+            handled = wrappedParser.handleAttribute(context, attribute, element, layout, view, proteusView, parent, childIndex);
         }
         return handled;
     }

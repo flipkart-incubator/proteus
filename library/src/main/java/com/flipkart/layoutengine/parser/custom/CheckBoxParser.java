@@ -10,6 +10,8 @@ import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.flipkart.layoutengine.view.ProteusView;
+import com.google.gson.JsonObject;
 
 /**
  * Created by prateek.dixit on 1/8/15.
@@ -33,7 +35,7 @@ public class CheckBoxParser <T extends CheckBox> extends WrappableParser<T> {
 
         addHandler(Attributes.CheckBox.Checked, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setChecked(Boolean.parseBoolean(attributeValue));
             }
         });

@@ -26,8 +26,6 @@ import java.util.ArrayList;
  */
 public class DataProteusView extends SimpleProteusView {
 
-    public static final String TAG = Utils.getTagPrefix() + DataProteusView.class.getSimpleName();
-
     private boolean isViewUpdating = false;
     private String dataPathForChildren;
     private JsonObject childLayout;
@@ -72,7 +70,7 @@ public class DataProteusView extends SimpleProteusView {
 
     @Override
     protected View updateDataImpl(JsonObject data) {
-        Log.d(TAG, "START: update data " + (data != null ? "(top-level)" : "")
+        Log.d(Utils.TAG_DEBUG, "START: update data " + (data != null ? "(top-level)" : "")
                 + "for view with " + Utils.getLayoutIdentifier(layout));
         this.isViewUpdating = true;
         // update the data context so all child views can refer to new data
@@ -98,7 +96,7 @@ public class DataProteusView extends SimpleProteusView {
         }
 
         this.isViewUpdating = false;
-        Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "")
+        Log.d(Utils.TAG_DEBUG, "END: update data " + (data != null ? "(top-level)" : "")
                 + "for view with " + Utils.getLayoutIdentifier(layout));
         return this.getView();
     }
@@ -113,7 +111,7 @@ public class DataProteusView extends SimpleProteusView {
             childrenDataArray = Utils.getElementFromData(dataPathForChildren,
                     parserContext.getDataContext().getDataProvider(), index).getAsJsonArray();
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-            Log.e(TAG + "#updateChildrenFromData", e.getMessage());
+            Log.e(Utils.TAG_ERROR + "#updateChildrenFromData", e.getMessage());
         }
 
         if (children.size() > childrenDataArray.size()) {
@@ -164,7 +162,7 @@ public class DataProteusView extends SimpleProteusView {
                 dataValue = Utils.getElementFromData(binding.getBindingName(),
                         parserContext.getDataContext().getDataProvider(), index);
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                Log.e(TAG + "#handleBinding()", e.getMessage());
+                Log.e(Utils.TAG_ERROR + "#handleBinding()", e.getMessage());
                 if (getView() != null) {
                     getView().setVisibility(View.GONE);
                 }
@@ -216,7 +214,7 @@ public class DataProteusView extends SimpleProteusView {
             parent = Utils.getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
                     parserContext.getDataContext().getDataProvider(), childIndex);
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-            Log.e(TAG + "#set()", e.getMessage());
+            Log.e(Utils.TAG_ERROR + "#set()", e.getMessage());
         }
         if (parent == null || !parent.isJsonObject()) {
             return;

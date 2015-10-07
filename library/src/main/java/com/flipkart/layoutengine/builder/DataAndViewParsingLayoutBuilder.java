@@ -20,7 +20,6 @@ import com.google.gson.JsonObject;
  */
 public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
-    public static final String TAG = Utils.getTagPrefix() + DataAndViewParsingLayoutBuilder.class.getSimpleName();
     private Provider viewProvider;
 
     protected DataAndViewParsingLayoutBuilder(Context context, JsonObject viewProvider) {
@@ -30,24 +29,24 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
     @Override
     protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
-                                                   ProteusView parent, JsonObject viewJsonObject,
+                                                   ProteusView parent, JsonObject layout,
                                                    int childIndex) {
         JsonElement viewElement = null;
         if (viewProvider != null) {
             try {
                 viewElement = viewProvider.getObject(viewType, childIndex);
             } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
-                Log.e(TAG, e.getMessage());
+                Log.e(Utils.TAG_ERROR, e.getMessage());
             }
         }
         if (viewElement != null) {
             JsonObject viewLayoutObject = viewElement.getAsJsonObject();
-            ProteusView createdView = buildImpl(context, parent, viewLayoutObject, null, childIndex, parent.getStyles());
+            ProteusView createdView = buildImpl(context, parent, viewLayoutObject, childIndex, parent.getStyles());
             ParserContext newParserContext = getNewParserContext(context, viewLayoutObject, childIndex);
             onViewBuiltFromViewProvider(createdView, viewType, newParserContext, viewLayoutObject, parent, childIndex);
             return createdView;
         }
-        return super.onUnknownViewEncountered(context, viewType, parent, viewJsonObject, childIndex);
+        return super.onUnknownViewEncountered(context, viewType, parent, layout, childIndex);
     }
 
     public void updateLayoutProvider(JsonObject newViewProvider) {

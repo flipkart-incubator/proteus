@@ -20,9 +20,11 @@ import java.util.Map;
  * @author Aditya Sharat
  */
 public class Utils {
+
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "2.9.24-SNAPSHOT";
-    public static final String TAG = getTagPrefix() + Utils.class.getSimpleName();
+    public static final String VERSION = "2.9.28-SNAPSHOT";
+    public static final String TAG_DEBUG = Utils.getTagPrefix() + "debug";
+    public static final String TAG_ERROR = Utils.getTagPrefix() + "error";
 
     public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
             throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
@@ -137,10 +139,10 @@ public class Utils {
 
     public static String getPropertyAsString(JsonObject object, String property) {
         JsonElement element = object.get(property);
-        String string;
         if (element == null) {
             return null;
         }
+        String string;
         if (!element.isJsonNull() && element.isJsonPrimitive()) {
             string = element.getAsString();
         } else {
