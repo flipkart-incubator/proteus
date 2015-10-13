@@ -104,6 +104,7 @@ public class ViewParser<V extends View> extends Parser<V> {
 
                 if (layoutParams instanceof LinearLayout.LayoutParams) {
                     LinearLayout.LayoutParams linearLayoutParams = (LinearLayout.LayoutParams) layoutParams;
+                    //noinspection ResourceType
                     linearLayoutParams.gravity = ParseHelper.parseGravity(attributeValue);
                     view.setLayoutParams(layoutParams);
                 } else if (layoutParams instanceof FrameLayout.LayoutParams) {
@@ -343,6 +344,15 @@ public class ViewParser<V extends View> extends Parser<V> {
                     }
                     builder.handleAttribute(handler, parserContext, attribute.getKey(), attribute.getValue(),
                             layout, proteusView, parent, index);
+                }
+            }
+        });
+
+        addHandler(Attributes.View.TransitionName, new StringAttributeProcessor<V>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    view.setTransitionName(attributeValue);
                 }
             }
         });

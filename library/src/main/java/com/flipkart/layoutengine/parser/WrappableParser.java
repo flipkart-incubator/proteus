@@ -16,6 +16,7 @@ public class WrappableParser<V extends View> extends Parser<V> {
     private final Parser<V> wrappedParser;
 
     public WrappableParser(Class viewClass, Parser<V> wrappedParser) {
+        //noinspection unchecked
         super(viewClass);
         this.wrappedParser = wrappedParser;
     }

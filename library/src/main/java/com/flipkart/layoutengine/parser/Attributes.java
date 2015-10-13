@@ -61,6 +61,7 @@ public class Attributes {
         public static Attribute Clickable = new Attribute("clickable");
         public static Attribute OnClick = new Attribute("onClick");
         public static Attribute Border = new Attribute("border");
+        public static Attribute TransitionName = new Attribute("transitionName");
 
         /**
          * Meta Attributes
