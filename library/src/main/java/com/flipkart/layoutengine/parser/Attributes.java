@@ -93,6 +93,9 @@ public class Attributes {
         public static Attribute HTML = new Attribute("html");
         public static Attribute TextSize = new Attribute("textSize");
         public static Attribute TextColor = new Attribute("textColor");
+        public static Attribute TextColorHint = new Attribute("textColorHint");
+        public static Attribute TextColorLink = new Attribute("textColorLink");
+        public static Attribute TextColorHighLight = new Attribute("textColorHighlight");
         public static Attribute DrawableLeft = new Attribute("drawableLeft");
         public static Attribute DrawableRight = new Attribute("drawableRight");
         public static Attribute DrawableTop = new Attribute("drawableTop");

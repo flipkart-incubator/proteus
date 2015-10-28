@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
-import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
+import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 
 /**
  * Created by kiran.kumar on 12/05/14.
@@ -23,7 +23,7 @@ public class NetworkImageViewParser<T extends ImageView> extends WrappableParser
     @Override
     protected void prepareHandlers(final Context context) {
         super.prepareHandlers(context);
-        addHandler(Attributes.NetworkImageView.ImageUrl, new ResourceReferenceProcessor<T>(context) {
+        addHandler(Attributes.NetworkImageView.ImageUrl, new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 view.setImageDrawable(drawable);

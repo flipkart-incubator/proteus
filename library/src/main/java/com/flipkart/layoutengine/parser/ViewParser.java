@@ -17,7 +17,7 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
-import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
+import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
@@ -57,7 +57,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 });
             }
         });
-        addHandler(Attributes.View.Background, new ResourceReferenceProcessor<V>(context) {
+        addHandler(Attributes.View.Background, new DrawableResourceProcessor<V>(context) {
             @Override
             public void setDrawable(V view, Drawable drawable) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {

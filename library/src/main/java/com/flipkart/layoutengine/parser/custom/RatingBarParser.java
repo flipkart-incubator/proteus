@@ -7,7 +7,7 @@ import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
-import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
+import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.widgets.FixedRatingBar;
@@ -55,7 +55,7 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
                 view.setMinimumHeight(ParseHelper.parseDimension(attributeValue, context));
             }
         });
-        addHandler(Attributes.RatingBar.ProgressDrawable, new ResourceReferenceProcessor<T>(context) {
+        addHandler(Attributes.RatingBar.ProgressDrawable, new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 drawable = view.tileify(drawable, false);

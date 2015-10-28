@@ -11,7 +11,7 @@ import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
-import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
+import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonObject;
@@ -47,7 +47,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             }
         });
 
-        addHandler(Attributes.LinearLayout.Divider, new ResourceReferenceProcessor<T>(context) {
+        addHandler(Attributes.LinearLayout.Divider, new DrawableResourceProcessor<T>(context) {
             @SuppressLint("NewApi")
             @Override
             public void setDrawable(T view, Drawable drawable) {

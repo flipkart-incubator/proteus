@@ -336,6 +336,10 @@ public class ParseHelper {
         return attributeValue.startsWith("@drawable/");
     }
 
+    public static boolean isLocalColorResource(String attributeValue) {
+        return attributeValue.startsWith("@color/");
+    }
+
     public static Map<String, Integer> stateMap = new HashMap<>();
 
     static {

@@ -26,12 +26,12 @@ import java.util.List;
 /**
  * Use this as the base processor for references like @drawable or remote resources with http:// urls.
  */
-public abstract class ResourceReferenceProcessor<V extends View> extends AttributeProcessor<V> {
+public abstract class DrawableResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
-    private static final String TAG = ResourceReferenceProcessor.class.getSimpleName();
+    private static final String TAG = DrawableResourceProcessor.class.getSimpleName();
     private Context context;
 
-    public ResourceReferenceProcessor(Context context) {
+    public DrawableResourceProcessor(Context context) {
         this.context = context;
     }
 
@@ -77,7 +77,7 @@ public abstract class ResourceReferenceProcessor<V extends View> extends Attribu
                     JsonObject child = childElement.getAsJsonObject();
                     final Pair<int[], String> state = ParseHelper.parseState(child);
                     if (state != null) {
-                        ResourceReferenceProcessor<V> processor = new ResourceReferenceProcessor<V>(context) {
+                        DrawableResourceProcessor<V> processor = new DrawableResourceProcessor<V>(context) {
                             @Override
                             public void setDrawable(V view, Drawable drawable) {
                                 stateListDrawable.addState(state.first, drawable);
@@ -98,7 +98,7 @@ public abstract class ResourceReferenceProcessor<V extends View> extends Attribu
                     JsonObject child = childElement.getAsJsonObject();
                     final Pair<Integer, String> layerPair = ParseHelper.parseLayer(child);
 
-                    ResourceReferenceProcessor<V> processor = new ResourceReferenceProcessor<V>(context) {
+                    DrawableResourceProcessor<V> processor = new DrawableResourceProcessor<V>(context) {
                         @Override
                         public void setDrawable(V view, Drawable drawable) {
                             drawables.add(new Pair<>(layerPair.first, drawable));

@@ -47,7 +47,22 @@
               "layout_height": "wrap_content",
               "layout_marginBottom": "10dp",
               "text": "$product.title",
-              "textColor": "#444444"
+              "textColor":
+              {
+                "type": "selector",
+                "children": [
+                  {
+                    "type": "item",
+                    "state_enabled": "false",
+                    "color": "#9D9FA2"
+                  },
+                  {
+                    "type": "item",
+                    "state_enabled": "true",
+                    "color": "#4189c7"
+                  }
+                ]
+              }
             },
             {
               "type": "TextView",

@@ -1,6 +1,7 @@
 package com.flipkart.layoutengine.parser.custom;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -13,7 +14,8 @@ import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
-import com.flipkart.layoutengine.processor.ResourceReferenceProcessor;
+import com.flipkart.layoutengine.processor.ColorResourceProcessor;
+import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonObject;
@@ -63,35 +65,80 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.TextColor,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.TextColor, new ColorResourceProcessor<T>() {
+
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                view.setTextColor(ParseHelper.parseColor(attributeValue));
+            public void setColor(T view, int color) {
+                view.setTextColor(color);
+            }
+
+            @Override
+            public void setColor(T view, ColorStateList colors) {
+                view.setTextColor(colors);
             }
         });
 
-        addHandler(Attributes.TextView.DrawableLeft,new ResourceReferenceProcessor<T>(context) {
+        addHandler(Attributes.TextView.TextColorHint, new ColorResourceProcessor<T>() {
+
+            @Override
+            public void setColor(T view, int color) {
+                view.setHintTextColor(color);
+            }
+
+            @Override
+            public void setColor(T view, ColorStateList colors) {
+                view.setHintTextColor(colors);
+            }
+        });
+
+        addHandler(Attributes.TextView.TextColorLink, new ColorResourceProcessor<T>() {
+
+            @Override
+            public void setColor(T view, int color) {
+                view.setLinkTextColor(color);
+            }
+
+            @Override
+            public void setColor(T view, ColorStateList colors) {
+                view.setLinkTextColor(colors);
+            }
+        });
+
+        addHandler(Attributes.TextView.TextColorHighLight, new ColorResourceProcessor<T>() {
+
+            @Override
+            public void setColor(T view, int color) {
+                view.setHighlightColor(color);
+            }
+
+            @Override
+            public void setColor(T view, ColorStateList colors) {
+                //
+            }
+        });
+
+        addHandler(Attributes.TextView.DrawableLeft,new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(drawable, compoundDrawables[1], compoundDrawables[2], compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableTop,new ResourceReferenceProcessor<T>(context) {
+        addHandler(Attributes.TextView.DrawableTop,new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(compoundDrawables[0],drawable,compoundDrawables[2],compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableRight,new ResourceReferenceProcessor<T>(context) {
+        addHandler(Attributes.TextView.DrawableRight,new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(drawable,compoundDrawables[1],drawable,compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableBottom,new ResourceReferenceProcessor<T>(context) {
+        addHandler(Attributes.TextView.DrawableBottom,new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
