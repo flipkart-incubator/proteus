@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.processor;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
@@ -52,7 +53,8 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
      * This block handles different drawables.
      * Selector and LayerListDrawable are handled here.
      * Override this to handle more types of drawables
-     *  @param parserContext
+     *
+     * @param parserContext
      * @param attributeKey
      * @param attributeValue
      * @param view
@@ -132,9 +134,11 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         setDrawable(view, layerDrawable);
     }
 
+
     /**
      * Any string based drawables are handled here. Color, local resource and remote image urls.
-     *  @param parserContext
+     *
+     * @param parserContext
      * @param attributeKey
      * @param attributeValue
      * @param view
@@ -145,9 +149,20 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     protected void handleString(ParserContext parserContext, String attributeKey, final String attributeValue,
                                 final V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
         boolean synchronousRendering = parserContext.getLayoutBuilder().isSynchronousRendering();
-        if (ParseHelper.isColor(attributeValue)) {
+
+        if (ParseHelper.isLocalResourceAttribute(attributeValue)) {
+            int attributeId = ParseHelper.getAttributeId(context, attributeValue);
+            if(0 != attributeId)
+            {
+                TypedArray ta = context.obtainStyledAttributes(new int[]{attributeId});
+                Drawable drawable = ta.getDrawable(0 /* index */);
+                ta.recycle();
+                setDrawable(view, drawable);
+            }
+        }
+        else if (ParseHelper.isColor(attributeValue)) {
             setDrawable(view, new ColorDrawable(ParseHelper.parseColor(attributeValue)));
-        } else if (ParseHelper.isLocalResource(attributeValue)) {
+        } else if (ParseHelper.isLocalDrawableResource(attributeValue)) {
             try {
                 Resources r = context.getResources();
                 int drawableId = r.getIdentifier(attributeValue, "drawable", context.getPackageName());

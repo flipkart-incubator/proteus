@@ -27,14 +27,128 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author kiran.kumar
  */
 public class ParseHelper {
 
+
+    private static final String TRUE = "true";
+    private static final String FALSE = "false";
+
+    private static final String VISIBLE = "visible";
+    private static final String INVISIBLE = "invisible";
+    private static final String GONE = "gone";
+
+    private static final String CENTER = "center";
+    private static final String CENTER_HORIZONTAL = "center_horizontal";
+    private static final String CENTER_VERTICAL = "center_vertical";
+    private static final String LEFT = "left";
+    private static final String RIGHT = "right";
+    private static final String TOP = "top";
+    private static final String BOTTOM = "bottom";
+    private static final String START = "start";
+    private static final String END = "end";
+    private static final String MIDDLE = "middle";
+    private static final String BEGINNING = "beginning";
+    private static final String MARQUEE = "marquee";
+
+
+    private static final String MATCH_PARENT = "match_parent";
+    private static final String FILL_PARENT = "fill_parent";
+    private static final String WRAP_CONTENT = "wrap_content";
+
+
+    private static final String BOLD = "bold";
+    private static final String ITALIC = "italic";
+
+    private static final String SUFFIX_DP = "dp";
+    private static final String SUFFIX_SP = "sp";
+    private static final String SUFFIX_PX = "px";
+
+    private static final String ATTR_START_LITERAL = "?";
+    private static final String COLOR_PREFIX_LITERAL = "#";
+
+    private static final String DRAWABLE_LOCAL_RESOURCE_STR = "@drawable/";
+    private static final String COLOR_LOCAL_RESOURCE_STR = "@color/";
+    private static final String DIMENSION_LOCAL_RESOURCE_STR = "@dimen/";
+
+
+    private static final String DRAWABLE_STR = "drawable";
+    private static final String ID_STR = "id";
+
+
     private static Map<String, Integer> styleMap = new HashMap<>();
     private static Map<String, Integer> attributeMap = new HashMap<>();
+
+
+    private static final Pattern sAttributePattern = Pattern.compile("(\\?)(\\S*)(:?)(attr\\/?)(\\S*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+    private static final HashMap<String, Class> sHashMap = new HashMap<>();
+    private static final HashMap<String, Integer> sAttributeCache = new HashMap<>();
+
+    public static final Map<String, Integer> sStateMap = new HashMap<>();
+    public static final Map<String, Integer> sGravityMap = new HashMap<>();
+    public static final Map<String, Integer> sDividerMode = new HashMap<>();
+    public static final Map<String, Enum> sEllipsizeMode = new HashMap<>();
+    public static final Map<String, Integer> sVisibilityMode = new HashMap<>();
+
+
+    public static final Map<String, Integer> sDimensionsMap = new HashMap<>();
+
+    public static final Map<String, ImageView.ScaleType> sImageScaleType = new HashMap<>();
+
+
+    static {
+        sStateMap.put("state_pressed", android.R.attr.state_pressed);
+        sStateMap.put("state_enabled", android.R.attr.state_enabled);
+        sStateMap.put("state_focused", android.R.attr.state_focused);
+        sStateMap.put("state_hovered", android.R.attr.state_hovered);
+        sStateMap.put("state_selected", android.R.attr.state_selected);
+        sStateMap.put("state_checkable", android.R.attr.state_checkable);
+        sStateMap.put("state_checked", android.R.attr.state_checked);
+        sStateMap.put("state_activated", android.R.attr.state_activated);
+        sStateMap.put("state_window_focused", android.R.attr.state_window_focused);
+
+
+        sGravityMap.put(CENTER, Gravity.CENTER);
+        sGravityMap.put(CENTER_HORIZONTAL, Gravity.CENTER_HORIZONTAL);
+        sGravityMap.put(CENTER_VERTICAL, Gravity.CENTER_VERTICAL);
+        sGravityMap.put(LEFT, Gravity.LEFT);
+        sGravityMap.put(RIGHT, Gravity.RIGHT);
+        sGravityMap.put(TOP, Gravity.TOP);
+        sGravityMap.put(BOTTOM, Gravity.BOTTOM);
+        sGravityMap.put(START, Gravity.START);
+        sGravityMap.put(END, Gravity.END);
+
+
+        sDividerMode.put(END, LinearLayout.SHOW_DIVIDER_END);
+        sDividerMode.put(MIDDLE, LinearLayout.SHOW_DIVIDER_MIDDLE);
+        sDividerMode.put(BEGINNING, LinearLayout.SHOW_DIVIDER_BEGINNING);
+
+
+        sEllipsizeMode.put(END, TextUtils.TruncateAt.END);
+        sEllipsizeMode.put(START, TextUtils.TruncateAt.START);
+        sEllipsizeMode.put(MARQUEE, TextUtils.TruncateAt.MARQUEE);
+        sEllipsizeMode.put(MIDDLE, TextUtils.TruncateAt.MIDDLE);
+
+        sVisibilityMode.put(VISIBLE, View.VISIBLE);
+        sVisibilityMode.put(INVISIBLE, View.INVISIBLE);
+        sVisibilityMode.put(GONE, View.GONE);
+
+        sDimensionsMap.put(MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        sDimensionsMap.put(FILL_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        sDimensionsMap.put(WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        sImageScaleType.put(CENTER, ImageView.ScaleType.CENTER);
+        sImageScaleType.put("center_crop", ImageView.ScaleType.CENTER_CROP);
+        sImageScaleType.put("center_inside", ImageView.ScaleType.CENTER_INSIDE);
+        sImageScaleType.put("fitCenter", ImageView.ScaleType.FIT_CENTER);
+        sImageScaleType.put("fit_xy", ImageView.ScaleType.FIT_XY);
+        sImageScaleType.put("matrix", ImageView.ScaleType.MATRIX);
+    }
 
     public static int parseInt(String attributeValue) {
         int number;
@@ -78,187 +192,164 @@ public class ParseHelper {
         return number;
     }
 
+
     public static int parseGravity(String attributeValue) {
         String[] gravities = attributeValue.split("\\|");
         int returnGravity = Gravity.NO_GRAVITY;
         for (String gravity : gravities) {
-            gravity = gravity.trim().toLowerCase();
-            int gravityValue = Gravity.NO_GRAVITY;
-            if ("center".equals(gravity)) {
-                gravityValue = Gravity.CENTER;
-            } else if ("center_horizontal".equals(gravity)) {
-                gravityValue = Gravity.CENTER_HORIZONTAL;
-            } else if ("center_vertical".equals(gravity)) {
-                gravityValue = Gravity.CENTER_VERTICAL;
-            } else if ("left".equals(gravity)) {
-                gravityValue = Gravity.LEFT;
-            } else if ("right".equals(gravity)) {
-                gravityValue = Gravity.RIGHT;
-            } else if ("top".equals(gravity)) {
-                gravityValue = Gravity.TOP;
-            } else if ("bottom".equals(gravity)) {
-                gravityValue = Gravity.BOTTOM;
-            } else if ("start".equals(gravity)) {
-                gravityValue = Gravity.START;
-            } else if ("end".equals(gravity)) {
-                gravityValue = Gravity.END;
+            Integer gravityValue = sGravityMap.get(gravity.trim().toLowerCase());
+            if (null != gravityValue) {
+                returnGravity |= gravityValue;
             }
-
-            returnGravity = gravityValue;
         }
-
-
         return returnGravity;
     }
 
     public static int parseDividerMode(String attributeValue) {
-
-        int returnValue = LinearLayout.SHOW_DIVIDER_NONE;
-        if (attributeValue.equals("end")) {
-            returnValue = LinearLayout.SHOW_DIVIDER_END;
-        } else if (attributeValue.equals("middle")) {
-            returnValue = LinearLayout.SHOW_DIVIDER_MIDDLE;
-        } else if (attributeValue.equals("beginning")) {
-            returnValue = LinearLayout.SHOW_DIVIDER_BEGINNING;
-        } else {
-            returnValue = LinearLayout.SHOW_DIVIDER_NONE;
-        }
-
-        return returnValue;
+        Integer returnValue = sDividerMode.get(attributeValue);
+        return returnValue == null ? LinearLayout.SHOW_DIVIDER_NONE : returnValue;
     }
 
     public static Enum parseEllipsize(String attributeValue) {
-        Enum returnValue = TextUtils.TruncateAt.END;
-
-        if (attributeValue.equals("end"))
-            returnValue = TextUtils.TruncateAt.END;
-        else if (attributeValue.equals("start"))
-            returnValue = TextUtils.TruncateAt.START;
-        else if (attributeValue.equals("marquee"))
-            returnValue = TextUtils.TruncateAt.MARQUEE;
-        else if (attributeValue.equals("middle"))
-            returnValue = TextUtils.TruncateAt.MIDDLE;
-
-        return returnValue;
+        Enum returnValue = sEllipsizeMode.get(attributeValue);
+        return returnValue == null ? TextUtils.TruncateAt.END : returnValue;
     }
 
     public static int parseVisibility(JsonElement element) {
-        String attributeValue;
-        int returnValue;
-
+        Integer returnValue = null;
         if (element.isJsonPrimitive()) {
-            if (!element.getAsString().equals("")
-                    && !element.getAsString().equals("false")
-                    && !element.getAsString().equals(ProteusConstants.DATA_NULL)) {
-                attributeValue = element.getAsString();
-            } else {
-                attributeValue = "gone";
+            String attributeValue = element.getAsString();
+            returnValue = sVisibilityMode.get(attributeValue);
+            if (null == returnValue && (attributeValue.isEmpty() ||
+                    FALSE.equals(attributeValue) ||
+                    ProteusConstants.DATA_NULL.equals(attributeValue))) {
+                returnValue = View.GONE;
             }
         } else if (element.isJsonNull()) {
-            attributeValue = "gone";
-        } else {
-            attributeValue = "visible";
-        }
-
-        if ("visible".equals(attributeValue)) {
-            returnValue = View.VISIBLE;
-        } else if ("invisible".equals(attributeValue)) {
-            returnValue = View.INVISIBLE;
-        } else if ("gone".equals(attributeValue)) {
             returnValue = View.GONE;
-        } else if ("true".equals(attributeValue)) {
-            returnValue = View.VISIBLE;
-        } else if ("false".equals(attributeValue)) {
-            returnValue = View.GONE;
-        } else {
-            returnValue = View.VISIBLE;
         }
-
-        return returnValue;
+        return returnValue == null ? View.VISIBLE : returnValue;
     }
 
     public static int parseInvisibility(JsonElement element) {
-        String attributeValue;
-        int returnValue;
-
-        if (element.isJsonPrimitive() &&
-                (element.getAsString().equals("") ||
-                        element.getAsString().equals("false") ||
-                        element.getAsString().equals(ProteusConstants.DATA_NULL))
-                ) {
-            attributeValue = "visible";
+        Integer returnValue = null;
+        if (element.isJsonPrimitive()) {
+            String attributeValue = element.getAsString();
+            returnValue = sVisibilityMode.get(attributeValue);
+            if (null == returnValue && (attributeValue.isEmpty() ||
+                    FALSE.equals(attributeValue) ||
+                    ProteusConstants.DATA_NULL.equals(attributeValue))) {
+                returnValue = View.VISIBLE;
+            }
         } else if (element.isJsonNull()) {
-            attributeValue = "visible";
-        } else {
-            attributeValue = "gone";
-        }
-
-        if ("visible".equals(attributeValue)) {
-            returnValue = View.VISIBLE;
-        } else if ("gone".equals(attributeValue)) {
-            returnValue = View.GONE;
-        } else {
             returnValue = View.VISIBLE;
         }
 
-        return returnValue;
+        return returnValue == null ? View.GONE : returnValue;
     }
 
     public static int parseDimension(String dimension, Context context) {
-        int dimensionInPixels;
-        if ("match_parent".equals(dimension) || "fill_parent".equals(dimension)) {
-            dimensionInPixels = ViewGroup.LayoutParams.MATCH_PARENT;
-        } else if ("wrap_content".equals(dimension)) {
-            dimensionInPixels = ViewGroup.LayoutParams.WRAP_CONTENT;
-        } else if (dimension.endsWith("dp")) {
-            dimension = dimension.substring(0, dimension.length() - 2);
-            dimensionInPixels = dpToPx(ParseHelper.parseFloat(dimension));
-        } else if (dimension.endsWith("px") || dimension.endsWith("sp")) {
-            dimension = dimension.substring(0, dimension.length() - 2);
-            try {
-                dimensionInPixels = Integer.parseInt(dimension);
-            } catch (NumberFormatException e) {
-                Log.e(Utils.TAG_ERROR, dimension + " is NAN. Error: " + e.getMessage());
-                dimensionInPixels = 0;
-            }
-        } else if (dimension.startsWith("@dimen/")) {
-            try {
-                int resourceId = context.getResources().getIdentifier(dimension, "dimen", context.getPackageName());
-                dimensionInPixels = (int) context.getResources().getDimension(resourceId);
-            } catch (Exception e) {
-                Log.e(Utils.TAG_ERROR, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
-                dimensionInPixels = 0;
-            }
-        } else if (dimension.startsWith("?")) {
-            try {
-                String[] dimenArr = dimension.substring(1, dimension.length()).split(":");
-                String style = dimenArr[0];
-                String attr = dimenArr[1];
-                Integer styleId = styleMap.get(style);
-                if (styleId == null) {
-                    styleId = R.style.class.getField(style).getInt(null);
-                    styleMap.put(style, styleId);
+        Integer dimensionInPixels = sDimensionsMap.get(dimension);
+
+        if (null == dimensionInPixels && dimension.length() > 2) {
+            String suffix = dimension.substring(dimension.length() - 2);
+            if (SUFFIX_DP.equals(suffix)) {
+                dimension = dimension.substring(0, dimension.length() - 2);
+                dimensionInPixels = dpToPx(ParseHelper.parseFloat(dimension));
+            } else if (SUFFIX_PX.equals(suffix) || SUFFIX_SP.equals(suffix)) {
+                dimension = dimension.substring(0, dimension.length() - 2);
+                try {
+                    dimensionInPixels = Integer.parseInt(dimension);
+                } catch (NumberFormatException e) {
+                    Log.e(Utils.TAG_ERROR, dimension + " is NAN. Error: " + e.getMessage());
+                    dimensionInPixels = 0;
                 }
-                Integer attrId = attributeMap.get(attr);
-                if (attrId == null) {
-                    attrId = R.attr.class.getField(attr).getInt(null);
-                    attributeMap.put(attr, attrId);
+            } else if (dimension.startsWith(DIMENSION_LOCAL_RESOURCE_STR)) {
+                try {
+                    int resourceId = context.getResources().getIdentifier(dimension, "dimen", context.getPackageName());
+                    dimensionInPixels = (int) context.getResources().getDimension(resourceId);
+                } catch (Exception e) {
+                    Log.e(Utils.TAG_ERROR, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                    dimensionInPixels = 0;
                 }
-                TypedArray a = context.getTheme().obtainStyledAttributes(styleId, new int[]{attrId});
-                dimensionInPixels = a.getDimensionPixelSize(0, 0);
-            } catch (Exception e) {
-                Log.e(Utils.TAG_ERROR, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
-                dimensionInPixels = 0;
+            } else if (dimension.startsWith(ATTR_START_LITERAL)) {
+                try {
+                    String[] dimenArr = dimension.substring(1, dimension.length()).split(":");
+                    String style = dimenArr[0];
+                    String attr = dimenArr[1];
+                    Integer styleId = styleMap.get(style);
+                    if (styleId == null) {
+                        styleId = R.style.class.getField(style).getInt(null);
+                        styleMap.put(style, styleId);
+                    }
+                    Integer attrId = attributeMap.get(attr);
+                    if (attrId == null) {
+                        attrId = R.attr.class.getField(attr).getInt(null);
+                        attributeMap.put(attr, attrId);
+                    }
+                    TypedArray a = context.getTheme().obtainStyledAttributes(styleId, new int[]{attrId});
+                    dimensionInPixels = a.getDimensionPixelSize(0, 0);
+                    a.recycle();
+                } catch (Exception e) {
+                    Log.e(Utils.TAG_ERROR, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                    dimensionInPixels = 0;
+                }
             }
-        } else {
-            dimensionInPixels = 0;
         }
 
-        return dimensionInPixels;
+        return dimensionInPixels == null ? 0 : dimensionInPixels;
+    }
+
+    public static int getAttributeId(Context context, String attribute) {
+        Integer result = sAttributeCache.get(attribute);
+        if (null == result && attribute.length() > 1) {
+            try {
+                String attributeName = "";
+                String packageName = "";
+                Matcher matcher = sAttributePattern.matcher(attribute);
+                if (matcher.matches()) {
+                    attributeName  = matcher.group(5);
+                    packageName = matcher.group(2);
+                }
+                else
+                {
+                    attributeName = attribute.substring(1);
+                }
+
+                Class clazz = null;
+                if (!TextUtils.isEmpty(packageName)) {
+                    packageName = packageName.substring(0, packageName.length() - 1);
+                } else {
+                    packageName = context.getPackageName();
+                }
+                String className = packageName + ".R$attr";
+                clazz = sHashMap.get(className);
+                if (null == clazz) {
+                    clazz = Class.forName(className);
+                    sHashMap.put(className, clazz);
+                }
+
+                if (null != clazz) {
+                    Field field = clazz.getField(attributeName);
+                    if (null != field) {
+                        result = field.getInt(null);
+                        sAttributeCache.put(attribute, result);
+                    }
+                }
+
+            } catch (ClassNotFoundException e) {
+                // Class not found!
+            } catch (NoSuchFieldException e) {
+
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return result == null ? 0 : result;
     }
 
     public static boolean isColor(String color) {
-        return color.startsWith("#");
+        return color.startsWith(COLOR_PREFIX_LITERAL);
     }
 
     public static int parseColor(String color) {
@@ -283,15 +374,11 @@ public class ParseHelper {
     }
 
     public static boolean parseBoolean(String trueOrFalse) {
-        return trueOrFalse.equals("true");
+        return TRUE.equalsIgnoreCase(trueOrFalse);
     }
 
     public static int parseRelativeLayoutBoolean(String trueOrFalse) {
-        if (trueOrFalse.equals("true")) {
-            return RelativeLayout.TRUE;
-        } else {
-            return 0;
-        }
+        return TRUE.equalsIgnoreCase(trueOrFalse) ? RelativeLayout.TRUE : 0;
     }
 
     public static void addRelativeLayoutRule(View view, int verb, int anchor) {
@@ -318,10 +405,10 @@ public class ParseHelper {
         if (attributeValue != null) {
             attributeValue = attributeValue.toLowerCase();
             switch (attributeValue) {
-                case "bold":
+                case BOLD:
                     typeface = Typeface.BOLD;
                     break;
-                case "italic":
+                case ITALIC:
                     typeface = Typeface.ITALIC;
                     break;
                 default:
@@ -332,33 +419,23 @@ public class ParseHelper {
         return typeface;
     }
 
-    public static boolean isLocalResource(String attributeValue) {
-        return attributeValue.startsWith("@drawable/");
+    public static boolean isLocalResourceAttribute(String attributeValue) {
+        return attributeValue.startsWith(ATTR_START_LITERAL);
+    }
+
+    public static boolean isLocalDrawableResource(String attributeValue) {
+        return attributeValue.startsWith(DRAWABLE_LOCAL_RESOURCE_STR);
     }
 
     public static boolean isLocalColorResource(String attributeValue) {
-        return attributeValue.startsWith("@color/");
+        return attributeValue.startsWith(COLOR_LOCAL_RESOURCE_STR);
     }
 
-    public static Map<String, Integer> stateMap = new HashMap<>();
-
-    static {
-        stateMap.put("state_pressed", android.R.attr.state_pressed);
-        stateMap.put("state_enabled", android.R.attr.state_enabled);
-        stateMap.put("state_focused", android.R.attr.state_focused);
-        stateMap.put("state_hovered", android.R.attr.state_hovered);
-        stateMap.put("state_selected", android.R.attr.state_selected);
-        stateMap.put("state_checkable", android.R.attr.state_checkable);
-        stateMap.put("state_checked", android.R.attr.state_checked);
-        stateMap.put("state_activated", android.R.attr.state_activated);
-        stateMap.put("state_window_focused", android.R.attr.state_window_focused);
-
-    }
 
     public static Pair<int[], String> parseState(JsonObject stateObject) {
 
         //drawable
-        JsonElement jsonElement = stateObject.get("drawable");
+        JsonElement jsonElement = stateObject.get(DRAWABLE_STR);
         if (jsonElement.isJsonPrimitive()) {
             String drawable = jsonElement.getAsString();
 
@@ -368,17 +445,11 @@ public class ParseHelper {
             for (Map.Entry<String, JsonElement> entry : entries) {
                 JsonElement value = entry.getValue();
                 String state = entry.getKey();
-                Integer stateInteger = stateMap.get(state);
+                Integer stateInteger = sStateMap.get(state);
                 if (stateInteger != null) {
                     String stateValue = value.getAsString();
-                    boolean stateValueBoolean = ParseHelper.parseBoolean(stateValue);
-                    if (stateValueBoolean) {
-                        //e.g state_pressed = true
-                        statesToReturn.add(stateInteger);
-                    } else {
-                        //e.g state_pressed = false
-                        statesToReturn.add(-stateInteger);
-                    }
+                    //e.g state_pressed = true state_pressed = false
+                    statesToReturn.add(ParseHelper.parseBoolean(stateValue) ? stateInteger : -stateInteger);
                 }
             }
 
@@ -386,8 +457,10 @@ public class ParseHelper {
             //return
 
             int[] statesToReturnInteger = new int[statesToReturn.size()];
-            for (int i = 0; i < statesToReturn.size(); i++)
+            for (int i = 0; i < statesToReturn.size(); i++) {
                 statesToReturnInteger[i] = statesToReturn.get(i);
+            }
+
             return new Pair<>(statesToReturnInteger, drawable);
         }
         return null;
@@ -407,11 +480,7 @@ public class ParseHelper {
         int resId = 0;
         try {
             field = с.getField(variableName);
-            try {
-                resId = field.getInt(null);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            resId = field.getInt(null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -446,7 +515,7 @@ public class ParseHelper {
      */
     public static Pair<Integer, String> parseLayer(JsonObject child) {
 
-        JsonElement id = child.get("id");
+        JsonElement id = child.get(ID_STR);
         int androidResIdByXmlResId = View.NO_ID;
         String idAsString = null;
         if (id != null) {
@@ -456,7 +525,7 @@ public class ParseHelper {
             androidResIdByXmlResId = getAndroidResIdByXmlResId(idAsString);
         }
         String drawable = null;
-        JsonElement drawableElement = child.get("drawable");
+        JsonElement drawableElement = child.get(DRAWABLE_STR);
         if (drawableElement != null) {
             drawable = drawableElement.getAsString();
         }
@@ -471,24 +540,7 @@ public class ParseHelper {
      * @return {@link android.widget.ImageView.ScaleType} enum
      */
     public static ImageView.ScaleType parseScaleType(String attributeValue) {
-        ImageView.ScaleType type = null;
-        if (attributeValue != null) {
-            attributeValue = attributeValue.toLowerCase();
-            if ("center".equals(attributeValue)) {
-                type = ImageView.ScaleType.CENTER;
-            } else if ("center_crop".equals(attributeValue)) {
-                type = ImageView.ScaleType.CENTER_CROP;
-            } else if ("center_inside".equals(attributeValue)) {
-                type = ImageView.ScaleType.CENTER_INSIDE;
-            } else if ("fitCenter".equals(attributeValue)) {
-                type = ImageView.ScaleType.FIT_CENTER;
-            } else if ("fit_xy".equals(attributeValue)) {
-                type = ImageView.ScaleType.FIT_XY;
-            } else if ("matrix".equals(attributeValue)) {
-                type = ImageView.ScaleType.MATRIX;
-            }
-        }
-        return type;
+        return !TextUtils.isEmpty(attributeValue) ? sImageScaleType.get(attributeValue) : null;
     }
 
     /**
@@ -498,13 +550,7 @@ public class ParseHelper {
      * @return the typeface value
      */
     public static int parseTypeFace(String attributeValue) {
-        int typeface = 0;
-        if (attributeValue != null) {
-            if ("bold".equals(attributeValue)) {
-                typeface = Typeface.BOLD;
-            }
-        }
-        return typeface;
+        return (attributeValue != null && BOLD.equals(attributeValue)) ? Typeface.BOLD : 0;
     }
 
 }

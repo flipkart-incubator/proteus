@@ -9,10 +9,11 @@
       "type": "LinearLayout",
       "layout_width": "match_parent",
       "layout_height": "wrap_content",
-      "background": "#ffffff",
       "orientation": "vertical",
       "marginTop": "?Theme_AppCompat:actionBarSize",
       "padding": "?Theme_AppCompat:actionBarSize",
+      "background": "?attr/selectableItemBackground",
+      "clickable": "true",
       "dataContext": {
         "sellers": "sellers_1",
         "product": "product"
@@ -47,8 +48,7 @@
               "layout_height": "wrap_content",
               "layout_marginBottom": "10dp",
               "text": "$product.title",
-              "textColor":
-              {
+              "textColor": {
                 "type": "selector",
                 "children": [
                   {
