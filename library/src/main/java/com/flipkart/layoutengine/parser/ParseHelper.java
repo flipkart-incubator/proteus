@@ -308,11 +308,9 @@ public class ParseHelper {
                 String packageName = "";
                 Matcher matcher = sAttributePattern.matcher(attribute);
                 if (matcher.matches()) {
-                    attributeName  = matcher.group(5);
+                    attributeName = matcher.group(5);
                     packageName = matcher.group(2);
-                }
-                else
-                {
+                } else {
                     attributeName = attribute.substring(1);
                 }
 
@@ -338,9 +336,9 @@ public class ParseHelper {
                 }
 
             } catch (ClassNotFoundException e) {
-                // Class not found!
+                e.printStackTrace();
             } catch (NoSuchFieldException e) {
-
+                e.printStackTrace();
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -453,9 +451,6 @@ public class ParseHelper {
                 }
             }
 
-
-            //return
-
             int[] statesToReturnInteger = new int[statesToReturn.size()];
             for (int i = 0; i < statesToReturn.size(); i++) {
                 statesToReturnInteger[i] = statesToReturn.get(i);
@@ -508,10 +503,11 @@ public class ParseHelper {
     }
 
     /**
-     * Parses a single layer item (represented by {@param child) inside a layer list and gives a pair of android:id and a string for the drawable path
+     * Parses a single layer item (represented by {@param child}) inside a layer list and gives
+     * a pair of android:id and a string for the drawable path.
      *
      * @param child
-     * @return
+     * @return The layer info as a {@link Pair}
      */
     public static Pair<Integer, String> parseLayer(JsonObject child) {
 
