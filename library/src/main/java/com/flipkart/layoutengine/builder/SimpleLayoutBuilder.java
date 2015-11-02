@@ -257,9 +257,6 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     protected void onUnknownAttributeEncountered(ParserContext context, String attribute,
                                                  JsonElement element, JsonObject layout, View view,
                                                  int childIndex) {
-        if (ProteusConstants.ATTRIBUTES_TO_IGNORE.contains(attribute)) {
-            return;
-        }
         if (listener != null) {
             listener.onUnknownAttribute(context, attribute, element, layout, view, childIndex);
         }

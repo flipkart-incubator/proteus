@@ -19,10 +19,8 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * This class will help parsing by introducing handlers. Any subclass can use addHandler()
@@ -114,10 +112,6 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
     public boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
                                    JsonObject layout, V view, ProteusView proteusView, ProteusView parent,
                                    int childIndex) {
-
-        if (getIgnoredAttributeSet().contains(attribute)) {
-            return true;
-        }
         AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
             //noinspection unchecked
@@ -128,10 +122,6 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
     }
 
     protected abstract void prepareHandlers(Context context);
-
-    protected Set<String> getIgnoredAttributeSet() {
-        return new HashSet<>();
-    }
 
     @Override
     public void addChildren(ParserContext parserContext, ProteusView parent,

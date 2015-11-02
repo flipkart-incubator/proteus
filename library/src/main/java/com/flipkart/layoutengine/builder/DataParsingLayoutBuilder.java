@@ -334,7 +334,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         this.formatter.remove(formatterName);
     }
 
-    public void getFormatter(String formatterName) {
-        this.formatter.get(formatterName);
+    public Formatter getFormatter(String formatterName) {
+        return this.formatter.get(formatterName);
     }
 }
