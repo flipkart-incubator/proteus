@@ -7,11 +7,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
+import java.util.StringTokenizer;
+
 /**
  * Created by kirankumar on 24/06/14.
  */
 public class JsonProvider implements Provider {
-
     private JsonElement rootElement;
 
     public JsonProvider(JsonElement jsonElement) {
@@ -37,12 +38,13 @@ public class JsonProvider implements Provider {
     private JsonElement getFromObject(String path, int childIndex)
             throws InvalidDataPathException, JsonNullException, NoSuchDataPathException {
         JsonElement root = this.rootElement;
-        String[] segments = path.split(ProteusConstants.DATA_PATH_DELIMITER);
+        StringTokenizer tokenizer = new StringTokenizer(path, ProteusConstants.DATA_PATH_DELIMITERS);
         JsonElement elementToReturn = root;
         JsonElement tempElement;
         JsonArray tempArray;
 
-        for (String segment : segments) {
+        while (tokenizer.hasMoreTokens()) {
+            String segment = tokenizer.nextToken();
             if (elementToReturn == null) {
                 throw new NoSuchDataPathException(path);
             }

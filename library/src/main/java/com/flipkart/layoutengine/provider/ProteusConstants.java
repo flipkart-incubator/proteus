@@ -27,6 +27,7 @@ public class ProteusConstants {
     public static final Pattern REGEX_PATTERN = Pattern.compile("\\{\\{(\\S+?)\\}\\}\\$\\((.+?)\\)|\\{\\{(\\S+?)\\}\\}");
 
     public static final String DATA_PATH_DELIMITER = "\\.|\\[|\\]";
+    public static final String DATA_PATH_DELIMITERS = ".[]";
     public static final String DATA_PATH_SIMPLE_DELIMITER = "\\.";
 
     public static final String CHILD_INDEX_REFERENCE = "$index";
