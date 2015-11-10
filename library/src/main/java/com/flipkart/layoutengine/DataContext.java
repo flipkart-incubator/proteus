@@ -1,7 +1,5 @@
 package com.flipkart.layoutengine;
 
-import android.util.Log;
-
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
@@ -13,6 +11,9 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import java.util.regex.Pattern;
  */
 public class DataContext {
 
+    private static Logger logger = LoggerFactory.getLogger(DataContext.class);
     private List<DataContext> children;
     private JsonProvider dataProvider;
     private JsonObject reverseScope;
@@ -118,8 +120,10 @@ public class DataContext {
             try {
                 element = Utils.getElementFromData(value, dataProvider, childIndex);
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                Log.e(Utils.TAG_ERROR + "#getNewDataContext()", "could not find: '" + value +
-                        "' for '" + key + "'. ERROR: " + e.getMessage());
+                if(logger.isErrorEnabled()) {
+                    logger.error("#getNewDataContext could not find: '" + value +
+                            "' for '" + key + "'. ERROR: " + e.getMessage());
+                }
                 element = new JsonObject();
             }
 

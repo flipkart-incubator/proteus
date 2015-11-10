@@ -1,7 +1,6 @@
 package com.flipkart.layoutengine.builder;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 
 import com.flipkart.layoutengine.DataContext;
@@ -24,6 +23,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +38,7 @@ import java.util.regex.Matcher;
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private Map<String, Formatter> formatter = new HashMap<>();
+    private Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
 
     protected DataParsingLayoutBuilder(Context context) {
         super(context);
@@ -45,7 +48,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     protected List<ProteusView> parseChildren(LayoutHandler handler, ParserContext context,
                                               ProteusView view, JsonObject parentLayout, int childIndex, Styles styles) {
 
-        Log.d(TAG_DEBUG, "Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
+        if(logger.isDebugEnabled()) {
+            logger.debug("Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
+        }
         JsonElement childrenElement = parentLayout.get(ProteusConstants.CHILDREN);
 
         if (childrenElement != null &&
@@ -66,10 +71,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     length = Integer.parseInt(attributeValue);
                 }
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-                Log.e(TAG_ERROR + "#parseChildren()", e.getMessage());
+                logger.error(TAG_ERROR + "#parseChildren() "+e.getMessage());
                 length = 0;
             } catch (NumberFormatException e) {
-                Log.e(TAG_ERROR + "#parseChildren()", childrenElement.getAsString() +
+                logger.error(TAG_ERROR + "#parseChildren() " +childrenElement.getAsString() +
                         " is not a number. layout: " +
                         parentLayout.toString());
                 length = 0;
@@ -164,8 +169,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX ||
                         attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX)) {
 
-            Log.d(TAG_DEBUG, "Find '" + element.toString() + "' for " + attributeName
-                    + " for view with " + Utils.getLayoutIdentifier(layout));
+            if(logger.isDebugEnabled()) {
+                logger.debug("Find '" + element.toString() + "' for " + attributeName
+                        + " for view with " + Utils.getLayoutIdentifier(layout));
+            }
 
             if (attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX) {
                 Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(attributeValue);
@@ -184,7 +191,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                     parserContext.getDataContext().getDataProvider(),
                                     parserContext.getDataContext().getIndex()).getAsString());
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            Log.e(TAG_ERROR + "#findAndReplaceValues()", e.getMessage());
+                            if(logger.isErrorEnabled()) {
+                                logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
+                            }
                             finalValue = dataPath;
                             failed = true;
                         }
@@ -202,7 +211,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                             parserContext.getDataContext().getIndex()),
                                     formatterName);
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            Log.e(TAG_ERROR + "#findAndReplaceValues()", e.getMessage());
+                            if(logger.isErrorEnabled()) {
+                                logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
+                            }
                             formattedValue = dataPath;
                             failed = true;
                         }
@@ -230,7 +241,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             parserContext.getDataContext().getDataProvider(),
                             childIndex);
                 } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                    Log.e(TAG_ERROR + "#findAndReplaceValues()", e.getMessage());
+                    if(logger.isErrorEnabled()) {
+                        logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
+                    }
                     failed = true;
                     elementFromData = new JsonPrimitive(ProteusConstants.DATA_NULL);
                 }
@@ -293,7 +306,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         DataContext oldDataContext = oldParserContext.getDataContext();
         if (oldDataContext.getDataProvider() == null) {
-            Log.e(TAG_ERROR + "#getNewParserContext()", "When scope is specified, data provider cannot be null");
+            if(logger.isErrorEnabled()) {
+                logger.error(TAG_ERROR + "#getNewParserContext() When scope is specified, data provider cannot be null");
+            }
             return oldParserContext;
         }
 

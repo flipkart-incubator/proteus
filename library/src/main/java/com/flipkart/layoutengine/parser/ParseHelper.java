@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
@@ -17,9 +16,11 @@ import android.widget.RelativeLayout;
 
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.provider.ProteusConstants;
-import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -99,6 +100,7 @@ public class ParseHelper {
     public static final Map<String, Integer> sDimensionsMap = new HashMap<>();
 
     public static final Map<String, ImageView.ScaleType> sImageScaleType = new HashMap<>();
+    private static Logger logger = LoggerFactory.getLogger(ParseHelper.class);
 
 
     static {
@@ -158,7 +160,9 @@ public class ParseHelper {
         try {
             number = Integer.parseInt(attributeValue);
         } catch (NumberFormatException e) {
-            Log.e(Utils.TAG_ERROR, attributeValue + " is NAN. Error: " + e.getMessage());
+            if(logger.isErrorEnabled()) {
+                  logger.error(attributeValue + " is NAN. Error: " + e.getMessage());
+            }
             number = 0;
         }
         return number;
@@ -172,7 +176,9 @@ public class ParseHelper {
         try {
             number = Float.parseFloat(attributeValue);
         } catch (NumberFormatException e) {
-            Log.e(Utils.TAG_ERROR, attributeValue + " is NAN. Error: " + e.getMessage());
+            if(logger.isErrorEnabled()) {
+                logger.error(attributeValue + " is NAN. Error: " + e.getMessage());
+            }
             number = 0;
         }
         return number;
@@ -186,7 +192,9 @@ public class ParseHelper {
         try {
             number = Double.parseDouble(attributeValue);
         } catch (NumberFormatException e) {
-            Log.e(Utils.TAG_ERROR, attributeValue + " is NAN. Error: " + e.getMessage());
+            if(logger.isErrorEnabled()) {
+                logger.error(attributeValue + " is NAN. Error: " + e.getMessage());
+            }
             number = 0;
         }
         return number;
@@ -261,7 +269,9 @@ public class ParseHelper {
                 try {
                     dimensionInPixels = Integer.parseInt(dimension);
                 } catch (NumberFormatException e) {
-                    Log.e(Utils.TAG_ERROR, dimension + " is NAN. Error: " + e.getMessage());
+                    if(logger.isErrorEnabled()) {
+                        logger.error(dimension + " is NAN. Error: " + e.getMessage());
+                    }
                     dimensionInPixels = 0;
                 }
             } else if (dimension.startsWith(DIMENSION_LOCAL_RESOURCE_STR)) {
@@ -269,7 +279,9 @@ public class ParseHelper {
                     int resourceId = context.getResources().getIdentifier(dimension, "dimen", context.getPackageName());
                     dimensionInPixels = (int) context.getResources().getDimension(resourceId);
                 } catch (Exception e) {
-                    Log.e(Utils.TAG_ERROR, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                    if(logger.isErrorEnabled()) {
+                        logger.error("could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                    }
                     dimensionInPixels = 0;
                 }
             } else if (dimension.startsWith(ATTR_START_LITERAL)) {
@@ -291,7 +303,9 @@ public class ParseHelper {
                     dimensionInPixels = a.getDimensionPixelSize(0, 0);
                     a.recycle();
                 } catch (Exception e) {
-                    Log.e(Utils.TAG_ERROR, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                    if(logger.isErrorEnabled()) {
+                        logger.error("could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                    }
                     dimensionInPixels = 0;
                 }
             }
@@ -354,7 +368,9 @@ public class ParseHelper {
         try {
             return Color.parseColor(color);
         } catch (IllegalArgumentException ex) {
-            Log.e(Utils.TAG_ERROR, "Invalid color : " + color + ". Using #000000");
+            if(logger.isErrorEnabled()) {
+                logger.error("Invalid color : " + color + ". Using #000000");
+            }
             return Color.BLACK;
         }
     }
@@ -366,7 +382,9 @@ public class ParseHelper {
         try {
             return Integer.valueOf(id);
         } catch (NumberFormatException ex) {
-            Log.e(Utils.TAG_ERROR, id + " is not a valid resource ID.");
+            if(logger.isErrorEnabled()) {
+                logger.error(id + " is not a valid resource ID.");
+            }
         }
         return null;
     }
@@ -386,7 +404,9 @@ public class ParseHelper {
             params.addRule(verb, anchor);
             view.setLayoutParams(params);
         } else {
-            Log.d(Utils.TAG_ERROR, "cannot add relative layout rules when container is not relative");
+            if(logger.isErrorEnabled()) {
+                logger.error("cannot add relative layout rules when container is not relative");
+            }
         }
     }
 

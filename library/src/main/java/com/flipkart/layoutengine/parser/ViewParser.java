@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -15,9 +14,9 @@ import android.widget.RelativeLayout;
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
+import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
-import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
@@ -26,6 +25,9 @@ import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +41,7 @@ public class ViewParser<V extends View> extends Parser<V> {
     public static final String ATTRIBUTE_BORDER_COLOR = "color";
     public static final String ATTRIBUTE_BORDER_RADIUS = "radius";
     public static final String ATTRIBUTE_BG_COLOR = "bgColor";
+    private Logger logger = LoggerFactory.getLogger(ViewParser.class);
 
     public ViewParser(Class viewClass) {
         super(viewClass);
@@ -93,7 +96,9 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.weight = ParseHelper.parseFloat(attributeValue);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    Log.e(Utils.TAG_ERROR, attributeKey + " is only supported for LinearLayouts");
+                    if(logger.isErrorEnabled()) {
+                        logger.error(attributeKey + " is only supported for LinearLayouts");
+                    }
                 }
             }
         });
@@ -112,7 +117,9 @@ public class ViewParser<V extends View> extends Parser<V> {
                     linearLayoutParams.gravity = ParseHelper.parseGravity(attributeValue);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    Log.e(Utils.TAG_ERROR, attributeKey + " is only supported for LinearLayout and FrameLayout");
+                    if(logger.isErrorEnabled()) {
+                        logger.error(attributeKey + " is only supported for LinearLayout and FrameLayout");
+                    }
                 }
             }
         });
@@ -161,7 +168,9 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.setMargins(dimension, dimension, dimension, dimension);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    Log.e(Utils.TAG_ERROR, "margins can only be applied to views with parent ViewGroup");
+                    if(logger.isErrorEnabled()) {
+                        logger.error("margins can only be applied to views with parent ViewGroup");
+                    }
                 }
             }
         });
@@ -175,7 +184,9 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.setMargins(dimension, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    Log.e(Utils.TAG_ERROR, "margins can only be applied to views with parent ViewGroup");
+                    if(logger.isErrorEnabled()) {
+                        logger.error("margins can only be applied to views with parent ViewGroup");
+                    }
                 }
             }
         });
@@ -189,7 +200,9 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.setMargins(layoutParams.leftMargin, dimension, layoutParams.rightMargin, layoutParams.bottomMargin);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    Log.e(Utils.TAG_ERROR, "margins can only be applied to views with parent ViewGroup");
+                    if(logger.isErrorEnabled()) {
+                        logger.error("margins can only be applied to views with parent ViewGroup");
+                    }
                 }
             }
         });
@@ -203,7 +216,9 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, dimension, layoutParams.bottomMargin);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    Log.e(Utils.TAG_ERROR, "margins can only be applied to views with parent ViewGroup");
+                    if(logger.isErrorEnabled()) {
+                        logger.error("margins can only be applied to views with parent ViewGroup");
+                    }
                 }
             }
         });
@@ -217,7 +232,9 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, dimension);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    Log.e(Utils.TAG_ERROR, "margins can only be applied to views with parent ViewGroup");
+                    if(logger.isErrorEnabled()) {
+                        logger.error("margins can only be applied to views with parent ViewGroup");
+                    }
                 }
             }
         });

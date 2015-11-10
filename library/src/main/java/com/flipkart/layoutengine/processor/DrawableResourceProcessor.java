@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.webkit.URLUtil;
@@ -21,6 +20,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
     private static final String TAG = DrawableResourceProcessor.class.getSimpleName();
     private Context context;
+    private Logger logger = LoggerFactory.getLogger(DrawableResourceProcessor.class);
 
     public DrawableResourceProcessor(Context context) {
         this.context = context;
@@ -44,8 +47,10 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         } else if (attributeValue.isJsonObject()) {
             handleElement(parserContext, attributeKey, attributeValue, view, proteusView, parent, layout, index);
         } else {
-            Log.e(TAG + ".handle()", "Resource for key: " + attributeKey
-                    + " must be a primitive or an object. value -> " + attributeValue.toString());
+            if(logger.isErrorEnabled()) {
+                logger.error("Resource for key: " + attributeKey
+                        + " must be a primitive or an object. value -> " + attributeValue.toString());
+            }
         }
     }
 

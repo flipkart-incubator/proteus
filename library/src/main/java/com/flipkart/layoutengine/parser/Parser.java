@@ -2,19 +2,19 @@ package com.flipkart.layoutengine.parser;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.processor.AttributeProcessor;
-import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 
 import java.lang.reflect.Constructor;
@@ -31,6 +31,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
 
     protected final Class<V> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
+    private Logger logger = LoggerFactory.getLogger(Parser.class);
 
     public Parser(Class<V> viewClass) {
         this.viewClass = viewClass;
@@ -60,7 +61,9 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                 v.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
-            Log.e(Utils.TAG_ERROR + "#createView()", e.getMessage());
+            if(logger.isErrorEnabled()) {
+                logger.error("#createView()", e.getMessage());
+            }
         }
 
         //noinspection unchecked
@@ -80,9 +83,13 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
             try {
                 constructor = viewClass.getDeclaredConstructor(Context.class);
                 constructorCache.put(viewClass, constructor);
-                Log.d(Utils.TAG_DEBUG, "constructor for " + viewClass + " was created and put into cache");
+                if(logger.isDebugEnabled()) {
+                    logger.debug("constructor for " + viewClass + " was created and put into cache");
+                }
             } catch (NoSuchMethodException e) {
-                Log.e(Utils.TAG_ERROR, e.getMessage());
+                if(logger.isErrorEnabled()) {
+                    logger.error(e.getMessage());
+                }
             }
         }
         return constructor;

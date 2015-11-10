@@ -3,11 +3,8 @@ package com.flipkart.layoutengine.processor;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.StateSet;
 import android.view.View;
 
@@ -18,6 +15,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +26,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
 
     private static HashMap<String, Integer> sAttributesMap = null;
     private static final String TAG = ColorResourceProcessor.class.getSimpleName();
+    private Logger logger = LoggerFactory.getLogger(ColorResourceProcessor.class);
 
     public ColorResourceProcessor() {
 
@@ -64,8 +65,9 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
         } else if (attributeValue.isJsonObject()) {
             handleElement(parserContext, attributeKey, attributeValue, view, proteusView, parent, layout, index);
         } else {
-            Log.e(TAG + ".handle()", "Resource for key: " + attributeKey
-                    + " must be a primitive or an object. value -> " + attributeValue.toString());
+            if(logger.isErrorEnabled()) {
+                logger.error("#handle() : Resource for key: " + attributeKey + " must be a primitive or an object. value -> " + attributeValue.toString());
+            }
         }
     }
 
@@ -135,7 +137,9 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
                     setColor(view, color);
                 }
             } catch (Exception ex) {
-                System.out.println("Could not load local resource " + attributeValue);
+                if(logger.isErrorEnabled()) {
+                    logger.error("Could not load local resource " + attributeValue);
+                }
             }
         }
     }

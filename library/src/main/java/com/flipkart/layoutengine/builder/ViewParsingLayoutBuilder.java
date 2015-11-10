@@ -1,7 +1,6 @@
 package com.flipkart.layoutengine.builder;
 
 import android.app.Activity;
-import android.util.Log;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
@@ -12,12 +11,16 @@ import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A layout builder which can parse view blocks before passing it on to {@link SimpleLayoutBuilder}
  */
 public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private Provider viewProvider;
+    private Logger logger = LoggerFactory.getLogger(ViewParsingLayoutBuilder.class);
 
     public ViewParsingLayoutBuilder(Activity activity, Provider viewProvider) {
         super(activity);
@@ -32,7 +35,9 @@ public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
             try {
                 viewElement = viewProvider.getObject(viewType, childIndex);
             } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
-                Log.e(TAG_ERROR, e.getMessage());
+                if(logger.isErrorEnabled()) {
+                    logger.error(e.getMessage());
+                }
             }
         }
         if (viewElement != null) {

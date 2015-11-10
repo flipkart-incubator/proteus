@@ -1,6 +1,5 @@
 package com.flipkart.layoutengine.view;
 
-import android.util.Log;
 import android.view.View;
 
 import com.flipkart.layoutengine.DataContext;
@@ -15,6 +14,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -35,6 +37,7 @@ public class DataProteusView extends SimpleProteusView {
      */
     private ArrayList<Binding> bindings;
     private ParserContext parserContext;
+    private Logger logger = LoggerFactory.getLogger(DataProteusView.class);
 
     public DataProteusView(ProteusView proteusView) {
         super(proteusView.getView(), proteusView.getLayout(), proteusView.getIndex(),
@@ -70,8 +73,10 @@ public class DataProteusView extends SimpleProteusView {
 
     @Override
     protected View updateDataImpl(JsonObject data) {
-        Log.d(Utils.TAG_DEBUG, "START: update data " + (data != null ? "(top-level)" : "")
-                + "for view with " + Utils.getLayoutIdentifier(layout));
+        if(logger.isDebugEnabled()) {
+            logger.debug("START: update data " + (data != null ? "(top-level)" : "")
+                    + "for view with " + Utils.getLayoutIdentifier(layout));
+        }
         this.isViewUpdating = true;
         // update the data context so all child views can refer to new data
         if (data != null) {
@@ -96,8 +101,10 @@ public class DataProteusView extends SimpleProteusView {
         }
 
         this.isViewUpdating = false;
-        Log.d(Utils.TAG_DEBUG, "END: update data " + (data != null ? "(top-level)" : "")
-                + "for view with " + Utils.getLayoutIdentifier(layout));
+        if(logger.isDebugEnabled()) {
+            logger.debug("END: update data " + (data != null ? "(top-level)" : "")
+                    + "for view with " + Utils.getLayoutIdentifier(layout));
+        }
         return this.getView();
     }
 
@@ -111,7 +118,9 @@ public class DataProteusView extends SimpleProteusView {
             childrenDataArray = Utils.getElementFromData(dataPathForChildren,
                     parserContext.getDataContext().getDataProvider(), index).getAsJsonArray();
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-            Log.e(Utils.TAG_ERROR + "#updateChildrenFromData", e.getMessage());
+            if(logger.isErrorEnabled()) {
+                logger.error("#updateChildrenFromData " +e.getMessage());
+            }
         }
 
         if (children.size() > childrenDataArray.size()) {
@@ -162,7 +171,9 @@ public class DataProteusView extends SimpleProteusView {
                 dataValue = Utils.getElementFromData(binding.getBindingName(),
                         parserContext.getDataContext().getDataProvider(), index);
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                Log.e(Utils.TAG_ERROR + "#handleBinding()", e.getMessage());
+                if(logger.isErrorEnabled()) {
+                    logger.error("#handleBinding() " + e.getMessage());
+                }
                 if (getView() != null) {
                     getView().setVisibility(View.GONE);
                 }
@@ -214,7 +225,9 @@ public class DataProteusView extends SimpleProteusView {
             parent = Utils.getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
                     parserContext.getDataContext().getDataProvider(), childIndex);
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-            Log.e(Utils.TAG_ERROR + "#set()", e.getMessage());
+            if(logger.isErrorEnabled()) {
+                logger.error("#set() "+ e.getMessage());
+            }
         }
         if (parent == null || !parent.isJsonObject()) {
             return;
