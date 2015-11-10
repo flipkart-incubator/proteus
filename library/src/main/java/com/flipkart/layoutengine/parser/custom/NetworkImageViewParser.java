@@ -30,4 +30,4 @@ public class NetworkImageViewParser<T extends ImageView> extends WrappableParser
             }
         });
     }
- }
+}

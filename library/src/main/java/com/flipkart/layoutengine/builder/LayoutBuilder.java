@@ -29,6 +29,7 @@ public interface LayoutBuilder {
      * @param viewType remove {@link LayoutHandler} for the specified view type.
      */
     void unregisterHandler(String viewType);
+
     /**
      * Returns the {@link LayoutHandler} for the specified view type.
      *
@@ -41,7 +42,7 @@ public interface LayoutBuilder {
      * This method is used to process the attributes from the layout and set them on the {@link View}
      * that is being built.
      *
-     * @param attributeValue    The name of or reference to the value of this attribute
+     * @param attributeValue        The name of or reference to the value of this attribute
      * @param handler               The {@link LayoutHandler} which will be used to handle the attribute.
      * @param context               The {@link ParserContext} which will be used to process the attribute values.
      * @param attributeName         The name of the attribute which needs to be processed.

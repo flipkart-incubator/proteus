@@ -42,8 +42,7 @@ public class FixedRatingBar extends RatingBar {
         super(context);
     }
 
-    public void setSampleTile(Bitmap bitmap)
-    {
+    public void setSampleTile(Bitmap bitmap) {
         this.sampleTile = bitmap;
     }
 
@@ -59,7 +58,7 @@ public class FixedRatingBar extends RatingBar {
     }
 
     Shape getDrawableShape() {
-        final float[] roundedCorners = new float[] { 5, 5, 5, 5, 5, 5, 5, 5 };
+        final float[] roundedCorners = new float[]{5, 5, 5, 5, 5, 5, 5, 5};
         return new RoundRectShape(roundedCorners, null, null);
     }
 

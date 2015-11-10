@@ -45,20 +45,20 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.DrawablePadding,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.DrawablePadding, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setCompoundDrawablePadding(ParseHelper.parseDimension(attributeValue, context));
             }
         });
 
-        addHandler(Attributes.TextView.TextSize,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.TextSize, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setTextSize(ParseHelper.parseDimension(attributeValue, context));
             }
         });
-        addHandler(Attributes.TextView.Gravity,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.Gravity, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setGravity(ParseHelper.parseGravity(attributeValue));
@@ -117,73 +117,73 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.DrawableLeft,new DrawableResourceProcessor<T>(context) {
+        addHandler(Attributes.TextView.DrawableLeft, new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(drawable, compoundDrawables[1], compoundDrawables[2], compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableTop,new DrawableResourceProcessor<T>(context) {
+        addHandler(Attributes.TextView.DrawableTop, new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
-                view.setCompoundDrawablesWithIntrinsicBounds(compoundDrawables[0],drawable,compoundDrawables[2],compoundDrawables[3]);
+                view.setCompoundDrawablesWithIntrinsicBounds(compoundDrawables[0], drawable, compoundDrawables[2], compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableRight,new DrawableResourceProcessor<T>(context) {
+        addHandler(Attributes.TextView.DrawableRight, new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
-                view.setCompoundDrawablesWithIntrinsicBounds(drawable,compoundDrawables[1],drawable,compoundDrawables[3]);
+                view.setCompoundDrawablesWithIntrinsicBounds(drawable, compoundDrawables[1], drawable, compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableBottom,new DrawableResourceProcessor<T>(context) {
+        addHandler(Attributes.TextView.DrawableBottom, new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
-                view.setCompoundDrawablesWithIntrinsicBounds(drawable,compoundDrawables[1],compoundDrawables[2],drawable);
+                view.setCompoundDrawablesWithIntrinsicBounds(drawable, compoundDrawables[1], compoundDrawables[2], drawable);
             }
         });
 
-        addHandler(Attributes.TextView.MaxLines,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.MaxLines, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setMaxLines(ParseHelper.parseInt(attributeValue));
             }
         });
 
-        addHandler(Attributes.TextView.Ellipsize,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.Ellipsize, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 Enum ellipsize = ParseHelper.parseEllipsize(attributeValue);
                 view.setEllipsize((android.text.TextUtils.TruncateAt) ellipsize);
-               }
+            }
         });
 
-        addHandler(Attributes.TextView.PaintFlags,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.PaintFlags, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                if(attributeValue.equals("strike"))
+                if (attributeValue.equals("strike"))
                     view.setPaintFlags(view.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
         });
 
-        addHandler(Attributes.TextView.Prefix,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.Prefix, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                    view.setText(attributeValue + view.getText());
+                view.setText(attributeValue + view.getText());
             }
         });
 
-        addHandler(Attributes.TextView.Suffix,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.Suffix, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setText(view.getText() + attributeValue);
             }
         });
 
-        addHandler(Attributes.TextView.TextStyle,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.TextStyle, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 int typeface = ParseHelper.parseTypeFace(attributeValue);
@@ -191,14 +191,14 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.SingleLine,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.SingleLine, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setSingleLine(ParseHelper.parseBoolean(attributeValue));
             }
         });
 
-        addHandler(Attributes.TextView.TextAllCaps,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.TextAllCaps, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -206,7 +206,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
                 }
             }
         });
-        addHandler(Attributes.TextView.Hint,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.Hint, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setHint(attributeValue);

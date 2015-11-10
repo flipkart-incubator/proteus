@@ -61,7 +61,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                 v.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
-            if(logger.isErrorEnabled()) {
+            if (logger.isErrorEnabled()) {
                 logger.error("#createView()", e.getMessage());
             }
         }
@@ -83,11 +83,11 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
             try {
                 constructor = viewClass.getDeclaredConstructor(Context.class);
                 constructorCache.put(viewClass, constructor);
-                if(logger.isDebugEnabled()) {
+                if (logger.isDebugEnabled()) {
                     logger.debug("constructor for " + viewClass + " was created and put into cache");
                 }
             } catch (NoSuchMethodException e) {
-                if(logger.isErrorEnabled()) {
+                if (logger.isErrorEnabled()) {
                     logger.error(e.getMessage());
                 }
             }

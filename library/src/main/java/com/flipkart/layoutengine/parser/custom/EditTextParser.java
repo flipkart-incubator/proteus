@@ -10,6 +10,6 @@ import com.flipkart.layoutengine.parser.WrappableParser;
  */
 public class EditTextParser<T extends EditText> extends WrappableParser<T> {
     public EditTextParser(Parser<T> wrappedParser) {
-        super(EditText.class,wrappedParser);
+        super(EditText.class, wrappedParser);
     }
 }

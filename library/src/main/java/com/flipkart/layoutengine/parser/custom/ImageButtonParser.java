@@ -10,6 +10,6 @@ import com.flipkart.layoutengine.parser.WrappableParser;
  */
 public class ImageButtonParser<T extends ImageButton> extends WrappableParser<T> {
     public ImageButtonParser(Parser<T> parentParser) {
-        super(ImageButton.class,parentParser);
+        super(ImageButton.class, parentParser);
     }
 }

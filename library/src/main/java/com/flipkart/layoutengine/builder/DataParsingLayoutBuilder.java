@@ -48,7 +48,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     protected List<ProteusView> parseChildren(LayoutHandler handler, ParserContext context,
                                               ProteusView view, JsonObject parentLayout, int childIndex, Styles styles) {
 
-        if(logger.isDebugEnabled()) {
+        if (logger.isDebugEnabled()) {
             logger.debug("Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
         }
         JsonElement childrenElement = parentLayout.get(ProteusConstants.CHILDREN);
@@ -71,10 +71,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     length = Integer.parseInt(attributeValue);
                 }
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-                logger.error(TAG_ERROR + "#parseChildren() "+e.getMessage());
+                logger.error(TAG_ERROR + "#parseChildren() " + e.getMessage());
                 length = 0;
             } catch (NumberFormatException e) {
-                logger.error(TAG_ERROR + "#parseChildren() " +childrenElement.getAsString() +
+                logger.error(TAG_ERROR + "#parseChildren() " + childrenElement.getAsString() +
                         " is not a number. layout: " +
                         parentLayout.toString());
                 length = 0;
@@ -169,7 +169,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX ||
                         attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX)) {
 
-            if(logger.isDebugEnabled()) {
+            if (logger.isDebugEnabled()) {
                 logger.debug("Find '" + element.toString() + "' for " + attributeName
                         + " for view with " + Utils.getLayoutIdentifier(layout));
             }
@@ -191,7 +191,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                     parserContext.getDataContext().getDataProvider(),
                                     parserContext.getDataContext().getIndex()).getAsString());
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            if(logger.isErrorEnabled()) {
+                            if (logger.isErrorEnabled()) {
                                 logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
                             }
                             finalValue = dataPath;
@@ -211,7 +211,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                             parserContext.getDataContext().getIndex()),
                                     formatterName);
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            if(logger.isErrorEnabled()) {
+                            if (logger.isErrorEnabled()) {
                                 logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
                             }
                             formattedValue = dataPath;
@@ -241,7 +241,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             parserContext.getDataContext().getDataProvider(),
                             childIndex);
                 } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                    if(logger.isErrorEnabled()) {
+                    if (logger.isErrorEnabled()) {
                         logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
                     }
                     failed = true;
@@ -306,7 +306,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         DataContext oldDataContext = oldParserContext.getDataContext();
         if (oldDataContext.getDataProvider() == null) {
-            if(logger.isErrorEnabled()) {
+            if (logger.isErrorEnabled()) {
                 logger.error(TAG_ERROR + "#getNewParserContext() When scope is specified, data provider cannot be null");
             }
             return oldParserContext;

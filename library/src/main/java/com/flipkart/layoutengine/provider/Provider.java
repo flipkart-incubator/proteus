@@ -10,8 +10,11 @@ import com.google.gson.JsonElement;
  */
 public interface Provider extends Cloneable {
     JsonElement getObject(String key, int childIndex) throws InvalidDataPathException, NoSuchDataPathException, JsonNullException;
+
     void setData(JsonElement rootElement);
+
     JsonElement getData();
+
     Provider clone();
 
 }

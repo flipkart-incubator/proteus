@@ -22,7 +22,8 @@ public interface BitmapLoader {
 
     /**
      * Useful for asynchronous download of bitmap.
-     *  @param imageUrl
+     *
+     * @param imageUrl
      * @param imageLoaderCallBack
      * @param layout
      */

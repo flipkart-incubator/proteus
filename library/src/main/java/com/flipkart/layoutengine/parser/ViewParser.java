@@ -96,7 +96,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.weight = ParseHelper.parseFloat(attributeValue);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    if(logger.isErrorEnabled()) {
+                    if (logger.isErrorEnabled()) {
                         logger.error(attributeKey + " is only supported for LinearLayouts");
                     }
                 }
@@ -117,7 +117,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     linearLayoutParams.gravity = ParseHelper.parseGravity(attributeValue);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    if(logger.isErrorEnabled()) {
+                    if (logger.isErrorEnabled()) {
                         logger.error(attributeKey + " is only supported for LinearLayout and FrameLayout");
                     }
                 }
@@ -168,7 +168,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.setMargins(dimension, dimension, dimension, dimension);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    if(logger.isErrorEnabled()) {
+                    if (logger.isErrorEnabled()) {
                         logger.error("margins can only be applied to views with parent ViewGroup");
                     }
                 }
@@ -184,7 +184,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.setMargins(dimension, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    if(logger.isErrorEnabled()) {
+                    if (logger.isErrorEnabled()) {
                         logger.error("margins can only be applied to views with parent ViewGroup");
                     }
                 }
@@ -200,7 +200,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.setMargins(layoutParams.leftMargin, dimension, layoutParams.rightMargin, layoutParams.bottomMargin);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    if(logger.isErrorEnabled()) {
+                    if (logger.isErrorEnabled()) {
                         logger.error("margins can only be applied to views with parent ViewGroup");
                     }
                 }
@@ -216,7 +216,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, dimension, layoutParams.bottomMargin);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    if(logger.isErrorEnabled()) {
+                    if (logger.isErrorEnabled()) {
                         logger.error("margins can only be applied to views with parent ViewGroup");
                     }
                 }
@@ -232,7 +232,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, dimension);
                     view.setLayoutParams(layoutParams);
                 } else {
-                    if(logger.isErrorEnabled()) {
+                    if (logger.isErrorEnabled()) {
                         logger.error("margins can only be applied to views with parent ViewGroup");
                     }
                 }
@@ -347,7 +347,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 String[] styleSet = attributeValue.split(ProteusConstants.STYLE_DELIMITER);
                 for (String styleName : styleSet) {
                     if (styles.contains(styleName)) {
-                        process(styles.getStyle(styleName), layout, proteusView,  (handler != null ? handler : ViewParser.this),
+                        process(styles.getStyle(styleName), layout, proteusView, (handler != null ? handler : ViewParser.this),
                                 parserContext.getLayoutBuilder(), parserContext, parent, index);
                     }
                 }

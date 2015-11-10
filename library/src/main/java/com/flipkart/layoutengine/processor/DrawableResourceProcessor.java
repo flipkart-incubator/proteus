@@ -47,7 +47,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         } else if (attributeValue.isJsonObject()) {
             handleElement(parserContext, attributeKey, attributeValue, view, proteusView, parent, layout, index);
         } else {
-            if(logger.isErrorEnabled()) {
+            if (logger.isErrorEnabled()) {
                 logger.error("Resource for key: " + attributeKey
                         + " must be a primitive or an object. value -> " + attributeValue.toString());
             }
@@ -157,15 +157,13 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
         if (ParseHelper.isLocalResourceAttribute(attributeValue)) {
             int attributeId = ParseHelper.getAttributeId(context, attributeValue);
-            if(0 != attributeId)
-            {
+            if (0 != attributeId) {
                 TypedArray ta = context.obtainStyledAttributes(new int[]{attributeId});
                 Drawable drawable = ta.getDrawable(0 /* index */);
                 ta.recycle();
                 setDrawable(view, drawable);
             }
-        }
-        else if (ParseHelper.isColor(attributeValue)) {
+        } else if (ParseHelper.isColor(attributeValue)) {
             setDrawable(view, new ColorDrawable(ParseHelper.parseColor(attributeValue)));
         } else if (ParseHelper.isLocalDrawableResource(attributeValue)) {
             try {

@@ -15,24 +15,23 @@ import com.google.gson.JsonObject;
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends WrappableParser<T>{
+public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends WrappableParser<T> {
 
-    public FrameLayoutParser(Parser<T> parentParser)
-    {
-        super(AspectRatioFrameLayout.class,parentParser);
+    public FrameLayoutParser(Parser<T> parentParser) {
+        super(AspectRatioFrameLayout.class, parentParser);
     }
 
     @Override
     protected void prepareHandlers(Context context) {
         super.prepareHandlers(context);
-        addHandler(Attributes.FrameLayout.HeightRatio,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.FrameLayout.HeightRatio, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setAspectRatioHeight(ParseHelper.parseInt(attributeValue));
 
             }
         });
-        addHandler(Attributes.FrameLayout.WidthRatio,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.FrameLayout.WidthRatio, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setAspectRatioWidth(ParseHelper.parseInt(attributeValue));

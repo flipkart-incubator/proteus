@@ -65,7 +65,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
         } else if (attributeValue.isJsonObject()) {
             handleElement(parserContext, attributeKey, attributeValue, view, proteusView, parent, layout, index);
         } else {
-            if(logger.isErrorEnabled()) {
+            if (logger.isErrorEnabled()) {
                 logger.error("#handle() : Resource for key: " + attributeKey + " must be a primitive or an object. value -> " + attributeValue.toString());
             }
         }
@@ -137,7 +137,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
                     setColor(view, color);
                 }
             } catch (Exception ex) {
-                if(logger.isErrorEnabled()) {
+                if (logger.isErrorEnabled()) {
                     logger.error("Could not load local resource " + attributeValue);
                 }
             }

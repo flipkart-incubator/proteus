@@ -39,7 +39,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
             try {
                 viewElement = viewProvider.getObject(viewType, childIndex);
             } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
-                logger.error("onUnknownViewEncountered "+e.getMessage());
+                logger.error("onUnknownViewEncountered " + e.getMessage());
             }
         }
         if (viewElement != null) {

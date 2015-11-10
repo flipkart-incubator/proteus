@@ -73,7 +73,7 @@ public class DataProteusView extends SimpleProteusView {
 
     @Override
     protected View updateDataImpl(JsonObject data) {
-        if(logger.isDebugEnabled()) {
+        if (logger.isDebugEnabled()) {
             logger.debug("START: update data " + (data != null ? "(top-level)" : "")
                     + "for view with " + Utils.getLayoutIdentifier(layout));
         }
@@ -101,7 +101,7 @@ public class DataProteusView extends SimpleProteusView {
         }
 
         this.isViewUpdating = false;
-        if(logger.isDebugEnabled()) {
+        if (logger.isDebugEnabled()) {
             logger.debug("END: update data " + (data != null ? "(top-level)" : "")
                     + "for view with " + Utils.getLayoutIdentifier(layout));
         }
@@ -118,8 +118,8 @@ public class DataProteusView extends SimpleProteusView {
             childrenDataArray = Utils.getElementFromData(dataPathForChildren,
                     parserContext.getDataContext().getDataProvider(), index).getAsJsonArray();
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-            if(logger.isErrorEnabled()) {
-                logger.error("#updateChildrenFromData " +e.getMessage());
+            if (logger.isErrorEnabled()) {
+                logger.error("#updateChildrenFromData " + e.getMessage());
             }
         }
 
@@ -171,7 +171,7 @@ public class DataProteusView extends SimpleProteusView {
                 dataValue = Utils.getElementFromData(binding.getBindingName(),
                         parserContext.getDataContext().getDataProvider(), index);
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                if(logger.isErrorEnabled()) {
+                if (logger.isErrorEnabled()) {
                     logger.error("#handleBinding() " + e.getMessage());
                 }
                 if (getView() != null) {
@@ -225,8 +225,8 @@ public class DataProteusView extends SimpleProteusView {
             parent = Utils.getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
                     parserContext.getDataContext().getDataProvider(), childIndex);
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-            if(logger.isErrorEnabled()) {
-                logger.error("#set() "+ e.getMessage());
+            if (logger.isErrorEnabled()) {
+                logger.error("#set() " + e.getMessage());
             }
         }
         if (parent == null || !parent.isJsonObject()) {

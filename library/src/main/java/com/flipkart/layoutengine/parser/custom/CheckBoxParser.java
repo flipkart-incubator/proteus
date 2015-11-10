@@ -16,7 +16,7 @@ import com.google.gson.JsonObject;
 /**
  * Created by prateek.dixit on 1/8/15.
  */
-public class CheckBoxParser <T extends CheckBox> extends WrappableParser<T> {
+public class CheckBoxParser<T extends CheckBox> extends WrappableParser<T> {
 
     public CheckBoxParser(Parser<T> wrappedParser) {
         super(CheckBox.class, wrappedParser);
@@ -26,7 +26,7 @@ public class CheckBoxParser <T extends CheckBox> extends WrappableParser<T> {
     protected void prepareHandlers(Context context) {
         super.prepareHandlers(context);
 
-        addHandler(Attributes.CheckBox.Button , new DrawableResourceProcessor<T>(context) {
+        addHandler(Attributes.CheckBox.Button, new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 view.setButtonDrawable(drawable);

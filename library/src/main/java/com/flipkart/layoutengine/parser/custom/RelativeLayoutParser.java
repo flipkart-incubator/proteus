@@ -17,15 +17,14 @@ import com.google.gson.JsonObject;
  */
 public class RelativeLayoutParser<T extends RelativeLayout> extends WrappableParser<T> {
 
-    public RelativeLayoutParser(Parser<T> parentParser)
-    {
-        super(RelativeLayout.class,parentParser);
+    public RelativeLayoutParser(Parser<T> parentParser) {
+        super(RelativeLayout.class, parentParser);
     }
 
     @Override
     protected void prepareHandlers(Context context) {
         super.prepareHandlers(context);
-        addHandler(Attributes.View.Gravity,new StringAttributeProcessor<T>() {
+        addHandler(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
 
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {

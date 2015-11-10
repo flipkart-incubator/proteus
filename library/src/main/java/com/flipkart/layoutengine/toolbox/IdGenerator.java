@@ -41,7 +41,7 @@ public class IdGenerator {
 
     /**
      * Taken from Android View Source code API 17+
-     * <p>
+     * <p/>
      * Generate a value suitable for use.
      * This value will not collide with ID values generated at build time by aapt for R.id.
      *
