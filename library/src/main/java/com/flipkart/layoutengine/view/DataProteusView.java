@@ -1,5 +1,6 @@
 package com.flipkart.layoutengine.view;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
@@ -29,6 +30,7 @@ public class DataProteusView extends SimpleProteusView {
     private boolean isViewUpdating = false;
     private String dataPathForChildren;
     private JsonObject childLayout;
+    private OnUpdateDataListener onUpdateDataListeners;
 
     /**
      * This Array holds a to the {@link Binding}s of this {@link DataProteusView}.
@@ -46,6 +48,7 @@ public class DataProteusView extends SimpleProteusView {
             bindings = dataProteusView.getBindings();
             dataPathForChildren = dataProteusView.getDataPathForChildren();
             childLayout = dataProteusView.getChildLayout();
+            onUpdateDataListeners = dataProteusView.getOnUpdateDataListeners();
         }
     }
 
@@ -73,10 +76,24 @@ public class DataProteusView extends SimpleProteusView {
         Log.d(Utils.TAG_DEBUG, "START: update data " + (data != null ? "(top-level)" : "")
                 + "for view with " + Utils.getLayoutIdentifier(layout));
         this.isViewUpdating = true;
+
+        data = onBeforeUpdateData(data);
+
         // update the data context so all child views can refer to new data
         if (data != null) {
             updateDataContext(data);
         }
+
+        if (parserContext != null) {
+            data = onAfterDataContext(parserContext.getDataContext().getDataProvider().getData().getAsJsonObject());
+        } else {
+            data = onAfterDataContext(null);
+        }
+
+        if (data == null) {
+            return this.getView();
+        }
+
         // update the bindings of this view
         if (this.bindings != null) {
             for (Binding binding : this.bindings) {
@@ -98,7 +115,36 @@ public class DataProteusView extends SimpleProteusView {
         this.isViewUpdating = false;
         Log.d(Utils.TAG_DEBUG, "END: update data " + (data != null ? "(top-level)" : "")
                 + "for view with " + Utils.getLayoutIdentifier(layout));
+        onUpdateDataComplete();
         return this.getView();
+    }
+
+    @Nullable
+    private JsonObject onBeforeUpdateData(JsonObject data) {
+        if (onUpdateDataListeners != null) {
+            JsonObject override = onUpdateDataListeners.onBeforeUpdateData(data);
+            if (override != null) {
+                return override;
+            }
+        }
+        return data;
+    }
+
+    @Nullable
+    private JsonObject onAfterDataContext(JsonObject data) {
+        if (onUpdateDataListeners != null) {
+            JsonObject override = onUpdateDataListeners.onAfterDataContext(data);
+            if (override != null) {
+                return override;
+            }
+        }
+        return data;
+    }
+
+    private void onUpdateDataComplete() {
+        if (onUpdateDataListeners != null) {
+            onUpdateDataListeners.onUpdateDataComplete();
+        }
     }
 
     private void updateDataContext(JsonObject data) {
@@ -282,5 +328,29 @@ public class DataProteusView extends SimpleProteusView {
         childLayout = null;
         parserContext = null;
         dataPathForChildren = null;
+        onUpdateDataListeners = null;
+        bindings = null;
+    }
+
+    public void addOnUpdateDataListener(OnUpdateDataListener listener) {
+        onUpdateDataListeners = listener;
+    }
+
+    public void removeOnUpdateDataListener() {
+        onUpdateDataListeners = null;
+
+    }
+
+    public OnUpdateDataListener getOnUpdateDataListeners() {
+        return onUpdateDataListeners;
+    }
+
+    public interface OnUpdateDataListener {
+
+        JsonObject onBeforeUpdateData(JsonObject data);
+
+        JsonObject onAfterDataContext(JsonObject data);
+
+        void onUpdateDataComplete();
     }
 }

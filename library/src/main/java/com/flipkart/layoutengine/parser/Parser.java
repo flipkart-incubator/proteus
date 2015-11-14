@@ -60,7 +60,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                 v.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
-            Log.e(Utils.TAG_ERROR + "#createView()", e.getMessage());
+            Log.e(Utils.TAG_ERROR + "#createView()", e.getMessage() + "");
         }
 
         //noinspection unchecked
@@ -82,7 +82,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                 constructorCache.put(viewClass, constructor);
                 Log.d(Utils.TAG_DEBUG, "constructor for " + viewClass + " was created and put into cache");
             } catch (NoSuchMethodException e) {
-                Log.e(Utils.TAG_ERROR, e.getMessage());
+                Log.e(Utils.TAG_ERROR, e.getMessage() + "");
             }
         }
         return constructor;
