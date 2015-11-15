@@ -15,9 +15,9 @@ import android.widget.RelativeLayout;
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
+import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
-import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
@@ -34,11 +34,6 @@ import java.util.Map;
  * @author kiran.kumar
  */
 public class ViewParser<V extends View> extends Parser<V> {
-
-    public static final String ATTRIBUTE_BORDER_WIDTH = "width";
-    public static final String ATTRIBUTE_BORDER_COLOR = "color";
-    public static final String ATTRIBUTE_BORDER_RADIUS = "radius";
-    public static final String ATTRIBUTE_BG_COLOR = "bgColor";
 
     public ViewParser(Class viewClass) {
         super(viewClass);
@@ -269,38 +264,10 @@ public class ViewParser<V extends View> extends Parser<V> {
         addHandler(Attributes.View.Border, new JsonDataProcessor<V>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
+                Drawable border = Utils.getBorderDrawble(attributeValue, context);
+                if (border == null) {
                     return;
                 }
-
-                int cornerRadius = 0, borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
-                JsonObject data = attributeValue.getAsJsonObject();
-
-                String value = Utils.getPropertyAsString(data, ATTRIBUTE_BG_COLOR);
-                if (value != null && !value.equals("-1")) {
-                    bgColor = ParseHelper.parseColor(value);
-                }
-
-                value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_COLOR);
-                if (value != null) {
-                    borderColor = ParseHelper.parseColor(value);
-                }
-
-                value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_RADIUS);
-                if (value != null) {
-                    cornerRadius = ParseHelper.parseDimension(value, context);
-                }
-
-                value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_WIDTH);
-                if (value != null) {
-                    borderWidth = ParseHelper.parseDimension(value, context);
-                }
-
-                GradientDrawable border = new GradientDrawable();
-                border.setCornerRadius(cornerRadius);
-                border.setShape(GradientDrawable.RECTANGLE);
-                border.setStroke(borderWidth, borderColor);
-                border.setColor(bgColor);
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                     //noinspection deprecation
@@ -330,7 +297,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 String[] styleSet = attributeValue.split(ProteusConstants.STYLE_DELIMITER);
                 for (String styleName : styleSet) {
                     if (styles.contains(styleName)) {
-                        process(styles.getStyle(styleName), layout, proteusView,  (handler != null ? handler : ViewParser.this),
+                        process(styles.getStyle(styleName), layout, proteusView, (handler != null ? handler : ViewParser.this),
                                 parserContext.getLayoutBuilder(), parserContext, parent, index);
                     }
                 }
