@@ -1,9 +1,7 @@
 package com.flipkart.layoutengine.parser;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
@@ -321,6 +319,50 @@ public class ViewParser<V extends View> extends Parser<V> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     view.setTransitionName(attributeValue);
                 }
+            }
+        });
+
+        addHandler(Attributes.View.RequiresFadingEdge, new StringAttributeProcessor<V>() {
+
+            private final String NONE = "none";
+            private final String BOTH = "both";
+            private final String VERTICAL = "vertical";
+            private final String HORIZONTAL = "horizontal";
+
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue,
+                               V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+
+                switch (attributeValue) {
+                    case NONE:
+                        view.setVerticalFadingEdgeEnabled(false);
+                        view.setHorizontalFadingEdgeEnabled(false);
+                        break;
+                    case BOTH:
+                        view.setVerticalFadingEdgeEnabled(true);
+                        view.setHorizontalFadingEdgeEnabled(true);
+                        break;
+                    case VERTICAL:
+                        view.setVerticalFadingEdgeEnabled(true);
+                        view.setHorizontalFadingEdgeEnabled(false);
+                        break;
+                    case HORIZONTAL:
+                        view.setVerticalFadingEdgeEnabled(false);
+                        view.setHorizontalFadingEdgeEnabled(true);
+                        break;
+                    default:
+                        view.setVerticalFadingEdgeEnabled(false);
+                        view.setHorizontalFadingEdgeEnabled(false);
+                        break;
+                }
+            }
+        });
+
+        addHandler(Attributes.View.FadingEdgeLength, new StringAttributeProcessor<V>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue,
+                               V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+                view.setFadingEdgeLength(ParseHelper.parseInt(attributeValue));
             }
         });
 
