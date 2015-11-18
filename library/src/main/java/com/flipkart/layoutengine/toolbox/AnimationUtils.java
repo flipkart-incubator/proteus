@@ -26,6 +26,7 @@ import com.flipkart.layoutengine.parser.ParseHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class AnimationUtils {
     private static final String BOUNCE_INTERPOLATOR = "bounceInterpolator";
     private static final String PATH_INTERPOLATOR = "pathInterpolator";
 
-    
+
     private static final String TYPE = "type";
     private static final String SET = "set";
     private static final String ALPHA = "alpha";
@@ -54,9 +55,68 @@ public class AnimationUtils {
     private static final String ROTATE = "rotate";
     private static final String TRANSLATE = "translate";
 
+    private static final String PERCENT_SELF = "%";
+    private static final String PERCENT_RELATIVE_PARENT = "%p";
+
     private static final String TAG = AnimationUtils.class.getSimpleName();
     private Logger mLogger = LoggerFactory.getLogger(AnimationUtils.class);
 
+    /**
+     * Utility class to parse a string description of a size.
+     */
+    private static class Description {
+        /**
+         * One of Animation.ABSOLUTE, Animation.RELATIVE_TO_SELF, or
+         * Animation.RELATIVE_TO_PARENT.
+         */
+        public int type;
+
+        /**
+         * The absolute or relative dimension for this Description.
+         */
+        public float value;
+
+        /**
+         * Size descriptions can appear in three forms:
+         * <ol>
+         * <li>An absolute size. This is represented by a number.</li>
+         * <li>A size relative to the size of the object being animated. This
+         * is represented by a number followed by "%".</li> *
+         * <li>A size relative to the size of the parent of object being
+         * animated. This is represented by a number followed by "%p".</li>
+         * </ol>
+         *
+         * @param value The Json value to parse
+         * @return The parsed version of the description
+         */
+        static Description parseValue(JsonPrimitive value) {
+            Description d = new Description();
+            d.type = Animation.ABSOLUTE;
+            d.value = 0;
+            if (value != null && value.isNumber() || value.isString()) {
+                if (value.isNumber()) {
+                    d.type = Animation.ABSOLUTE;
+                    d.value = value.getAsNumber().floatValue();
+                } else {
+                    String stringValue = value.getAsString();
+                    if (stringValue.endsWith(PERCENT_SELF)) {
+                        stringValue = stringValue.substring(0, stringValue.length() - PERCENT_SELF.length());
+                        d.value = Integer.parseInt(stringValue) / 100;
+                        d.type = Animation.RELATIVE_TO_SELF;
+                    } else if (stringValue.endsWith(PERCENT_RELATIVE_PARENT)) {
+                        stringValue = stringValue.substring(0, stringValue.length() - PERCENT_RELATIVE_PARENT.length());
+                        d.value = Integer.parseInt(stringValue) / 100;
+                        d.type = Animation.RELATIVE_TO_PARENT;
+                    } else {
+                        d.type = Animation.ABSOLUTE;
+                        d.value = value.getAsNumber().floatValue();
+                    }
+                }
+            }
+
+            return d;
+        }
+    }
 
     private abstract static class AnimationProperties {
         Integer duration;
@@ -113,13 +173,15 @@ public class AnimationUtils {
         public Float toXScale;
         public Float fromYScale;
         public Float toYScale;
-        public Float pivotX;
-        public Float pivotY;
+        public JsonPrimitive pivotX;
+        public JsonPrimitive pivotY;
 
         @Override
         Animation createAnimation(Context c) {
             if (pivotX != null && pivotY != null) {
-                return new ScaleAnimation(fromXScale, toXScale, fromYScale, toYScale, pivotX, pivotY);
+                Description pivotXDesc = Description.parseValue(pivotX);
+                Description pivotYDesc = Description.parseValue(pivotY);
+                return new ScaleAnimation(fromXScale, toXScale, fromYScale, toYScale, pivotXDesc.type, pivotXDesc.value, pivotYDesc.type, pivotYDesc.value);
             } else {
                 return new ScaleAnimation(fromXScale, toXScale, fromYScale, toYScale);
             }
@@ -127,26 +189,37 @@ public class AnimationUtils {
     }
 
     private static class TranslateAnimProperties extends AnimationProperties {
-        public Float fromXDelta;
-        public Float toXDelta;
-        public Float fromYDelta;
-        public Float toYDelta;
+        public JsonPrimitive fromXDelta;
+        public JsonPrimitive toXDelta;
+        public JsonPrimitive fromYDelta;
+        public JsonPrimitive toYDelta;
 
         @Override
         Animation createAnimation(Context c) {
-            return new TranslateAnimation(fromXDelta, toXDelta, fromYDelta, toYDelta);
+            Description fromXDeltaDescription = Description.parseValue(fromXDelta);
+            Description toXDeltaDescription = Description.parseValue(toXDelta);
+            Description fromYDeltaDescription = Description.parseValue(fromYDelta);
+            Description toYDeltaDescription = Description.parseValue(toYDelta);
+
+            return new TranslateAnimation(fromXDeltaDescription.type, fromXDeltaDescription.value, toXDeltaDescription.type, toXDeltaDescription.value, fromYDeltaDescription.type, fromYDeltaDescription.value, toYDeltaDescription.type, toYDeltaDescription.value);
         }
     }
 
     private static class RotateAnimProperties extends AnimationProperties {
         public Float fromDegrees;
         public Float toDegrees;
-        public Float pivotX;
-        public Float pivotY;
+        public JsonPrimitive pivotX;
+        public JsonPrimitive pivotY;
 
         @Override
         Animation createAnimation(Context c) {
-            return new RotateAnimation(fromDegrees, toDegrees, pivotX, pivotY);
+            if (null != pivotX && null != pivotY) {
+                Description pivotXDesc = Description.parseValue(pivotX);
+                Description pivotYDesc = Description.parseValue(pivotY);
+                return new RotateAnimation(fromDegrees, toDegrees, pivotXDesc.type, pivotXDesc.value, pivotYDesc.type, pivotYDesc.value);
+            } else {
+                return new RotateAnimation(fromDegrees, toDegrees);
+            }
         }
     }
 

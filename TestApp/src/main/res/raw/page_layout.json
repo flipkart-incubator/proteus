@@ -25,11 +25,11 @@
           "style": "h1.blue",
           "animation" : {
             "type": "rotate",
-            "fromDegrees": "-10",
+            "fromDegrees": "-100",
             "toDegrees": "0",
-            "pivotX": "100",
-            "pivotY": "100",
-            "duration": "700"
+            "pivotX": "100%",
+            "pivotY": "100%",
+            "duration": "1700"
           }
         },
         {
