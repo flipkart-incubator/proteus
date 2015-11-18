@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class AnimationUtils {
 
+
     private static final String LINEAR_INTERPOLATOR = "linearInterpolator";
     private static final String ACCELERATE_INTERPOLATOR = "accelerateInterpolator";
     private static final String DECELERATE_INTERPOLATOR = "decelerateInterpolator";
@@ -59,7 +60,7 @@ public class AnimationUtils {
     private static final String PERCENT_RELATIVE_PARENT = "%p";
 
     private static final String TAG = AnimationUtils.class.getSimpleName();
-    private Logger mLogger = LoggerFactory.getLogger(AnimationUtils.class);
+    private static Logger mLogger = LoggerFactory.getLogger(AnimationUtils.class);
 
     /**
      * Utility class to parse a string description of a size.
@@ -241,7 +242,9 @@ public class AnimationUtils {
         } else if (value.isJsonObject()) {
             anim = handleElement(context, value.getAsJsonObject());
         } else {
-
+            if (mLogger.isErrorEnabled()) {
+                mLogger.error("Could not load animation for : " + value.toString());
+            }
         }
         return anim;
     }
@@ -358,7 +361,9 @@ public class AnimationUtils {
         } else if (value.isJsonObject()) {
             interpolator = handleElementInterpolator(context, value.getAsJsonObject());
         } else {
-
+            if (mLogger.isErrorEnabled()) {
+                mLogger.error("Could not load interpolator for : " + value.toString());
+            }
         }
         return interpolator;
     }
@@ -404,6 +409,9 @@ public class AnimationUtils {
         } else if (PATH_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
             interpolatorProperties = sGson.fromJson(value, PathInterpolatorProperties.class);
         } else {
+            if (mLogger.isErrorEnabled()) {
+                mLogger.error("Unknown interpolator name: " + interpolatorType);
+            }
             throw new RuntimeException("Unknown interpolator name: " + interpolatorType);
         }
 
