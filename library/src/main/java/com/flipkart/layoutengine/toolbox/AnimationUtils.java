@@ -35,8 +35,28 @@ import org.slf4j.LoggerFactory;
  */
 public class AnimationUtils {
 
+    private static final String LINEAR_INTERPOLATOR = "linearInterpolator";
+    private static final String ACCELERATE_INTERPOLATOR = "accelerateInterpolator";
+    private static final String DECELERATE_INTERPOLATOR = "decelerateInterpolator";
+    private static final String ACCELERATE_DECELERATE_INTERPOLATOR = "accelerateDecelerateInterpolator";
+    private static final String CYCLE_INTERPOLATOR = "cycleInterpolator";
+    private static final String ANTICIPATE_INTERPOLATOR = "anticipateInterpolator";
+    private static final String OVERSHOOT_INTERPOLATOR = "overshootInterpolator";
+    private static final String ANTICIPATE_OVERSHOOT_INTERPOLATOR = "anticipateOvershootInterpolator";
+    private static final String BOUNCE_INTERPOLATOR = "bounceInterpolator";
+    private static final String PATH_INTERPOLATOR = "pathInterpolator";
+
+    
+    private static final String TYPE = "type";
+    private static final String SET = "set";
+    private static final String ALPHA = "alpha";
+    private static final String SCALE = "scale";
+    private static final String ROTATE = "rotate";
+    private static final String TRANSLATE = "translate";
+
     private static final String TAG = AnimationUtils.class.getSimpleName();
     private Logger mLogger = LoggerFactory.getLogger(AnimationUtils.class);
+
 
     private abstract static class AnimationProperties {
         Integer duration;
@@ -159,7 +179,7 @@ public class AnimationUtils {
             try {
                 Resources r = c.getResources();
                 int animationId = r.getIdentifier(value, "anim", c.getPackageName());
-                anim = android.view.animation.AnimationUtils.loadAnimation(c,animationId);
+                anim = android.view.animation.AnimationUtils.loadAnimation(c, animationId);
             } catch (Exception ex) {
                 System.out.println("Could not load local resource " + value);
             }
@@ -169,18 +189,18 @@ public class AnimationUtils {
 
     private static Animation handleElement(Context c, JsonObject value) {
         Animation anim = null;
-        JsonElement type = value.get("type");
+        JsonElement type = value.get(TYPE);
         String animationType = type.getAsString();
         AnimationProperties animationProperties = null;
-        if ("set".equalsIgnoreCase(animationType)) {
+        if (SET.equalsIgnoreCase(animationType)) {
             animationProperties = sGson.fromJson(value, AnimationSetProperties.class);
-        } else if ("alpha".equalsIgnoreCase(animationType)) {
+        } else if (ALPHA.equalsIgnoreCase(animationType)) {
             animationProperties = sGson.fromJson(value, AlphaAnimProperties.class);
-        } else if ("scale".equalsIgnoreCase(animationType)) {
+        } else if (SCALE.equalsIgnoreCase(animationType)) {
             animationProperties = sGson.fromJson(value, ScaleAnimProperties.class);
-        } else if ("rotate".equalsIgnoreCase(animationType)) {
+        } else if (ROTATE.equalsIgnoreCase(animationType)) {
             animationProperties = sGson.fromJson(value, RotateAnimProperties.class);
-        } else if ("translate".equalsIgnoreCase(animationType)) {
+        } else if (TRANSLATE.equalsIgnoreCase(animationType)) {
             animationProperties = sGson.fromJson(value, TranslateAnimProperties.class);
         }
 
@@ -290,32 +310,31 @@ public class AnimationUtils {
         JsonElement type = value.get("type");
         String interpolatorType = type.getAsString();
         InterpolatorProperties interpolatorProperties = null;
-        if ("linearInterpolator".equalsIgnoreCase(interpolatorType)) {
+        if (LINEAR_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
             interpolator = new LinearInterpolator();
-        } else if ("accelerateInterpolator".equalsIgnoreCase(interpolatorType)) {
+        } else if (ACCELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
             interpolator = new AccelerateInterpolator();
-        } else if ("decelerateInterpolator".equalsIgnoreCase(interpolatorType)) {
+        } else if (DECELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
             interpolator = new DecelerateInterpolator();
-        } else if ("accelerateDecelerateInterpolator".equalsIgnoreCase(interpolatorType)) {
+        } else if (ACCELERATE_DECELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
             interpolator = new AccelerateDecelerateInterpolator();
-        } else if ("cycleInterpolator".equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value,CycleInterpolatorProperties.class);
-        } else if ("anticipateInterpolator".equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value,AnticipateInterpolatorProperties.class);
-        } else if ("overshootInterpolator".equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value,OvershootInterpolatorProperties.class);
-        } else if ("anticipateOvershootInterpolator".equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value,AnticipateOvershootInterpolatorProperties.class);
-        } else if ("bounceInterpolator".equalsIgnoreCase(interpolatorType)) {
+        } else if (CYCLE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolatorProperties = sGson.fromJson(value, CycleInterpolatorProperties.class);
+        } else if (ANTICIPATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolatorProperties = sGson.fromJson(value, AnticipateInterpolatorProperties.class);
+        } else if (OVERSHOOT_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolatorProperties = sGson.fromJson(value, OvershootInterpolatorProperties.class);
+        } else if (ANTICIPATE_OVERSHOOT_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolatorProperties = sGson.fromJson(value, AnticipateOvershootInterpolatorProperties.class);
+        } else if (BOUNCE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
             interpolator = new BounceInterpolator();
-        } else if ("pathInterpolator".equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value,PathInterpolatorProperties.class);
+        } else if (PATH_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolatorProperties = sGson.fromJson(value, PathInterpolatorProperties.class);
         } else {
             throw new RuntimeException("Unknown interpolator name: " + interpolatorType);
         }
 
-        if(null != interpolatorProperties)
-        {
+        if (null != interpolatorProperties) {
             interpolator = interpolatorProperties.createInterpolator(c);
         }
 
