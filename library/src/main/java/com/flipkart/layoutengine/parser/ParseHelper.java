@@ -74,6 +74,7 @@ public class ParseHelper {
     private static final String COLOR_PREFIX_LITERAL = "#";
 
     private static final String DRAWABLE_LOCAL_RESOURCE_STR = "@drawable/";
+    private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";
     private static final String COLOR_LOCAL_RESOURCE_STR = "@color/";
     private static final String DIMENSION_LOCAL_RESOURCE_STR = "@dimen/";
 
@@ -443,6 +444,10 @@ public class ParseHelper {
 
     public static boolean isLocalDrawableResource(String attributeValue) {
         return attributeValue.startsWith(DRAWABLE_LOCAL_RESOURCE_STR);
+    }
+
+    public static boolean isTweenAnimationResource(String attributeValue) {
+        return attributeValue.startsWith(TWEEN_LOCAL_RESOURCE_STR);
     }
 
     public static boolean isLocalColorResource(String attributeValue) {

@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -18,6 +19,7 @@ import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.flipkart.layoutengine.processor.TweenAnimationResourceProcessor;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.flipkart.layoutengine.toolbox.Styles;
@@ -442,5 +444,12 @@ public class ViewParser<V extends View> extends Parser<V> {
         addHandler(Attributes.View.CenterVertical, relativeLayoutBooleanProcessor);
 
 
+        addHandler(Attributes.View.Animation, new TweenAnimationResourceProcessor<V>(context) {
+
+            @Override
+            public void setAnimation(V view, Animation animation) {
+                view.setAnimation(animation);
+            }
+        });
     }
 }
