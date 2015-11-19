@@ -120,25 +120,77 @@ public class AnimationUtils {
     }
 
     private abstract static class AnimationProperties {
-        Integer duration;
+        Boolean detachWallpaper;
+        Long duration;
+        Boolean fillAfter;
+        Boolean fillBefore;
+        Boolean fillEnabled;
+        JsonElement interpolator;
+        Integer repeatCount;
+        Integer repeatMode;
+        Long startOffset;
+        Integer zAdjustment;
+
+        public Animation instantiate(Context c) {
+            Animation anim = createAnimation(c);
+            if (null != anim) {
+                if (null != detachWallpaper) {
+                    anim.setDetachWallpaper(detachWallpaper);
+                }
+
+                if (null != duration) {
+                    anim.setDuration(duration);
+                }
+
+                if (null != fillAfter) {
+                    anim.setFillAfter(fillAfter);
+                }
+
+                if (null != fillBefore) {
+                    anim.setFillBefore(fillBefore);
+                }
+
+                if (null != fillEnabled) {
+                    anim.setFillEnabled(fillEnabled);
+                }
+
+                if (null != interpolator) {
+                    Interpolator i = loadInterpolator(c, interpolator);
+                    if (null != i) {
+                        anim.setInterpolator(i);
+                    }
+                }
+
+                if (null != repeatCount) {
+                    anim.setRepeatCount(repeatCount);
+                }
+
+                if (null != repeatMode) {
+                    anim.setRepeatMode(repeatMode);
+                }
+
+                if (null != startOffset) {
+                    anim.setStartOffset(startOffset);
+                }
+
+                if (null != zAdjustment) {
+                    anim.setZAdjustment(zAdjustment);
+                }
+            }
+            return anim;
+        }
 
         abstract Animation createAnimation(Context c);
     }
 
     private static class AnimationSetProperties extends AnimationProperties {
-        JsonElement interpolator;
         Boolean shareInterpolator;
         JsonElement children;
 
         @Override
         Animation createAnimation(Context c) {
             AnimationSet animationSet = new AnimationSet(shareInterpolator == null ? true : shareInterpolator);
-            if (null != interpolator) {
-                Interpolator i = loadInterpolator(c, interpolator);
-                if (null != i) {
-                    animationSet.setInterpolator(i);
-                }
-            }
+
 
             if (null != children) {
                 if (children.isJsonArray()) {
@@ -281,11 +333,7 @@ public class AnimationUtils {
         }
 
         if (null != animationProperties) {
-            anim = animationProperties.createAnimation(c);
-
-            if (null != anim && null != animationProperties.duration) {
-                anim.setDuration(animationProperties.duration);
-            }
+            anim = animationProperties.instantiate(c);
         }
 
         return anim;
