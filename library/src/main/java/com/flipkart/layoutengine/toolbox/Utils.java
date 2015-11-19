@@ -148,6 +148,9 @@ public class Utils {
     }
 
     public static String getPropertyAsString(JsonObject object, String property) {
+        if (object == null || object.isJsonNull()) {
+            return null;
+        }
         JsonElement element = object.get(property);
         if (element == null) {
             return null;

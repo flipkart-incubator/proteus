@@ -208,14 +208,12 @@ public class DataProteusView extends SimpleProteusView {
             try {
                 dataValue = Utils.getElementFromData(binding.getBindingName(),
                         parserContext.getDataContext().getDataProvider(), index);
-                if (!Attributes.View.Visibility.getName().equals(binding.getAttributeKey()) &&
-                        !Attributes.View.Invisibility.getName().equals(binding.getAttributeKey()) &&
-                        this.getView() != null) {
+                if (shouldSetVisibility(binding.getAttributeKey(), view)) {
                     this.getView().setVisibility(View.VISIBLE);
                 }
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                 Log.e(Utils.TAG_ERROR + "#handleBinding()", e.getMessage());
-                if (getView() != null) {
+                if (shouldSetVisibility(binding.getAttributeKey(), view)) {
                     getView().setVisibility(View.GONE);
                 }
                 dataValue = new JsonPrimitive(ProteusConstants.DATA_NULL);
@@ -358,5 +356,11 @@ public class DataProteusView extends SimpleProteusView {
         JsonObject onAfterDataContext(JsonObject data);
 
         void onUpdateDataComplete();
+    }
+
+    public static boolean shouldSetVisibility(String attribute, View view) {
+        return !Attributes.View.Visibility.getName().equals(attribute) &&
+                !Attributes.View.Invisibility.getName().equals(attribute) &&
+                view != null;
     }
 }
