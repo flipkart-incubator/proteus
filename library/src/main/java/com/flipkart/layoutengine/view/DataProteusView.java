@@ -10,6 +10,7 @@ import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonArray;
@@ -207,6 +208,11 @@ public class DataProteusView extends SimpleProteusView {
             try {
                 dataValue = Utils.getElementFromData(binding.getBindingName(),
                         parserContext.getDataContext().getDataProvider(), index);
+                if (!Attributes.View.Visibility.getName().equals(binding.getAttributeKey()) &&
+                        !Attributes.View.Invisibility.getName().equals(binding.getAttributeKey()) &&
+                        this.getView() != null) {
+                    this.getView().setVisibility(0);
+                }
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                 Log.e(Utils.TAG_ERROR + "#handleBinding()", e.getMessage());
                 if (getView() != null) {
