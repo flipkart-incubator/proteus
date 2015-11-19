@@ -211,7 +211,7 @@ public class DataProteusView extends SimpleProteusView {
                 if (!Attributes.View.Visibility.getName().equals(binding.getAttributeKey()) &&
                         !Attributes.View.Invisibility.getName().equals(binding.getAttributeKey()) &&
                         this.getView() != null) {
-                    this.getView().setVisibility(0);
+                    this.getView().setVisibility(View.VISIBLE);
                 }
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                 Log.e(Utils.TAG_ERROR + "#handleBinding()", e.getMessage());
