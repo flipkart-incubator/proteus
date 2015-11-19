@@ -253,7 +253,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             .equals(Utils.getPropertyAsString(layout,
                                     Attributes.View.Visibility.getName()))) {
                         dataProteusView.getView().setVisibility(View.INVISIBLE);
-                    } else {
+                    } else if (DataProteusView.shouldSetVisibility(attributeName, dataProteusView.getView())) {
                         dataProteusView.getView().setVisibility(View.GONE);
                     }
                 } else if (dataProteusView.isViewUpdating()
