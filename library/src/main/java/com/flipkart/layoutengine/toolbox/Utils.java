@@ -1,10 +1,15 @@
 package com.flipkart.layoutengine.toolbox;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.google.gson.Gson;
@@ -22,9 +27,14 @@ import java.util.Map;
 public class Utils {
 
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "2.10.0-SNAPSHOT";
+    public static final String VERSION = "3.0.0-SNAPSHOT";
     public static final String TAG_DEBUG = Utils.getTagPrefix() + "debug";
     public static final String TAG_ERROR = Utils.getTagPrefix() + "error";
+
+    public static final String ATTRIBUTE_BORDER_WIDTH = "width";
+    public static final String ATTRIBUTE_BORDER_COLOR = "color";
+    public static final String ATTRIBUTE_BORDER_RADIUS = "radius";
+    public static final String ATTRIBUTE_BG_COLOR = "bgColor";
 
     public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
             throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
@@ -138,6 +148,9 @@ public class Utils {
     }
 
     public static String getPropertyAsString(JsonObject object, String property) {
+        if (object == null || object.isJsonNull()) {
+            return null;
+        }
         JsonElement element = object.get(property);
         if (element == null) {
             return null;
@@ -166,6 +179,44 @@ public class Utils {
             return "TAG: " + value + ".";
         }
         return noLayoutId;
+    }
+
+    public static Drawable getBorderDrawble(JsonElement attributeValue, Context context) {
+
+        if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
+            return null;
+        }
+
+        int cornerRadius = 0, borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
+        JsonObject data = attributeValue.getAsJsonObject();
+
+        String value = Utils.getPropertyAsString(data, ATTRIBUTE_BG_COLOR);
+        if (value != null && !value.equals("-1")) {
+            bgColor = ParseHelper.parseColor(value);
+        }
+
+        value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_COLOR);
+        if (value != null) {
+            borderColor = ParseHelper.parseColor(value);
+        }
+
+        value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_RADIUS);
+        if (value != null) {
+            cornerRadius = ParseHelper.parseDimension(value, context);
+        }
+
+        value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_WIDTH);
+        if (value != null) {
+            borderWidth = ParseHelper.parseDimension(value, context);
+        }
+
+        GradientDrawable border = new GradientDrawable();
+        border.setCornerRadius(cornerRadius);
+        border.setShape(GradientDrawable.RECTANGLE);
+        border.setStroke(borderWidth, borderColor);
+        border.setColor(bgColor);
+
+        return border;
     }
 
     public static String getTagPrefix() {

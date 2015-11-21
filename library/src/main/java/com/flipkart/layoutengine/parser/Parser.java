@@ -62,10 +62,9 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
             }
         } catch (Exception e) {
             if (logger.isErrorEnabled()) {
-                logger.error("#createView()", e.getMessage());
+                logger.error("#createView()", e.getMessage() + "");
             }
         }
-
         //noinspection unchecked
         return (V) v;
     }
@@ -88,7 +87,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                 }
             } catch (NoSuchMethodException e) {
                 if (logger.isErrorEnabled()) {
-                    logger.error(e.getMessage());
+                    logger.error(e.getMessage() + "");
                 }
             }
         }

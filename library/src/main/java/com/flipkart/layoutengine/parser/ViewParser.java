@@ -1,12 +1,11 @@
 package com.flipkart.layoutengine.parser;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -18,6 +17,7 @@ import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
+import com.flipkart.layoutengine.processor.TweenAnimationResourceProcessor;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.flipkart.layoutengine.toolbox.Styles;
@@ -37,10 +37,6 @@ import java.util.Map;
  */
 public class ViewParser<V extends View> extends Parser<V> {
 
-    public static final String ATTRIBUTE_BORDER_WIDTH = "width";
-    public static final String ATTRIBUTE_BORDER_COLOR = "color";
-    public static final String ATTRIBUTE_BORDER_RADIUS = "radius";
-    public static final String ATTRIBUTE_BG_COLOR = "bgColor";
     private Logger logger = LoggerFactory.getLogger(ViewParser.class);
 
     public ViewParser(Class viewClass) {
@@ -286,38 +282,10 @@ public class ViewParser<V extends View> extends Parser<V> {
         addHandler(Attributes.View.Border, new JsonDataProcessor<V>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
+                Drawable border = Utils.getBorderDrawble(attributeValue, context);
+                if (border == null) {
                     return;
                 }
-
-                int cornerRadius = 0, borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
-                JsonObject data = attributeValue.getAsJsonObject();
-
-                String value = Utils.getPropertyAsString(data, ATTRIBUTE_BG_COLOR);
-                if (value != null && !value.equals("-1")) {
-                    bgColor = ParseHelper.parseColor(value);
-                }
-
-                value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_COLOR);
-                if (value != null) {
-                    borderColor = ParseHelper.parseColor(value);
-                }
-
-                value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_RADIUS);
-                if (value != null) {
-                    cornerRadius = ParseHelper.parseDimension(value, context);
-                }
-
-                value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_WIDTH);
-                if (value != null) {
-                    borderWidth = ParseHelper.parseDimension(value, context);
-                }
-
-                GradientDrawable border = new GradientDrawable();
-                border.setCornerRadius(cornerRadius);
-                border.setShape(GradientDrawable.RECTANGLE);
-                border.setStroke(borderWidth, borderColor);
-                border.setColor(bgColor);
 
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
                     //noinspection deprecation
@@ -371,6 +339,50 @@ public class ViewParser<V extends View> extends Parser<V> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     view.setTransitionName(attributeValue);
                 }
+            }
+        });
+
+        addHandler(Attributes.View.RequiresFadingEdge, new StringAttributeProcessor<V>() {
+
+            private final String NONE = "none";
+            private final String BOTH = "both";
+            private final String VERTICAL = "vertical";
+            private final String HORIZONTAL = "horizontal";
+
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue,
+                               V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+
+                switch (attributeValue) {
+                    case NONE:
+                        view.setVerticalFadingEdgeEnabled(false);
+                        view.setHorizontalFadingEdgeEnabled(false);
+                        break;
+                    case BOTH:
+                        view.setVerticalFadingEdgeEnabled(true);
+                        view.setHorizontalFadingEdgeEnabled(true);
+                        break;
+                    case VERTICAL:
+                        view.setVerticalFadingEdgeEnabled(true);
+                        view.setHorizontalFadingEdgeEnabled(false);
+                        break;
+                    case HORIZONTAL:
+                        view.setVerticalFadingEdgeEnabled(false);
+                        view.setHorizontalFadingEdgeEnabled(true);
+                        break;
+                    default:
+                        view.setVerticalFadingEdgeEnabled(false);
+                        view.setHorizontalFadingEdgeEnabled(false);
+                        break;
+                }
+            }
+        });
+
+        addHandler(Attributes.View.FadingEdgeLength, new StringAttributeProcessor<V>() {
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue,
+                               V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+                view.setFadingEdgeLength(ParseHelper.parseInt(attributeValue));
             }
         });
 
@@ -442,5 +454,12 @@ public class ViewParser<V extends View> extends Parser<V> {
         addHandler(Attributes.View.CenterVertical, relativeLayoutBooleanProcessor);
 
 
+        addHandler(Attributes.View.Animation, new TweenAnimationResourceProcessor<V>(context) {
+
+            @Override
+            public void setAnimation(V view, Animation animation) {
+                view.setAnimation(animation);
+            }
+        });
     }
 }

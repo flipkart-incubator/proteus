@@ -22,7 +22,15 @@
         {
           "type": "TextView",
           "text": "Proteus Demo",
-          "style": "h1.blue"
+          "style": "h1.blue",
+          "animation" : {
+            "type": "rotate",
+            "fromDegrees": "-100",
+            "toDegrees": "0",
+            "pivotX": "100%",
+            "pivotY": "100%",
+            "duration": "1700"
+          }
         },
         {
           "type": "LinearLayout",
