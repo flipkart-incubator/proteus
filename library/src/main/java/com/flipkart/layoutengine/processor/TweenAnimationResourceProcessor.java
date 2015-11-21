@@ -5,8 +5,8 @@ import android.view.View;
 import android.view.animation.Animation;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.toolbox.AnimationUtils;
+import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -30,7 +30,7 @@ public abstract class TweenAnimationResourceProcessor<V extends View> extends At
                        V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
         Animation animation = AnimationUtils.loadAnimation(mContext, attributeValue);
         if (null != animation) {
-            setAnimation(view,animation);
+            setAnimation(view, animation);
         } else {
             if (mLogger.isErrorEnabled()) {
                 mLogger.error("Resource for key: " + attributeKey
