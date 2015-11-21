@@ -63,6 +63,8 @@ public class Attributes {
         public static Attribute Border = new Attribute("border");
         public static Attribute TransitionName = new Attribute("transitionName");
         public static Attribute Animation = new Attribute("animation");
+        public static Attribute RequiresFadingEdge = new Attribute("requiresFadingEdge");
+        public static Attribute FadingEdgeLength = new Attribute("fadingEdgeLength");
 
         /**
          * Meta Attributes
