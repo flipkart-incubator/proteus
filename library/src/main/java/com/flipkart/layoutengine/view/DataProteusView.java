@@ -34,10 +34,6 @@ public class DataProteusView extends SimpleProteusView {
     private String dataPathForChildren;
     private JsonObject childLayout;
     private OnUpdateDataListener onUpdateDataListeners;
-
-    /**
-     * This Array holds a to the {@link Binding}s of this {@link DataProteusView}.
-     */
     private ArrayList<Binding> bindings;
     private ParserContext parserContext;
     private Logger logger = LoggerFactory.getLogger(DataProteusView.class);
@@ -76,7 +72,7 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     @Override
-    protected View updateDataImpl(JsonObject data) {
+    public View updateData(JsonObject data) {
         if (logger.isDebugEnabled()) {
             logger.debug("START: update data " + (data != null ? "(top-level)" : "")
                     + "for view with " + Utils.getLayoutIdentifier(layout));
@@ -204,15 +200,9 @@ public class DataProteusView extends SimpleProteusView {
      */
     private void handleBinding(Binding binding) {
         if (binding.hasRegEx()) {
-            parserContext.getLayoutBuilder().handleAttribute(
-                    binding.getLayoutHandler(),
-                    parserContext,
-                    binding.getAttributeKey(),
-                    new JsonPrimitive(binding.getAttributeValue()),
-                    layout,
-                    this,
-                    parent,
-                    index);
+            parserContext.getLayoutBuilder().handleAttribute(binding.getLayoutHandler(), parserContext,
+                    binding.getAttributeKey(), new JsonPrimitive(binding.getAttributeValue()), layout,
+                    this, parent, index);
         } else {
             JsonElement dataValue;
             try {
@@ -230,16 +220,8 @@ public class DataProteusView extends SimpleProteusView {
                 }
                 dataValue = new JsonPrimitive(ProteusConstants.DATA_NULL);
             }
-            parserContext.getLayoutBuilder().handleAttribute(
-                    binding.getLayoutHandler(),
-                    parserContext,
-                    binding.getAttributeKey(),
-                    dataValue,
-                    layout,
-                    this,
-                    parent,
-                    index);
-
+            parserContext.getLayoutBuilder().handleAttribute(binding.getLayoutHandler(), parserContext,
+                    binding.getAttributeKey(), dataValue, layout, this, parent, index);
         }
     }
 
@@ -348,17 +330,18 @@ public class DataProteusView extends SimpleProteusView {
         dataPathForChildren = null;
         onUpdateDataListeners = null;
         bindings = null;
+        logger = null;
     }
 
-    public void addOnUpdateDataListener(OnUpdateDataListener listener) {
+    public void setOnUpdateDataListener(OnUpdateDataListener listener) {
         onUpdateDataListeners = listener;
     }
 
     public void removeOnUpdateDataListener() {
         onUpdateDataListeners = null;
-
     }
 
+    @Nullable
     public OnUpdateDataListener getOnUpdateDataListeners() {
         return onUpdateDataListeners;
     }

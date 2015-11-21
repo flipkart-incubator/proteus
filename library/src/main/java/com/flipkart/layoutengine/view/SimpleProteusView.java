@@ -89,7 +89,7 @@ public class SimpleProteusView implements ProteusView {
 
     @Override
     public View updateData(JsonObject data) {
-        return updateDataImpl(data);
+        return this.view;
     }
 
     @Override
@@ -143,10 +143,6 @@ public class SimpleProteusView implements ProteusView {
         this.layout = null;
         this.styles = null;
         this.parent = null;
-    }
-
-    protected View updateDataImpl(JsonObject data) {
-        return this.view;
     }
 
     protected void unsetParent(View child) {
