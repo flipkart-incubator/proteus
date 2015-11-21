@@ -122,19 +122,6 @@ public class Utils {
         return destination;
     }
 
-    public static JsonObject getMergedLayout(JsonObject source, JsonObject override) {
-        JsonObject layout = new JsonObject();
-
-        for (Map.Entry<String, JsonElement> entry : source.entrySet()) {
-
-            if (!ProteusConstants.TYPE.equals(entry.getKey()) )
-
-            layout.add(entry.getKey(), entry.getValue());
-        }
-
-        return layout;
-    }
-
     public static String getStringFromArray(JsonArray array, String delimiter) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < array.size(); i++) {

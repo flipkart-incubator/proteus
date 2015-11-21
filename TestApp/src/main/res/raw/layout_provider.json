@@ -1,18 +1,4 @@
 {
-  "DemoLinearLayout": {
-    "type": "LinearLayout",
-    "layout_width": "match_parent",
-    "layout_height": "wrap_content",
-    "orientation": "vertical",
-    "children": [
-      {
-        "type": "TextView",
-        "text": "LinearLayout",
-        "gravity": "left",
-        "style": "h.2.blue"
-      }
-    ]
-  },
   "SellerWidget": {
     "type": "LinearLayout",
     "layout_width": "match_parent",
