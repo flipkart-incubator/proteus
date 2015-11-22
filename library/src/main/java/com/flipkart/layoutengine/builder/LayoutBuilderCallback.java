@@ -44,8 +44,8 @@ public interface LayoutBuilderCallback {
     JsonObject onChildTypeLayoutRequired(ParserContext context, String viewType, JsonObject parentViewJsonObject,
                                          ProteusView parent);
 
-    void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, ParserContext context,
-                                     JsonObject viewJsonObject, ProteusView parent, int childIndex);
+    void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, JsonObject viewJsonObject,
+                                     ProteusView parent, int childIndex);
 
     /**
      * called when any click occurs on views

@@ -3,18 +3,12 @@ package com.flipkart.layoutengine.builder;
 import android.content.Context;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
-import com.flipkart.layoutengine.exceptions.JsonNullException;
-import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
-import com.flipkart.layoutengine.provider.JsonProvider;
-import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Map;
 
 /**
  * A layout builder which can parse @data and @view blocks before passing it on to
@@ -22,51 +16,35 @@ import org.slf4j.LoggerFactory;
  */
 public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
-    private Provider viewProvider;
-    private Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
+    private Map<String, JsonObject> viewProvider;
 
-    protected DataAndViewParsingLayoutBuilder(Context context, JsonObject viewProvider) {
+    protected DataAndViewParsingLayoutBuilder(Context context, Map<String, JsonObject> viewProvider) {
         super(context);
-        this.viewProvider = new JsonProvider(viewProvider);
+        this.viewProvider = viewProvider;
     }
 
     @Override
     protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
-                                                   ProteusView parent, JsonObject layout,
-                                                   int childIndex) {
+                                                   ProteusView parent, JsonObject source,
+                                                   int index) {
         JsonElement viewElement = null;
         if (viewProvider != null) {
-            try {
-                viewElement = viewProvider.getObject(viewType, childIndex);
-            } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
-                logger.error("onUnknownViewEncountered " + e.getMessage());
-            }
+            viewElement = viewProvider.get(viewType);
         }
         if (viewElement != null) {
-            JsonObject viewLayoutObject = viewElement.getAsJsonObject();
-            ProteusView createdView = buildImpl(context, parent, viewLayoutObject, childIndex, parent.getStyles());
-            ParserContext newParserContext = getNewParserContext(context, viewLayoutObject, childIndex);
-            onViewBuiltFromViewProvider(createdView, viewType, newParserContext, viewLayoutObject, parent, childIndex);
+            JsonObject layout = viewElement.getAsJsonObject();
+            layout = Utils.mergeLayouts(layout, source);
+            ProteusView createdView = buildImpl(context, parent, layout, index, parent.getStyles());
+            onViewBuiltFromViewProvider(createdView, viewType, layout, parent, index);
             return createdView;
         }
-        return super.onUnknownViewEncountered(context, viewType, parent, layout, childIndex);
+        return super.onUnknownViewEncountered(context, viewType, parent, source, index);
     }
 
-    public void updateLayoutProvider(JsonObject newViewProvider) {
-        if (viewProvider != null && viewProvider.getData() != null) {
-            JsonElement viewProviderData = Utils.addElements(viewProvider.getData().getAsJsonObject(), newViewProvider, true);
-            viewProvider.setData(viewProviderData);
-        } else {
-            viewProvider = new JsonProvider(newViewProvider);
-        }
-    }
-
-    private void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
-                                             ParserContext parserContext, JsonObject viewLayoutObject,
-                                             ProteusView parent, int childIndex) {
+    private void onViewBuiltFromViewProvider(ProteusView view, String viewType,
+                                             JsonObject layout, ProteusView parent, int childIndex) {
         if (listener != null) {
-            listener.onViewBuiltFromViewProvider(createdView, viewType, parserContext, viewLayoutObject,
-                    parent, childIndex);
+            listener.onViewBuiltFromViewProvider(view, viewType, layout, parent, childIndex);
         }
     }
 }

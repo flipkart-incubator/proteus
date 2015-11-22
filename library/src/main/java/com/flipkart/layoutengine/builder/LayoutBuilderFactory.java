@@ -32,6 +32,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Factory class for creating Layout builders with different predefined behaviours. This is the
@@ -51,8 +52,7 @@ public class LayoutBuilderFactory {
      * @param context {@link Context} of the activity
      * @return A new {@link DataAndViewParsingLayoutBuilder}
      */
-    public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Context context,
-                                                                              JsonObject viewProvider) {
+    public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Context context, Map<String, JsonObject> viewProvider) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
             dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(context, viewProvider);
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);

@@ -46,12 +46,13 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Override
     protected List<ProteusView> parseChildren(LayoutHandler handler, ParserContext context,
-                                              ProteusView view, JsonObject parentLayout, int childIndex, Styles styles) {
+                                              ProteusView parent, JsonObject layout, int index,
+                                              Styles styles) {
 
         if (logger.isDebugEnabled()) {
-            logger.debug("Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
+            logger.debug("Parsing children for view with " + Utils.getLayoutIdentifier(layout));
         }
-        JsonElement childrenElement = parentLayout.get(ProteusConstants.CHILDREN);
+        JsonElement childrenElement = layout.get(ProteusConstants.CHILDREN);
 
         if (childrenElement != null &&
                 childrenElement.isJsonPrimitive() &&
@@ -63,7 +64,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             try {
                 JsonElement elementFromData = Utils.getElementFromData(dataPathLength,
                         context.getDataContext().getDataProvider(),
-                        childIndex);
+                        index);
                 String attributeValue = elementFromData.getAsString();
                 if (ProteusConstants.DATA_NULL.equals(attributeValue)) {
                     length = 0;
@@ -76,18 +77,18 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             } catch (NumberFormatException e) {
                 logger.error(TAG_ERROR + "#parseChildren() " + childrenElement.getAsString() +
                         " is not a number. layout: " +
-                        parentLayout.toString());
+                        layout.toString());
                 length = 0;
             }
 
             // get the child type
-            JsonElement childTypeElement = parentLayout.get(ProteusConstants.CHILD_TYPE);
+            JsonElement childType = layout.get(ProteusConstants.CHILD_TYPE);
 
-            if (childTypeElement != null) {
+            if (childType != null) {
                 List<ProteusView> childrenView = new ArrayList<>();
-                JsonObject childLayout = getChildLayout(childTypeElement, context, parentLayout, view);
+                JsonObject childLayout = getChildLayout(childType, context, layout, parent);
                 JsonElement childDataContext = childLayout.get(ProteusConstants.CHILD_DATA_CONTEXT);
-                JsonElement childDataContextFromParent = parentLayout.get(ProteusConstants.CHILD_DATA_CONTEXT);
+                JsonElement childDataContextFromParent = layout.get(ProteusConstants.CHILD_DATA_CONTEXT);
 
                 if (childDataContextFromParent != null && childDataContext != null) {
                     Utils.addElements(childDataContext.getAsJsonObject(),
@@ -97,12 +98,12 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     childLayout.add(ProteusConstants.DATA_CONTEXT, childDataContextFromParent);
                 }
 
-                DataProteusView proteusView = (DataProteusView) view;
+                DataProteusView proteusView = (DataProteusView) parent;
                 proteusView.setChildLayout(childLayout);
                 proteusView.setDataPathForChildren(dataPath);
 
                 for (int i = 0; i < length; i++) {
-                    ProteusView childView = buildImpl(context, view, childLayout, i, styles);
+                    ProteusView childView = buildImpl(context, parent, childLayout, i, styles);
                     if (childView != null && childView.getView() != null) {
                         childrenView.add(childView);
                     }
@@ -112,7 +113,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             }
         }
 
-        return super.parseChildren(handler, context, view, parentLayout, childIndex, styles);
+        return super.parseChildren(handler, context, parent, layout, index, styles);
     }
 
     @Override
