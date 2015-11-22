@@ -31,6 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,6 +40,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Future;
 
 
@@ -66,9 +68,9 @@ public class MainActivity extends ActionBarActivity {
 
     private void createView() {
 
-        JsonObject layoutProvider = getJsonFromFile(R.raw.layout_provider).getAsJsonObject();
-
+        Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
         layout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
+
         data = getJsonFromFile(R.raw.data_1).getAsJsonObject();
 
         builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, layoutProvider);
@@ -145,14 +147,13 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public JsonObject onChildTypeLayoutRequired(ParserContext context, String viewType,
-                                                        JsonObject parentViewJsonObject, ProteusView parent) {
+                                                        JsonObject layout, ProteusView parent) {
                 return null;
             }
 
             @Override
             public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
-                                                    ParserContext context, JsonObject viewJsonObject,
-                                                    ProteusView parent, int childIndex) {
+                                                    JsonObject layout, ProteusView parent, int childIndex) {
             }
 
             @Override
@@ -200,6 +201,13 @@ public class MainActivity extends ActionBarActivity {
         InputStream inputStream = getResources().openRawResource(resId);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         return gson.fromJson(reader, JsonElement.class);
+    }
+
+    private Map<String, JsonObject> getProviderFromFile(int resId) {
+        InputStream inputStream = getResources().openRawResource(resId);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        return gson.fromJson(reader, (new TypeToken<Map<String, JsonObject>>() {
+        }).getType());
     }
 
     public class ProteusViewHolderAdapter extends RecyclerView.Adapter<ProteusViewHolderAdapter.ProteusViewHolder> {
