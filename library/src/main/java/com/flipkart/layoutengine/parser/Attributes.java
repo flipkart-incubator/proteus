@@ -157,6 +157,10 @@ public class Attributes {
         public static Attribute ProgressTint = new Attribute("progressTint");
     }
 
+    public static class VideoView {
+        public static Attribute Uri = new Attribute("uri");
+    }
+
     public static class Attribute {
 
         public static class Priority {
