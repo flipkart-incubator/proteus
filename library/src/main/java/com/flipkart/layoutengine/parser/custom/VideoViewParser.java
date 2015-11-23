@@ -22,13 +22,21 @@ public class VideoViewParser<T extends VideoView> extends WrappableParser<T> {
     }
 
     @Override
-    protected void prepareHandlers(Context context) {
+    protected void prepareHandlers(final Context context) {
         super.prepareHandlers(context);
 
         addHandler(Attributes.VideoView.Uri, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                view.setVideoURI(Uri.parse(attributeValue));
+                if(attributeValue.matches("raw/.*")) {
+                    int resourceId = context.getResources()
+                            .getIdentifier(attributeValue, "raw", context.getPackageName());
+                    String uri = "android.resource://" + context.getPackageName() + "/" + resourceId;
+                    view.setVideoURI(Uri.parse(uri));
+                }
+                else {
+                    view.setVideoURI(Uri.parse(attributeValue));
+                }
             }
         });
     }

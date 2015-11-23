@@ -2,6 +2,8 @@ package com.flipkart.layoutengine.testapp;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ImageLoaderCallBack;
@@ -24,6 +27,7 @@ import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -124,7 +128,29 @@ public class MainActivity extends ActionBarActivity {
 
         Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
 
-        container.addView(proteusView.getView(), layoutParams);
+        View view = proteusView.getView();
+        final VideoView videoViewLocal = (VideoView) view.findViewById(
+                IdGenerator.getInstance().getUnique("video_view_from_local"));
+
+        final VideoView videoViewWeb = (VideoView) view.findViewById(
+                IdGenerator.getInstance().getUnique("video_view_from_web"));
+
+        videoViewLocal.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                videoViewLocal.start();
+            }
+        });
+
+        videoViewWeb.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                videoViewWeb.start();
+            }
+        });
+
+
+        container.addView(view, layoutParams);
         setContentView(container);
     }
 

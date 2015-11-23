@@ -272,6 +272,21 @@
               "style": "blue"
             }
           ]
+        },
+        {
+          "type": "VideoView",
+          "id" : "video_view_from_local",
+          "visibility": "visible",
+          "layout_width": "100dp",
+          "layout_height": "100dp",
+          "uri": "raw/sample_video"
+        },
+        {
+          "type": "VideoView",
+          "id": "video_view_from_web",
+          "layout_width": "100dp",
+          "layout_height": "100dp",
+          "uri": "http://www.sample-videos.com/video/mp4/240/big_buck_bunny_240p_1mb.mp4"
         }
       ]
     }
