@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.flipkart.layoutengine.EventType;
+import com.flipkart.layoutengine.GifLoaderCallback;
 import com.flipkart.layoutengine.ImageLoaderCallBack;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DataAndViewParsingLayoutBuilder;
@@ -24,6 +25,8 @@ import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.GifLoader;
+import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -32,7 +35,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,6 +45,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.concurrent.Future;
+
+import pl.droidsonroids.gif.AnimationListener;
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -109,6 +118,57 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
+        builder.setGifLoader(new GifLoader() {
+            @Override
+            public Future<GifDrawable> getGifDrawable(String imageUrl, View view) {
+                return null;
+            }
+
+            @Override
+            public void getGifDrawable(String imageUrl, final GifLoaderCallback gifLoaderCallback, View view, JsonObject layout) {
+                URL url;
+                try {
+                    url = new URL(imageUrl);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                new AsyncTask<URL, Integer, GifDrawable>() {
+
+                    @Override
+                    protected GifDrawable doInBackground(URL... urls) {
+                        try {
+                            Log.d("GIF", "DOING IN BACKGROUND");
+                            InputStream inputStream =  urls[0].openConnection().getInputStream();
+
+                            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+                            int nRead;
+                            byte[] data = new byte[16384];
+
+                            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+                                buffer.write(data, 0, nRead);
+                            }
+
+                            buffer.flush();
+
+                            GifDrawable drawable = new GifDrawable(buffer.toByteArray());
+                            drawable.stop();
+                            return drawable;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(GifDrawable gifDrawable) {
+                        gifLoaderCallback.onResponse(gifDrawable);
+                    }
+                }.execute(url);
+            }
+        });
+
         container = new FrameLayout(MainActivity.this);
         layoutParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -123,6 +183,26 @@ public class MainActivity extends ActionBarActivity {
         long elapsedTime = stopTime - startTime;
 
         Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
+
+        final GifImageView imageView = (GifImageView) proteusView.getView().findViewById(
+                IdGenerator.getInstance().getUnique("gif_image_view"));
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GifDrawable drawable = (GifDrawable) imageView.getDrawable();
+                if(!drawable.isRunning()) {
+                    drawable.reset();
+                    drawable.addAnimationListener(new AnimationListener() {
+                        @Override
+                        public void onAnimationCompleted(int loopNumber) {
+                            Toast.makeText(MainActivity.this, "Animation completed!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    drawable.start();
+                }
+            }
+        });
 
         container.addView(proteusView.getView(), layoutParams);
         setContentView(container);

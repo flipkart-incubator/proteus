@@ -9,6 +9,7 @@ import com.flipkart.layoutengine.parser.custom.ButtonParser;
 import com.flipkart.layoutengine.parser.custom.CheckBoxParser;
 import com.flipkart.layoutengine.parser.custom.EditTextParser;
 import com.flipkart.layoutengine.parser.custom.FrameLayoutParser;
+import com.flipkart.layoutengine.parser.custom.GifImageViewParser;
 import com.flipkart.layoutengine.parser.custom.HorizontalProgressBarParser;
 import com.flipkart.layoutengine.parser.custom.HorizontalScrollViewParser;
 import com.flipkart.layoutengine.parser.custom.ImageButtonParser;
@@ -116,6 +117,7 @@ public class LayoutBuilderFactory {
         CheckBoxParser checkBoxParser = new CheckBoxParser(buttonParser);
         ProgressBarParser progressBarParser = new ProgressBarParser(viewParser);
         HorizontalProgressBarParser horizontalProgressBarParser = new HorizontalProgressBarParser(progressBarParser);
+        GifImageViewParser gifImageViewParser = new GifImageViewParser(imageViewParser);
 
         layoutBuilder.registerHandler("View", viewParser);
         layoutBuilder.registerHandler("RelativeLayout", relativeLayoutParser);
@@ -135,6 +137,7 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("CheckBox", checkBoxParser);
         layoutBuilder.registerHandler("ProgressBar", progressBarParser);
         layoutBuilder.registerHandler("HorizontalProgressBar", horizontalProgressBarParser);
+        layoutBuilder.registerHandler("GifImageView", gifImageViewParser);
     }
 
     protected void registerFormatter(DataParsingLayoutBuilder layoutBuilder) {

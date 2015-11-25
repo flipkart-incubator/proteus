@@ -157,6 +157,10 @@ public class Attributes {
         public static Attribute ProgressTint = new Attribute("progressTint");
     }
 
+    public static class GifImageView {
+        public static Attribute Background = new Attribute("background");
+    }
+
     public static class Attribute {
 
         public static class Priority {

@@ -8,6 +8,7 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.GifLoader;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -36,6 +37,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     private HashMap<String, LayoutHandler> layoutHandlers = new HashMap<>();
     protected LayoutBuilderCallback listener;
     private BitmapLoader bitmapLoader;
+    private GifLoader gifLoader;
     private boolean isSynchronousRendering = false;
     private Context context;
     private Logger logger = LoggerFactory.getLogger(SimpleLayoutBuilder.class);
@@ -314,6 +316,16 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     @Override
     public void setBitmapLoader(BitmapLoader bitmapLoader) {
         this.bitmapLoader = bitmapLoader;
+    }
+
+    @Override
+    public void setGifLoader(GifLoader gifLoader) {
+        this.gifLoader = gifLoader;
+    }
+
+    @Override
+    public GifLoader getNetworkGifDrawableHelper() {
+        return gifLoader;
     }
 
     @Override
