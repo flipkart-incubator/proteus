@@ -2,6 +2,8 @@ package com.flipkart.layoutengine.testapp;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.GifLoaderCallback;
@@ -35,7 +38,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -204,7 +206,30 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        container.addView(proteusView.getView(), layoutParams);
+
+        View view = proteusView.getView();
+        final VideoView videoViewLocal = (VideoView) view.findViewById(
+                IdGenerator.getInstance().getUnique("video_view_from_local"));
+
+        final VideoView videoViewWeb = (VideoView) view.findViewById(
+                IdGenerator.getInstance().getUnique("video_view_from_web"));
+
+        videoViewLocal.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                videoViewLocal.start();
+            }
+        });
+
+        videoViewWeb.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                videoViewWeb.start();
+            }
+        });
+
+
+        container.addView(view, layoutParams);
         setContentView(container);
     }
 

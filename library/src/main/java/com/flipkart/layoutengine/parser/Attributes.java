@@ -161,6 +161,10 @@ public class Attributes {
         public static Attribute Background = new Attribute("background");
     }
 
+    public static class VideoView {
+        public static Attribute Uri = new Attribute("uri");
+    }
+
     public static class Attribute {
 
         public static class Priority {

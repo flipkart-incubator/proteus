@@ -286,6 +286,21 @@
           "layout_width" : "wrap_content",
           "layout_height": "wrap_content",
           "background": "http://24.media.tumblr.com/f19be613299b81529e90680e7c559b7a/tumblr_mfjdq2Sz7K1rjxfbno1_r1_500.gif"
+        },
+        {
+          "type": "VideoView",
+          "id" : "video_view_from_local",
+          "visibility": "visible",
+          "layout_width": "100dp",
+          "layout_height": "100dp",
+          "uri": "raw/sample_video"
+        },
+        {
+          "type": "VideoView",
+          "id": "video_view_from_web",
+          "layout_width": "100dp",
+          "layout_height": "100dp",
+          "uri": "http://www.sample-videos.com/video/mp4/240/big_buck_bunny_240p_1mb.mp4"
         }
       ]
     }
