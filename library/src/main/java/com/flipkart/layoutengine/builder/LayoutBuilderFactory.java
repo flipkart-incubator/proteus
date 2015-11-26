@@ -9,6 +9,7 @@ import com.flipkart.layoutengine.parser.custom.ButtonParser;
 import com.flipkart.layoutengine.parser.custom.CheckBoxParser;
 import com.flipkart.layoutengine.parser.custom.EditTextParser;
 import com.flipkart.layoutengine.parser.custom.FrameLayoutParser;
+import com.flipkart.layoutengine.parser.custom.GifImageViewParser;
 import com.flipkart.layoutengine.parser.custom.HorizontalProgressBarParser;
 import com.flipkart.layoutengine.parser.custom.HorizontalScrollViewParser;
 import com.flipkart.layoutengine.parser.custom.ImageButtonParser;
@@ -20,6 +21,7 @@ import com.flipkart.layoutengine.parser.custom.RatingBarParser;
 import com.flipkart.layoutengine.parser.custom.RelativeLayoutParser;
 import com.flipkart.layoutengine.parser.custom.ScrollViewParser;
 import com.flipkart.layoutengine.parser.custom.TextViewParser;
+import com.flipkart.layoutengine.parser.custom.VideoViewParser;
 import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
 import com.flipkart.layoutengine.parser.custom.WebViewParser;
 import com.flipkart.layoutengine.toolbox.Formatter;
@@ -116,6 +118,8 @@ public class LayoutBuilderFactory {
         CheckBoxParser checkBoxParser = new CheckBoxParser(buttonParser);
         ProgressBarParser progressBarParser = new ProgressBarParser(viewParser);
         HorizontalProgressBarParser horizontalProgressBarParser = new HorizontalProgressBarParser(progressBarParser);
+        GifImageViewParser gifImageViewParser = new GifImageViewParser(imageViewParser);
+        VideoViewParser videoViewParser = new VideoViewParser(viewParser);
 
         layoutBuilder.registerHandler("View", viewParser);
         layoutBuilder.registerHandler("RelativeLayout", relativeLayoutParser);
@@ -135,6 +139,8 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("CheckBox", checkBoxParser);
         layoutBuilder.registerHandler("ProgressBar", progressBarParser);
         layoutBuilder.registerHandler("HorizontalProgressBar", horizontalProgressBarParser);
+        layoutBuilder.registerHandler("GifImageView", gifImageViewParser);
+        layoutBuilder.registerHandler("VideoView", videoViewParser);
     }
 
     protected void registerFormatter(DataParsingLayoutBuilder layoutBuilder) {

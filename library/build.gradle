@@ -44,6 +44,10 @@ android {
             minifyEnabled false
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
 android.libraryVariants.all { variant ->
@@ -127,4 +131,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.code.gson:gson:2.4'
     compile 'org.slf4j:slf4j-api:1.7.6'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.1.10'
 }

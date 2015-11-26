@@ -5,6 +5,7 @@ import android.view.View;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.GifLoader;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
@@ -93,6 +94,11 @@ public interface LayoutBuilder {
      */
     BitmapLoader getNetworkDrawableHelper();
 
+    /**
+     * @return The helper object that is being used to handle  gif drawables that need to fetched
+     * from a network.
+     */
+    GifLoader getNetworkGifDrawableHelper();
 
     /**
      * All network bitmap calls will be handed over to this loader. This method is used to
@@ -103,6 +109,17 @@ public interface LayoutBuilder {
      *                     loading images.
      */
     void setBitmapLoader(BitmapLoader bitmapLoader);
+
+    /**
+     * All network gif calls will be handed over to this loader. This method is used to
+     * set the {@link com.flipkart.layoutengine.toolbox.GifLoader} for the
+     * {@link com.flipkart.layoutengine.builder.LayoutBuilder}
+     *
+     * @param gifLoader {@link com.flipkart.layoutengine.toolbox.GifLoader} to use for
+     *                     loading images.
+     */
+    void setGifLoader(GifLoader gifLoader);
+
 
     /**
      * Set this to true for rendering preview immediately. This is to be used to decide whether

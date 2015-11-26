@@ -32,7 +32,7 @@ import java.util.List;
 public abstract class DrawableResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
     private static final String TAG = DrawableResourceProcessor.class.getSimpleName();
-    private Context context;
+    protected Context context;
     private Logger logger = LoggerFactory.getLogger(DrawableResourceProcessor.class);
 
     public DrawableResourceProcessor(Context context) {
