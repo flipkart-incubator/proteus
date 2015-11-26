@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +19,6 @@ import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ImageLoaderCallBack;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DataAndViewParsingLayoutBuilder;
-import com.flipkart.layoutengine.builder.LayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
@@ -28,7 +26,6 @@ import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
@@ -46,7 +43,6 @@ import java.util.concurrent.Future;
 
 public class MainActivity extends ActionBarActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
     private DataProteusView proteusView;
     private Gson gson;
     private DataAndViewParsingLayoutBuilder builder;
@@ -184,16 +180,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_new_data_1:
-                return true;
-
-            case R.id.action_new_data_2:
-                return true;
-
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -208,49 +194,5 @@ public class MainActivity extends ActionBarActivity {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         return gson.fromJson(reader, (new TypeToken<Map<String, JsonObject>>() {
         }).getType());
-    }
-
-    public class ProteusViewHolderAdapter extends RecyclerView.Adapter<ProteusViewHolderAdapter.ProteusViewHolder> {
-
-        private final JsonArray specs;
-        private final LayoutBuilder layoutBuilder;
-        private final JsonObject layout;
-
-        public ProteusViewHolderAdapter(JsonArray specs, LayoutBuilder layoutBuilder, JsonObject layout) {
-            this.specs = specs;
-            this.layoutBuilder = layoutBuilder;
-            this.layout = layout;
-        }
-
-        @Override
-        public ProteusViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            DataProteusView proteusView = (DataProteusView) layoutBuilder.build(viewGroup, layout,
-                    new JsonObject(), 0, styles);
-            return new ProteusViewHolder(proteusView);
-        }
-
-        @Override
-        public void onBindViewHolder(ProteusViewHolder viewHolder, int i) {
-            viewHolder.getProteusItemView().updateData(specs.get(i).getAsJsonObject());
-        }
-
-        @Override
-        public int getItemCount() {
-            return specs.size();
-        }
-
-        public class ProteusViewHolder extends RecyclerView.ViewHolder {
-
-            private final ProteusView proteusItemView;
-
-            public ProteusViewHolder(ProteusView itemView) {
-                super(itemView.getView());
-                this.proteusItemView = itemView;
-            }
-
-            public ProteusView getProteusItemView() {
-                return proteusItemView;
-            }
-        }
     }
 }
