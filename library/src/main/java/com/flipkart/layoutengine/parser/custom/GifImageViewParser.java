@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.parser.custom;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.Log;
 
 import com.flipkart.layoutengine.parser.Attributes;
@@ -27,8 +28,21 @@ public class GifImageViewParser<T extends GifImageView> extends WrappableParser<
         addHandler(Attributes.GifImageView.Background, new GifDrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    //noinspection deprecation
+                    view.setBackgroundDrawable(drawable);
+                } else {
+                    view.setBackground(drawable);
+                }
+            }
+        });
+
+        addHandler(Attributes.GifImageView.Src, new GifDrawableResourceProcessor<T>(context) {
+            @Override
+            public void setDrawable(T view, Drawable drawable) {
                 view.setImageDrawable(drawable);
             }
         });
+
     }
 }

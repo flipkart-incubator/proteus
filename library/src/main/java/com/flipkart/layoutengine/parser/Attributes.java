@@ -159,6 +159,7 @@ public class Attributes {
 
     public static class GifImageView {
         public static Attribute Background = new Attribute("background");
+        public static Attribute Src = new Attribute("src");
     }
 
     public static class VideoView {

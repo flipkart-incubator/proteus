@@ -155,7 +155,6 @@ public class MainActivity extends ActionBarActivity {
                             buffer.flush();
 
                             GifDrawable drawable = new GifDrawable(buffer.toByteArray());
-                            drawable.stop();
                             return drawable;
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -189,11 +188,12 @@ public class MainActivity extends ActionBarActivity {
         final GifImageView imageView = (GifImageView) proteusView.getView().findViewById(
                 IdGenerator.getInstance().getUnique("gif_image_view"));
 
+        ((GifDrawable)imageView.getDrawable()).stop();
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 GifDrawable drawable = (GifDrawable) imageView.getDrawable();
-                if(!drawable.isRunning()) {
+                if (!drawable.isRunning()) {
                     drawable.reset();
                     drawable.addAnimationListener(new AnimationListener() {
                         @Override

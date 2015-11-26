@@ -278,7 +278,7 @@
           "id": "gif_image_view",
           "layout_width": "100dp",
           "layout_height": "100dp",
-          "background": "@drawable/like_1s"
+          "src": "@drawable/like_1s"
         },
         {
           "type": "GifImageView",
