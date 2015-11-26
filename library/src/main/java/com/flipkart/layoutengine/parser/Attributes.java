@@ -30,6 +30,9 @@ public class Attributes {
         public static Attribute MarginTop = new Attribute("layout_marginTop");
         public static Attribute MarginRight = new Attribute("layout_marginRight");
         public static Attribute MarginBottom = new Attribute("layout_marginBottom");
+        public static Attribute MinHeight = new Attribute("minHeight");
+        public static Attribute MinWidth = new Attribute("minWidth");
+        public static Attribute Elevation = new Attribute("elevation");
         public static Attribute Alpha = new Attribute("alpha");
         public static Attribute Visibility = new Attribute("visibility");
         public static Attribute Invisibility = new Attribute("invisibility");

@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.LayoutBuilder;
+import com.flipkart.layoutengine.processor.DimensionAttributeProcessor;
 import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.EventProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
@@ -170,10 +171,9 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.MarginLeft, new StringAttributeProcessor<V>() {
+        addHandler(Attributes.View.MarginLeft, new DimensionAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                int dimension = ParseHelper.parseDimension(attributeValue, context);
+            public void setDimension(V view, String attributeKey, int dimension) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -186,10 +186,9 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.MarginTop, new StringAttributeProcessor<V>() {
+        addHandler(Attributes.View.MarginTop, new DimensionAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                int dimension = ParseHelper.parseDimension(attributeValue, context);
+            public void setDimension(V view, String attributeKey, int dimension) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -202,10 +201,9 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.MarginRight, new StringAttributeProcessor<V>() {
+        addHandler(Attributes.View.MarginRight, new DimensionAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                int dimension = ParseHelper.parseDimension(attributeValue, context);
+            public void setDimension(V view, String attributeKey, int dimension) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -218,10 +216,9 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.MarginBottom, new StringAttributeProcessor<V>() {
+        addHandler(Attributes.View.MarginBottom, new DimensionAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                int dimension = ParseHelper.parseDimension(attributeValue, context);
+            public void setDimension(V view, String attributeKey, int dimension) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -231,6 +228,30 @@ public class ViewParser<V extends View> extends Parser<V> {
                     if (logger.isErrorEnabled()) {
                         logger.error("margins can only be applied to views with parent ViewGroup");
                     }
+                }
+            }
+        });
+
+        addHandler(Attributes.View.MinHeight, new DimensionAttributeProcessor<V>() {
+            @Override
+            public void setDimension(V view, String attributeKey, int dimension) {
+                view.setMinimumHeight(dimension);
+            }
+        });
+
+        addHandler(Attributes.View.MinWidth, new DimensionAttributeProcessor<V>() {
+            @Override
+            public void setDimension(V view, String attributeKey, int dimension) {
+                view.setMinimumWidth(dimension);
+            }
+        });
+
+        addHandler(Attributes.View.Elevation, new DimensionAttributeProcessor<V>() {
+            @Override
+            public void setDimension(V view, String attributeKey, int dimension) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                {
+                    view.setElevation(dimension);
                 }
             }
         });
