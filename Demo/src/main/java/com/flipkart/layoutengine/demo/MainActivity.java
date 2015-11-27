@@ -144,8 +144,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public JsonObject onChildTypeLayoutRequired(ParserContext context, String viewType,
-                                                        JsonObject layout, ProteusView parent) {
+            public JsonObject onLayoutRequired(ParserContext context, String viewType,
+                                               JsonObject layout, ProteusView parent) {
                 return null;
             }
 

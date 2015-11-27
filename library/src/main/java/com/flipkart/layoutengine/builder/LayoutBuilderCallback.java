@@ -41,8 +41,8 @@ public interface LayoutBuilderCallback {
     ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject viewJsonObject,
                                   ProteusView parent, int childIndex);
 
-    JsonObject onChildTypeLayoutRequired(ParserContext context, String viewType, JsonObject parentViewJsonObject,
-                                         ProteusView parent);
+    JsonObject onLayoutRequired(ParserContext context, String viewType, JsonObject parentViewJsonObject,
+                                ProteusView parent);
 
     void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, JsonObject viewJsonObject,
                                      ProteusView parent, int childIndex);

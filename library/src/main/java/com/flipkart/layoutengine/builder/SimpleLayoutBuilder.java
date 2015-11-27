@@ -294,7 +294,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             logger.debug("Fetching child layout: " + viewType);
         }
         if (listener != null) {
-            return listener.onChildTypeLayoutRequired(context, viewType, parentLayout, parent);
+            return listener.onLayoutRequired(context, viewType, parentLayout, parent);
         }
         return null;
     }
