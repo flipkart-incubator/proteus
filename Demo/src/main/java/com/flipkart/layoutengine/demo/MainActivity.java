@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -57,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogbackConfigureHelper.configure(getApplicationContext());
         if (savedInstanceState == null) {
             gson = new Gson();
             styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
         layout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
 
-        data = new JsonObject();//getJsonFromFile(R.raw.data_1).getAsJsonObject();
+        data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
 
         builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, layoutProvider);
 

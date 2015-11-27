@@ -1,12 +1,15 @@
 {
-  "h1": {
-    "textSize": "18sp",
-    "layout_width": "match_parent",
+  "mini": {
+    "textSize": "8sp",
+    "layout_width": "wrap_content",
     "layout_height": "wrap_content",
-    "layout_marginTop": "8dp",
-    "layout_marginBottom": "8dp"
+    "layout_margin": "4dp"
   },
   "blue": {
     "textColor": "#027cd5"
+  },
+  "default": {
+    "textColor": "#323232",
+    "textSize": "14sp"
   }
 }

@@ -1,0 +1,14 @@
+{
+  "user": {
+    "name": "John Doe",
+    "level": 4,
+    "achievements": 16,
+    "experience": 2791,
+    "location": "India",
+    "credits": "39550"
+  },
+  "data": {
+    "totalAchievements": 114,
+    "tags": ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Mike"]
+  }
+}
