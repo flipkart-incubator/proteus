@@ -1,4 +1,4 @@
-package com.flipkart.layoutengine.testapp;
+package com.flipkart.layoutengine.demo;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DataAndViewParsingLayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
+import com.flipkart.layoutengine.testapp.R;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.DataProteusView;
@@ -41,7 +43,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     private DataProteusView proteusView;
     private Gson gson;
@@ -67,7 +69,7 @@ public class MainActivity extends ActionBarActivity {
         Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
         layout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
 
-        data = getJsonFromFile(R.raw.data_1).getAsJsonObject();
+        data = new JsonObject();//getJsonFromFile(R.raw.data_1).getAsJsonObject();
 
         builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, layoutProvider);
 
