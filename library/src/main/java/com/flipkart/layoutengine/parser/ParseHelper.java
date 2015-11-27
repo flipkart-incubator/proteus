@@ -66,6 +66,14 @@ public class ParseHelper {
     private static final String BOLD = "bold";
     private static final String ITALIC = "italic";
 
+    private static final String TEXT_ALIGNMENT_INHERIT = "inherit";
+    private static final String TEXT_ALIGNMENT_GRAVITY = "gravity";
+    private static final String TEXT_ALIGNMENT_CENTER = "center";
+    private static final String TEXT_ALIGNMENT_TEXT_START = "start";
+    private static final String TEXT_ALIGNMENT_TEXT_END = "end";
+    private static final String TEXT_ALIGNMENT_VIEW_START = "viewStart";
+    private static final String TEXT_ALIGNMENT_VIEW_END = "viewEnd";
+
     private static final String SUFFIX_DP = "dp";
     private static final String SUFFIX_SP = "sp";
     private static final String SUFFIX_PX = "px";
@@ -74,6 +82,7 @@ public class ParseHelper {
     private static final String COLOR_PREFIX_LITERAL = "#";
 
     private static final String DRAWABLE_LOCAL_RESOURCE_STR = "@drawable/";
+    private static final String STRING_LOCAL_RESOURCE_STR = "@string/";
     private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";
     private static final String COLOR_LOCAL_RESOURCE_STR = "@color/";
     private static final String DIMENSION_LOCAL_RESOURCE_STR = "@dimen/";
@@ -96,6 +105,7 @@ public class ParseHelper {
     public static final Map<String, Integer> sDividerMode = new HashMap<>();
     public static final Map<String, Enum> sEllipsizeMode = new HashMap<>();
     public static final Map<String, Integer> sVisibilityMode = new HashMap<>();
+    public static final Map<String, Integer> sTextAligment = new HashMap<>();
 
 
     public static final Map<String, Integer> sDimensionsMap = new HashMap<>();
@@ -151,6 +161,15 @@ public class ParseHelper {
         sImageScaleType.put("fitCenter", ImageView.ScaleType.FIT_CENTER);
         sImageScaleType.put("fit_xy", ImageView.ScaleType.FIT_XY);
         sImageScaleType.put("matrix", ImageView.ScaleType.MATRIX);
+
+
+        sTextAligment.put(TEXT_ALIGNMENT_INHERIT, View.TEXT_ALIGNMENT_INHERIT);
+        sTextAligment.put(TEXT_ALIGNMENT_GRAVITY, View.TEXT_ALIGNMENT_GRAVITY);
+        sTextAligment.put(TEXT_ALIGNMENT_CENTER, View.TEXT_ALIGNMENT_CENTER);
+        sTextAligment.put(TEXT_ALIGNMENT_TEXT_START, View.TEXT_ALIGNMENT_TEXT_START);
+        sTextAligment.put(TEXT_ALIGNMENT_TEXT_END, View.TEXT_ALIGNMENT_TEXT_END);
+        sTextAligment.put(TEXT_ALIGNMENT_VIEW_START, View.TEXT_ALIGNMENT_VIEW_START);
+        sTextAligment.put(TEXT_ALIGNMENT_VIEW_END, View.TEXT_ALIGNMENT_VIEW_END);
     }
 
     public static int parseInt(String attributeValue) {
@@ -442,6 +461,11 @@ public class ParseHelper {
         return attributeValue.startsWith(ATTR_START_LITERAL);
     }
 
+    public static boolean isLocalStringResource(String attributeValue) {
+        return attributeValue.startsWith(STRING_LOCAL_RESOURCE_STR);
+    }
+
+
     public static boolean isLocalDrawableResource(String attributeValue) {
         return attributeValue.startsWith(DRAWABLE_LOCAL_RESOURCE_STR);
     }
@@ -574,4 +598,13 @@ public class ParseHelper {
         return (attributeValue != null && BOLD.equals(attributeValue)) ? Typeface.BOLD : 0;
     }
 
+    /**
+     * parses Text Alignment
+     *
+     * @param attributeValue value of the typeface attribute
+     * @return the text alignment value
+     */
+    public static Integer parseTextAlignment(String attributeValue){
+        return !TextUtils.isEmpty(attributeValue) ? sTextAligment.get(attributeValue) : null;
+    }
 }

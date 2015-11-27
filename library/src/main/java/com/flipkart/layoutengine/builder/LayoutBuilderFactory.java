@@ -20,6 +20,7 @@ import com.flipkart.layoutengine.parser.custom.RatingBarParser;
 import com.flipkart.layoutengine.parser.custom.RelativeLayoutParser;
 import com.flipkart.layoutengine.parser.custom.ScrollViewParser;
 import com.flipkart.layoutengine.parser.custom.TextViewParser;
+import com.flipkart.layoutengine.parser.custom.ViewGroupParser;
 import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
 import com.flipkart.layoutengine.parser.custom.WebViewParser;
 import com.flipkart.layoutengine.toolbox.Formatter;
@@ -102,15 +103,16 @@ public class LayoutBuilderFactory {
         ImageViewParser imageViewParser = new ImageViewParser(viewParser);
         ImageButtonParser imageButtonParser = new ImageButtonParser(imageViewParser);
         NetworkImageViewParser networkImageViewParser = new NetworkImageViewParser(imageViewParser);
-        RelativeLayoutParser relativeLayoutParser = new RelativeLayoutParser(viewParser);
-        LinearLayoutParser linearLayoutParser = new LinearLayoutParser(viewParser);
-        FrameLayoutParser frameLayoutParser = new FrameLayoutParser(viewParser);
-        ScrollViewParser scrollViewParser = new ScrollViewParser(viewParser);
-        HorizontalScrollViewParser horizontalScrollViewParser = new HorizontalScrollViewParser(viewParser);
+        ViewGroupParser viewGroupParser = new ViewGroupParser(viewParser);
+        RelativeLayoutParser relativeLayoutParser = new RelativeLayoutParser(viewGroupParser);
+        LinearLayoutParser linearLayoutParser = new LinearLayoutParser(viewGroupParser);
+        FrameLayoutParser frameLayoutParser = new FrameLayoutParser(viewGroupParser);
+        ScrollViewParser scrollViewParser = new ScrollViewParser(frameLayoutParser);
+        HorizontalScrollViewParser horizontalScrollViewParser = new HorizontalScrollViewParser(frameLayoutParser);
         TextViewParser textViewParser = new TextViewParser(viewParser);
         EditTextParser editTextParser = new EditTextParser(textViewParser);
         ButtonParser buttonParser = new ButtonParser(textViewParser);
-        ViewPagerParser viewPagerParser = new ViewPagerParser(viewParser);
+        ViewPagerParser viewPagerParser = new ViewPagerParser(viewGroupParser);
         WebViewParser webViewParser = new WebViewParser(viewParser);
         RatingBarParser ratingBarParser = new RatingBarParser(viewParser);
         CheckBoxParser checkBoxParser = new CheckBoxParser(buttonParser);
@@ -118,6 +120,7 @@ public class LayoutBuilderFactory {
         HorizontalProgressBarParser horizontalProgressBarParser = new HorizontalProgressBarParser(progressBarParser);
 
         layoutBuilder.registerHandler("View", viewParser);
+        layoutBuilder.registerHandler("ViewGroup", viewGroupParser);
         layoutBuilder.registerHandler("RelativeLayout", relativeLayoutParser);
         layoutBuilder.registerHandler("LinearLayout", linearLayoutParser);
         layoutBuilder.registerHandler("FrameLayout", frameLayoutParser);

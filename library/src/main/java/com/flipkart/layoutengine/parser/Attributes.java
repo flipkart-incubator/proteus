@@ -30,6 +30,9 @@ public class Attributes {
         public static Attribute MarginTop = new Attribute("layout_marginTop");
         public static Attribute MarginRight = new Attribute("layout_marginRight");
         public static Attribute MarginBottom = new Attribute("layout_marginBottom");
+        public static Attribute MinHeight = new Attribute("minHeight");
+        public static Attribute MinWidth = new Attribute("minWidth");
+        public static Attribute Elevation = new Attribute("elevation");
         public static Attribute Alpha = new Attribute("alpha");
         public static Attribute Visibility = new Attribute("visibility");
         public static Attribute Invisibility = new Attribute("invisibility");
@@ -129,6 +132,13 @@ public class Attributes {
         public static Attribute Src = new Attribute("src");
         public static Attribute ScaleType = new Attribute("scaleType");
         public static Attribute AdjustViewBounds = new Attribute("adjustViewBounds");
+    }
+
+    public static class ViewGroup {
+        public static Attribute ClipChildren = new Attribute("clipChildren");
+        public static Attribute ClipToPadding = new Attribute("clipToPadding");
+        public static Attribute LayoutMode = new Attribute("layoutMode");
+        public static Attribute SplitMotionEvents = new Attribute("splitMotionEvents");
     }
 
     public static class LinearLayout {

@@ -46,7 +46,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
         }
     }
 
-    protected void addHandler(Attributes.Attribute key, AttributeProcessor<V> handler) {
+    public void addHandler(Attributes.Attribute key, AttributeProcessor<V> handler) {
         handlers.put(key.getName(), handler);
     }
 
