@@ -9,11 +9,10 @@ import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
-import com.flipkart.layoutengine.parser.Attributes;
-import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -208,17 +207,12 @@ public class DataProteusView extends SimpleProteusView {
             try {
                 dataValue = Utils.getElementFromData(binding.getBindingName(),
                         parserContext.getDataContext().getDataProvider(), index);
-                if (shouldSetVisibility(binding.getAttributeKey(), view)) {
-                    this.getView().setVisibility(View.VISIBLE);
-                }
+
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                 if (logger.isErrorEnabled()) {
                     logger.error("#handleBinding() " + e.getMessage());
                 }
-                if (shouldSetVisibility(binding.getAttributeKey(), view)) {
-                    getView().setVisibility(View.GONE);
-                }
-                dataValue = new JsonPrimitive(ProteusConstants.DATA_NULL);
+                dataValue = JsonNull.INSTANCE;
             }
             parserContext.getLayoutBuilder().handleAttribute(binding.getLayoutHandler(), parserContext,
                     binding.getAttributeKey(), dataValue, layout, this, parent, index);
@@ -353,11 +347,5 @@ public class DataProteusView extends SimpleProteusView {
         JsonObject onAfterDataContext(JsonObject data);
 
         void onUpdateDataComplete();
-    }
-
-    public static boolean shouldSetVisibility(String attribute, View view) {
-        return !Attributes.View.Visibility.getName().equals(attribute) &&
-                !Attributes.View.Invisibility.getName().equals(attribute) &&
-                view != null;
     }
 }

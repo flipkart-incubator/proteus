@@ -9,7 +9,6 @@ import com.flipkart.layoutengine.binding.Binding;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
-import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.ProteusConstants;
@@ -20,6 +19,7 @@ import com.flipkart.layoutengine.view.DataProteusView;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.view.SimpleProteusView;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -161,8 +161,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                              LayoutHandler handler, String attributeName,
                                              ProteusView proteusView, JsonObject layout,
                                              int childIndex) {
-
-        boolean failed = false;
         String attributeValue = element.getAsString();
         DataProteusView dataProteusView = (DataProteusView) proteusView;
 
@@ -196,7 +194,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                 logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
                             }
                             finalValue = dataPath;
-                            failed = true;
                         }
                         bindingName = dataPath;
                     } else {
@@ -216,7 +213,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                 logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
                             }
                             formattedValue = dataPath;
-                            failed = true;
                         }
                         finalValue = finalValue.replace(matchedString, formattedValue);
                         bindingName = dataPath;
@@ -245,8 +241,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     if (logger.isErrorEnabled()) {
                         logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
                     }
-                    failed = true;
-                    elementFromData = new JsonPrimitive(ProteusConstants.DATA_NULL);
+                    elementFromData = JsonNull.INSTANCE;
                 }
 
                 if (elementFromData != null) {
@@ -258,22 +253,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         attributeValue,
                         handler,
                         false);
-            }
-
-            if (dataProteusView.getView() != null) {
-                if (failed) {
-                    if (layout != null && !layout.isJsonNull()
-                            && ProteusConstants.DATA_VISIBILITY
-                            .equals(Utils.getPropertyAsString(layout,
-                                    Attributes.View.Visibility.getName()))) {
-                        dataProteusView.getView().setVisibility(View.INVISIBLE);
-                    } else if (DataProteusView.shouldSetVisibility(attributeName, dataProteusView.getView())) {
-                        dataProteusView.getView().setVisibility(View.GONE);
-                    }
-                } else if (dataProteusView.isViewUpdating()
-                        && DataProteusView.shouldSetVisibility(attributeName, dataProteusView.getView())) {
-                    dataProteusView.getView().setVisibility(View.VISIBLE);
-                }
             }
         }
 

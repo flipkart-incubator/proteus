@@ -243,7 +243,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             layout = type.getAsJsonObject();
             layout = Utils.mergeLayouts(layout, source);
         } else if (type.isJsonPrimitive()) {
-            layout = onChildTypeLayoutRequired(parserContext, type.getAsString(), source, view);
+            layout = onLayoutRequired(parserContext, type.getAsString(), source, view);
             if (layout == null) {
                 layout = new JsonObject();
                 layout.add(ProteusConstants.TYPE, type);
@@ -288,8 +288,8 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         return null;
     }
 
-    protected JsonObject onChildTypeLayoutRequired(ParserContext context, String viewType,
-                                                   JsonObject parentLayout, ProteusView parent) {
+    protected JsonObject onLayoutRequired(ParserContext context, String viewType,
+                                          JsonObject parentLayout, ProteusView parent) {
         if (logger.isDebugEnabled()) {
             logger.debug("Fetching child layout: " + viewType);
         }
