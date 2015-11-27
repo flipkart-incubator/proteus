@@ -134,6 +134,13 @@ public class Attributes {
         public static Attribute AdjustViewBounds = new Attribute("adjustViewBounds");
     }
 
+    public static class ViewGroup {
+        public static Attribute ClipChildren = new Attribute("clipChildren");
+        public static Attribute ClipToPadding = new Attribute("clipToPadding");
+        public static Attribute LayoutMode = new Attribute("layoutMode");
+        public static Attribute SplitMotionEvents = new Attribute("splitMotionEvents");
+    }
+
     public static class LinearLayout {
         public static Attribute Orientation = new Attribute("orientation");
         public static Attribute Divider = new Attribute("divider");
