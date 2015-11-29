@@ -48,7 +48,7 @@ public class ProteusActivity extends AppCompatActivity {
     private Gson gson;
     private DataAndViewParsingLayoutBuilder builder;
     private FrameLayout container;
-    private JsonObject layout;
+    private JsonObject pageLayout;
     private JsonObject data;
     private ViewGroup.LayoutParams layoutParams;
     private Styles styles;
@@ -67,47 +67,13 @@ public class ProteusActivity extends AppCompatActivity {
     private void createView() {
 
         Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
-        layout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
+        pageLayout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
 
         data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
 
         builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, layoutProvider);
-
-        builder.setListener(createCallback());
-
-        builder.setBitmapLoader(new BitmapLoader() {
-            @Override
-            public Future<Bitmap> getBitmap(String imageUrl, View view) {
-                return null;
-            }
-
-            @Override
-            public void getBitmap(String imageUrl, final ImageLoaderCallback callback, View view, JsonObject layout) {
-                URL url;
-                try {
-                    url = new URL(imageUrl);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                    return;
-                }
-                new AsyncTask<URL, Integer, Bitmap>() {
-
-                    @Override
-                    protected Bitmap doInBackground(URL... params) {
-                        try {
-                            return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    }
-
-                    protected void onPostExecute(Bitmap result) {
-                        callback.onResponse(result);
-                    }
-                }.execute(url);
-            }
-        });
+        builder.setListener(callback);
+        builder.setBitmapLoader(bitmapLoader);
 
         container = new FrameLayout(ProteusActivity.this);
         layoutParams = new ViewGroup.LayoutParams(
@@ -117,7 +83,7 @@ public class ProteusActivity extends AppCompatActivity {
 
         long startTime = System.currentTimeMillis();
 
-        proteusView = (DataProteusView) builder.build(container, layout, data, 0, styles);
+        proteusView = (DataProteusView) builder.build(container, pageLayout, data, 0, styles);
 
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
@@ -126,52 +92,6 @@ public class ProteusActivity extends AppCompatActivity {
 
         container.addView(proteusView.getView(), layoutParams);
         setContentView(container);
-    }
-
-    private LayoutBuilderCallback createCallback() {
-        return new LayoutBuilderCallback() {
-
-            @Override
-            public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element,
-                                           JsonObject layout, View view, int childIndex) {
-                Log.i("unknown-attribute", attribute + " in " + layout.toString());
-            }
-
-            @Override
-            public ProteusView onUnknownViewType(ParserContext context, String viewType,
-                                                 JsonObject object, ProteusView parent, int childIndex) {
-                return null;
-            }
-
-            @Override
-            public JsonObject onLayoutRequired(ParserContext context, String viewType,
-                                               JsonObject layout, ProteusView parent) {
-                return null;
-            }
-
-            @Override
-            public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
-                                                    JsonObject layout, ProteusView parent, int childIndex) {
-            }
-
-            @Override
-            public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType) {
-                Log.d("event", attributeValue.toString());
-                return view;
-            }
-
-            @Override
-            public PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView parent,
-                                                       List<ProteusView> children, JsonObject viewLayout) {
-                return null;
-            }
-
-            @Override
-            public Adapter onAdapterRequired(ParserContext parserContext, ProteusView parent,
-                                             List<ProteusView> children, JsonObject viewLayout) {
-                return null;
-            }
-        };
     }
 
     @Override
@@ -184,6 +104,84 @@ public class ProteusActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
+    private BitmapLoader bitmapLoader = new BitmapLoader() {
+        @Override
+        public Future<Bitmap> getBitmap(String imageUrl, View view) {
+            return null;
+        }
+
+        @Override
+        public void getBitmap(String imageUrl, final ImageLoaderCallback callback, View view, JsonObject layout) {
+            URL url;
+            try {
+                url = new URL(imageUrl);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return;
+            }
+            new AsyncTask<URL, Integer, Bitmap>() {
+
+                @Override
+                protected Bitmap doInBackground(URL... params) {
+                    try {
+                        return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+
+                protected void onPostExecute(Bitmap result) {
+                    callback.onResponse(result);
+                }
+            }.execute(url);
+        }
+    };
+
+    private LayoutBuilderCallback callback = new LayoutBuilderCallback() {
+
+        @Override
+        public void onUnknownAttribute(ParserContext context, String attribute, JsonElement element,
+                                       JsonObject layout, View view, int childIndex) {
+            Log.i("unknown-attribute", attribute + " in " + layout.toString());
+        }
+
+        @Override
+        public ProteusView onUnknownViewType(ParserContext context, String viewType,
+                                             JsonObject object, ProteusView parent, int childIndex) {
+            return null;
+        }
+
+        @Override
+        public JsonObject onLayoutRequired(ParserContext context, String viewType,
+                                           JsonObject layout, ProteusView parent) {
+            return null;
+        }
+
+        @Override
+        public void onViewBuiltFromViewProvider(ProteusView createdView, String viewType,
+                                                JsonObject layout, ProteusView parent, int childIndex) {
+        }
+
+        @Override
+        public View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType) {
+            Log.d("event", attributeValue.toString());
+            return view;
+        }
+
+        @Override
+        public PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView parent,
+                                                   List<ProteusView> children, JsonObject viewLayout) {
+            return null;
+        }
+
+        @Override
+        public Adapter onAdapterRequired(ParserContext parserContext, ProteusView parent,
+                                         List<ProteusView> children, JsonObject viewLayout) {
+            return null;
+        }
+    };
 
     private JsonElement getJsonFromFile(int resId) {
         InputStream inputStream = getResources().openRawResource(resId);
