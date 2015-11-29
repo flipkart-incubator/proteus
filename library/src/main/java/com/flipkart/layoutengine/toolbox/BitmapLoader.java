@@ -3,7 +3,7 @@ package com.flipkart.layoutengine.toolbox;
 import android.graphics.Bitmap;
 import android.view.View;
 
-import com.flipkart.layoutengine.ImageLoaderCall;
+import com.flipkart.layoutengine.ImageLoaderCallback;
 import com.google.gson.JsonObject;
 
 import java.util.concurrent.Future;
@@ -27,5 +27,5 @@ public interface BitmapLoader {
      * @param imageLoaderCallback
      * @param layout
      */
-    void getBitmap(String imageUrl, ImageLoaderCall imageLoaderCallback, View view, JsonObject layout);
+    void getBitmap(String imageUrl, ImageLoaderCallback imageLoaderCallback, View view, JsonObject layout);
 }
