@@ -16,7 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.flipkart.layoutengine.EventType;
-import com.flipkart.layoutengine.ImageLoaderCallBack;
+import com.flipkart.layoutengine.ImageLoaderCallback;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DataAndViewParsingLayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void getBitmap(String imageUrl, final ImageLoaderCallBack callback, View view, JsonObject layout) {
+            public void getBitmap(String imageUrl, final ImageLoaderCallback callback, View view, JsonObject layout) {
                 URL url;
                 try {
                     url = new URL(imageUrl);

@@ -1,18 +1,13 @@
 package com.flipkart.layoutengine.parser.custom;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
-import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonObject;
@@ -42,8 +37,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 Boolean clipToPadding = ParseHelper.parseBoolean(attributeValue);
-                if(null != clipToPadding)
-                {
+                if (null != clipToPadding) {
                     view.setClipToPadding(clipToPadding);
                 }
             }
@@ -52,12 +46,9 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
         addHandler(Attributes.ViewGroup.LayoutMode, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                if(LAYOUT_MODE_CLIP_BOUNDS.equals(attributeValue))
-                {
+                if (LAYOUT_MODE_CLIP_BOUNDS.equals(attributeValue)) {
                     view.setLayoutMode(ViewGroup.LAYOUT_MODE_CLIP_BOUNDS);
-                }
-                else if(LAYOUT_MODE_OPTICAL_BOUNDS.equals(attributeValue))
-                {
+                } else if (LAYOUT_MODE_OPTICAL_BOUNDS.equals(attributeValue)) {
                     view.setLayoutMode(ViewGroup.LAYOUT_MODE_OPTICAL_BOUNDS);
                 }
             }
@@ -67,8 +58,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 Boolean splitMotionEvents = ParseHelper.parseBoolean(attributeValue);
-                if(null != splitMotionEvents)
-                {
+                if (null != splitMotionEvents) {
                     view.setMotionEventSplittingEnabled(splitMotionEvents);
                 }
             }

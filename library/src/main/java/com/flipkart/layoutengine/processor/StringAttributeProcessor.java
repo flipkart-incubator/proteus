@@ -2,7 +2,6 @@ package com.flipkart.layoutengine.processor;
 
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -36,8 +35,7 @@ public abstract class StringAttributeProcessor<E extends View> extends Attribute
         }
     }
 
-    private String getStringFromAttribute(E view, String attributeValue)
-    {
+    private String getStringFromAttribute(E view, String attributeValue) {
         String result;
         if (ParseHelper.isLocalResourceAttribute(attributeValue)) {
             int attributeId = ParseHelper.getAttributeId(view.getContext(), attributeValue);
@@ -45,13 +43,10 @@ public abstract class StringAttributeProcessor<E extends View> extends Attribute
                 TypedArray ta = view.getContext().obtainStyledAttributes(new int[]{attributeId});
                 result = ta.getString(0/* index */);
                 ta.recycle();
-            }
-            else
-            {
+            } else {
                 result = "";
             }
-        }
-        else if (ParseHelper.isLocalDrawableResource(attributeValue)) {
+        } else if (ParseHelper.isLocalDrawableResource(attributeValue)) {
             try {
                 Resources r = view.getContext().getResources();
                 int stringId = r.getIdentifier(attributeValue, "string", view.getContext().getPackageName());
@@ -60,12 +55,12 @@ public abstract class StringAttributeProcessor<E extends View> extends Attribute
                 result = "";
                 System.out.println("Could not load local resource " + attributeValue);
             }
-        }
-        else {
+        } else {
             result = attributeValue;
         }
         return result;
     }
+
     /**
      * @param parserContext  ParserContext
      * @param attributeKey   Attribute Key

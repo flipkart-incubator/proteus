@@ -604,7 +604,7 @@ public class ParseHelper {
      * @param attributeValue value of the typeface attribute
      * @return the text alignment value
      */
-    public static Integer parseTextAlignment(String attributeValue){
+    public static Integer parseTextAlignment(String attributeValue) {
         return !TextUtils.isEmpty(attributeValue) ? sTextAligment.get(attributeValue) : null;
     }
 }

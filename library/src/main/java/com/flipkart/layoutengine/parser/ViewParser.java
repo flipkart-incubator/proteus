@@ -249,8 +249,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         addHandler(Attributes.View.Elevation, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String attributeKey, int dimension) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     view.setElevation(dimension);
                 }
             }

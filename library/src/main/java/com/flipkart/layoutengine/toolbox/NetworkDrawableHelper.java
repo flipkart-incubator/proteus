@@ -10,7 +10,7 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import com.flipkart.layoutengine.ImageLoaderCallBack;
+import com.flipkart.layoutengine.ImageLoaderCallback;
 import com.google.gson.JsonObject;
 
 import java.util.concurrent.CountDownLatch;
@@ -107,17 +107,13 @@ public class NetworkDrawableHelper {
 
     private void startAsyncLoad(final String url, View view) {
 
-        bitmapLoader.getBitmap(url, new ImageLoaderCallBack() {
+        bitmapLoader.getBitmap(url, new ImageLoaderCallback() {
             @Override
             public void onResponse(Bitmap bitmap) {
                 if (bitmap == null) return;
                 if (callback != null) {
                     callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap));
                 }
-            }
-
-            @Override
-            public void handled() {
             }
 
             @Override
