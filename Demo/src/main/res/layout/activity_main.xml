@@ -1,5 +1,24 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</FrameLayout>
+    <Button
+        android:id="@+id/inflate_native"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Native"
+        android:padding="8dp"
+        android:layout_margin="8dp"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/inflate_proteus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Proteus"
+        android:padding="8dp"
+        android:layout_margin="8dp"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>
