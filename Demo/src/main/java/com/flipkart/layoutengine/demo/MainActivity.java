@@ -22,16 +22,14 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.startActivity(intent);
             }
         });
+
+        view = findViewById(R.id.inflate_native);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, NativeActivity.class);
+                MainActivity.this.startActivity(intent);
+            }
+        });
     }
-
-    /*@SuppressLint("InflateParams")
-    private View createAndBindView() {
-        View view = getLayoutInflater().inflate(R.layout.activity_main, null, false);
-        bindView(view);
-        return view;
-    }
-
-    private void bindView(View view) {
-
-    }*/
 }

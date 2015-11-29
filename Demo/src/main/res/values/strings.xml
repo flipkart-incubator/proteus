@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Proteus Demo App</string>
+    <string name="html">
+        <![CDATA[<b>TextView</b> with <font color=#cc8322><i>HTML</i></font> content.]]>
+    </string>
 </resources>

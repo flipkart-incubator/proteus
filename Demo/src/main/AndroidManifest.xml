@@ -9,22 +9,24 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-
         <activity
             android:name="com.flipkart.layoutengine.demo.ProteusActivity"
             android:label="@string/app_name">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>-->
-        </activity>
 
+            <!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+            -->
+        </activity>
         <activity android:name="com.flipkart.layoutengine.demo.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name="com.flipkart.layoutengine.demo.NativeActivity"></activity>
     </application>
 
 </manifest>
