@@ -35,8 +35,8 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:layout_width="match_parent"
                     android:id="@+id/html_text_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:textSize="14sp"
@@ -97,7 +97,9 @@
 
         </FrameLayout>
 
-        <include layout="@layout/relative_layout_example" />
+        <include android:layout="@layout/relative_layout_example" />
+
+        <include android:layout="@layout/simple_data_binding_example" />
 
     </LinearLayout>
 </ScrollView>
