@@ -97,9 +97,9 @@
 
         </FrameLayout>
 
-        <include android:layout="@layout/relative_layout_example" />
+        <include layout="@layout/relative_layout_example" />
 
-        <include android:layout="@layout/simple_data_binding_example" />
+        <include layout="@layout/simple_data_binding_example" />
 
     </LinearLayout>
 </ScrollView>

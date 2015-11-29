@@ -12,11 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.flipkart.layoutengine.demo.models.User;
+import com.flipkart.layoutengine.demo.models.Data;
 import com.flipkart.layoutengine.testapp.R;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -30,13 +28,13 @@ public class NativeActivity extends AppCompatActivity {
     private static final String IMAGE_URL = "http://img6a.flixcart.com/www/prod/images/flipkart_logo_retina-9fddfff2.png";
     private static final String STRING_ACHIEVEMENTS = "Achievements - ";
 
-    private User user;
+    private Data data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        user = getJsonFromFile(R.raw.data_init);
+        data = getJsonFromFile(R.raw.data_init);
 
         long startTime = System.currentTimeMillis();
 
@@ -70,13 +68,13 @@ public class NativeActivity extends AppCompatActivity {
     @SuppressLint("SetTextI18n")
     private void bindUserView(View view) {
         TextView userName = (TextView) view.findViewById(R.id.user_name);
-        userName.setText(user.name);
+        userName.setText(data.user.name);
 
         TextView userLevel = (TextView) view.findViewById(R.id.user_level);
-        userLevel.setText(user.level);
+        userLevel.setText(data.user.level + "");
 
         TextView userAchievements = (TextView) view.findViewById(R.id.user_achievements);
-        userAchievements.setText(STRING_ACHIEVEMENTS + user.achievements + "/" + user.data.totalAchievements);
+        userAchievements.setText(STRING_ACHIEVEMENTS + data.user.achievements + "/" + data.metaData.totalAchievements);
     }
 
     private void loadImage(final ImageView view, String urlString) {
@@ -105,9 +103,9 @@ public class NativeActivity extends AppCompatActivity {
         }.execute(url);
     }
 
-    private User getJsonFromFile(int resId) {
+    private Data getJsonFromFile(int resId) {
         InputStream inputStream = getResources().openRawResource(resId);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        return new Gson().fromJson(reader, User.class);
+        return new Gson().fromJson(reader, Data.class);
     }
 }
