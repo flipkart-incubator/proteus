@@ -5,15 +5,11 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.flipkart.layoutengine.EventType;
 import com.flipkart.layoutengine.ImageLoaderCallback;
@@ -42,7 +38,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 
-public class ProteusActivity extends AppCompatActivity {
+public class ProteusActivity extends BaseActivity {
 
     private DataProteusView proteusView;
     private Gson gson;
@@ -55,17 +51,13 @@ public class ProteusActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        gson = new Gson();
+        styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
         super.onCreate(savedInstanceState);
-        LogbackConfigureHelper.configure();
-        if (savedInstanceState == null) {
-            gson = new Gson();
-            styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
-            createView();
-        }
     }
 
-    private void createView() {
-
+    @Override
+    View createAndBindView() {
         Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
         pageLayout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
 
@@ -81,28 +73,20 @@ public class ProteusActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
 
-        long startTime = System.currentTimeMillis();
-
         proteusView = (DataProteusView) builder.build(container, pageLayout, data, 0, styles);
 
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
+        return proteusView.getView();
+    }
 
-        Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
-
+    @Override
+    void attachView(View view) {
         container.addView(proteusView.getView(), layoutParams);
         setContentView(container);
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return super.onOptionsItemSelected(item);
+    void onBuildComplete(long time) {
+        PerformanceTracker.instance(this).updateProteusRenderTime(time);
     }
 
     private BitmapLoader bitmapLoader = new BitmapLoader() {

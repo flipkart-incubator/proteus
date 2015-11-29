@@ -48,7 +48,7 @@ public class LogbackConfigureHelper {
         logcatAppender.start();
 
         ch.qos.logback.classic.Logger root = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
-        root.setLevel(Level.ALL); // level.OFF can be used for muting all logs
+        root.setLevel(Level.OFF); // level.OFF can be used for muting all logs
         //root.addAppender(asyncAppender); //for logging to a file
         root.addAppender(logcatAppender); //for logging to logcat
 

@@ -1,7 +1,5 @@
 package com.flipkart.layoutengine.demo.models;
 
-import java.util.List;
-
 /**
  * User
  *

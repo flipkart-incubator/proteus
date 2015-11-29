@@ -5,12 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.flipkart.layoutengine.demo.models.Data;
 import com.flipkart.layoutengine.testapp.R;
@@ -23,7 +21,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class NativeActivity extends AppCompatActivity {
+public class NativeActivity extends BaseActivity {
 
     private static final String IMAGE_URL = "http://img6a.flixcart.com/www/prod/images/flipkart_logo_retina-9fddfff2.png";
     private static final String STRING_ACHIEVEMENTS = "Achievements - ";
@@ -32,27 +30,25 @@ public class NativeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         data = getJsonFromFile(R.raw.data_init);
-
-        long startTime = System.currentTimeMillis();
-
-        View view = createAndBindView();
-
-        long stopTime = System.currentTimeMillis();
-        long elapsedTime = stopTime - startTime;
-
-        Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_LONG).show();
-
-        setContentView(view);
+        super.onCreate(savedInstanceState);
     }
 
     @SuppressLint("InflateParams")
-    private View createAndBindView() {
+    protected View createAndBindView() {
         View view = getLayoutInflater().inflate(R.layout.activity_native, null, false);
         bindView(view);
         return view;
+    }
+
+    @Override
+    void attachView(View view) {
+        setContentView(view);
+    }
+
+    @Override
+    void onBuildComplete(long time) {
+        PerformanceTracker.instance(this).updateNativeRenderTime(time);
     }
 
     private void bindView(View view) {
