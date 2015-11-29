@@ -42,7 +42,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 
-public class MainActivity extends AppCompatActivity {
+public class ProteusActivity extends AppCompatActivity {
 
     private DataProteusView proteusView;
     private Gson gson;
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogbackConfigureHelper.configure(getApplicationContext());
+        LogbackConfigureHelper.configure();
         if (savedInstanceState == null) {
             gson = new Gson();
             styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        container = new FrameLayout(MainActivity.this);
+        container = new FrameLayout(ProteusActivity.this);
         layoutParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT

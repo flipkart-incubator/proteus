@@ -1,7 +1,5 @@
 package com.flipkart.layoutengine.demo;
 
-import android.content.Context;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +17,7 @@ import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
  */
 public class LogbackConfigureHelper {
 
-    public static void configure(Context context) {
+    public static void configure() {
         // reset the default context (which may already have been initialized)
         // since we want to reconfigure it
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();

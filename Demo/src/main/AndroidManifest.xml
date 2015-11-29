@@ -10,7 +10,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.flipkart.layoutengine.demo.MainActivity"
+            android:name="com.flipkart.layoutengine.demo.ProteusActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
