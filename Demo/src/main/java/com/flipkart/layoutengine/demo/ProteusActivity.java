@@ -53,11 +53,6 @@ public class ProteusActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         gson = new Gson();
         styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    View createAndBindView() {
         Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
         pageLayout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
 
@@ -72,9 +67,12 @@ public class ProteusActivity extends BaseActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
+        super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    View createAndBindView() {
         proteusView = (DataProteusView) builder.build(container, pageLayout, data, 0, styles);
-
         return proteusView.getView();
     }
 
