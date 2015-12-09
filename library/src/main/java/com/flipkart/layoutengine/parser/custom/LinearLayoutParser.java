@@ -11,9 +11,11 @@ import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
+import com.flipkart.layoutengine.processor.DimensionAttributeProcessor;
 import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.view.ProteusView;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -58,13 +60,12 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             }
         });
 
-        addHandler(Attributes.LinearLayout.DividerPadding, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.LinearLayout.DividerPadding, new DimensionAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-
+            public void setDimension(ParserContext parserContext, int dimension, T view, String attributeKey, JsonElement attributeValue, ProteusView proteusView, JsonObject layout, int index) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-                    view.setDividerPadding(ParseHelper.parseInt(attributeValue));
+                    view.setDividerPadding(dimension);
                 }
             }
         });

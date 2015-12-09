@@ -6,9 +6,10 @@ import android.view.View;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.view.ProteusView;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public abstract class DimensionAttributeProcessor<T extends View> extends StringAttributeProcessor<T> {
+public abstract class DimensionAttributeProcessor<T extends View> extends AttributeProcessor<T> {
 
     /**
      * @param parserContext  ParserContext
@@ -21,10 +22,10 @@ public abstract class DimensionAttributeProcessor<T extends View> extends String
      * @param index          index
      */
     @Override
-    public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-        int dimension = ParseHelper.parseDimension(attributeValue, view.getContext());
-        setDimension(view,attributeKey,dimension);
+    public final void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+        int dimension = ParseHelper.parseDimension(attributeValue.getAsString(), view.getContext());
+        setDimension(parserContext, dimension, view, attributeKey, attributeValue, proteusView, layout, index);
     }
 
-    public abstract void setDimension(T view, String attributeKey, int dimension);
+    public abstract void setDimension(ParserContext parserContext, int dimension, T view, String attributeKey, JsonElement attributeValue, ProteusView proteusView, JsonObject layout, int index);
 }
