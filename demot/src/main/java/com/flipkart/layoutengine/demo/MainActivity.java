@@ -8,8 +8,6 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
 
-import com.flipkart.layoutengine.testapp.R;
-
 public class MainActivity extends AppCompatActivity {
 
     private static final String RENDER_NATIVE = "Average Native Render Time: ";

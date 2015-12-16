@@ -15,9 +15,11 @@ import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.ColorResourceProcessor;
+import com.flipkart.layoutengine.processor.DimensionAttributeProcessor;
 import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.view.ProteusView;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -45,17 +47,17 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.DrawablePadding, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.DrawablePadding, new DimensionAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                view.setCompoundDrawablePadding(ParseHelper.parseDimension(attributeValue, context));
+            public void setDimension(ParserContext parserContext, int dimension, T view, String attributeKey, JsonElement attributeValue, ProteusView proteusView, JsonObject layout, int index) {
+                view.setCompoundDrawablePadding(dimension);
             }
         });
 
-        addHandler(Attributes.TextView.TextSize, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.TextView.TextSize, new DimensionAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                view.setTextSize(ParseHelper.parseDimension(attributeValue, context));
+            public void setDimension(ParserContext parserContext, int dimension, T view, String attributeKey, JsonElement attributeValue, ProteusView proteusView, JsonObject layout, int index) {
+                view.setTextSize(dimension);
             }
         });
         addHandler(Attributes.TextView.Gravity, new StringAttributeProcessor<T>() {

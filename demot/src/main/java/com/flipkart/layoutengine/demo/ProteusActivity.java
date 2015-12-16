@@ -17,7 +17,6 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.DataAndViewParsingLayoutBuilder;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.builder.LayoutBuilderFactory;
-import com.flipkart.layoutengine.testapp.R;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.DataProteusView;

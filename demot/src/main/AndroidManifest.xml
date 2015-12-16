@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.flipkart.layoutengine.testapp">
+<manifest
+    package="com.flipkart.layoutengine.demo"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="false"
@@ -21,12 +22,12 @@
         </activity>
         <activity android:name="com.flipkart.layoutengine.demo.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.flipkart.layoutengine.demo.NativeActivity"></activity>
+        <activity android:name="com.flipkart.layoutengine.demo.NativeActivity"/>
     </application>
 
 </manifest>

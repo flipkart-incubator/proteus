@@ -1,6 +1,7 @@
 package com.flipkart.layoutengine.parser.custom;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.ViewGroup;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -26,30 +27,28 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
         addHandler(Attributes.ViewGroup.ClipChildren, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                Boolean clipChildren = ParseHelper.parseBoolean(attributeValue);
-                if (null != clipChildren) {
-                    view.setClipChildren(clipChildren);
-                }
+                boolean clipChildren = ParseHelper.parseBoolean(attributeValue);
+                view.setClipChildren(clipChildren);
             }
         });
 
         addHandler(Attributes.ViewGroup.ClipToPadding, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                Boolean clipToPadding = ParseHelper.parseBoolean(attributeValue);
-                if (null != clipToPadding) {
-                    view.setClipToPadding(clipToPadding);
-                }
+                boolean clipToPadding = ParseHelper.parseBoolean(attributeValue);
+                view.setClipToPadding(clipToPadding);
             }
         });
 
         addHandler(Attributes.ViewGroup.LayoutMode, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                if (LAYOUT_MODE_CLIP_BOUNDS.equals(attributeValue)) {
-                    view.setLayoutMode(ViewGroup.LAYOUT_MODE_CLIP_BOUNDS);
-                } else if (LAYOUT_MODE_OPTICAL_BOUNDS.equals(attributeValue)) {
-                    view.setLayoutMode(ViewGroup.LAYOUT_MODE_OPTICAL_BOUNDS);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    if (LAYOUT_MODE_CLIP_BOUNDS.equals(attributeValue)) {
+                        view.setLayoutMode(ViewGroup.LAYOUT_MODE_CLIP_BOUNDS);
+                    } else if (LAYOUT_MODE_OPTICAL_BOUNDS.equals(attributeValue)) {
+                        view.setLayoutMode(ViewGroup.LAYOUT_MODE_OPTICAL_BOUNDS);
+                    }
                 }
             }
         });
@@ -57,10 +56,8 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
         addHandler(Attributes.ViewGroup.SplitMotionEvents, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                Boolean splitMotionEvents = ParseHelper.parseBoolean(attributeValue);
-                if (null != splitMotionEvents) {
-                    view.setMotionEventSplittingEnabled(splitMotionEvents);
-                }
+                boolean splitMotionEvents = ParseHelper.parseBoolean(attributeValue);
+                view.setMotionEventSplittingEnabled(splitMotionEvents);
             }
         });
     }

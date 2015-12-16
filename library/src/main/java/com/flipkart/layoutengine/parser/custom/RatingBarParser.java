@@ -8,10 +8,12 @@ import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
+import com.flipkart.layoutengine.processor.DimensionAttributeProcessor;
 import com.flipkart.layoutengine.processor.DrawableResourceProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.flipkart.layoutengine.widgets.FixedRatingBar;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -50,10 +52,10 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
                 view.setStepSize(ParseHelper.parseFloat(attributeValue));
             }
         });
-        addHandler(Attributes.RatingBar.MinHeight, new StringAttributeProcessor<T>() {
+        addHandler(Attributes.RatingBar.MinHeight, new DimensionAttributeProcessor<T>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                view.setMinimumHeight(ParseHelper.parseDimension(attributeValue, context));
+            public void setDimension(ParserContext parserContext, int dimension, T view, String attributeKey, JsonElement attributeValue, ProteusView proteusView, JsonObject layout, int index) {
+                view.setMinimumHeight(dimension);
             }
         });
         addHandler(Attributes.RatingBar.ProgressDrawable, new DrawableResourceProcessor<T>(context) {

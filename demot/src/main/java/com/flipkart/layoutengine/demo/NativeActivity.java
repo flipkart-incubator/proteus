@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.flipkart.layoutengine.demo.models.Data;
-import com.flipkart.layoutengine.testapp.R;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;

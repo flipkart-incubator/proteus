@@ -113,7 +113,7 @@ artifactory {
     }
     resolve {
         repository {
-            if (project.version.endsWith('-SNAPSHOT') || project.version.contains('-RC')) {
+            if (project.version.endsWith('-SNAPSHOT')) {
                 repoKey = SNAPSHOT_REPO_KEY
             } else {
                 repoKey = RELEASE_REPO_KEY

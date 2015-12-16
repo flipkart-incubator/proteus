@@ -7,7 +7,7 @@
     {
       "type": "LinearLayout",
       "layout_width": "match_parent",
-      "layout_height": "wrap_content",
+      "layout_height": "match_parent",
       "orientation": "vertical",
       "background": "#efefef",
       "children": [
