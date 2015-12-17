@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -271,12 +272,28 @@ public class ViewParser<V extends View> extends Parser<V> {
         addHandler(Attributes.View.Id, new StringAttributeProcessor<V>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                {
+                    final String resourceName = attributeValue;
+                    view.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+                        @Override
+                        public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfo info) {
+                            super.onInitializeAccessibilityNodeInfo(host, info);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                            {
+                                // Set some other information. 
+                                info.setViewIdResourceName(resourceName);
+                            }
+                        }
+                    });
+                }
                 view.setId(IdGenerator.getInstance().getUnique(attributeValue));
             }
         });
         addHandler(Attributes.View.ContentDescription, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject
+                    layout,int index) {
                 view.setContentDescription(attributeValue);
             }
         });
@@ -289,7 +306,8 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.Tag, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject
+            layout, int index) {
                 view.setTag(attributeValue);
             }
         });
