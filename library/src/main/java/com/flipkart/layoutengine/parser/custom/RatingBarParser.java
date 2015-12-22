@@ -54,8 +54,8 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
         });
         addHandler(Attributes.RatingBar.MinHeight, new DimensionAttributeProcessor<T>() {
             @Override
-            public void setDimension(ParserContext parserContext, int dimension, T view, String attributeKey, JsonElement attributeValue, ProteusView proteusView, JsonObject layout, int index) {
-                view.setMinimumHeight(dimension);
+            public void setDimension(ParserContext parserContext, float dimension, T view, String key, JsonElement value, ProteusView proteusView, JsonObject layout, int index) {
+                view.setMinimumHeight((int) dimension);
             }
         });
         addHandler(Attributes.RatingBar.ProgressDrawable, new DrawableResourceProcessor<T>(context) {

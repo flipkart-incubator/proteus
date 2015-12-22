@@ -49,14 +49,14 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
 
         addHandler(Attributes.TextView.DrawablePadding, new DimensionAttributeProcessor<T>() {
             @Override
-            public void setDimension(ParserContext parserContext, int dimension, T view, String attributeKey, JsonElement attributeValue, ProteusView proteusView, JsonObject layout, int index) {
-                view.setCompoundDrawablePadding(dimension);
+            public void setDimension(ParserContext parserContext, float dimension, T view, String key, JsonElement value, ProteusView proteusView, JsonObject layout, int index) {
+                view.setCompoundDrawablePadding((int) dimension);
             }
         });
 
         addHandler(Attributes.TextView.TextSize, new DimensionAttributeProcessor<T>() {
             @Override
-            public void setDimension(ParserContext parserContext, int dimension, T view, String attributeKey, JsonElement attributeValue, ProteusView proteusView, JsonObject layout, int index) {
+            public void setDimension(ParserContext parserContext, float dimension, T view, String key, JsonElement value, ProteusView proteusView, JsonObject layout, int index) {
                 view.setTextSize(dimension);
             }
         });
