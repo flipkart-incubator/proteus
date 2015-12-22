@@ -184,6 +184,7 @@
               "layout_width": "wrap_content",
               "layout_height": "wrap_content",
               "layout_marginBottom": "10dp",
+              "textSize": "12dp",
               "text": "~{{product.tags}}$(join)",
               "textColor": "#444444"
             },
@@ -247,7 +248,7 @@
           "type": "LinearLayout",
           "layout_width": "match_parent",
           "layout_height": "wrap_content",
-          "padding": "8dp",
+          "background": "#efefef",
           "orientation": "horizontal",
           "weightSum": "4",
           "children": [
