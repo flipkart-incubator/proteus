@@ -184,7 +184,7 @@
               "layout_width": "wrap_content",
               "layout_height": "wrap_content",
               "layout_marginBottom": "10dp",
-              "textSize": "12dp",
+              "textSize": "12sp",
               "text": "~{{product.tags}}$(join)",
               "textColor": "#444444"
             },
