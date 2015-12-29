@@ -23,14 +23,34 @@
           "type": "TextView",
           "id": "@+id/proteus_resource_id",
           "text": "Proteus Demo",
+          "layout_width": "120dp",
+          "layout_height": "120dp",
+          "gravity":"center",
           "style": "h1.blue",
-          "animation" : {
+          "animation": {
             "type": "rotate",
             "fromDegrees": "-100",
             "toDegrees": "0",
             "pivotX": "100%",
             "pivotY": "100%",
             "duration": "1700"
+          },
+          "background": {
+            "type": "shape",
+            "shape":"oval",
+            "children": [
+              {
+                "type": "size",
+                "width": "120dp",
+                "height": "120dp"
+              },
+              {
+                "type": "gradient",
+                "endColor": "#DDBBBBBB",
+                "startColor": "#DD777777",
+                "angle": "90"
+              }
+            ]
           }
         },
         {
