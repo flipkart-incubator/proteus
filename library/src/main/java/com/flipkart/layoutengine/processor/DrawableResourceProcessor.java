@@ -105,14 +105,12 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 gradientDrawable.setCornerRadius(ParseHelper.parseDimension(radius, context));
             }
 
+            float fTopLeftRadius = TextUtils.isEmpty(topLeftRadius) ? 0 : ParseHelper.parseDimension(topLeftRadius, context);
+            float fTopRightRadius = TextUtils.isEmpty(topRightRadius) ? 0 : ParseHelper.parseDimension(topRightRadius, context);
+            float fBottomRightRadius = TextUtils.isEmpty(bottomRightRadius) ? 0 : ParseHelper.parseDimension(bottomRightRadius, context);
+            float fBottomLeftRadius = TextUtils.isEmpty(bottomLeftRadius) ? 0 : ParseHelper.parseDimension(bottomLeftRadius, context);
 
-            if (!TextUtils.equals(topLeftRadius, radius) || !TextUtils.equals(topRightRadius, radius) ||
-                    !TextUtils.equals(bottomLeftRadius, radius) || !TextUtils.equals(bottomRightRadius, radius)) {
-                float fTopLeftRadius = ParseHelper.parseDimension(topLeftRadius, context);
-                float fTopRightRadius = ParseHelper.parseDimension(topRightRadius, context);
-                float fBottomRightRadius = ParseHelper.parseDimension(bottomRightRadius, context);
-                float fBottomLeftRadius = ParseHelper.parseDimension(bottomLeftRadius, context);
-
+            if (fTopLeftRadius != 0 || fTopRightRadius != 0 || fBottomRightRadius != 0 || fBottomLeftRadius != 0) {
                 // The corner radii are specified in clockwise order (see Path.addRoundRect())
                 gradientDrawable.setCornerRadii(new float[]{
                         fTopLeftRadius, fTopLeftRadius,
@@ -235,7 +233,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
         @Override
         public void apply(Context context, GradientDrawable gradientDrawable) {
-            gradientDrawable.setSize((int)ParseHelper.parseDimension(width, context), (int)ParseHelper.parseDimension(height, context));
+            gradientDrawable.setSize((int) ParseHelper.parseDimension(width, context), (int) ParseHelper.parseDimension(height, context));
         }
     }
 
@@ -248,9 +246,9 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         @Override
         public void apply(Context context, GradientDrawable gradientDrawable) {
             if (null == dashWidth) {
-                gradientDrawable.setStroke((int)ParseHelper.parseDimension(width, context), loadColor(context, color));
+                gradientDrawable.setStroke((int) ParseHelper.parseDimension(width, context), loadColor(context, color));
             } else if (null != dashWidth) {
-                gradientDrawable.setStroke((int)ParseHelper.parseDimension(width, context), loadColor(context, color), ParseHelper.parseDimension(dashWidth, context), ParseHelper.parseDimension(dashGap, context));
+                gradientDrawable.setStroke((int) ParseHelper.parseDimension(width, context), loadColor(context, color), ParseHelper.parseDimension(dashWidth, context), ParseHelper.parseDimension(dashGap, context));
             }
         }
     }
@@ -270,8 +268,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         }
     }
 
-    private static class ShapeDrawableJson
-    {
+    private static class ShapeDrawableJson {
         public String shape;
         public String innerRadius;
         public Float innerRadiusRatio;
@@ -279,8 +276,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         public Float thicknessRatio;
         public JsonArray children;
 
-        public GradientDrawable init(Context context)
-        {
+        public GradientDrawable init(Context context) {
             ArrayList<GradientDrawableElement> elements = null;
             Gradient gradient = null;
 
@@ -321,11 +317,9 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
             GradientDrawable gradientDrawable = (null != gradient) ? gradient.init(context) : new GradientDrawable();
 
-            if(!TextUtils.isEmpty(shape))
-            {
+            if (!TextUtils.isEmpty(shape)) {
                 int shapeInt = -1;
-                switch (shape)
-                {
+                switch (shape) {
                     case SHAPE_RECTANGLE:
                         shapeInt = GradientDrawable.RECTANGLE;
                         break;
@@ -340,8 +334,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                         break;
                 }
 
-                if(-1 != shapeInt)
-                {
+                if (-1 != shapeInt) {
                     gradientDrawable.setShape(shapeInt);
                 }
             }
@@ -354,6 +347,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             return gradientDrawable;
         }
     }
+
     public DrawableResourceProcessor(Context context) {
         this.context = context;
     }
@@ -459,7 +453,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     private static GradientDrawable loadGradientDrawable(Context context, JsonObject value) {
-        ShapeDrawableJson shapeDrawable = sGson.fromJson(value,ShapeDrawableJson.class);
+        ShapeDrawableJson shapeDrawable = sGson.fromJson(value, ShapeDrawableJson.class);
         return shapeDrawable.init(context);
     }
 
