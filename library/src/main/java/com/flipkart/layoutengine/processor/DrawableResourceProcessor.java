@@ -9,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.LevelListDrawable;
-import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.text.TextUtils;
@@ -65,6 +64,10 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     private static final String SHAPE_OVAL = "oval";
     private static final String SHAPE_LINE = "line";
     private static final String SHAPE_RING = "ring";
+
+    private static final String LINEAR_GRADIENT = "linear";
+    private static final String RADIAL_GRADIENT = "radial";
+    private static final String SWEEP_GRADIENT = "sweep";
 
 
     private abstract static class GradientDrawableElement {
@@ -161,7 +164,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         public JsonElement endColor;
         public Float gradientRadius;
         public JsonElement startColor;
-        public String type;
+        public String gradientType;
         public Boolean useLevel;
 
         @Override
@@ -174,6 +177,22 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 gradientDrawable.setGradientRadius(gradientRadius);
             }
 
+            if(!TextUtils.isEmpty(gradientType))
+            {
+                switch (gradientType)
+                {
+                    case LINEAR_GRADIENT:
+                        gradientDrawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+                        break;
+                    case RADIAL_GRADIENT:
+                        gradientDrawable.setGradientType(GradientDrawable.RADIAL_GRADIENT);
+                        break;
+                    case SWEEP_GRADIENT:
+                        gradientDrawable.setGradientType(GradientDrawable.SWEEP_GRADIENT);
+                        break;
+                }
+
+            }
         }
 
         public GradientDrawable init(Context context) {
@@ -252,6 +271,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             }
         }
     }
+
 
     private static class LayerListDrawableItem {
         public Integer minLevel;
