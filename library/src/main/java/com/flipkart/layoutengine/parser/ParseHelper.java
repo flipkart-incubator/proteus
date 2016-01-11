@@ -384,11 +384,17 @@ public class ParseHelper {
                 }
 
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage() + "");
+                }
             } catch (NoSuchFieldException e) {
-                e.printStackTrace();
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage() + "");
+                }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage() + "");
+                }
             }
         }
         return result == null ? 0 : result;
