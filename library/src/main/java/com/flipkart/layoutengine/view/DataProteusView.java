@@ -75,6 +75,13 @@ public class DataProteusView extends SimpleProteusView {
         this.bindings.add(binding);
     }
 
+    public void addDataProteusView(DataProteusView child) {
+        super.addView(child);
+        if (parserContext != null && child != null && child.getParserContext() != null) {
+            parserContext.getDataContext().addChild(child.getParserContext().getDataContext());
+        }
+    }
+
     @Override
     protected View updateDataImpl(JsonObject data) {
         if (logger.isDebugEnabled()) {
@@ -94,10 +101,6 @@ public class DataProteusView extends SimpleProteusView {
             data = onAfterDataContext(parserContext.getDataContext().getDataProvider().getData().getAsJsonObject());
         } else {
             data = onAfterDataContext(null);
-        }
-
-        if (data == null) {
-            return this.getView();
         }
 
         // update the bindings of this view
