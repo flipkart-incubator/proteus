@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 public class DataContext {
 
     private static Logger logger = LoggerFactory.getLogger(DataContext.class);
+    private List<DataContext> children;
     private JsonProvider dataProvider;
     private JsonObject reverseScope;
     private JsonObject scope;
@@ -33,6 +34,7 @@ public class DataContext {
     public DataContext() {
         this.scope = new JsonObject();
         this.reverseScope = new JsonObject();
+        this.children = new ArrayList<>();
     }
 
     public JsonObject getScope() {
@@ -78,13 +80,27 @@ public class DataContext {
         this.index = index;
     }
 
+    public List<DataContext> getChildren() {
+        return children;
+    }
+
+    public void addChild(DataContext dataContext) {
+        this.children.add(dataContext);
+    }
+
     public DataContext createChildDataContext(JsonObject scope, int childIndex) {
-        return updateDataContext(new DataContext(), dataProvider, scope, childIndex);
+        DataContext dataContext = updateDataContext(new DataContext(), dataProvider, scope, childIndex);
+        this.addChild(dataContext);
+        return dataContext;
     }
 
     public void updateDataContext(JsonObject data) {
         JsonProvider dataProvider = new JsonProvider(data);
         updateDataContext(this, dataProvider, scope, index);
+
+        for (DataContext child : children) {
+            child.updateDataContext(this.dataProvider.getData().getAsJsonObject());
+        }
     }
 
     public static DataContext updateDataContext(DataContext dataContext, JsonProvider dataProvider,
