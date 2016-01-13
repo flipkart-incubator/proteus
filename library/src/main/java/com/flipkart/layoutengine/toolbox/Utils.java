@@ -27,7 +27,7 @@ import java.util.Map;
 public class Utils {
 
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "3.1.5-SNAPSHOT";
+    public static final String VERSION = "3.1.6";
     public static final String TAG_DEBUG = Utils.getTagPrefix() + "debug";
     public static final String TAG_ERROR = Utils.getTagPrefix() + "error";
 
