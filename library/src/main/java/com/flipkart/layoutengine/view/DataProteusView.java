@@ -153,7 +153,7 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     private void updateDataContext(JsonObject data) {
-        if (parserContext != null) {
+        if (parserContext != null && parserContext.hasDataContext()) {
             parserContext.getDataContext().updateDataContext(data);
         }
     }

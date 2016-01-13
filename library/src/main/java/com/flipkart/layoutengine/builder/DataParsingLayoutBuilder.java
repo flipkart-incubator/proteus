@@ -298,22 +298,28 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                                 final JsonObject currentViewJsonObject,
                                                 final int childIndex) {
 
+        ParserContext newParserContext = oldParserContext.clone();
+        DataContext newDataContext = oldParserContext.getDataContext();
+
         JsonElement scope = currentViewJsonObject.get(ProteusConstants.DATA_CONTEXT);
         if (scope == null || scope.isJsonNull()) {
-            return oldParserContext;
+            newParserContext.setDataContext(newDataContext);
+            newParserContext.setHasDataContext(false);
+            return newParserContext;
         }
 
-        DataContext oldDataContext = oldParserContext.getDataContext();
-        if (oldDataContext.getDataProvider() == null) {
+        if (oldParserContext.getDataContext().getDataProvider() == null) {
             if (logger.isErrorEnabled()) {
                 logger.error(TAG_ERROR + "#getNewParserContext() When scope is specified, data provider cannot be null");
             }
-            return oldParserContext;
+            newParserContext.setDataContext(newDataContext);
+            newParserContext.setHasDataContext(false);
+            return newParserContext;
         }
 
-        DataContext newDataContext = oldDataContext.createChildDataContext(scope.getAsJsonObject(), childIndex);
-        ParserContext newParserContext = oldParserContext.clone();
+        newDataContext = oldParserContext.getDataContext().createChildDataContext(scope.getAsJsonObject(), childIndex);
         newParserContext.setDataContext(newDataContext);
+        newParserContext.setHasDataContext(true);
 
         return newParserContext;
     }

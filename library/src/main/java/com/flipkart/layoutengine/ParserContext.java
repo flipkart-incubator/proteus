@@ -11,6 +11,7 @@ public class ParserContext implements Cloneable {
     private LayoutBuilder layoutBuilder;
     private DataContext dataContext;
     private Styles styles;
+    private boolean hasDataContext = true;
 
     public ParserContext() {
         this.dataContext = new DataContext();
@@ -50,5 +51,13 @@ public class ParserContext implements Cloneable {
 
     public void setStyles(Styles styles) {
         this.styles = styles;
+    }
+
+    public boolean hasDataContext() {
+        return hasDataContext;
+    }
+
+    public void setHasDataContext(boolean hasDataContext) {
+        this.hasDataContext = hasDataContext;
     }
 }
