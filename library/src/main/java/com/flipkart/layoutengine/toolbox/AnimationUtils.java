@@ -102,11 +102,11 @@ public class AnimationUtils {
                     String stringValue = value.getAsString();
                     if (stringValue.endsWith(PERCENT_SELF)) {
                         stringValue = stringValue.substring(0, stringValue.length() - PERCENT_SELF.length());
-                        d.value = Integer.parseInt(stringValue) / 100;
+                        d.value = Float.parseFloat(stringValue) / 100;
                         d.type = Animation.RELATIVE_TO_SELF;
                     } else if (stringValue.endsWith(PERCENT_RELATIVE_PARENT)) {
                         stringValue = stringValue.substring(0, stringValue.length() - PERCENT_RELATIVE_PARENT.length());
-                        d.value = Integer.parseInt(stringValue) / 100;
+                        d.value = Float.parseFloat(stringValue) / 100;
                         d.type = Animation.RELATIVE_TO_PARENT;
                     } else {
                         d.type = Animation.ABSOLUTE;
