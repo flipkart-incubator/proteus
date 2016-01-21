@@ -94,7 +94,7 @@ public class AnimationUtils {
             Description d = new Description();
             d.type = Animation.ABSOLUTE;
             d.value = 0;
-            if (value != null && value.isNumber() || value.isString()) {
+            if (value != null && (value.isNumber() || value.isString())) {
                 if (value.isNumber()) {
                     d.type = Animation.ABSOLUTE;
                     d.value = value.getAsNumber().floatValue();
