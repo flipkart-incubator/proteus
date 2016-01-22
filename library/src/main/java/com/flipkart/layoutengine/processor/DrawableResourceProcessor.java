@@ -11,6 +11,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.LevelListDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
@@ -177,10 +178,8 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 gradientDrawable.setGradientRadius(gradientRadius);
             }
 
-            if(!TextUtils.isEmpty(gradientType))
-            {
-                switch (gradientType)
-                {
+            if (!TextUtils.isEmpty(gradientType)) {
+                switch (gradientType) {
                     case LINEAR_GRADIENT:
                         gradientDrawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
                         break;
@@ -195,19 +194,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             }
         }
 
-        public GradientDrawable init(Context context) {
-            int[] colors = null;
-            if (centerColor != null) {
-                colors = new int[3];
-                colors[0] = loadColor(context, startColor);
-                colors[1] = loadColor(context, centerColor);
-                colors[2] = loadColor(context, endColor);
-            } else {
-                colors = new int[2];
-                colors[0] = loadColor(context, startColor);
-                colors[1] = loadColor(context, endColor);
-            }
-
+        public static GradientDrawable.Orientation getOrientation(Integer angle) {
             GradientDrawable.Orientation orientation = GradientDrawable.Orientation.LEFT_RIGHT;
 
             if (null != angle) {
@@ -241,7 +228,27 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                     }
                 }
             }
-            return colors != null ? new GradientDrawable(orientation, colors) : new GradientDrawable();
+            return orientation;
+        }
+
+        public GradientDrawable init(Context context) {
+            int[] colors = null;
+            if (centerColor != null) {
+                colors = new int[3];
+                colors[0] = loadColor(context, startColor);
+                colors[1] = loadColor(context, centerColor);
+                colors[2] = loadColor(context, endColor);
+            } else {
+                colors = new int[2];
+                colors[0] = loadColor(context, startColor);
+                colors[1] = loadColor(context, endColor);
+            }
+
+            return init(colors, angle);
+        }
+
+        public static GradientDrawable init(@Nullable int[] colors, @Nullable Integer angle) {
+            return colors != null ? new GradientDrawable(getOrientation(angle), colors) : new GradientDrawable();
         }
     }
 
@@ -296,7 +303,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         public Float thicknessRatio;
         public JsonArray children;
 
-        public GradientDrawable init(Context context) {
+        public GradientDrawable init(Context context, @Nullable GradientDrawable useGradient) {
             ArrayList<GradientDrawableElement> elements = null;
             Gradient gradient = null;
 
@@ -335,7 +342,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 }
             }
 
-            GradientDrawable gradientDrawable = (null != gradient) ? gradient.init(context) : new GradientDrawable();
+            GradientDrawable gradientDrawable = (null != gradient) ? gradient.init(context) : (null != useGradient) ? useGradient : new GradientDrawable();
 
             if (!TextUtils.isEmpty(shape)) {
                 int shapeInt = -1;
@@ -474,7 +481,18 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
     private static GradientDrawable loadGradientDrawable(Context context, JsonObject value) {
         ShapeDrawableJson shapeDrawable = sGson.fromJson(value, ShapeDrawableJson.class);
-        return shapeDrawable.init(context);
+        return shapeDrawable.init(context, null);
+    }
+
+    /**
+     * @param Context  Context object
+     * @param JsonObject Json representation of the gradient drawable
+     * @param colors  [startColor, centerColor, endColor] or [startColor, endColor]. This can be null
+     * @param angle  angle. This can be null
+     */
+    public static GradientDrawable loadShapeDrawable(Context context, JsonObject value, @Nullable int[] colors, Integer angle) {
+        ShapeDrawableJson shapeDrawable = sGson.fromJson(value, ShapeDrawableJson.class);
+        return shapeDrawable.init(context, Gradient.init(colors, angle));
     }
 
     private void onLayerDrawableFinish(V view, List<Pair<Integer, Drawable>> drawables) {
