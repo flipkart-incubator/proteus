@@ -28,6 +28,7 @@
           "gravity":"center",
           "style": "h1.blue",
           "animation": {
+            "interpolator":{"type":"anticipateOvershootInterpolator"},
             "type": "rotate",
             "fromDegrees": "-100",
             "toDegrees": "0",

@@ -344,7 +344,7 @@ public class AnimationUtils {
     }
 
 
-    private abstract static class PathInterpolatorProperties extends InterpolatorProperties {
+    private static class PathInterpolatorProperties extends InterpolatorProperties {
         public Float controlX1;
         public Float controlY1;
         public Float controlX2;
@@ -360,7 +360,7 @@ public class AnimationUtils {
         }
     }
 
-    private abstract static class AnticipateInterpolatorProperties extends InterpolatorProperties {
+    private static class AnticipateInterpolatorProperties extends InterpolatorProperties {
         public Float tension;
 
         Interpolator createInterpolator(Context c) {
@@ -368,7 +368,7 @@ public class AnimationUtils {
         }
     }
 
-    private abstract static class OvershootInterpolatorProperties extends InterpolatorProperties {
+    private static class OvershootInterpolatorProperties extends InterpolatorProperties {
         public Float tension;
 
         Interpolator createInterpolator(Context c) {
@@ -376,7 +376,7 @@ public class AnimationUtils {
         }
     }
 
-    private abstract static class AnticipateOvershootInterpolatorProperties extends InterpolatorProperties {
+    private static class AnticipateOvershootInterpolatorProperties extends InterpolatorProperties {
         public Float tension;
         public Float extraTension;
 
@@ -385,7 +385,7 @@ public class AnimationUtils {
         }
     }
 
-    private abstract static class CycleInterpolatorProperties extends InterpolatorProperties {
+    private static class CycleInterpolatorProperties extends InterpolatorProperties {
         public Float cycles;
 
         Interpolator createInterpolator(Context c) {
