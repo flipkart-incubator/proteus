@@ -424,7 +424,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                     JsonArray children = childrenElement.getAsJsonArray();
                     for (JsonElement childElement : children) {
                         JsonObject child = childElement.getAsJsonObject();
-                        final Pair<int[], String> state = ParseHelper.parseState(child);
+                        final Pair<int[], JsonElement> state = ParseHelper.parseState(child);
                         if (state != null) {
                             DrawableResourceProcessor<V> processor = new DrawableResourceProcessor<V>(context) {
                                 @Override
@@ -432,7 +432,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                                     stateListDrawable.addState(state.first, drawable);
                                 }
                             };
-                            processor.handle(parserContext, attributeKey, new JsonPrimitive(state.second), view, proteusView, parent, layout, index);
+                            processor.handle(parserContext, attributeKey, state.second, view, proteusView, parent, layout, index);
                         }
 
                     }
@@ -452,16 +452,18 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                     JsonArray children = childrenElement.getAsJsonArray();
                     for (JsonElement childElement : children) {
                         JsonObject child = childElement.getAsJsonObject();
-                        final Pair<Integer, String> layerPair = ParseHelper.parseLayer(child);
-
-                        DrawableResourceProcessor<V> processor = new DrawableResourceProcessor<V>(context) {
-                            @Override
-                            public void setDrawable(V view, Drawable drawable) {
-                                drawables.add(new Pair<>(layerPair.first, drawable));
-                                onLayerDrawableFinish(view, drawables);
-                            }
-                        };
-                        processor.handle(parserContext, attributeKey, new JsonPrimitive(layerPair.second), view, proteusView, parent, layout, index);
+                        final Pair<Integer, JsonElement> layerPair = ParseHelper.parseLayer(child);
+                        if(null != layerPair)
+                        {
+                            DrawableResourceProcessor<V> processor = new DrawableResourceProcessor<V>(context) {
+                                @Override
+                                public void setDrawable(V view, Drawable drawable) {
+                                    drawables.add(new Pair<>(layerPair.first, drawable));
+                                    onLayerDrawableFinish(view, drawables);
+                                }
+                            };
+                            processor.handle(parserContext, attributeKey, layerPair.second, view, proteusView, parent, layout, index);
+                        }
                     }
                 }
                 break;
@@ -485,8 +487,8 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     /**
-     * @param Context  Context object
-     * @param JsonObject Json representation of the gradient drawable
+     * @param context  Context object
+     * @param value Json representation of the gradient drawable
      * @param colors  [startColor, centerColor, endColor] or [startColor, endColor]. This can be null
      * @param angle  angle. This can be null
      */

@@ -499,12 +499,11 @@ public class ParseHelper {
     }
 
 
-    public static Pair<int[], String> parseState(JsonObject stateObject) {
+    public static Pair<int[], JsonElement> parseState(JsonObject stateObject) {
 
         //drawable
-        JsonElement jsonElement = stateObject.get(DRAWABLE_STR);
-        if (jsonElement.isJsonPrimitive()) {
-            String drawable = jsonElement.getAsString();
+        JsonElement drawableJson = stateObject.get(DRAWABLE_STR);
+        if (null != drawableJson) {
 
             //states
             Set<Map.Entry<String, JsonElement>> entries = stateObject.entrySet();
@@ -525,7 +524,7 @@ public class ParseHelper {
                 statesToReturnInteger[i] = statesToReturn.get(i);
             }
 
-            return new Pair<>(statesToReturnInteger, drawable);
+            return new Pair<>(statesToReturnInteger, drawableJson);
         }
         return null;
     }
@@ -578,7 +577,7 @@ public class ParseHelper {
      * @param child
      * @return The layer info as a {@link Pair}
      */
-    public static Pair<Integer, String> parseLayer(JsonObject child) {
+    public static Pair<Integer, JsonElement> parseLayer(JsonObject child) {
 
         JsonElement id = child.get(ID_STR);
         int androidResIdByXmlResId = View.NO_ID;
@@ -589,13 +588,8 @@ public class ParseHelper {
         if (idAsString != null) {
             androidResIdByXmlResId = getAndroidResIdByXmlResId(idAsString);
         }
-        String drawable = null;
         JsonElement drawableElement = child.get(DRAWABLE_STR);
-        if (drawableElement != null) {
-            drawable = drawableElement.getAsString();
-        }
-
-        return new Pair<>(androidResIdByXmlResId, drawable);
+        return (drawableElement != null) ? new Pair<>(androidResIdByXmlResId, drawableElement) : null;
     }
 
     /**
