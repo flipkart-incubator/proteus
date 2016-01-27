@@ -3,6 +3,7 @@ package com.flipkart.layoutengine.parser;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -38,6 +39,11 @@ import java.util.Map;
  * @author kiran.kumar
  */
 public class ViewParser<V extends View> extends Parser<V> {
+
+    private static final String ID_STRING_START_PATTERN = "@+id/";
+    private static final String ID_STRING_START_PATTERN1 = "@id/";
+    private static final String ID_STRING_NORMALIZED_PATTERN = ":id/";
+
 
     private Logger logger = LoggerFactory.getLogger(ViewParser.class);
 
@@ -271,7 +277,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.Id, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, final V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
                 view.setId(IdGenerator.getInstance().getUnique(attributeValue));
 
                 // set view id resource name
@@ -282,7 +288,28 @@ public class ViewParser<V extends View> extends Parser<V> {
                         public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfo info) {
                             super.onInitializeAccessibilityNodeInfo(host, info);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                                info.setViewIdResourceName(resourceName);
+                                String normalizedResourceName;
+                                if(!TextUtils.isEmpty(resourceName))
+                                {
+                                    String id;
+                                    if(resourceName.startsWith(ID_STRING_START_PATTERN))
+                                    {
+                                        id = resourceName.substring(ID_STRING_START_PATTERN.length());
+                                    }
+                                    else if(resourceName.startsWith(ID_STRING_START_PATTERN1))
+                                    {
+                                        id = resourceName.substring(ID_STRING_START_PATTERN1.length());
+                                    }
+                                    else {
+                                        id = resourceName;
+                                    }
+                                    normalizedResourceName = view.getContext().getPackageName() + ID_STRING_NORMALIZED_PATTERN + id;
+                                }
+                                else
+                                {
+                                    normalizedResourceName = "";
+                                }
+                                info.setViewIdResourceName(normalizedResourceName);
                             }
                         }
                     });
