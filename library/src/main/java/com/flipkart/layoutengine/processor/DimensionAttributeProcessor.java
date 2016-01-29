@@ -23,8 +23,11 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
      */
     @Override
     public final void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-        float dimension = ParseHelper.parseDimension(attributeValue.getAsString(), view.getContext());
-        setDimension(parserContext, dimension, view, attributeKey, attributeValue, proteusView, layout, index);
+        if(attributeValue != null && attributeValue.isJsonPrimitive())
+        {
+            float dimension = ParseHelper.parseDimension(attributeValue.getAsString(), view.getContext());
+            setDimension(parserContext, dimension, view, attributeKey, attributeValue, proteusView, layout, index);
+        }
     }
 
     public abstract void setDimension(ParserContext parserContext, float dimension, T view, String key, JsonElement value, ProteusView proteusView, JsonObject layout, int index);

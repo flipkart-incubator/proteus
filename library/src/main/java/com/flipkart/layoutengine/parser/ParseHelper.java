@@ -66,6 +66,7 @@ public class ParseHelper {
 
     private static final String BOLD = "bold";
     private static final String ITALIC = "italic";
+    private static final String BOLD_ITALIC = "bold|italic";
 
     private static final String TEXT_ALIGNMENT_INHERIT = "inherit";
     private static final String TEXT_ALIGNMENT_GRAVITY = "gravity";
@@ -469,6 +470,9 @@ public class ParseHelper {
                 case ITALIC:
                     typeface = Typeface.ITALIC;
                     break;
+                case BOLD_ITALIC:
+                    typeface = Typeface.BOLD_ITALIC;
+                    break;
                 default:
                     typeface = Typeface.NORMAL;
                     break;
@@ -600,16 +604,6 @@ public class ParseHelper {
      */
     public static ImageView.ScaleType parseScaleType(String attributeValue) {
         return !TextUtils.isEmpty(attributeValue) ? sImageScaleType.get(attributeValue) : null;
-    }
-
-    /**
-     * parses TextView typeface
-     *
-     * @param attributeValue value of the typeface attribute
-     * @return the typeface value
-     */
-    public static int parseTypeFace(String attributeValue) {
-        return (attributeValue != null && BOLD.equals(attributeValue)) ? Typeface.BOLD : 0;
     }
 
     /**

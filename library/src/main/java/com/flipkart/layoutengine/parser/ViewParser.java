@@ -536,5 +536,21 @@ public class ViewParser<V extends View> extends Parser<V> {
                 view.setAnimation(animation);
             }
         });
+
+        addHandler(Attributes.View.TextAlignment, new StringAttributeProcessor<V>() {
+
+            @Override
+            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+                {
+                    Integer textAlignment = ParseHelper.parseTextAlignment(attributeValue);
+                    if(null != textAlignment)
+                    {
+                        //noinspection ResourceType
+                        view.setTextAlignment(textAlignment);
+                    }
+                }
+            }
+        });
     }
 }

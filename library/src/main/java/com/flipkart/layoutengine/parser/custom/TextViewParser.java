@@ -189,7 +189,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         addHandler(Attributes.TextView.TextStyle, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                int typeface = ParseHelper.parseTypeFace(attributeValue);
+                int typeface = ParseHelper.parseTextStyle(attributeValue);
                 view.setTypeface(Typeface.defaultFromStyle(typeface));
             }
         });

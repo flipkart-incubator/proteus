@@ -27,7 +27,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -303,7 +302,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         public Float thicknessRatio;
         public JsonArray children;
 
-        public GradientDrawable init(Context context, @Nullable GradientDrawable useGradient) {
+        public GradientDrawable init(Context context) {
             ArrayList<GradientDrawableElement> elements = null;
             Gradient gradient = null;
 
@@ -342,7 +341,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 }
             }
 
-            GradientDrawable gradientDrawable = (null != gradient) ? gradient.init(context) : (null != useGradient) ? useGradient : new GradientDrawable();
+            GradientDrawable gradientDrawable = (null != gradient) ? gradient.init(context) : new GradientDrawable();
 
             if (!TextUtils.isEmpty(shape)) {
                 int shapeInt = -1;
@@ -481,20 +480,9 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         }
     }
 
-    private static GradientDrawable loadGradientDrawable(Context context, JsonObject value) {
+    public static GradientDrawable loadGradientDrawable(Context context, JsonObject value) {
         ShapeDrawableJson shapeDrawable = sGson.fromJson(value, ShapeDrawableJson.class);
-        return shapeDrawable.init(context, null);
-    }
-
-    /**
-     * @param context  Context object
-     * @param value Json representation of the gradient drawable
-     * @param colors  [startColor, centerColor, endColor] or [startColor, endColor]. This can be null
-     * @param angle  angle. This can be null
-     */
-    public static GradientDrawable loadShapeDrawable(Context context, JsonObject value, @Nullable int[] colors, Integer angle) {
-        ShapeDrawableJson shapeDrawable = sGson.fromJson(value, ShapeDrawableJson.class);
-        return shapeDrawable.init(context, Gradient.init(colors, angle));
+        return shapeDrawable.init(context);
     }
 
     private void onLayerDrawableFinish(V view, List<Pair<Integer, Drawable>> drawables) {

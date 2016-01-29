@@ -68,6 +68,7 @@ public class Attributes {
         public static Attribute Animation = new Attribute("animation");
         public static Attribute RequiresFadingEdge = new Attribute("requiresFadingEdge");
         public static Attribute FadingEdgeLength = new Attribute("fadingEdgeLength");
+        public static Attribute TextAlignment = new Attribute("textAlignment");
 
         /**
          * Meta Attributes
