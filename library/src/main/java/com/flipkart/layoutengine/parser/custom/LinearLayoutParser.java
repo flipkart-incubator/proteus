@@ -63,9 +63,9 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
         addHandler(Attributes.LinearLayout.DividerPadding, new DimensionAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
-            public void setDimension(ParserContext parserContext, int dimension, T view, String attributeKey, JsonElement attributeValue, ProteusView proteusView, JsonObject layout, int index) {
+            public void setDimension(ParserContext parserContext, float dimension, T view, String key, JsonElement value, ProteusView proteusView, JsonObject layout, int index) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-                    view.setDividerPadding(dimension);
+                    view.setDividerPadding((int) dimension);
                 }
             }
         });

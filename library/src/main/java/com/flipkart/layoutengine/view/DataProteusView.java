@@ -91,10 +91,6 @@ public class DataProteusView extends SimpleProteusView {
             data = onAfterDataContext(null);
         }
 
-        if (data == null) {
-            return this.getView();
-        }
-
         // update the bindings of this view
         if (this.bindings != null) {
             for (Binding binding : this.bindings) {
@@ -109,7 +105,7 @@ public class DataProteusView extends SimpleProteusView {
             updateChildrenFromData();
         } else if (children != null) {
             for (ProteusView proteusView : children) {
-                proteusView.updateData(null);
+                proteusView.updateData(data);
             }
         }
 
@@ -152,7 +148,9 @@ public class DataProteusView extends SimpleProteusView {
     }
 
     private void updateDataContext(JsonObject data) {
-        parserContext.getDataContext().updateDataContext(data);
+        if (parserContext != null && parserContext.hasDataContext()) {
+            parserContext.getDataContext().updateDataContext(data);
+        }
     }
 
     private void updateChildrenFromData() {
@@ -342,9 +340,9 @@ public class DataProteusView extends SimpleProteusView {
 
     public interface OnUpdateDataListener {
 
-        JsonObject onBeforeUpdateData(JsonObject data);
+        JsonObject onBeforeUpdateData(@Nullable JsonObject data);
 
-        JsonObject onAfterDataContext(JsonObject data);
+        JsonObject onAfterDataContext(@Nullable JsonObject data);
 
         void onUpdateDataComplete();
     }

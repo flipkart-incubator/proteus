@@ -27,7 +27,7 @@ import java.util.Map;
 public class Utils {
 
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "3.0.3-SNAPSHOT";
+    public static final String VERSION = "3.1.15-SNAPSHOT";
     public static final String TAG_DEBUG = Utils.getTagPrefix() + "debug";
     public static final String TAG_ERROR = Utils.getTagPrefix() + "error";
 
@@ -199,13 +199,14 @@ public class Utils {
         return noLayoutId;
     }
 
-    public static Drawable getBorderDrawble(JsonElement attributeValue, Context context) {
+    public static Drawable getBorderDrawable(JsonElement attributeValue, Context context) {
 
         if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
             return null;
         }
 
-        int cornerRadius = 0, borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
+        float cornerRadius = 0;
+        int borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
         JsonObject data = attributeValue.getAsJsonObject();
 
         String value = Utils.getPropertyAsString(data, ATTRIBUTE_BG_COLOR);
@@ -225,7 +226,7 @@ public class Utils {
 
         value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_WIDTH);
         if (value != null) {
-            borderWidth = ParseHelper.parseDimension(value, context);
+            borderWidth = (int) ParseHelper.parseDimension(value, context);
         }
 
         GradientDrawable border = new GradientDrawable();

@@ -94,7 +94,7 @@ public class AnimationUtils {
             Description d = new Description();
             d.type = Animation.ABSOLUTE;
             d.value = 0;
-            if (value != null && value.isNumber() || value.isString()) {
+            if (value != null && (value.isNumber() || value.isString())) {
                 if (value.isNumber()) {
                     d.type = Animation.ABSOLUTE;
                     d.value = value.getAsNumber().floatValue();
@@ -102,11 +102,11 @@ public class AnimationUtils {
                     String stringValue = value.getAsString();
                     if (stringValue.endsWith(PERCENT_SELF)) {
                         stringValue = stringValue.substring(0, stringValue.length() - PERCENT_SELF.length());
-                        d.value = Integer.parseInt(stringValue) / 100;
+                        d.value = Float.parseFloat(stringValue) / 100;
                         d.type = Animation.RELATIVE_TO_SELF;
                     } else if (stringValue.endsWith(PERCENT_RELATIVE_PARENT)) {
                         stringValue = stringValue.substring(0, stringValue.length() - PERCENT_RELATIVE_PARENT.length());
-                        d.value = Integer.parseInt(stringValue) / 100;
+                        d.value = Float.parseFloat(stringValue) / 100;
                         d.type = Animation.RELATIVE_TO_PARENT;
                     } else {
                         d.type = Animation.ABSOLUTE;
@@ -344,7 +344,7 @@ public class AnimationUtils {
     }
 
 
-    private abstract static class PathInterpolatorProperties extends InterpolatorProperties {
+    private static class PathInterpolatorProperties extends InterpolatorProperties {
         public Float controlX1;
         public Float controlY1;
         public Float controlX2;
@@ -360,7 +360,7 @@ public class AnimationUtils {
         }
     }
 
-    private abstract static class AnticipateInterpolatorProperties extends InterpolatorProperties {
+    private static class AnticipateInterpolatorProperties extends InterpolatorProperties {
         public Float tension;
 
         Interpolator createInterpolator(Context c) {
@@ -368,7 +368,7 @@ public class AnimationUtils {
         }
     }
 
-    private abstract static class OvershootInterpolatorProperties extends InterpolatorProperties {
+    private static class OvershootInterpolatorProperties extends InterpolatorProperties {
         public Float tension;
 
         Interpolator createInterpolator(Context c) {
@@ -376,7 +376,7 @@ public class AnimationUtils {
         }
     }
 
-    private abstract static class AnticipateOvershootInterpolatorProperties extends InterpolatorProperties {
+    private static class AnticipateOvershootInterpolatorProperties extends InterpolatorProperties {
         public Float tension;
         public Float extraTension;
 
@@ -385,7 +385,7 @@ public class AnimationUtils {
         }
     }
 
-    private abstract static class CycleInterpolatorProperties extends InterpolatorProperties {
+    private static class CycleInterpolatorProperties extends InterpolatorProperties {
         public Float cycles;
 
         Interpolator createInterpolator(Context c) {

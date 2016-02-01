@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Html;
+import android.util.TypedValue;
 import android.widget.TextView;
 
 import com.flipkart.layoutengine.ParserContext;
@@ -49,15 +50,15 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
 
         addHandler(Attributes.TextView.DrawablePadding, new DimensionAttributeProcessor<T>() {
             @Override
-            public void setDimension(ParserContext parserContext, int dimension, T view, String attributeKey, JsonElement attributeValue, ProteusView proteusView, JsonObject layout, int index) {
-                view.setCompoundDrawablePadding(dimension);
+            public void setDimension(ParserContext parserContext, float dimension, T view, String key, JsonElement value, ProteusView proteusView, JsonObject layout, int index) {
+                view.setCompoundDrawablePadding((int) dimension);
             }
         });
 
         addHandler(Attributes.TextView.TextSize, new DimensionAttributeProcessor<T>() {
             @Override
-            public void setDimension(ParserContext parserContext, int dimension, T view, String attributeKey, JsonElement attributeValue, ProteusView proteusView, JsonObject layout, int index) {
-                view.setTextSize(dimension);
+            public void setDimension(ParserContext parserContext, float dimension, T view, String key, JsonElement value, ProteusView proteusView, JsonObject layout, int index) {
+                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
             }
         });
         addHandler(Attributes.TextView.Gravity, new StringAttributeProcessor<T>() {
@@ -188,7 +189,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         addHandler(Attributes.TextView.TextStyle, new StringAttributeProcessor<T>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                int typeface = ParseHelper.parseTypeFace(attributeValue);
+                int typeface = ParseHelper.parseTextStyle(attributeValue);
                 view.setTypeface(Typeface.defaultFromStyle(typeface));
             }
         });
