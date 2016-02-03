@@ -1,12 +1,15 @@
 package com.flipkart.layoutengine.parser.custom;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
+import android.os.Build;
 import android.view.Gravity;
 import android.widget.ProgressBar;
 
@@ -15,6 +18,7 @@ import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
+import com.flipkart.layoutengine.processor.ColorResourceProcessor;
 import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.toolbox.Utils;
@@ -66,6 +70,36 @@ public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T>
                 }
 
                 view.setProgressDrawable(getLayerDrawable(progress, background));
+            }
+        });
+
+        addHandler(Attributes.ProgressBar.SecondaryProgressTint, new ColorResourceProcessor<T>() {
+            @Override
+            public void setColor(T view, int color) {
+
+            }
+
+            @Override
+            public void setColor(T view, ColorStateList colors) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                {
+                    view.setSecondaryProgressTintList(colors);
+                }
+            }
+        });
+
+        addHandler(Attributes.ProgressBar.IndeterminateTint, new ColorResourceProcessor<T>() {
+            @Override
+            public void setColor(T view, int color) {
+
+            }
+
+            @Override
+            public void setColor(T view, ColorStateList colors) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                {
+                    view.setIndeterminateTintList(colors);
+                }
             }
         });
     }
