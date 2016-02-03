@@ -202,6 +202,8 @@ public class Attributes {
         public static Attribute Progress = new Attribute("progress");
         public static Attribute Max = new Attribute("max");
         public static Attribute ProgressTint = new Attribute("progressTint");
+        public static Attribute IndeterminateTint   = new Attribute("indeterminateTint");
+        public static Attribute SecondaryProgressTint   = new Attribute("secondaryProgressTint");
     }
 
     public static class Attribute {
