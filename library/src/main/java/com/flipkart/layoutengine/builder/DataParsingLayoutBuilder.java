@@ -217,7 +217,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             formattedValue = dataPath;
                             failed = true;
                         }
-                        finalValue = finalValue.replace(matchedString, formattedValue);
+                        finalValue = finalValue.replace(matchedString, formattedValue != null ? formattedValue : "");
                         bindingName = dataPath;
                     }
                     addBinding(dataProteusView,
