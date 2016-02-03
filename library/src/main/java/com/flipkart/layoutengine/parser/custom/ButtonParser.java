@@ -1,10 +1,9 @@
 package com.flipkart.layoutengine.parser.custom;
 
-import android.content.Context;
-import android.widget.Button;
 
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
+import com.flipkart.layoutengine.view.Button;
 
 /**
  * Created by kiran.kumar on 12/05/14.
@@ -16,7 +15,7 @@ public class ButtonParser<T extends Button> extends WrappableParser<T> {
     }
 
     @Override
-    protected void prepareHandlers(Context context) {
-        super.prepareHandlers(context);
+    protected void prepareHandlers() {
+        super.prepareHandlers();
     }
 }

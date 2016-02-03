@@ -1,4 +1,4 @@
-package com.flipkart.layoutengine.provider;
+package com.flipkart.layoutengine.toolbox;
 
 import java.util.regex.Pattern;
 
@@ -30,7 +30,7 @@ public class ProteusConstants {
     public static final String DATA_PATH_DELIMITERS = ".[]";
     public static final String DATA_PATH_SIMPLE_DELIMITER = "\\.";
 
-    public static final String CHILD_INDEX_REFERENCE = "$index";
+    public static final String INDEX = "$index";
     public static final String ARRAY_DATA_LENGTH_REFERENCE = "$length";
     public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
 }

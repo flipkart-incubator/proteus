@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class ColorUtils {
-    private static HashMap<String, Integer> sAttributesMap = null;
     private static final String TAG = ColorUtils.class.getSimpleName();
+    private static HashMap<String, Integer> sAttributesMap = null;
     private static Logger mLogger = LoggerFactory.getLogger(ColorUtils.class);
 
     /**

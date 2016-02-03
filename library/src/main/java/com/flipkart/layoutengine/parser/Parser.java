@@ -5,11 +5,10 @@ import android.content.res.XmlResourceParser;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.processor.AttributeProcessor;
+import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.ProteusView;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -19,45 +18,41 @@ import org.xmlpull.v1.XmlPullParser;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * This class will help parsing by introducing handlers. Any subclass can use addHandler()
  * method  to specify a callback for an attribute.
  * This class also creates an instance of the view with the first constructor.
+ *
+ * @author kiran.kumar
+ * @author aditya.sharat
  */
 public abstract class Parser<V extends View> implements LayoutHandler<V> {
 
+    protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<>();
     protected final Class<V> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
+
     private Logger logger = LoggerFactory.getLogger(Parser.class);
 
     public Parser(Class<V> viewClass) {
         this.viewClass = viewClass;
     }
 
-    protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<>();
-
     @Override
-    public void prepare(Context context) {
-        if (handlers.size() == 0) {
-            prepareHandlers(context);
-        }
-    }
-
-    public void addHandler(Attributes.Attribute key, AttributeProcessor<V> handler) {
-        handlers.put(key.getName(), handler);
+    public void onBeforeCreateView(View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
+        // nothing to do here
     }
 
     @Override
-    public V createView(ParserContext parserContext, Context context, ProteusView parent, JsonObject layout) {
+    public V createView(View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
         View v = null;
         try {
             Constructor<? extends View> constructor = getContextConstructor(viewClass);
             if (constructor != null) {
-                v = constructor.newInstance(context);
-                ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams((ViewGroup) parent.getView(), layout);
+                v = constructor.newInstance(parent.getContext());
+                ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams((ViewGroup) parent, layout);
                 v.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
@@ -69,12 +64,46 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
         return (V) v;
     }
 
-    /**
-     * Gets and caches the constructor
-     *
-     * @param viewClass
-     * @return Constructor of that class
-     */
+    @Override
+    public void onAfterCreateView(V view, JsonObject layout, JsonObject data, int index, Styles styles) {
+        // nothing to do here
+    }
+
+    protected abstract void prepareHandlers();
+
+    @Override
+    public boolean handleAttribute(V view, String attribute, JsonElement value) {
+        AttributeProcessor attributeProcessor = handlers.get(attribute);
+        if (attributeProcessor != null) {
+            //noinspection unchecked
+            attributeProcessor.handle(attribute, value, view);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean handleChildren(ProteusView view) {
+        return false;
+    }
+
+    @Override
+    public boolean addView(ProteusView parent, ProteusView view) {
+        return false;
+    }
+
+    @Override
+    public void prepareAttributeHandlers() {
+        if (handlers.size() == 0) {
+            prepareHandlers();
+        }
+    }
+
+    @Override
+    public void addHandler(Attributes.Attribute key, AttributeProcessor<V> handler) {
+        handlers.put(key.getName(), handler);
+    }
+
     protected Constructor<? extends V> getContextConstructor(Class<V> viewClass) {
         //noinspection unchecked
         Constructor<? extends V> constructor = (Constructor<? extends V>) constructorCache.get(viewClass);
@@ -114,36 +143,4 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
         return null;
     }
 
-    @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
-                                   JsonObject layout, V view, ProteusView proteusView, ProteusView parent,
-                                   int childIndex) {
-        AttributeProcessor attributeProcessor = handlers.get(attribute);
-        if (attributeProcessor != null) {
-            //noinspection unchecked
-            attributeProcessor.handle(context, attribute, element, view, proteusView, parent, layout, childIndex);
-            return true;
-        }
-        return false;
-    }
-
-    protected abstract void prepareHandlers(Context context);
-
-    @Override
-    public void addChildren(ParserContext parserContext, ProteusView parent,
-                            List<ProteusView> children, JsonObject viewLayout) {
-        for (ProteusView child : children) {
-            parent.addView(child);
-        }
-    }
-
-    @Override
-    public JsonArray parseChildren(ParserContext context, JsonElement element, int childIndex) {
-        return element.getAsJsonArray();
-    }
-
-    @Override
-    public void setupView(ParserContext context, ProteusView parent, V view, JsonObject layout) {
-        // nothing to do here
-    }
 }

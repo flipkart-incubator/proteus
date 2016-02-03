@@ -1,37 +1,31 @@
 package com.flipkart.layoutengine.parser;
 
-import android.content.Context;
 import android.view.View;
 
-import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.processor.AttributeProcessor;
+import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.ProteusView;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import java.util.List;
 
 /**
  * @author kiran.kumar
  */
 public interface LayoutHandler<V extends View> {
 
-    V createView(ParserContext parserContext, Context context, ProteusView parent, JsonObject layout);
+    void prepareAttributeHandlers();
 
-    boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
-                            JsonObject layout, V view, ProteusView proteusView, ProteusView parent, int childIndex);
+    void onBeforeCreateView(View parent, JsonObject layout, JsonObject data, int index, Styles styles);
 
-    JsonArray parseChildren(ParserContext context, JsonElement element, int childIndex);
+    V createView(View parent, JsonObject layout, JsonObject data, int index, Styles styles);
 
-    void setupView(ParserContext context, ProteusView parent, V view, JsonObject layout);
+    void onAfterCreateView(V view, JsonObject layout, JsonObject data, int index, Styles styles);
 
-    void prepare(Context context);
+    void addHandler(Attributes.Attribute key, AttributeProcessor<V> handler);
 
-    /**
-     * This is a base implementation which calls addView() on the parent.
-     *
-     * @param parent   The view group into which the child will be added.
-     * @param children The List of child views which have to be added.
-     */
-    void addChildren(ParserContext parserContext, ProteusView parent, List<ProteusView> children, JsonObject viewLayout);
+    boolean handleAttribute(V view, String attribute, JsonElement value);
+
+    boolean handleChildren(ProteusView view);
+
+    boolean addView(ProteusView parent, ProteusView view);
 }

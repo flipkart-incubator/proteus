@@ -4,11 +4,8 @@ import android.content.res.ColorStateList;
 import android.view.View;
 import android.webkit.ValueCallback;
 
-import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.toolbox.ColorUtils;
-import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 public abstract class ColorResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
@@ -16,10 +13,9 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
 
     }
 
-
     @Override
-    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue, final V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-        ColorUtils.loadColor(view.getContext(), attributeValue, new ValueCallback<Integer>() {
+    public void handle(String key, JsonElement value, final V view) {
+        ColorUtils.loadColor(view.getContext(), value, new ValueCallback<Integer>() {
             /**
              * Invoked when the value is available.
              *
@@ -40,9 +36,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
                 setColor(view, value);
             }
         });
-
     }
-
 
     public abstract void setColor(V view, int color);
 

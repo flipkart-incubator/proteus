@@ -1,4 +1,4 @@
-package com.flipkart.layoutengine.widgets;
+package com.flipkart.layoutengine.view.custom;
 
 import android.annotation.TargetApi;
 import android.content.Context;

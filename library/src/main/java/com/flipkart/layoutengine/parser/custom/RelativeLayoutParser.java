@@ -1,16 +1,12 @@
 package com.flipkart.layoutengine.parser.custom;
 
-import android.content.Context;
-import android.widget.RelativeLayout;
 
-import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
-import com.flipkart.layoutengine.view.ProteusView;
-import com.google.gson.JsonObject;
+import com.flipkart.layoutengine.view.RelativeLayout;
 
 /**
  * Created by kirankumar on 10/07/14.
@@ -22,12 +18,12 @@ public class RelativeLayoutParser<T extends RelativeLayout> extends WrappablePar
     }
 
     @Override
-    protected void prepareHandlers(Context context) {
-        super.prepareHandlers(context);
+    protected void prepareHandlers() {
+        super.prepareHandlers();
         addHandler(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
 
             @Override
-            public void handle(ParserContext parserContext, String attributeKey, String attributeValue, T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
+            public void handle(String attributeKey, String attributeValue, T view) {
                 view.setGravity(ParseHelper.parseGravity(attributeValue));
             }
         });

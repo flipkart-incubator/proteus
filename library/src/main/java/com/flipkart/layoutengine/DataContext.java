@@ -1,10 +1,11 @@
 package com.flipkart.layoutengine;
 
+import android.support.annotation.Nullable;
+
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
-import com.flipkart.layoutengine.provider.JsonProvider;
-import com.flipkart.layoutengine.provider.ProteusConstants;
+import com.flipkart.layoutengine.toolbox.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -14,8 +15,6 @@ import com.google.gson.JsonPrimitive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -25,73 +24,33 @@ import java.util.regex.Pattern;
 public class DataContext {
 
     private static Logger logger = LoggerFactory.getLogger(DataContext.class);
-    private JsonProvider dataProvider;
+    private final boolean isClone;
+    private JsonObject data;
+    @Nullable
     private JsonObject reverseScope;
+    @Nullable
     private JsonObject scope;
     private int index;
 
     public DataContext() {
+        this.data = new JsonObject();
         this.scope = new JsonObject();
         this.reverseScope = new JsonObject();
+        this.index = -1;
+        this.isClone = false;
     }
 
-    public JsonObject getScope() {
-        return scope;
+    public DataContext(DataContext dataContext) {
+        this.data = dataContext.getData();
+        this.scope = dataContext.getScope();
+        this.reverseScope = dataContext.getReverseScope();
+        this.index = dataContext.getIndex();
+        this.isClone = true;
     }
 
-    public JsonObject getReverseScopeMap() {
-        return reverseScope;
-    }
-
-    public void setScope(JsonObject scope) {
-        this.scope = scope;
-    }
-
-    public void setReverseScope(JsonObject reverseScope) {
-        this.reverseScope = reverseScope;
-    }
-
-    public JsonProvider getDataProvider() {
-        return dataProvider;
-    }
-
-    public void setDataProvider(JsonProvider dataProvider) {
-        this.dataProvider = dataProvider;
-    }
-
-    public JsonElement get(String dataPath, int childIndex) {
-        String aliasedDataPath = getAliasedDataPath(dataPath, reverseScope, true);
-        try {
-            return Utils.getElementFromData(aliasedDataPath, dataProvider, childIndex);
-        } catch (JsonNullException e) {
-            return JsonNull.INSTANCE;
-        } catch (NoSuchDataPathException | InvalidDataPathException e) {
-            return null;
-        }
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public DataContext createChildDataContext(JsonObject scope, int childIndex) {
-        return updateDataContext(new DataContext(), dataProvider, scope, childIndex);
-    }
-
-    public void updateDataContext(JsonObject data) {
-        JsonProvider dataProvider = new JsonProvider(data);
-        updateDataContext(this, dataProvider, scope, index);
-    }
-
-    public static DataContext updateDataContext(DataContext dataContext, JsonProvider dataProvider,
-                                                JsonObject scope, int childIndex) {
+    public static DataContext updateDataContext(DataContext dataContext, JsonObject data, JsonObject scope) {
         JsonObject reverseScope = new JsonObject();
         JsonObject newData = new JsonObject();
-        JsonObject data = dataProvider.getData().getAsJsonObject();
 
         if (data == null) {
             data = new JsonObject();
@@ -102,30 +61,28 @@ public class DataContext {
             String value = entry.getValue().getAsString();
             JsonElement element;
             try {
-                element = Utils.getElementFromData(value, dataProvider, childIndex);
+                element = Utils.readJson(value, data, dataContext.getIndex());
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                 if (logger.isErrorEnabled()) {
-                    logger.error("#getNewDataContext could not find: '" + value +
-                            "' for '" + key + "'. ERROR: " + e.getMessage());
+                    logger.error("#getNewDataContext could not find: '" + value + "' for '" + key + "'. ERROR: " + e.getMessage());
                 }
                 element = new JsonObject();
             }
 
             newData.add(key, element);
-            String unAliasedValue = value.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
+            String unAliasedValue = value.replace(ProteusConstants.INDEX, String.valueOf(dataContext.getIndex()));
             reverseScope.add(unAliasedValue, new JsonPrimitive(key));
         }
 
         Utils.addElements(newData, data, false);
 
-        if (dataContext.getDataProvider() == null) {
-            dataContext.setDataProvider(new JsonProvider(newData));
+        if (dataContext.getData() == null) {
+            dataContext.setData(new JsonObject());
         } else {
-            dataContext.getDataProvider().setData(newData);
+            dataContext.setData(newData);
         }
         dataContext.setScope(scope);
         dataContext.setReverseScope(reverseScope);
-        dataContext.setIndex(childIndex);
         return dataContext;
     }
 
@@ -146,5 +103,63 @@ public class DataContext {
         }
 
         return dataPath.replaceFirst(Pattern.quote(segments[0]), alias);
+    }
+
+    public JsonObject getData() {
+        return data;
+    }
+
+    public void setData(JsonObject data) {
+        this.data = data;
+    }
+
+    @Nullable
+    public JsonObject getScope() {
+        return scope;
+    }
+
+    public void setScope(@Nullable JsonObject scope) {
+        this.scope = scope;
+    }
+
+    @Nullable
+    public JsonObject getReverseScope() {
+        return reverseScope;
+    }
+
+    public void setReverseScope(@Nullable JsonObject reverseScope) {
+        this.reverseScope = reverseScope;
+    }
+
+    public boolean isClone() {
+        return isClone;
+    }
+
+    @Nullable
+    public JsonElement get(String dataPath) {
+        String aliasedDataPath = getAliasedDataPath(dataPath, reverseScope, true);
+        try {
+            return Utils.readJson(aliasedDataPath, data, index);
+        } catch (JsonNullException e) {
+            return JsonNull.INSTANCE;
+        } catch (NoSuchDataPathException | InvalidDataPathException e) {
+            return null;
+        }
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public DataContext createChildDataContext(JsonObject scope, int childIndex) {
+        return updateDataContext(new DataContext(), data, scope);
+    }
+
+    public void updateDataContext(JsonObject data) {
+        updateDataContext(this, data, scope);
     }
 }

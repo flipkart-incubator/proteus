@@ -61,6 +61,144 @@ public class AnimationUtils {
 
     private static final String TAG = AnimationUtils.class.getSimpleName();
     private static Logger mLogger = LoggerFactory.getLogger(AnimationUtils.class);
+    private static Gson sGson = new Gson();
+
+    /**
+     * Loads an {@link Animation} object from a resource
+     *
+     * @param context Application context used to access resources
+     * @param value   JSON representation of the Animation
+     * @return The animation object reference by the specified id
+     * @throws android.content.res.Resources.NotFoundException when the animation cannot be loaded
+     */
+    public static Animation loadAnimation(Context context, JsonElement value) throws Resources.NotFoundException {
+        Animation anim = null;
+        if (value.isJsonPrimitive()) {
+            anim = handleString(context, value.getAsString());
+        } else if (value.isJsonObject()) {
+            anim = handleElement(context, value.getAsJsonObject());
+        } else {
+            if (mLogger.isErrorEnabled()) {
+                mLogger.error("Could not load animation for : " + value.toString());
+            }
+        }
+        return anim;
+    }
+
+    private static Animation handleString(Context c, String value) {
+        Animation anim = null;
+        if (ParseHelper.isTweenAnimationResource(value)) {
+            try {
+                Resources r = c.getResources();
+                int animationId = r.getIdentifier(value, "anim", c.getPackageName());
+                anim = android.view.animation.AnimationUtils.loadAnimation(c, animationId);
+            } catch (Exception ex) {
+                System.out.println("Could not load local resource " + value);
+            }
+        }
+        return anim;
+    }
+
+    private static Animation handleElement(Context c, JsonObject value) {
+        Animation anim = null;
+        JsonElement type = value.get(TYPE);
+        String animationType = type.getAsString();
+        AnimationProperties animationProperties = null;
+        if (SET.equalsIgnoreCase(animationType)) {
+            animationProperties = sGson.fromJson(value, AnimationSetProperties.class);
+        } else if (ALPHA.equalsIgnoreCase(animationType)) {
+            animationProperties = sGson.fromJson(value, AlphaAnimProperties.class);
+        } else if (SCALE.equalsIgnoreCase(animationType)) {
+            animationProperties = sGson.fromJson(value, ScaleAnimProperties.class);
+        } else if (ROTATE.equalsIgnoreCase(animationType)) {
+            animationProperties = sGson.fromJson(value, RotateAnimProperties.class);
+        } else if (TRANSLATE.equalsIgnoreCase(animationType)) {
+            animationProperties = sGson.fromJson(value, TranslateAnimProperties.class);
+        }
+
+        if (null != animationProperties) {
+            anim = animationProperties.instantiate(c);
+        }
+
+        return anim;
+    }
+
+    /**
+     * Loads an {@link Interpolator} object from a resource
+     *
+     * @param context Application context used to access resources
+     * @param value   Json representation of the Interpolator
+     * @return The animation object reference by the specified id
+     * @throws android.content.res.Resources.NotFoundException
+     */
+    public static Interpolator loadInterpolator(Context context, JsonElement value)
+            throws Resources.NotFoundException {
+        Interpolator interpolator = null;
+        if (value.isJsonPrimitive()) {
+            interpolator = handleStringInterpolator(context, value.getAsString());
+        } else if (value.isJsonObject()) {
+            interpolator = handleElementInterpolator(context, value.getAsJsonObject());
+        } else {
+            if (mLogger.isErrorEnabled()) {
+                mLogger.error("Could not load interpolator for : " + value.toString());
+            }
+        }
+        return interpolator;
+    }
+
+    private static Interpolator handleStringInterpolator(Context c, String value) {
+        Interpolator interpolator = null;
+        if (ParseHelper.isTweenAnimationResource(value)) {
+            try {
+                Resources r = c.getResources();
+                int interpolatorID = r.getIdentifier(value, "anim", c.getPackageName());
+                interpolator = android.view.animation.AnimationUtils.loadInterpolator(c, interpolatorID);
+            } catch (Exception ex) {
+                System.out.println("Could not load local resource " + value);
+            }
+        }
+        return interpolator;
+    }
+
+    private static Interpolator handleElementInterpolator(Context c, JsonObject value) {
+
+        Interpolator interpolator = null;
+        JsonElement type = value.get("type");
+        String interpolatorType = type.getAsString();
+        InterpolatorProperties interpolatorProperties = null;
+        if (LINEAR_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolator = new LinearInterpolator();
+        } else if (ACCELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolator = new AccelerateInterpolator();
+        } else if (DECELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolator = new DecelerateInterpolator();
+        } else if (ACCELERATE_DECELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolator = new AccelerateDecelerateInterpolator();
+        } else if (CYCLE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolatorProperties = sGson.fromJson(value, CycleInterpolatorProperties.class);
+        } else if (ANTICIPATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolatorProperties = sGson.fromJson(value, AnticipateInterpolatorProperties.class);
+        } else if (OVERSHOOT_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolatorProperties = sGson.fromJson(value, OvershootInterpolatorProperties.class);
+        } else if (ANTICIPATE_OVERSHOOT_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolatorProperties = sGson.fromJson(value, AnticipateOvershootInterpolatorProperties.class);
+        } else if (BOUNCE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolator = new BounceInterpolator();
+        } else if (PATH_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+            interpolatorProperties = sGson.fromJson(value, PathInterpolatorProperties.class);
+        } else {
+            if (mLogger.isErrorEnabled()) {
+                mLogger.error("Unknown interpolator name: " + interpolatorType);
+            }
+            throw new RuntimeException("Unknown interpolator name: " + interpolatorType);
+        }
+
+        if (null != interpolatorProperties) {
+            interpolator = interpolatorProperties.createInterpolator(c);
+        }
+
+        return interpolator;
+    }
 
     /**
      * Utility class to parse a string description of a size.
@@ -276,73 +414,9 @@ public class AnimationUtils {
         }
     }
 
-    private static Gson sGson = new Gson();
-
-
-    /**
-     * Loads an {@link Animation} object from a resource
-     *
-     * @param context Application context used to access resources
-     * @param value   JSON representation of the Animation
-     * @return The animation object reference by the specified id
-     * @throws android.content.res.Resources.NotFoundException when the animation cannot be loaded
-     */
-    public static Animation loadAnimation(Context context, JsonElement value) throws Resources.NotFoundException {
-        Animation anim = null;
-        if (value.isJsonPrimitive()) {
-            anim = handleString(context, value.getAsString());
-        } else if (value.isJsonObject()) {
-            anim = handleElement(context, value.getAsJsonObject());
-        } else {
-            if (mLogger.isErrorEnabled()) {
-                mLogger.error("Could not load animation for : " + value.toString());
-            }
-        }
-        return anim;
-    }
-
-    private static Animation handleString(Context c, String value) {
-        Animation anim = null;
-        if (ParseHelper.isTweenAnimationResource(value)) {
-            try {
-                Resources r = c.getResources();
-                int animationId = r.getIdentifier(value, "anim", c.getPackageName());
-                anim = android.view.animation.AnimationUtils.loadAnimation(c, animationId);
-            } catch (Exception ex) {
-                System.out.println("Could not load local resource " + value);
-            }
-        }
-        return anim;
-    }
-
-    private static Animation handleElement(Context c, JsonObject value) {
-        Animation anim = null;
-        JsonElement type = value.get(TYPE);
-        String animationType = type.getAsString();
-        AnimationProperties animationProperties = null;
-        if (SET.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, AnimationSetProperties.class);
-        } else if (ALPHA.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, AlphaAnimProperties.class);
-        } else if (SCALE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, ScaleAnimProperties.class);
-        } else if (ROTATE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, RotateAnimProperties.class);
-        } else if (TRANSLATE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, TranslateAnimProperties.class);
-        }
-
-        if (null != animationProperties) {
-            anim = animationProperties.instantiate(c);
-        }
-
-        return anim;
-    }
-
     private abstract static class InterpolatorProperties {
         abstract Interpolator createInterpolator(Context c);
     }
-
 
     private static class PathInterpolatorProperties extends InterpolatorProperties {
         public Float controlX1;
@@ -391,82 +465,5 @@ public class AnimationUtils {
         Interpolator createInterpolator(Context c) {
             return new CycleInterpolator(cycles);
         }
-    }
-
-    /**
-     * Loads an {@link Interpolator} object from a resource
-     *
-     * @param context Application context used to access resources
-     * @param value   Json representation of the Interpolator
-     * @return The animation object reference by the specified id
-     * @throws android.content.res.Resources.NotFoundException
-     */
-    public static Interpolator loadInterpolator(Context context, JsonElement value)
-            throws Resources.NotFoundException {
-        Interpolator interpolator = null;
-        if (value.isJsonPrimitive()) {
-            interpolator = handleStringInterpolator(context, value.getAsString());
-        } else if (value.isJsonObject()) {
-            interpolator = handleElementInterpolator(context, value.getAsJsonObject());
-        } else {
-            if (mLogger.isErrorEnabled()) {
-                mLogger.error("Could not load interpolator for : " + value.toString());
-            }
-        }
-        return interpolator;
-    }
-
-    private static Interpolator handleStringInterpolator(Context c, String value) {
-        Interpolator interpolator = null;
-        if (ParseHelper.isTweenAnimationResource(value)) {
-            try {
-                Resources r = c.getResources();
-                int interpolatorID = r.getIdentifier(value, "anim", c.getPackageName());
-                interpolator = android.view.animation.AnimationUtils.loadInterpolator(c, interpolatorID);
-            } catch (Exception ex) {
-                System.out.println("Could not load local resource " + value);
-            }
-        }
-        return interpolator;
-    }
-
-    private static Interpolator handleElementInterpolator(Context c, JsonObject value) {
-
-        Interpolator interpolator = null;
-        JsonElement type = value.get("type");
-        String interpolatorType = type.getAsString();
-        InterpolatorProperties interpolatorProperties = null;
-        if (LINEAR_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolator = new LinearInterpolator();
-        } else if (ACCELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolator = new AccelerateInterpolator();
-        } else if (DECELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolator = new DecelerateInterpolator();
-        } else if (ACCELERATE_DECELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolator = new AccelerateDecelerateInterpolator();
-        } else if (CYCLE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value, CycleInterpolatorProperties.class);
-        } else if (ANTICIPATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value, AnticipateInterpolatorProperties.class);
-        } else if (OVERSHOOT_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value, OvershootInterpolatorProperties.class);
-        } else if (ANTICIPATE_OVERSHOOT_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value, AnticipateOvershootInterpolatorProperties.class);
-        } else if (BOUNCE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolator = new BounceInterpolator();
-        } else if (PATH_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value, PathInterpolatorProperties.class);
-        } else {
-            if (mLogger.isErrorEnabled()) {
-                mLogger.error("Unknown interpolator name: " + interpolatorType);
-            }
-            throw new RuntimeException("Unknown interpolator name: " + interpolatorType);
-        }
-
-        if (null != interpolatorProperties) {
-            interpolator = interpolatorProperties.createInterpolator(c);
-        }
-
-        return interpolator;
     }
 }

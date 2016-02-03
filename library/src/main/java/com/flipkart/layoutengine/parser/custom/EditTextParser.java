@@ -1,9 +1,9 @@
 package com.flipkart.layoutengine.parser.custom;
 
-import android.widget.EditText;
 
 import com.flipkart.layoutengine.parser.Parser;
 import com.flipkart.layoutengine.parser.WrappableParser;
+import com.flipkart.layoutengine.view.EditText;
 
 /**
  * Created by kirankumar on 25/11/14.

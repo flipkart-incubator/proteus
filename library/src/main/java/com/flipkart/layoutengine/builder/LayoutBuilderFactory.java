@@ -1,6 +1,5 @@
 package com.flipkart.layoutengine.builder;
 
-import android.content.Context;
 import android.os.Build;
 import android.view.View;
 
@@ -14,7 +13,6 @@ import com.flipkart.layoutengine.parser.custom.HorizontalScrollViewParser;
 import com.flipkart.layoutengine.parser.custom.ImageButtonParser;
 import com.flipkart.layoutengine.parser.custom.ImageViewParser;
 import com.flipkart.layoutengine.parser.custom.LinearLayoutParser;
-import com.flipkart.layoutengine.parser.custom.NetworkImageViewParser;
 import com.flipkart.layoutengine.parser.custom.ProgressBarParser;
 import com.flipkart.layoutengine.parser.custom.RatingBarParser;
 import com.flipkart.layoutengine.parser.custom.RelativeLayoutParser;
@@ -38,7 +36,7 @@ import java.util.Map;
 /**
  * Factory class for creating Layout builders with different predefined behaviours. This is the
  * only way to create layout builder objects. To create a simple layout builder use
- * {@link LayoutBuilderFactory#getSimpleLayoutBuilder(android.content.Context)}
+ * {@link LayoutBuilderFactory#getSimpleLayoutBuilder()}
  */
 public class LayoutBuilderFactory {
 
@@ -50,12 +48,11 @@ public class LayoutBuilderFactory {
      * Returns a layout builder which can parse @data blocks as well as custom view blocks.
      * See {@link DataParsingLayoutBuilder}
      *
-     * @param context {@link Context} of the activity
      * @return A new {@link DataAndViewParsingLayoutBuilder}
      */
-    public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Context context, Map<String, JsonObject> viewProvider) {
+    public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Map<String, JsonObject> viewProvider) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
-            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(context, viewProvider);
+            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(viewProvider);
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
             registerFormatter(dataAndViewParsingLayoutBuilderInstance);
         }
@@ -65,12 +62,11 @@ public class LayoutBuilderFactory {
     /**
      * Returns a layout builder which can parse @data blocks. See {@link DataParsingLayoutBuilder}
      *
-     * @param context {@link Context} of the activity
      * @return A new {@link DataParsingLayoutBuilder}
      */
-    public DataParsingLayoutBuilder getDataParsingLayoutBuilder(Context context) {
+    public DataParsingLayoutBuilder getDataParsingLayoutBuilder() {
         if (dataParsingLayoutBuilderInstance == null) {
-            dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder(context);
+            dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder();
             registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
             registerFormatter(dataParsingLayoutBuilderInstance);
         }
@@ -80,12 +76,11 @@ public class LayoutBuilderFactory {
     /**
      * Returns a simple layout builder. See {@link SimpleLayoutBuilder}
      *
-     * @param context {@link Context} of the activity
      * @return A new {@link SimpleLayoutBuilder}
      */
-    public SimpleLayoutBuilder getSimpleLayoutBuilder(Context context) {
+    public SimpleLayoutBuilder getSimpleLayoutBuilder() {
         if (simpleLayoutBuilderInstance == null) {
-            simpleLayoutBuilderInstance = new SimpleLayoutBuilder(context);
+            simpleLayoutBuilderInstance = new SimpleLayoutBuilder();
             registerBuiltInHandlers(simpleLayoutBuilderInstance);
         }
         return simpleLayoutBuilderInstance;
@@ -102,7 +97,6 @@ public class LayoutBuilderFactory {
         ViewParser viewParser = new ViewParser(View.class);
         ImageViewParser imageViewParser = new ImageViewParser(viewParser);
         ImageButtonParser imageButtonParser = new ImageButtonParser(imageViewParser);
-        NetworkImageViewParser networkImageViewParser = new NetworkImageViewParser(imageViewParser);
         ViewGroupParser viewGroupParser = new ViewGroupParser(viewParser);
         RelativeLayoutParser relativeLayoutParser = new RelativeLayoutParser(viewGroupParser);
         LinearLayoutParser linearLayoutParser = new LinearLayoutParser(viewGroupParser);
@@ -132,7 +126,6 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("Button", buttonParser);
         layoutBuilder.registerHandler("ImageButton", imageButtonParser);
         layoutBuilder.registerHandler("ViewPager", viewPagerParser);
-        layoutBuilder.registerHandler("NetworkImageView", networkImageViewParser);
         layoutBuilder.registerHandler("WebView", webViewParser);
         layoutBuilder.registerHandler("RatingBar", ratingBarParser);
         layoutBuilder.registerHandler("CheckBox", checkBoxParser);

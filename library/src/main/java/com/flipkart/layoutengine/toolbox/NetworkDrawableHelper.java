@@ -1,7 +1,6 @@
 package com.flipkart.layoutengine.toolbox;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
@@ -27,7 +26,6 @@ public class NetworkDrawableHelper {
 
     private final View view;
     private final DrawableCallback callback;
-    private final Context context;
     private final BitmapLoader bitmapLoader;
     private final JsonObject layout;
 
@@ -39,16 +37,13 @@ public class NetworkDrawableHelper {
      * @param callback        Implement this to get a hold of the loaded bitmap or the error reason.
      * @param layout
      */
-    public NetworkDrawableHelper(final Context context, final View view, final String url,
-                                 boolean loadImmediately, DrawableCallback callback, BitmapLoader bitmapLoader,
-                                 JsonObject layout) {
+    public NetworkDrawableHelper(final View view, final String url, boolean loadImmediately, DrawableCallback callback,
+                                 BitmapLoader bitmapLoader, JsonObject layout) {
         this.view = view;
         this.callback = callback;
-        this.context = context;
         this.bitmapLoader = bitmapLoader;
         this.layout = layout;
         init(url, loadImmediately);
-
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
@@ -79,16 +74,16 @@ public class NetworkDrawableHelper {
         Future<Bitmap> future = bitmapLoader.getBitmap(url, view);
         try {
             Bitmap bitmap = future.get(10, TimeUnit.SECONDS);
-            callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap));
+            callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap, view));
         } catch (Exception e) {
             e.printStackTrace();
             callback.onDrawableError(url, e.getLocalizedMessage(), null);
         }
     }
 
-    private Drawable convertBitmapToDrawable(Bitmap bitmapOriginal) {
+    private Drawable convertBitmapToDrawable(Bitmap bitmapOriginal, View view) {
 
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        DisplayMetrics displayMetrics = view.getContext().getResources().getDisplayMetrics();
         int width = bitmapOriginal.getWidth();
         int height = bitmapOriginal.getHeight();
 
@@ -99,20 +94,17 @@ public class NetworkDrawableHelper {
 
         Bitmap resizedBitmap = Bitmap.createBitmap(bitmapOriginal, 0, 0, width, height, matrix, true);
 
-        return new BitmapDrawable(context.getResources(), resizedBitmap);
+        return new BitmapDrawable(view.getContext().getResources(), resizedBitmap);
     }
 
-    private void cancelLoad() {
-    }
-
-    private void startAsyncLoad(final String url, View view) {
+    private void startAsyncLoad(final String url, final View view) {
 
         bitmapLoader.getBitmap(url, new ImageLoaderCallback() {
             @Override
             public void onResponse(Bitmap bitmap) {
                 if (bitmap == null) return;
                 if (callback != null) {
-                    callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap));
+                    callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap, view));
                 }
             }
 

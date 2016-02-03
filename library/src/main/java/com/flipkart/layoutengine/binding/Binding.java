@@ -1,29 +1,21 @@
 package com.flipkart.layoutengine.binding;
 
-import com.flipkart.layoutengine.parser.LayoutHandler;
-
 /**
  * @author kirankumar
+ * @author aditya.sharat
  */
 public class Binding {
-    private LayoutHandler layoutHandler;
+
     private String bindingName;
     private String attributeKey;
     private String attributeValue;
     private boolean hasRegEx;
 
-    public Binding(LayoutHandler layoutHandler, String bindingName, String attributeKey,
-                   String attributeValue, boolean hasRegEx) {
-
-        this.layoutHandler = layoutHandler;
+    public Binding(String bindingName, String attributeKey, String attributeValue, boolean hasRegEx) {
         this.bindingName = bindingName;
         this.attributeKey = attributeKey;
         this.attributeValue = attributeValue;
         this.hasRegEx = hasRegEx;
-    }
-
-    public LayoutHandler getLayoutHandler() {
-        return this.layoutHandler;
     }
 
     public String getAttributeKey() {

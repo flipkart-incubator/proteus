@@ -1,11 +1,12 @@
 package com.flipkart.layoutengine.builder;
 
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.widget.Adapter;
 
 import com.flipkart.layoutengine.EventType;
-import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,45 +21,30 @@ public interface LayoutBuilderCallback {
     /**
      * called when the builder encounters an attribute key which is unhandled by its parser.
      *
-     * @param context    ParserContext for current parsed view
-     * @param attribute  attribute that is being parsed
-     * @param element    corresponding JsonElemt for the parsed attribute
-     * @param object     Original JsonObject of the view
-     * @param view       corresponding view for current attribute that is being parsed
-     * @param childIndex child index
+     * @param attribute attribute that is being parsed
+     * @param view      corresponding view for current attribute that is being parsed
      */
-    void onUnknownAttribute(ParserContext context, String attribute, JsonElement element,
-                            JsonObject object, View view, int childIndex);
+    void onUnknownAttribute(String attribute, JsonElement value, ProteusView view);
 
     /**
      * called when the builder encounters a view type which it cannot understand.
-     *
-     * @param context        ParserContext for current parsed view
-     * @param viewType       type of view that is being parsed
-     * @param viewJsonObject corresponding JsonObject for the parsed attribute
-     * @param childIndex     child index
      */
-    ProteusView onUnknownViewType(ParserContext context, String viewType, JsonObject viewJsonObject,
-                                  ProteusView parent, int childIndex);
+    @Nullable
+    ProteusView onUnknownViewType(String type, View parent, JsonObject layout, JsonObject data, int index, Styles styles);
 
-    JsonObject onLayoutRequired(ParserContext context, String viewType, JsonObject parentViewJsonObject,
-                                ProteusView parent);
+    JsonObject onLayoutRequired(String type, ProteusView parent);
 
-    void onViewBuiltFromViewProvider(ProteusView createdView, String viewType, JsonObject viewJsonObject,
-                                     ProteusView parent, int childIndex);
+    void onViewBuiltFromViewProvider(ProteusView view, View parent, String type, int index);
 
     /**
      * called when any click occurs on views
      *
-     * @param context ParserContext for current parsed view
-     * @param view    The view that triggered the event
+     * @param view The view that triggered the event
      */
-    View onEvent(ParserContext context, View view, JsonElement attributeValue, EventType eventType);
+    View onEvent(ProteusView view, JsonElement value, EventType eventType);
 
-    PagerAdapter onPagerAdapterRequired(ParserContext parserContext, ProteusView parent,
-                                        final List<ProteusView> children, JsonObject viewLayout);
+    PagerAdapter onPagerAdapterRequired(ProteusView parent, final List<ProteusView> children, JsonObject layout);
 
-    Adapter onAdapterRequired(ParserContext parserContext, ProteusView parent,
-                              final List<ProteusView> children, JsonObject viewLayout);
+    Adapter onAdapterRequired(ProteusView parent, final List<ProteusView> children, JsonObject layout);
 
 }

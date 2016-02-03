@@ -1,8 +1,8 @@
 package com.flipkart.layoutengine.builder;
 
-import android.content.Context;
+import android.view.View;
 
-import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
@@ -18,33 +18,30 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
     private Map<String, JsonObject> viewProvider;
 
-    protected DataAndViewParsingLayoutBuilder(Context context, Map<String, JsonObject> viewProvider) {
-        super(context);
+    protected DataAndViewParsingLayoutBuilder(Map<String, JsonObject> viewProvider) {
+        super();
         this.viewProvider = viewProvider;
     }
 
     @Override
-    protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
-                                                   ProteusView parent, JsonObject source,
-                                                   int index) {
+    protected ProteusView onUnknownViewEncountered(String type, View parent, JsonObject source, JsonObject data, int index, Styles styles) {
         JsonElement viewElement = null;
         if (viewProvider != null) {
-            viewElement = viewProvider.get(viewType);
+            viewElement = viewProvider.get(type);
         }
         if (viewElement != null) {
             JsonObject layout = viewElement.getAsJsonObject();
             layout = Utils.mergeLayouts(layout, source);
-            ProteusView createdView = buildImpl(context, parent, layout, index, parent.getStyles());
-            onViewBuiltFromViewProvider(createdView, viewType, layout, parent, index);
+            ProteusView createdView = build(parent, layout, data, index, styles);
+            onViewBuiltFromViewProvider(createdView, type, parent, index);
             return createdView;
         }
-        return super.onUnknownViewEncountered(context, viewType, parent, source, index);
+        return super.onUnknownViewEncountered(type, parent, source, data, index, styles);
     }
 
-    private void onViewBuiltFromViewProvider(ProteusView view, String viewType,
-                                             JsonObject layout, ProteusView parent, int childIndex) {
+    private void onViewBuiltFromViewProvider(ProteusView view, String type, View parent, int childIndex) {
         if (listener != null) {
-            listener.onViewBuiltFromViewProvider(view, viewType, layout, parent, childIndex);
+            listener.onViewBuiltFromViewProvider(view, parent, type, childIndex);
         }
     }
 }

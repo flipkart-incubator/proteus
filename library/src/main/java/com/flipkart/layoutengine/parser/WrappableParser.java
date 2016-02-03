@@ -1,12 +1,9 @@
 package com.flipkart.layoutengine.parser;
 
-import android.content.Context;
 import android.view.View;
 
-import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * @author kirankumar
@@ -22,19 +19,35 @@ public class WrappableParser<V extends View> extends Parser<V> {
     }
 
     @Override
-    protected void prepareHandlers(Context context) {
+    protected void prepareHandlers() {
         if (wrappedParser != null) {
-            wrappedParser.prepareHandlers(context);
+            wrappedParser.prepareHandlers();
         }
     }
 
     @Override
-    public boolean handleAttribute(ParserContext context, String attribute, JsonElement element,
-                                   JsonObject layout, V view, ProteusView proteusView, ProteusView parent, int childIndex) {
-
-        boolean handled = super.handleAttribute(context, attribute, element, layout, view, proteusView, parent, childIndex);
+    public boolean handleAttribute(V view, String attribute, JsonElement value) {
+        boolean handled = super.handleAttribute(view, attribute, value);
         if (wrappedParser != null && !handled) {
-            handled = wrappedParser.handleAttribute(context, attribute, element, layout, view, proteusView, parent, childIndex);
+            handled = wrappedParser.handleAttribute(view, attribute, value);
+        }
+        return handled;
+    }
+
+    @Override
+    public boolean handleChildren(ProteusView view) {
+        boolean handled = super.handleChildren(view);
+        if (wrappedParser != null && !handled) {
+            handled = wrappedParser.handleChildren(view);
+        }
+        return handled;
+    }
+
+    @Override
+    public boolean addView(ProteusView parent, ProteusView view) {
+        boolean handled = super.addView(parent, view);
+        if (wrappedParser != null && !handled) {
+            handled = wrappedParser.addView(parent, view);
         }
         return handled;
     }

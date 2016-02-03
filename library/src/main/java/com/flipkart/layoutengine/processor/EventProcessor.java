@@ -1,14 +1,9 @@
 package com.flipkart.layoutengine.processor;
 
-import android.content.Context;
-import android.view.View;
-
 import com.flipkart.layoutengine.EventType;
-import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.builder.LayoutBuilderCallback;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 /**
  * Use this as the base processor for handling events like OnClick , OnLongClick , OnTouch etc.
@@ -17,29 +12,18 @@ import com.google.gson.JsonObject;
 
 public abstract class EventProcessor<T> extends AttributeProcessor<T> {
 
-    private Context context;
-
-    public EventProcessor(Context context) {
-        this.context = context;
-    }
-
     @Override
-    public void handle(ParserContext parserContext, String attributeKey, JsonElement attributeValue,
-                       T view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-        setOnEventListener(view, parserContext, attributeValue);
+    public void handle(String key, JsonElement value, T view) {
+        setOnEventListener(view, value);
     }
 
-    public abstract void setOnEventListener(T view, ParserContext parserContext, JsonElement attributeValue);
+    public abstract void setOnEventListener(T view, JsonElement attributeValue);
 
     /**
      * This delegates Event with required attributes to client
-     *
-     * @param parserContext
-     * @param eventType
-     * @param view
      */
-    public void fireEvent(View view, ParserContext parserContext, EventType eventType, JsonElement attributeValue) {
-        LayoutBuilderCallback layoutBuilderCallback = parserContext.getLayoutBuilder().getListener();
-        layoutBuilderCallback.onEvent(parserContext, view, attributeValue, eventType);
+    public void fireEvent(ProteusView view, EventType eventType, JsonElement attributeValue) {
+        LayoutBuilderCallback layoutBuilderCallback = view.getViewManager().getLayoutBuilder().getListener();
+        layoutBuilderCallback.onEvent(view, attributeValue, eventType);
     }
 }
