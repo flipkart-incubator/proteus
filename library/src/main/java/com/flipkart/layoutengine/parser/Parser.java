@@ -119,7 +119,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                                    JsonObject layout, V view, ProteusView proteusView, ProteusView parent,
                                    int childIndex) {
         AttributeProcessor attributeProcessor = handlers.get(attribute);
-        if (attributeProcessor != null) {
+        if (attributeProcessor != null && view != null) {
             //noinspection unchecked
             attributeProcessor.handle(context, attribute, element, view, proteusView, parent, layout, childIndex);
             return true;

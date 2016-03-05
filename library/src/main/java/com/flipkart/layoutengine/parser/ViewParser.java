@@ -79,6 +79,9 @@ public class ViewParser<V extends View> extends Parser<V> {
             @Override
             public void setDimension(ParserContext parserContext, float dimension, V view, String key, JsonElement value, ProteusView proteusView, JsonObject layout, int index) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                if (layoutParams == null) {
+                    return;
+                }
                 layoutParams.height = (int) dimension;
                 view.setLayoutParams(layoutParams);
             }
@@ -87,6 +90,9 @@ public class ViewParser<V extends View> extends Parser<V> {
             @Override
             public void setDimension(ParserContext parserContext, float dimension, V view, String key, JsonElement value, ProteusView proteusView, JsonObject layout, int index) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                if (layoutParams == null) {
+                    return;
+                }
                 layoutParams.width = (int) dimension;
                 view.setLayoutParams(layoutParams);
             }
