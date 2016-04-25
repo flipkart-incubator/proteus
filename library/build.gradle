@@ -1,4 +1,4 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
 apply plugin: 'artifactory'
 apply plugin: 'android-maven'
 
@@ -9,8 +9,8 @@ buildscript {
         maven { url 'http://artifactory.nm.flipkart.com:8081/artifactory/libs-release-local' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
-        classpath 'com.github.dcendents:android-maven-plugin:1.+'
+        classpath 'com.android.tools.build:gradle:2.0.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.3'
     }
 }
