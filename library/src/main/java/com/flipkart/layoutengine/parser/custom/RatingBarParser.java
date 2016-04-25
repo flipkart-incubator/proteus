@@ -61,7 +61,7 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
         addHandler(Attributes.RatingBar.ProgressDrawable, new DrawableResourceProcessor<T>(context) {
             @Override
             public void setDrawable(T view, Drawable drawable) {
-                drawable = view.tileify(drawable, false);
+                drawable = view.getTiledDrawable(drawable, false);
                 view.setProgressDrawable(drawable);
             }
         });
