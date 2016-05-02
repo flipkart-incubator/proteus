@@ -165,16 +165,39 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         String attributeValue = element.getAsString();
         DataProteusView dataProteusView = (DataProteusView) proteusView;
 
-        if (attributeValue != null && !"".equals(attributeValue) &&
-                (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX ||
-                        attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX)) {
+        char firstChar = null == attributeValue ? 0 : attributeValue.charAt(0);
+        boolean setVisibility = false;
+        String dataPath;
+        switch (firstChar)
+        {
+            case ProteusConstants.DATA_PREFIX:
+                setVisibility = true;
+                dataPath = attributeValue.substring(1);
+                JsonElement elementFromData;
+                try {
+                    elementFromData = Utils.getElementFromData(dataPath,
+                            parserContext.getDataContext().getDataProvider(),
+                            childIndex);
+                } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
+                    }
+                    failed = true;
+                    elementFromData = new JsonPrimitive(ProteusConstants.DATA_NULL);
+                }
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Find '" + element.toString() + "' for " + attributeName
-                        + " for view with " + Utils.getLayoutIdentifier(layout));
-            }
-
-            if (attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX) {
+                if (elementFromData != null) {
+                    element = elementFromData;
+                }
+                addBinding(dataProteusView,
+                        dataPath,
+                        attributeName,
+                        attributeValue,
+                        handler,
+                        false);
+                break;
+            case ProteusConstants.REGEX_PREFIX:
+                setVisibility = true;
                 Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(attributeValue);
                 String finalValue = attributeValue;
 
@@ -184,7 +207,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     if (regexMatcher.group(3) != null) {
 
                         // has NO formatter
-                        String dataPath = regexMatcher.group(3);
+                        dataPath = regexMatcher.group(3);
                         try {
                             finalValue = finalValue.replace(matchedString, Utils.getElementFromData(
                                     dataPath,
@@ -201,14 +224,14 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     } else {
 
                         // has formatter
-                        String dataPath = regexMatcher.group(1);
+                        dataPath = regexMatcher.group(1);
                         String formatterName = regexMatcher.group(2);
 
                         String formattedValue;
                         try {
                             formattedValue = format(Utils.getElementFromData(dataPath,
-                                            parserContext.getDataContext().getDataProvider(),
-                                            parserContext.getDataContext().getIndex()),
+                                    parserContext.getDataContext().getDataProvider(),
+                                    parserContext.getDataContext().getIndex()),
                                     formatterName);
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                             if (logger.isErrorEnabled()) {
@@ -233,49 +256,28 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
                 // return as a JsonPrimitive
                 element = new JsonPrimitive(finalValue);
-
-            } else if (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX) {
-                JsonElement elementFromData;
-                try {
-                    elementFromData = Utils.getElementFromData(attributeValue.substring(1),
-                            parserContext.getDataContext().getDataProvider(),
-                            childIndex);
-                } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                    if (logger.isErrorEnabled()) {
-                        logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
-                    }
-                    failed = true;
-                    elementFromData = new JsonPrimitive(ProteusConstants.DATA_NULL);
-                }
-
-                if (elementFromData != null) {
-                    element = elementFromData;
-                }
-                addBinding(dataProteusView,
-                        attributeValue.substring(1),
-                        attributeName,
-                        attributeValue,
-                        handler,
-                        false);
-            }
-
-            if (dataProteusView.getView() != null) {
-                if (failed) {
-                    if (layout != null && !layout.isJsonNull()
-                            && ProteusConstants.DATA_VISIBILITY
-                            .equals(Utils.getPropertyAsString(layout,
-                                    Attributes.View.Visibility.getName()))) {
-                        dataProteusView.getView().setVisibility(View.INVISIBLE);
-                    } else if (DataProteusView.shouldSetVisibility(attributeName, dataProteusView.getView())) {
-                        dataProteusView.getView().setVisibility(View.GONE);
-                    }
-                } else if (dataProteusView.isViewUpdating()
-                        && DataProteusView.shouldSetVisibility(attributeName, dataProteusView.getView())) {
-                    dataProteusView.getView().setVisibility(View.VISIBLE);
-                }
-            }
+                break;
         }
 
+        if (setVisibility && dataProteusView.getView() != null) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Find '" + element.toString() + "' for " + attributeName
+                        + " for view with " + Utils.getLayoutIdentifier(layout));
+            }
+            if (failed) {
+                if (layout != null && !layout.isJsonNull()
+                        && ProteusConstants.DATA_VISIBILITY
+                        .equals(Utils.getPropertyAsString(layout,
+                                Attributes.View.Visibility.getName()))) {
+                    dataProteusView.getView().setVisibility(View.INVISIBLE);
+                } else if (DataProteusView.shouldSetVisibility(attributeName, dataProteusView.getView())) {
+                    dataProteusView.getView().setVisibility(View.GONE);
+                }
+            } else if (dataProteusView.isViewUpdating()
+                    && DataProteusView.shouldSetVisibility(attributeName, dataProteusView.getView())) {
+                dataProteusView.getView().setVisibility(View.VISIBLE);
+            }
+        }
         return element;
     }
 
