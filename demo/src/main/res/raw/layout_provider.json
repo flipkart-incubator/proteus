@@ -86,31 +86,97 @@
             "type": "RelativeLayout",
             "layout_width": "match_parent",
             "layout_height": "wrap_content",
-            "padding": "16dp",
+            "paddingLeft": "16dp",
+            "paddingRight": "16dp",
             "paddingTop": "8dp",
             "children": [
               {
                 "type": "TextView",
                 "layout_width": "wrap_content",
                 "layout_height": "wrap_content",
+                "textSize": "24dp",
                 "text": "$user.name",
                 "id": "name",
-                "layout_marginRight": "8dp"
+                "layout_marginRight": "4dp"
               },
               {
                 "type": "TextView",
-                "text": "$user.level",
+                "text": "~({{user.level}})",
+                "textColor": "#c48866",
                 "layout_width": "wrap_content",
                 "layout_height": "wrap_content",
                 "layout_toRightOf": "name"
               },
               {
                 "type": "TextView",
+                "id": "ach",
                 "layout_width": "wrap_content",
                 "layout_height": "wrap_content",
                 "text": "~Achievements - {{user.achievements}}/{{data.totalAchievements}}",
                 "layout_marginTop": "8dp",
                 "layout_below": "name"
+              },
+              {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "~{{data.tags}}$(join)",
+                "layout_marginTop": "8dp",
+                "layout_below": "ach"
+              }
+            ]
+          },
+          {
+            "type": "LinearLayout",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "horizontal",
+            "paddingLeft": "16dp",
+            "paddingRight": "16dp",
+            "layout_marginTop": "8dp",
+            "children": [
+              {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "~{{user.location.country}}, "
+              },
+              {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "~{{user.location.city}}, "
+              },
+              {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "text": "~{{user.location.pincode}}"
+              }
+            ]
+          },
+          {
+            "type": "LinearLayout",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "vertical",
+            "paddingLeft": "16dp",
+            "paddingRight": "16dp",
+            "paddingBottom": "4dp",
+            "children": [
+              {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_marginTop": "8dp",
+                "text": "~Experience : {{user.experience}}"
+              },
+              {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_marginTop": "8dp",
+                "text": "~Credits : {{user.credits}}"
               }
             ]
           }

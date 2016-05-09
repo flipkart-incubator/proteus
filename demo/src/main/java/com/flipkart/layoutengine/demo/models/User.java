@@ -10,6 +10,12 @@ public class User {
     public int level;
     public int achievements;
     public int experience;
-    public String location;
+    public Location location;
     public int credits;
+
+    public static class Location {
+        public String country;
+        public String city;
+        public String pincode;
+    }
 }

@@ -4,7 +4,11 @@
     "level": 4,
     "achievements": 16,
     "experience": 2791,
-    "location": "India",
+    "location": {
+      "country": "India",
+      "city": "Bengaluru",
+      "pincode": "560103"
+    },
     "credits": "39550"
   },
   "data": {

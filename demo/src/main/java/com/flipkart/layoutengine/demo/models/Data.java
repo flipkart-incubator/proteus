@@ -8,7 +8,10 @@ import com.google.gson.annotations.SerializedName;
  * @author aditya.sharat
  */
 public class Data {
+
+    @SerializedName("user")
     public User user;
+
     @SerializedName("data")
     public MetaData metaData;
 }

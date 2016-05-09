@@ -21,9 +21,8 @@ public class PerformanceTracker {
     private static final String KEY = "data";
 
     private static PerformanceTracker tracker;
-
-    private Gson gson;
     private final SharedPreferences preferences;
+    private Gson gson;
     private Values values;
 
     private PerformanceTracker(Context context) {
@@ -66,6 +65,14 @@ public class PerformanceTracker {
         for (long t : values) {
             total += t;
             n++;
+        }
+        if (n == 0) {
+            n = 1;
+        }
+
+        if (values.size() > 0) {
+            total = total - values.get(0);
+            n = n - 1;
         }
         if (n == 0) {
             n = 1;

@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 
 public class NativeActivity extends BaseActivity {
 
@@ -66,10 +67,36 @@ public class NativeActivity extends BaseActivity {
         userName.setText(data.user.name);
 
         TextView userLevel = (TextView) view.findViewById(R.id.user_level);
-        userLevel.setText(data.user.level + "");
+        userLevel.setText("(" + data.user.level + ")");
 
         TextView userAchievements = (TextView) view.findViewById(R.id.user_achievements);
         userAchievements.setText(STRING_ACHIEVEMENTS + data.user.achievements + "/" + data.metaData.totalAchievements);
+
+        TextView userTags = (TextView) view.findViewById(R.id.user_tags);
+        userTags.setText(getJoinedString(data.metaData.tags));
+
+        TextView country = (TextView) view.findViewById(R.id.user_location_country);
+        country.setText(data.user.location.country + ", ");
+
+        TextView city = (TextView) view.findViewById(R.id.user_location_city);
+        city.setText(data.user.location.city + ", ");
+
+        TextView pincode = (TextView) view.findViewById(R.id.user_location_pincode);
+        pincode.setText(data.user.location.pincode);
+
+        TextView experience = (TextView) view.findViewById(R.id.user_experience);
+        experience.setText("Experience : " + data.user.experience);
+
+        TextView credits = (TextView) view.findViewById(R.id.user_credits);
+        credits.setText("Credits : " + data.user.credits);
+    }
+
+    private String getJoinedString(List<String> tags) {
+        StringBuilder builder = new StringBuilder();
+        for (String tag: tags) {
+            builder.append(tag).append(", ");
+        }
+        return builder.toString();
     }
 
     private void loadImage(final ImageView view, String urlString) {

@@ -29,9 +29,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         long stopTime = System.currentTimeMillis();
         long elapsedTime = stopTime - startTime;
 
-        Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_SHORT).show();
-
         onBuildComplete(elapsedTime);
+
+        Toast.makeText(this, "render time: " + elapsedTime, Toast.LENGTH_SHORT).show();
 
         attachView(view);
     }
