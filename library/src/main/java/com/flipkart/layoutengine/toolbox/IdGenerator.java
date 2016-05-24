@@ -9,16 +9,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class IdGenerator {
     private static IdGenerator ourInstance = new IdGenerator();
+    private final HashMap<String, Integer> idMap = new HashMap<>();
+    private final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+    private IdGenerator() {
+    }
 
     public static IdGenerator getInstance() {
         return ourInstance;
-    }
-
-    private final HashMap<String, Integer> idMap = new HashMap<>();
-    private final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
-
-
-    private IdGenerator() {
     }
 
     /**
