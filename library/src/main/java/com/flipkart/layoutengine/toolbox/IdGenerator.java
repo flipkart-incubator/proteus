@@ -1,16 +1,24 @@
 package com.flipkart.layoutengine.toolbox;
 
+import android.os.Bundle;
+
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Simulates the R class. Useful to given unique ID for use in {@link android.view.View#setId(int)} method.
- * An ID which doesnt conflict with aapt's ID is ensured. Please ensure that all dynamic ID call go through this class to ensure uniqueness with other dynamic IDs.
+ * An ID which doesnt conflict with aapt's ID is ensured. Please ensure that all dynamic ID call go through
+ * this class to ensure uniqueness with other dynamic IDs.
  */
 public class IdGenerator {
+
+    private static final String ID_GENERATOR_MAP = "proteus.IdGenerator.Map";
+
     private static IdGenerator ourInstance = new IdGenerator();
     private final HashMap<String, Integer> idMap = new HashMap<>();
     private final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
+
     private IdGenerator() {
     }
 
@@ -36,6 +44,28 @@ public class IdGenerator {
         return existingId;
     }
 
+    public void save(Bundle outState) {
+        outState.putSerializable(ID_GENERATOR_MAP, getIdMap());
+    }
+
+    public void restore(Bundle savedInstanceState) {
+        Serializable serializable = savedInstanceState.getSerializable(ID_GENERATOR_MAP);
+        if (serializable instanceof HashMap) {
+            //noinspection unchecked
+            HashMap<String, Integer> map = (HashMap<String, Integer>) serializable;
+            setIdMap(map);
+        }
+    }
+
+    public HashMap<String, Integer> getIdMap() {
+        return idMap;
+    }
+
+    public void setIdMap(HashMap<String, Integer> map) {
+        idMap.clear();
+        idMap.putAll(map);
+    }
+
     /**
      * Taken from Android View Source code API 17+
      * <p/>
@@ -47,9 +77,12 @@ public class IdGenerator {
     private int generateViewId() {
         for (; ; ) {
             final int result = sNextGeneratedId.get();
+
             // aapt-generated IDs have the high byte nonzero; clamp to the range under that.
             int newValue = result + 1;
-            if (newValue > 0x00FFFFFF) newValue = 1; // Roll over to 1, not 0.
+            if (newValue > 0x00FFFFFF) {
+                newValue = 1; // Roll over to 1, not 0.
+            }
             if (sNextGeneratedId.compareAndSet(result, newValue)) {
                 return result;
             }
