@@ -22,7 +22,6 @@ import com.flipkart.layoutengine.processor.JsonDataProcessor;
 import com.flipkart.layoutengine.processor.StringAttributeProcessor;
 import com.flipkart.layoutengine.processor.TweenAnimationResourceProcessor;
 import com.flipkart.layoutengine.provider.ProteusConstants;
-import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -284,7 +283,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         addHandler(Attributes.View.Id, new StringAttributeProcessor<V>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, final V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                view.setId(IdGenerator.getInstance().getUnique(attributeValue));
+                view.setId(parserContext.getUniqueViewId(attributeValue));
 
                 // set view id resource name
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -490,7 +489,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         StringAttributeProcessor<V> relativeLayoutProcessor = new StringAttributeProcessor<V>() {
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                int id = IdGenerator.getInstance().getUnique(attributeValue);
+                int id = parserContext.getUniqueViewId(attributeValue);
                 Integer rule = relativeLayoutParams.get(attributeKey);
                 if (rule != null) {
                     ParseHelper.addRelativeLayoutRule(view, rule, id);

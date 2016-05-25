@@ -5,6 +5,7 @@ import android.view.View;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.IdGeneratorImpl;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
@@ -117,4 +118,20 @@ public interface LayoutBuilder {
      * otherwise false.
      */
     boolean isSynchronousRendering();
+
+    /**
+     * Give the View ID for this string. This will generally be given by the instance of ID Generator
+     * which will be available with the Layout Builder.
+     * This is similar to R.id auto generated
+     *
+     * @return int value for this id. This will never be -1.
+     */
+    int getUniqueViewId(String id);
+
+    /**
+     * Returns the Id Generator for this Layout Builder
+     *
+     * @return Returns the Id Generator for this Layout Builder
+     */
+    IdGenerator getIdGenerator();
 }

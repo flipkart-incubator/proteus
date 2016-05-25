@@ -1,6 +1,7 @@
 package com.flipkart.layoutengine.builder;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.layoutengine.DataContext;
@@ -40,8 +41,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     private Map<String, Formatter> formatter = new HashMap<>();
     private Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
 
-    protected DataParsingLayoutBuilder(Context context) {
-        super(context);
+    protected DataParsingLayoutBuilder(Context context, @Nullable IdGenerator idGenerator) {
+        super(context, idGenerator);
     }
 
     @Override

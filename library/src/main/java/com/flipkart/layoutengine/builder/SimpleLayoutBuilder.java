@@ -8,6 +8,7 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.IdGeneratorImpl;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -39,9 +40,11 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     private boolean isSynchronousRendering = false;
     private Context context;
     private Logger logger = LoggerFactory.getLogger(SimpleLayoutBuilder.class);
+    private IdGenerator idGenerator;
 
-    protected SimpleLayoutBuilder(Context context) {
+    protected SimpleLayoutBuilder(Context context, @Nullable IdGenerator idGenerator) {
         this.context = context;
+        this.idGenerator = null != idGenerator ? idGenerator : new IdGeneratorImpl();
     }
 
     @Override
@@ -319,6 +322,29 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     @Override
     public boolean isSynchronousRendering() {
         return isSynchronousRendering;
+    }
+
+    /**
+     * Give the View ID for this string. This will generally be given by the instance of ID Generator
+     * which will be available with the Layout Builder.
+     * This is similar to R.id auto generated
+     *
+     * @param id
+     * @return int value for this id. This will never be -1.
+     */
+    @Override
+    public int getUniqueViewId(String id) {
+        return idGenerator.getUnique(id);
+    }
+
+    /**
+     * Returns the Id Generator for this Layout Builder
+     *
+     * @return Returns the Id Generator for this Layout Builder
+     */
+    @Override
+    public IdGenerator getIdGenerator() {
+        return idGenerator;
     }
 
     @Override

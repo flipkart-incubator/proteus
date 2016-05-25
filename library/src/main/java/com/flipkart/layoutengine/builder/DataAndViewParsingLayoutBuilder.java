@@ -1,6 +1,7 @@
 package com.flipkart.layoutengine.builder;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
@@ -25,8 +26,8 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
     private Provider viewProvider;
     private Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
 
-    protected DataAndViewParsingLayoutBuilder(Context context, JsonObject viewProvider) {
-        super(context);
+    protected DataAndViewParsingLayoutBuilder(Context context, JsonObject viewProvider, @Nullable IdGenerator idGenerator) {
+        super(context, idGenerator);
         this.viewProvider = new JsonProvider(viewProvider);
     }
 

@@ -60,4 +60,8 @@ public class ParserContext implements Cloneable {
     public void setHasDataContext(boolean hasDataContext) {
         this.hasDataContext = hasDataContext;
     }
+
+    public int getUniqueViewId(String id) {
+        return layoutBuilder.getUniqueViewId(id);
+    }
 }

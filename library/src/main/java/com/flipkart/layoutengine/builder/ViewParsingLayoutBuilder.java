@@ -1,12 +1,14 @@
 package com.flipkart.layoutengine.builder;
 
 import android.app.Activity;
+import android.support.annotation.Nullable;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.toolbox.IdGeneratorImpl;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -22,8 +24,8 @@ public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
     private Provider viewProvider;
     private Logger logger = LoggerFactory.getLogger(ViewParsingLayoutBuilder.class);
 
-    public ViewParsingLayoutBuilder(Activity activity, Provider viewProvider) {
-        super(activity);
+    public ViewParsingLayoutBuilder(Activity activity, @Nullable IdGenerator idGenerator, Provider viewProvider) {
+        super(activity, idGenerator);
         this.viewProvider = viewProvider;
     }
 

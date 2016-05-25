@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.builder;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.layoutengine.parser.ViewParser;
@@ -24,6 +25,7 @@ import com.flipkart.layoutengine.parser.custom.ViewGroupParser;
 import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
 import com.flipkart.layoutengine.parser.custom.WebViewParser;
 import com.flipkart.layoutengine.toolbox.Formatter;
+import com.flipkart.layoutengine.toolbox.IdGeneratorImpl;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -37,7 +39,7 @@ import java.util.Date;
 /**
  * Factory class for creating Layout builders with different predefined behaviours. This is the
  * only way to create layout builder objects. To create a simple layout builder use
- * {@link LayoutBuilderFactory#getSimpleLayoutBuilder(android.content.Context)}
+ * {@link LayoutBuilderFactory#getSimpleLayoutBuilder(android.content.Context, IdGeneratorImpl)}
  */
 public class LayoutBuilderFactory {
 
@@ -53,9 +55,9 @@ public class LayoutBuilderFactory {
      * @return A new {@link DataAndViewParsingLayoutBuilder}
      */
     public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Context context,
-                                                                              JsonObject viewProvider) {
+                                                                              JsonObject viewProvider, @Nullable IdGeneratorImpl idGenerator) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
-            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(context, viewProvider);
+            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(context, viewProvider, idGenerator);
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
             registerFormatter(dataAndViewParsingLayoutBuilderInstance);
         }
@@ -68,9 +70,9 @@ public class LayoutBuilderFactory {
      * @param context {@link Context} of the activity
      * @return A new {@link DataParsingLayoutBuilder}
      */
-    public DataParsingLayoutBuilder getDataParsingLayoutBuilder(Context context) {
+    public DataParsingLayoutBuilder getDataParsingLayoutBuilder(Context context, @Nullable IdGeneratorImpl idGenerator) {
         if (dataParsingLayoutBuilderInstance == null) {
-            dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder(context);
+            dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder(context, idGenerator);
             registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
             registerFormatter(dataParsingLayoutBuilderInstance);
         }
@@ -83,9 +85,9 @@ public class LayoutBuilderFactory {
      * @param context {@link Context} of the activity
      * @return A new {@link SimpleLayoutBuilder}
      */
-    public SimpleLayoutBuilder getSimpleLayoutBuilder(Context context) {
+    public SimpleLayoutBuilder getSimpleLayoutBuilder(Context context, @Nullable IdGeneratorImpl idGenerator) {
         if (simpleLayoutBuilderInstance == null) {
-            simpleLayoutBuilderInstance = new SimpleLayoutBuilder(context);
+            simpleLayoutBuilderInstance = new SimpleLayoutBuilder(context, idGenerator);
             registerBuiltInHandlers(simpleLayoutBuilderInstance);
         }
         return simpleLayoutBuilderInstance;
