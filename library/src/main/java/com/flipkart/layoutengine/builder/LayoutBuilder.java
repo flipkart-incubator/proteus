@@ -129,7 +129,8 @@ public interface LayoutBuilder {
     int getUniqueViewId(String id);
 
     /**
-     * Returns the Id Generator for this Layout Builder
+     * All consumers of this should ensure that they save the instance state of the ID generator along with the activity/
+     * fragment and resume it when the Layout Builder is being re-initialized
      *
      * @return Returns the Id Generator for this Layout Builder
      */
