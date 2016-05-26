@@ -15,8 +15,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * An ID which doesnt conflict with aapt's ID is ensured. Please ensure that all dynamic ID call go through
  * this class to ensure uniqueness with other dynamic IDs.
  */
-public class IdGeneratorImpl implements IdGenerator{
-    private static final ClassLoader ID_MAP_CLASS_LOADER = new TypeToken<Map<String, Integer>>() {}.getClass().getClassLoader();
+public class IdGeneratorImpl implements IdGenerator {
+    private static final ClassLoader ID_MAP_CLASS_LOADER = new TypeToken<Map<String, Integer>>() {
+    }.getClass().getClassLoader();
     private final HashMap<String, Integer> idMap = new HashMap<>();
     private final AtomicInteger sNextGeneratedId;
 
@@ -28,7 +29,6 @@ public class IdGeneratorImpl implements IdGenerator{
         sNextGeneratedId = new AtomicInteger(source.readInt());
         source.readMap(idMap, ID_MAP_CLASS_LOADER);
     }
-
 
     /**
      * Flatten this object in to a Parcel.
@@ -42,6 +42,7 @@ public class IdGeneratorImpl implements IdGenerator{
         dest.writeInt(sNextGeneratedId.get());
         dest.writeMap(idMap);
     }
+
 
     /**
      * Generates and returns a unique id, for the given key.
@@ -61,9 +62,6 @@ public class IdGeneratorImpl implements IdGenerator{
         }
         return existingId;
     }
-
-
-
 
     /**
      * Taken from Android View Source code API 17+
@@ -99,7 +97,6 @@ public class IdGeneratorImpl implements IdGenerator{
     public int describeContents() {
         return 0;
     }
-
 
     public final static Parcelable.Creator<IdGeneratorImpl> CREATOR = new Creator<IdGeneratorImpl>() {
         @Override

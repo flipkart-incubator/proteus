@@ -2,7 +2,7 @@ package com.flipkart.layoutengine.builder;
 
 import android.os.Parcelable;
 
-public interface IdGenerator  extends Parcelable{
+public interface IdGenerator extends Parcelable {
     /**
      * Generates and returns a unique id, for the given key.
      * If key exists, returns old value.
