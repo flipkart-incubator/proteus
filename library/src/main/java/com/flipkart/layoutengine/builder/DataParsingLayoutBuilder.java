@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.builder;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.flipkart.layoutengine.DataContext;
@@ -56,6 +57,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         if (childrenElement != null &&
                 childrenElement.isJsonPrimitive() &&
+                ((JsonPrimitive) childrenElement).isString() &&
+                !childrenElement.getAsString().isEmpty() &&
                 childrenElement.getAsString().charAt(0) == ProteusConstants.DATA_PREFIX) {
 
             String dataPathLength = childrenElement.getAsString().substring(1);
@@ -166,11 +169,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         String attributeValue = element.getAsString();
         DataProteusView dataProteusView = (DataProteusView) proteusView;
 
-        char firstChar = null == attributeValue ? 0 : attributeValue.charAt(0);
+        char firstChar = TextUtils.isEmpty(attributeValue) ? 0 : attributeValue.charAt(0);
         boolean setVisibility = false;
         String dataPath;
-        switch (firstChar)
-        {
+        switch (firstChar) {
             case ProteusConstants.DATA_PREFIX:
                 setVisibility = true;
                 dataPath = attributeValue.substring(1);
