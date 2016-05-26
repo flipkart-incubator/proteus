@@ -71,7 +71,7 @@ public class MainActivity extends ActionBarActivity {
         layout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
         data = getJsonFromFile(R.raw.data_1).getAsJsonObject();
 
-        builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, layoutProvider);
+        builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, layoutProvider, null);
 
         builder.setListener(createCallback());
 
