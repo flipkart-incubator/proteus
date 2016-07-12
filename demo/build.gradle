@@ -5,6 +5,7 @@ android {
     buildToolsVersion '23.0.3'
 
     defaultConfig {
+        applicationId "com.flipkart.proteus.demo"
         minSdkVersion 14
         targetSdkVersion 24
         versionCode 400000
