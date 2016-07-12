@@ -67,7 +67,7 @@ Example:
 proteusView.updateView(newData);
 ```
 
-Head over to the [wiki](https://github.com/Flipkart/android-layout-engine/wiki) for detiled documentation 
+Head over to the [wiki](https://github.com/Flipkart/android-layout-engine/wiki) for detiled documentation on the experimental version of Proteus.
 
 One click XML to JSON conversion
 --------------------------------
