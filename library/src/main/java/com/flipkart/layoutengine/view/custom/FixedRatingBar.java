@@ -48,12 +48,9 @@ public class FixedRatingBar extends RatingBar {
 
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-
         if (sampleTile != null) {
-
             final int width = sampleTile.getWidth() * getNumStars();
             setMeasuredDimension(resolveSize(width, widthMeasureSpec), getMeasuredHeight());
-
         }
     }
 
@@ -67,7 +64,7 @@ public class FixedRatingBar extends RatingBar {
      * Converts a drawable to a tiled version of itself. It will recursively
      * traverse layer and state list drawables.
      */
-    public Drawable tileify(Drawable drawable, boolean clip) {
+    public Drawable getTiledDrawable(Drawable drawable, boolean clip) {
 
         if (drawable instanceof LayerDrawable) {
             LayerDrawable background = (LayerDrawable) drawable;
@@ -76,7 +73,7 @@ public class FixedRatingBar extends RatingBar {
 
             for (int i = 0; i < N; i++) {
                 int id = background.getId(i);
-                outDrawables[i] = tileify(background.getDrawable(i),
+                outDrawables[i] = getTiledDrawable(background.getDrawable(i),
                         (id == android.R.id.progress || id == android.R.id.secondaryProgress));
             }
 

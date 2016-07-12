@@ -78,16 +78,20 @@ public class ViewParser<V extends View> extends Parser<V> {
             @Override
             public void setDimension(float dimension, V view, String key, JsonElement value) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                layoutParams.height = (int) dimension;
-                view.setLayoutParams(layoutParams);
+                if (layoutParams != null) {
+                    layoutParams.height = (int) dimension;
+                    view.setLayoutParams(layoutParams);
+                }
             }
         });
         addHandler(Attributes.View.Width, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(float dimension, V view, String key, JsonElement value) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-                layoutParams.width = (int) dimension;
-                view.setLayoutParams(layoutParams);
+                if (layoutParams != null) {
+                    layoutParams.width = (int) dimension;
+                    view.setLayoutParams(layoutParams);
+                }
             }
         });
         addHandler(Attributes.View.Weight, new StringAttributeProcessor<V>() {
@@ -277,7 +281,9 @@ public class ViewParser<V extends View> extends Parser<V> {
         addHandler(Attributes.View.Id, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, final V view) {
-                view.setId(IdGenerator.getInstance().getUnique(attributeValue));
+                if (view instanceof ProteusView) {
+                    view.setId(((ProteusView) view).getViewManager().getUniqueViewId(attributeValue));
+                }
 
                 // set view id resource name
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
@@ -476,10 +482,12 @@ public class ViewParser<V extends View> extends Parser<V> {
         StringAttributeProcessor<V> relativeLayoutProcessor = new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {
-                int id = IdGenerator.getInstance().getUnique(attributeValue);
-                Integer rule = relativeLayoutParams.get(attributeKey);
-                if (rule != null) {
-                    ParseHelper.addRelativeLayoutRule(view, rule, id);
+                if (view instanceof ProteusView) {
+                    int id = ((ProteusView) view).getViewManager().getUniqueViewId(attributeValue);
+                    Integer rule = relativeLayoutParams.get(attributeKey);
+                    if (rule != null) {
+                        ParseHelper.addRelativeLayoutRule(view, rule, id);
+                    }
                 }
             }
         };

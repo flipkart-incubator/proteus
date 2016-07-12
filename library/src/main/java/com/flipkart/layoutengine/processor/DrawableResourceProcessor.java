@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.annotations.SerializedName;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -258,10 +259,16 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     private static class Corners extends GradientDrawableElement {
+
+        @SerializedName("radius")
         public String radius;
+        @SerializedName("topLeftRadius")
         public String topLeftRadius;
+        @SerializedName("topRightRadius")
         public String topRightRadius;
+        @SerializedName("bottomLeftRadius")
         public String bottomLeftRadius;
+        @SerializedName("bottomRightRadius")
         public String bottomRightRadius;
 
         @Override
@@ -288,6 +295,8 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     private static class Solid extends GradientDrawableElement {
+
+        @SerializedName("color")
         public JsonElement color;
 
         @Override
@@ -319,14 +328,24 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     private static class Gradient extends GradientDrawableElement {
+
+        @SerializedName("angle")
         public Integer angle;
+        @SerializedName("centerX")
         public Float centerX;
+        @SerializedName("centerY")
         public Float centerY;
+        @SerializedName("centerColor")
         public JsonElement centerColor;
+        @SerializedName("endColor")
         public JsonElement endColor;
+        @SerializedName("gradientRadius")
         public Float gradientRadius;
+        @SerializedName("startColor")
         public JsonElement startColor;
+        @SerializedName("gradientType")
         public String gradientType;
+        @SerializedName("useLevel")
         public Boolean useLevel;
 
         public static GradientDrawable.Orientation getOrientation(Integer angle) {
@@ -414,7 +433,10 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     private static class Size extends GradientDrawableElement {
+
+        @SerializedName("width")
         public String width;
+        @SerializedName("height")
         public String height;
 
         @Override
@@ -424,9 +446,14 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     private static class Stroke extends GradientDrawableElement {
+
+        @SerializedName("width")
         public String width;
+        @SerializedName("color")
         public JsonElement color;
+        @SerializedName("dashWidth")
         public String dashWidth;
+        @SerializedName("dashGap")
         public String dashGap;
 
         @Override
@@ -440,8 +467,12 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     private static class LayerListDrawableItem {
+
+        @SerializedName("minLevel")
         public Integer minLevel;
+        @SerializedName("maxLevel")
         public Integer maxLevel;
+        @SerializedName("drawable")
         public JsonElement drawable;
 
         public void addItem(Context context, final LevelListDrawable levelListDrawable) {
@@ -455,11 +486,18 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     private static class ShapeDrawableJson {
+
+        @SerializedName("shape")
         public String shape;
+        @SerializedName("innerRadius")
         public String innerRadius;
+        @SerializedName("innerRadiusRatio")
         public Float innerRadiusRatio;
+        @SerializedName("thickness")
         public String thickness;
+        @SerializedName("thicknessRatio")
         public Float thicknessRatio;
+        @SerializedName("children")
         public JsonArray children;
 
         public GradientDrawable init(Context context) {

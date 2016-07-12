@@ -286,13 +286,14 @@ public class ParseHelper {
             return parameter;
         }
 
-        if (dimension.length() < 2) {
+        int length = dimension.length();
+        if (length < 2) {
             return 0;
         }
 
         // find the units and value by splitting at the second-last character of the dimension
-        Integer units = sDimensionsUnitsMap.get(dimension.substring(dimension.length() - 2));
-        String stringValue = dimension.substring(0, dimension.length() - 2);
+        Integer units = sDimensionsUnitsMap.get(dimension.substring(length - 2));
+        String stringValue = dimension.substring(0, length - 2);
         if (units != null) {
             float value = parseFloat(stringValue);
             DisplayMetrics displayMetric = context.getResources().getDisplayMetrics();
@@ -318,7 +319,7 @@ public class ParseHelper {
         if (dimension.startsWith(ATTR_START_LITERAL)) {
             float value;
             try {
-                String[] dimenArr = dimension.substring(1, dimension.length()).split(":");
+                String[] dimenArr = dimension.substring(1, length).split(":");
                 String style = dimenArr[0];
                 String attr = dimenArr[1];
                 Integer styleId = styleMap.get(style);

@@ -59,6 +59,8 @@ public interface ProteusViewManager {
      */
     void setStyles(@Nullable Styles styles);
 
+    int getUniqueViewId(String id);
+
     JsonElement get(String dataPath, int index);
 
     void set(String dataPath, JsonElement newValue);

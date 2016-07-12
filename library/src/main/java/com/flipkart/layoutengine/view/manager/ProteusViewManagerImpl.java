@@ -234,6 +234,11 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         this.styles = styles;
     }
 
+    @Override
+    public int getUniqueViewId(String id) {
+        return layoutBuilder.getUniqueViewId(id);
+    }
+
     public JsonElement get(String dataPath, int index) {
         return dataContext.get(dataPath);
     }

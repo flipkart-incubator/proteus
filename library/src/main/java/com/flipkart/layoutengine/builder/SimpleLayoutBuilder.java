@@ -1,11 +1,13 @@
 package com.flipkart.layoutengine.builder;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.layoutengine.DataContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.flipkart.layoutengine.toolbox.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.toolbox.Utils;
@@ -37,8 +39,10 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     private Logger logger = LoggerFactory.getLogger(SimpleLayoutBuilder.class);
 
-    protected SimpleLayoutBuilder() {
+    private IdGenerator idGenerator;
 
+    protected SimpleLayoutBuilder(@NonNull IdGenerator idGenerator) {
+        this.idGenerator = idGenerator;
     }
 
     @Override
@@ -180,6 +184,17 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
             return listener.onUnknownViewType(type, parent, layout, data, index, styles);
         }
         return null;
+    }
+
+    @Override
+    public int getUniqueViewId(String id) {
+        return idGenerator.getUnique(id);
+    }
+
+    @Nullable
+    @Override
+    public IdGenerator getIdGenerator() {
+        return idGenerator;
     }
 
     @Nullable

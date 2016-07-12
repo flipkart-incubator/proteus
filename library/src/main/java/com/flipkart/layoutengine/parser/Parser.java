@@ -15,7 +15,9 @@ import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,9 +33,9 @@ import java.util.Map;
 public abstract class Parser<V extends View> implements LayoutHandler<V> {
 
     protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<>();
+    private static XmlResourceParser sParser = null;
     protected final Class<V> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
-
     private Logger logger = LoggerFactory.getLogger(Parser.class);
 
     public Parser(Class<V> viewClass) {
@@ -123,24 +125,25 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
         return constructor;
     }
 
-    protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent, JsonObject layout) {
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent, JsonObject layout) throws IOException, XmlPullParserException {
 
         /**
          * This whole method is a hack! To generate layout params, since no other way exists.
          * Refer : http://stackoverflow.com/questions/7018267/generating-a-layoutparams-based-on-the-type-of-parent
          */
-        XmlResourceParser parser = parent.getResources().getLayout(R.layout.layout_params_hack);
-        try {
-
-            //noinspection StatementWithEmptyBody
-            while (parser.nextToken() != XmlPullParser.START_TAG) {
-                // Skip everything until the view tag.
+        if (null == sParser) {
+            synchronized (Parser.class) {
+                if (null == sParser) {
+                    sParser = parent.getResources().getLayout(R.layout.layout_params_hack);
+                    //noinspection StatementWithEmptyBody
+                    while (sParser.nextToken() != XmlPullParser.START_TAG) {
+                        // Skip everything until the view tag.
+                    }
+                }
             }
-            return parent.generateLayoutParams(parser);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return null;
-    }
 
+        return parent.generateLayoutParams(sParser);
+    }
 }
+

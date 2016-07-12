@@ -1,35 +1,12 @@
 apply plugin: 'com.android.library'
-apply plugin: 'artifactory'
-apply plugin: 'android-maven'
-
-buildscript {
-    repositories {
-        jcenter()
-        maven { url 'http://repo1.maven.org/maven2' }
-        maven { url 'http://artifactory.nm.flipkart.com:8081/artifactory/libs-release-local' }
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.5.0'
-        classpath 'com.github.dcendents:android-maven-plugin:1.2'
-        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.3'
-    }
-}
-
-group = ARTIFACTORY_GROUP
-version = VERSION_NAME
-status = STATUS
-
-repositories {
-    maven { url 'http://artifactory.nm.flipkart.com:8081/artifactory/libs-release-local' }
-}
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '20.0'
+    compileSdkVersion 24
+    buildToolsVersion '23.0.3'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
@@ -46,84 +23,9 @@ android {
     }
 }
 
-android.libraryVariants.all { variant ->
-    task("generate${variant.name}Javadoc", type: Javadoc) {
-        source = variant.javaCompile.source
-        def androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-
-        classpath = files(variant.javaCompile.classpath.files, androidJar)
-        options {
-            links "http://docs.oracle.com/javase/7/docs/api/"
-            linksOffline "http://d.android.com/reference", "${android.sdkDirectory}/docs/reference"
-        }
-        exclude '**/BuildConfig.java'
-        exclude '**/R.java'
-    }
-}
-
-configurations {
-    published
-}
-
-task sourceJar(type: Jar) {
-    from 'src/java'
-    classifier "sources"
-}
-
-artifactoryPublish {
-    dependsOn sourceJar
-}
-
-artifacts {
-    published sourceJar
-}
-
-configure(install.repositories.mavenInstaller) {
-    pom.project {
-        licenses {
-            license {
-                name 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                distribution 'repo'
-            }
-        }
-    }
-}
-
-artifactory {
-    contextUrl = ARTIFACTORY_REPO_URL
-    publish {
-        repository {
-            if (project.version.endsWith('-SNAPSHOT')) {
-                repoKey = SNAPSHOT_REPO_KEY
-            } else {
-                repoKey = RELEASE_REPO_KEY
-            }
-        }
-        defaults {
-            publishConfigs('archives', 'published')
-            properties = ['build.status': "$it.project.status".toString()]
-
-            //Publish generated POM files to Artifactory (true by default)
-            publishPom = true
-
-            //Publish generated Ivy descriptor files to Artifactory (true by default)
-            publishIvy = false
-        }
-    }
-    resolve {
-        repository {
-            if (project.version.endsWith('-SNAPSHOT')) {
-                repoKey = SNAPSHOT_REPO_KEY
-            } else {
-                repoKey = RELEASE_REPO_KEY
-            }
-        }
-    }
-}
-
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:support-annotations:24.0.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.code.gson:gson:2.4'
     compile 'org.slf4j:slf4j-api:1.7.6'

@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.annotations.SerializedName;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -258,15 +259,26 @@ public class AnimationUtils {
     }
 
     private abstract static class AnimationProperties {
+
+        @SerializedName("detachWallpaper")
         Boolean detachWallpaper;
+        @SerializedName("duration")
         Long duration;
+        @SerializedName("fillAfter")
         Boolean fillAfter;
+        @SerializedName("fillBefore")
         Boolean fillBefore;
+        @SerializedName("fillEnabled")
         Boolean fillEnabled;
+        @SerializedName("interpolator")
         JsonElement interpolator;
+        @SerializedName("repeatCount")
         Integer repeatCount;
+        @SerializedName("repeatMode")
         Integer repeatMode;
+        @SerializedName("startOffset")
         Long startOffset;
+        @SerializedName("zAdjustment")
         Integer zAdjustment;
 
         public Animation instantiate(Context c) {
@@ -322,7 +334,10 @@ public class AnimationUtils {
     }
 
     private static class AnimationSetProperties extends AnimationProperties {
+
+        @SerializedName("shareInterpolator")
         Boolean shareInterpolator;
+        @SerializedName("children")
         JsonElement children;
 
         @Override
@@ -350,21 +365,31 @@ public class AnimationUtils {
     }
 
     private static class AlphaAnimProperties extends AnimationProperties {
+
+        @SerializedName("fromAlpha")
         public Float fromAlpha;
+        @SerializedName("toAlpha")
         public Float toAlpha;
 
         @Override
         Animation createAnimation(Context c) {
-            return new AlphaAnimation(fromAlpha, toAlpha);
+            return null == fromAlpha || null == toAlpha ? null : new AlphaAnimation(fromAlpha, toAlpha);
         }
     }
 
     private static class ScaleAnimProperties extends AnimationProperties {
+
+        @SerializedName("fromXScale")
         public Float fromXScale;
+        @SerializedName("toXScale")
         public Float toXScale;
+        @SerializedName("fromYScale")
         public Float fromYScale;
+        @SerializedName("toYScale")
         public Float toYScale;
+        @SerializedName("pivotX")
         public JsonPrimitive pivotX;
+        @SerializedName("pivotY")
         public JsonPrimitive pivotY;
 
         @Override
@@ -380,9 +405,14 @@ public class AnimationUtils {
     }
 
     private static class TranslateAnimProperties extends AnimationProperties {
+
+        @SerializedName("fromXDelta")
         public JsonPrimitive fromXDelta;
+        @SerializedName("toXDelta")
         public JsonPrimitive toXDelta;
+        @SerializedName("fromYDelta")
         public JsonPrimitive fromYDelta;
+        @SerializedName("toYDelta")
         public JsonPrimitive toYDelta;
 
         @Override
@@ -397,9 +427,14 @@ public class AnimationUtils {
     }
 
     private static class RotateAnimProperties extends AnimationProperties {
+
+        @SerializedName("fromDegrees")
         public Float fromDegrees;
+        @SerializedName("toDegrees")
         public Float toDegrees;
+        @SerializedName("pivotX")
         public JsonPrimitive pivotX;
+        @SerializedName("pivotY")
         public JsonPrimitive pivotY;
 
         @Override
@@ -419,9 +454,14 @@ public class AnimationUtils {
     }
 
     private static class PathInterpolatorProperties extends InterpolatorProperties {
+
+        @SerializedName("controlX1")
         public Float controlX1;
+        @SerializedName("controlY1")
         public Float controlY1;
+        @SerializedName("controlX2")
         public Float controlX2;
+        @SerializedName("controlY2")
         public Float controlY2;
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -435,6 +475,8 @@ public class AnimationUtils {
     }
 
     private static class AnticipateInterpolatorProperties extends InterpolatorProperties {
+
+        @SerializedName("tension")
         public Float tension;
 
         Interpolator createInterpolator(Context c) {
@@ -443,6 +485,8 @@ public class AnimationUtils {
     }
 
     private static class OvershootInterpolatorProperties extends InterpolatorProperties {
+
+        @SerializedName("tension")
         public Float tension;
 
         Interpolator createInterpolator(Context c) {
@@ -451,7 +495,10 @@ public class AnimationUtils {
     }
 
     private static class AnticipateOvershootInterpolatorProperties extends InterpolatorProperties {
+
+        @SerializedName("tension")
         public Float tension;
+        @SerializedName("extraTension")
         public Float extraTension;
 
         Interpolator createInterpolator(Context c) {
@@ -460,6 +507,8 @@ public class AnimationUtils {
     }
 
     private static class CycleInterpolatorProperties extends InterpolatorProperties {
+
+        @SerializedName("cycles")
         public Float cycles;
 
         Interpolator createInterpolator(Context c) {

@@ -4,6 +4,7 @@ import android.view.View;
 
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
@@ -59,6 +60,23 @@ public interface LayoutBuilder {
      * @return A {@link ProteusView} with the built view, an array of its children and optionally its bindings.
      */
     ProteusView build(View parent, JsonObject layout, JsonObject data, int index, Styles styles);
+
+    /**
+     * Give the View ID for this string. This will generally be given by the instance of ID Generator
+     * which will be available with the Layout Builder.
+     * This is similar to R.id auto generated
+     *
+     * @return int value for this id. This will never be -1.
+     */
+    int getUniqueViewId(String id);
+
+    /**
+     * All consumers of this should ensure that they save the instance state of the ID generator along with the activity/
+     * fragment and resume it when the Layout Builder is being re-initialized
+     *
+     * @return Returns the Id Generator for this Layout Builder
+     */
+    IdGenerator getIdGenerator();
 
     /**
      * @return The callback object used by this {@link LayoutBuilder}

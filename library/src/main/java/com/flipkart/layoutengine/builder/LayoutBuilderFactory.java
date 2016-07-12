@@ -1,6 +1,7 @@
 package com.flipkart.layoutengine.builder;
 
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.flipkart.layoutengine.parser.ViewParser;
@@ -22,6 +23,8 @@ import com.flipkart.layoutengine.parser.custom.ViewGroupParser;
 import com.flipkart.layoutengine.parser.custom.ViewPagerParser;
 import com.flipkart.layoutengine.parser.custom.WebViewParser;
 import com.flipkart.layoutengine.toolbox.Formatter;
+import com.flipkart.layoutengine.toolbox.IdGenerator;
+import com.flipkart.layoutengine.toolbox.IdGeneratorImpl;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,7 +39,7 @@ import java.util.Map;
 /**
  * Factory class for creating Layout builders with different predefined behaviours. This is the
  * only way to create layout builder objects. To create a simple layout builder use
- * {@link LayoutBuilderFactory#getSimpleLayoutBuilder()}
+ * {@link LayoutBuilderFactory#getSimpleLayoutBuilder(IdGenerator)}
  */
 public class LayoutBuilderFactory {
 
@@ -50,9 +53,18 @@ public class LayoutBuilderFactory {
      *
      * @return A new {@link DataAndViewParsingLayoutBuilder}
      */
-    public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Map<String, JsonObject> viewProvider) {
+    public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Map<String, JsonObject> layouts, @NonNull IdGenerator idGenerator) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
-            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(viewProvider);
+            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(layouts, idGenerator);
+            registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
+            registerFormatter(dataAndViewParsingLayoutBuilderInstance);
+        }
+        return dataAndViewParsingLayoutBuilderInstance;
+    }
+
+    public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Map<String, JsonObject> layouts) {
+        if (dataAndViewParsingLayoutBuilderInstance == null) {
+            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(layouts, new IdGeneratorImpl());
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
             registerFormatter(dataAndViewParsingLayoutBuilderInstance);
         }
@@ -64,9 +76,18 @@ public class LayoutBuilderFactory {
      *
      * @return A new {@link DataParsingLayoutBuilder}
      */
+    public DataParsingLayoutBuilder getDataParsingLayoutBuilder(@NonNull IdGenerator idGenerator) {
+        if (dataParsingLayoutBuilderInstance == null) {
+            dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder(idGenerator);
+            registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
+            registerFormatter(dataParsingLayoutBuilderInstance);
+        }
+        return dataParsingLayoutBuilderInstance;
+    }
+
     public DataParsingLayoutBuilder getDataParsingLayoutBuilder() {
         if (dataParsingLayoutBuilderInstance == null) {
-            dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder();
+            dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder(new IdGeneratorImpl());
             registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
             registerFormatter(dataParsingLayoutBuilderInstance);
         }
@@ -78,9 +99,17 @@ public class LayoutBuilderFactory {
      *
      * @return A new {@link SimpleLayoutBuilder}
      */
+    public SimpleLayoutBuilder getSimpleLayoutBuilder(@NonNull IdGenerator idGenerator) {
+        if (simpleLayoutBuilderInstance == null) {
+            simpleLayoutBuilderInstance = new SimpleLayoutBuilder(idGenerator);
+            registerBuiltInHandlers(simpleLayoutBuilderInstance);
+        }
+        return simpleLayoutBuilderInstance;
+    }
+
     public SimpleLayoutBuilder getSimpleLayoutBuilder() {
         if (simpleLayoutBuilderInstance == null) {
-            simpleLayoutBuilderInstance = new SimpleLayoutBuilder();
+            simpleLayoutBuilderInstance = new SimpleLayoutBuilder(new IdGeneratorImpl());
             registerBuiltInHandlers(simpleLayoutBuilderInstance);
         }
         return simpleLayoutBuilderInstance;

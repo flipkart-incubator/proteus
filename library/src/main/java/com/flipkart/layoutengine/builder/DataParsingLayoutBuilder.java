@@ -1,6 +1,8 @@
 package com.flipkart.layoutengine.builder;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.flipkart.layoutengine.DataContext;
@@ -10,6 +12,7 @@ import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.toolbox.Formatter;
+import com.flipkart.layoutengine.toolbox.IdGenerator;
 import com.flipkart.layoutengine.toolbox.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.toolbox.Utils;
@@ -37,8 +40,8 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
 
-    protected DataParsingLayoutBuilder() {
-        super();
+    protected DataParsingLayoutBuilder(@NonNull IdGenerator idGenerator) {
+        super(idGenerator);
     }
 
     @Override
@@ -117,11 +120,12 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         JsonElement element = viewManager.getLayout().get(ProteusConstants.CHILDREN);
         JsonElement child = viewManager.getLayout().get(ProteusConstants.CHILD_TYPE);
 
-        if (child == null || child == JsonNull.INSTANCE) {
+        if (child == null || child.isJsonNull()) {
             return null;
         }
 
-        if (element != null && element.isJsonPrimitive() && element.getAsString().charAt(0) == ProteusConstants.DATA_PREFIX) {
+        if (element != null && element.isJsonPrimitive() && !element.getAsString().isEmpty()
+                && element.getAsString().charAt(0) == ProteusConstants.DATA_PREFIX) {
             return element;
         }
 
@@ -186,17 +190,18 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             logger.debug("Find '" + stringValue + "' for " + attribute + " for view with " + Utils.getLayoutIdentifier(viewManager.getLayout()));
         }
 
-        if (stringValue.charAt(0) == ProteusConstants.REGEX_PREFIX) {
+        char firstChar = TextUtils.isEmpty(stringValue) ? 0 : stringValue.charAt(0);
+        if (firstChar == ProteusConstants.REGEX_PREFIX) {
             Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(stringValue);
             String finalValue = stringValue;
-
+            String dataPath;
             while (regexMatcher.find()) {
                 String matchedString = regexMatcher.group(0);
                 String bindingName;
                 if (regexMatcher.group(3) != null) {
 
                     // has NO formatter
-                    String dataPath = regexMatcher.group(3);
+                    dataPath = regexMatcher.group(3);
                     try {
                         finalValue = finalValue.replace(matchedString, Utils.readJson(dataPath, dataContext.getData(), dataContext.getIndex()).getAsString());
                     } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
@@ -209,7 +214,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 } else {
 
                     // has formatter
-                    String dataPath = regexMatcher.group(1);
+                    dataPath = regexMatcher.group(1);
                     String formatterName = regexMatcher.group(2);
 
                     String formattedValue;
@@ -235,8 +240,9 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         } else if (stringValue.charAt(0) == ProteusConstants.DATA_PREFIX) {
             JsonElement elementFromData;
+            String dataPath = stringValue.substring(1);
             try {
-                elementFromData = Utils.readJson(stringValue.substring(1), dataContext.getData(), dataContext.getIndex());
+                elementFromData = Utils.readJson(dataPath, dataContext.getData(), dataContext.getIndex());
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                 if (logger.isErrorEnabled()) {
                     logger.error("#findAndReplaceValues() " + e.getMessage());
@@ -247,7 +253,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             if (elementFromData != null) {
                 value = elementFromData;
             }
-            addBinding(viewManager, stringValue.substring(1), attribute, stringValue, false);
+            addBinding(viewManager, dataPath, attribute, stringValue, false);
         }
 
         return value;
