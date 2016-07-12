@@ -64,15 +64,7 @@ You can update a View created by Proteus with new data for the bindings. Using t
 Example:
 
 ```java
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
-View view = proteusView.getView();
-
-// some where else
-View view = proteusView.updateView(newDataJsonObject);
-
-// `view` is a reference to the old instance of the View associated with this ProteusView
-// with updated data bindings.
-
+proteusView.updateView(newData);
 ```
 
 Head over to the [wiki](https://github.com/Flipkart/android-layout-engine/wiki) for detiled documentation 
