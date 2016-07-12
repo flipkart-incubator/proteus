@@ -6,13 +6,12 @@ An android library for achieving granular control over the visual appearance and
 Usage:
 
 ```java
-JsonObject layout = new JsonObject();   // this layout is the layout sent from server
-LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this, null);
-
 ViewGroup parent = (ViewGroup)this.getWindow().getDecorView();
-ProteusView proteusView = builder.build(parent, layout, null, 0, null);
+LayoutBuilder builder = new DefaultLayoutBuilder().getSimpleLayoutBuilder(this, null);
 
+ProteusView proteusView = builder.build(parent, layout, null, 0, null);
 View view = proteusView.getView();
+
 parent.addView(view);
 ```
 
@@ -31,7 +30,7 @@ This is a layout builder which can parse json to construct an android view out o
 Example :
 
 ```java
-LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this, nulll);
+LayoutBuilder builder = new DefaultLayoutBuilder().getSimpleLayoutBuilder(this, null);
 ProteusView proteusView = builder.build(parent, layout, null, 0, null);
 ```
 
@@ -42,12 +41,8 @@ A layout builder built on top of simple layout builder which can additionally pa
 Example :
 
 ```java
-LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataParsingLayoutBuilder(MainActivity.this, new GsonProvider(dataJsonObject));
-
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
-// or
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, newDataJsonObject);
-
+LayoutBuilder builder = new DefaultLayoutBuilderFactory().getDataParsingLayoutBuilder(this, null);
+ProteusView proteusView = builder.build(parent, layout, data, 0, null);
 ```
 
 DataAndViewParsingLayoutBuilder
@@ -57,16 +52,8 @@ A layout builder built on top of data parsing layout builder which can make view
 Example :
 
 ```java
-LayoutBuilder builder = new DefaultLayoutBuilderFactory()
-    .createDataParsingLayoutBuilder(MainActivity.this,
-        new GsonProvider(dataJsonObject),
-        new GsonProvider(layoutJsonObject));
-
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
-// or
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, newDataJsonObject);
-
-View view = proteusView.getView();
+LayoutBuilder builder = new DefaultLayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(this, views, null);
+ProteusView proteusView = builder.build(parent, layout, data, 0, null);
 ```
 
 Updating a view
