@@ -7,14 +7,13 @@ Usage:
 
 ```java
 JsonObject layout = new JsonObject();   // this layout is the layout sent from server
-LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
+LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this, null);
 
-ViewGroup parentViewGroup = (ViewGroup)this.getWindow().getDecorView();
-ProteusView proteusView = builder.build(parentViewGroup, layout, null);
+ViewGroup parent = (ViewGroup)this.getWindow().getDecorView();
+ProteusView proteusView = builder.build(parent, layout, null, 0, null);
 
-// To get the View call the ProteusView.getView()
-// now you have a dynamic view which can be added to decorview
 View view = proteusView.getView();
+parent.addView(view);
 ```
 
 Builder types
@@ -32,9 +31,8 @@ This is a layout builder which can parse json to construct an android view out o
 Example :
 
 ```java
-LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this);
-ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
-View view = proteusView.getView();
+LayoutBuilder builder = new DefaultLayoutBuilder().createSimpleLayoutBuilder(this, nulll);
+ProteusView proteusView = builder.build(parent, layout, null, 0, null);
 ```
 
 DataParsingLayoutBuilder
@@ -44,14 +42,12 @@ A layout builder built on top of simple layout builder which can additionally pa
 Example :
 
 ```java
-LayoutBuilder builder = new DefaultLayoutBuilderFactory()
-    .createDataParsingLayoutBuilder(MainActivity.this, new GsonProvider(dataJsonObject));
+LayoutBuilder builder = new DefaultLayoutBuilderFactory().createDataParsingLayoutBuilder(MainActivity.this, new GsonProvider(dataJsonObject));
 
 ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, null);
 // or
 ProteusView proteusView = builder.build(parentViewGroup, layoutJsonObject, newDataJsonObject);
 
-View view = proteusView.getView();
 ```
 
 DataAndViewParsingLayoutBuilder
