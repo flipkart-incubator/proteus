@@ -7,4 +7,4 @@ Head over to the [wiki](https://github.com/Flipkart/proteus/wiki) for detailed d
 
 One click XML to JSON conversion
 --------------------------------
-Download [this plugin](https://github.com/Flipkart/android-studio-layoutengine-plugin/blob/master/Plugin/Plugin.jar) for android studio and enable it. Once enabled, you can select any android XML layout file and go to **Tools > Convert XML to JSON**
+Download [this plugin](https://github.com/flipkart-incubator/android-studio-proteus-plugin/blob/master/Plugin/Plugin.jar) for android studio and enable it. Once enabled, you can select any android XML layout file and go to **Tools > Convert XML to JSON**
