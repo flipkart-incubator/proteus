@@ -43,10 +43,10 @@
                     tools:ignore="RtlHardcoded" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_marginRight="8dp"
-                    android:src="@drawable/flipkart_app_icon"
+                    android:src="@drawable/github_icon"
                     tools:ignore="RtlHardcoded" />
 
                 <LinearLayout

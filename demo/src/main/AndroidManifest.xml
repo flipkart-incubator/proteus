@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="com.flipkart.proteus.demo"
+    package="com.flipkart.android.proteus.demo"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.flipkart.proteus.demo.ProteusActivity"
+            android:name="com.flipkart.android.proteus.demo.ProteusActivity"
             android:label="@string/app_name">
 
             <!--
@@ -20,14 +20,14 @@
             </intent-filter>
             -->
         </activity>
-        <activity android:name="com.flipkart.proteus.demo.MainActivity">
+        <activity android:name="com.flipkart.android.proteus.demo.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.flipkart.proteus.demo.NativeActivity"/>
+        <activity android:name="com.flipkart.android.proteus.demo.NativeActivity"/>
     </application>
 
 </manifest>

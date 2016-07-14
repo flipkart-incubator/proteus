@@ -23,7 +23,7 @@ import java.util.List;
 
 public class NativeActivity extends BaseActivity {
 
-    private static final String IMAGE_URL = "http://img6a.flixcart.com/www/prod/images/flipkart_logo_retina-9fddfff2.png";
+    private static final String IMAGE_URL = "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png";
     private static final String STRING_ACHIEVEMENTS = "Achievements - ";
 
     private Data data;

@@ -41,7 +41,9 @@
                 },
                 {
                   "type": "ImageView",
-                  "src": "@drawable/flipkart_app_icon",
+                  "layout_width": "60dp",
+                  "layout_height": "60dp",
+                  "src": "@drawable/github_icon",
                   "layout_marginRight": "8dp"
                 },
                 {
