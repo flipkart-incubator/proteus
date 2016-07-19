@@ -23,20 +23,39 @@ Proteus : Android Layout Engine
 
 Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON`, which can be used to inflate native and android UI at runtime. The `JSON` layouts can be hosted anywhere (on the deive, on servers, etc.).
 
+Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. **Proteus** has built-in [runtime data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings) and formatters. Use data bindings within the `JSON` layouts itseld. You can even plugin in your custom views and attributes.
+
+```json
+{
+  "type": "LinearLayout",
+  "orientation": "vertical",
+  "children": [
+    {
+      "type": "TextView",
+      "text": "$user.profile.name"
+    },
+    {
+      "type": "ImageView",
+      "src": "$user.profile.imageUrl"
+    }
+  ]
+}
+```
+
 ## Getting started
+
+Head over to the [wiki](https://github.com/flipkart-incubator/proteus/wiki) for detailed documentation
 
 ## Contributing
 
 1. Fork the repo
 2. Apply your changes
-3. Write tests
-4. Submit your pull request
+3. Submit your pull request
 
 ## License
-[The MIT License (MIT)](https://github.com/flipkart-incubator/proteus/LICENSE)
 
-Head over to the [wiki](https://github.com/flipkart-incubator/proteus/wiki) for detailed documentation
+[The MIT License (MIT)](https://github.com/flipkart-incubator/proteus/blob/master/LICENSE)
 
-One click XML to JSON conversion
---------------------------------
+## One click XML to JSON conversion plugin
+
 Download [this plugin](https://github.com/flipkart-incubator/android-studio-proteus-plugin/blob/master/Plugin/Plugin.jar) for android studio and enable it. Once enabled, you can select any android XML layout file and go to **Tools > Convert XML to JSON**
