@@ -14,7 +14,7 @@ Proteus : Android Layout Engine
       </ul>
     </td>
     <td style="width:60%; border: 0px; text-align:right;">
-      <img alt="proteus logo" src="" width="250px"/>
+      <img alt="proteus logo" src="https://github.com/flipkart-incubator/proteus/blob/master/assets/proteus-logo.png" width="250px"/>
     </td>
   </tr>
 </table>
