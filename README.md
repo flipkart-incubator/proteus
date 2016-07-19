@@ -14,7 +14,7 @@ Proteus : Android Layout Engine
       </ul>
     </td>
     <td style="width:60%; border: 0px; text-align:right;">
-      <img alt="json2view logo" src="" width="250px"/>
+      <img alt="proteus logo" src="" width="250px"/>
     </td>
   </tr>
 </table>
@@ -24,6 +24,16 @@ Proteus : Android Layout Engine
 Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON`, which can be used to inflate native and android UI at runtime. The `JSON` layouts can be hosted anywhere (on the deive, on servers, etc.).
 
 ## Getting started
+
+## Contributing
+
+1. Fork the repo
+2. Apply your changes
+3. Write tests
+4. Submit your pull request
+
+## License
+[The MIT License (MIT)](https://github.com/flipkart-incubator/proteus/LICENSE)
 
 Head over to the [wiki](https://github.com/flipkart-incubator/proteus/wiki) for detailed documentation
 
