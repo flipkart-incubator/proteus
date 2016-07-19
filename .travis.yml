@@ -1,7 +1,7 @@
 sudo: true
 language: android
 jdk:
-  - oraclejdk7
+  - oraclejdk8
 android:
   components:
     - tools
