@@ -1,10 +1,7 @@
 package com.flipkart.layoutengine.parser;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
-import android.os.Debug;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,22 +31,28 @@ import java.util.Map;
  */
 public abstract class Parser<V extends View> implements LayoutHandler<V> {
 
+    protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<>();
     private static XmlResourceParser sParser = null;
     protected final Class<V> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
     private Logger logger = LoggerFactory.getLogger(Parser.class);
+    private boolean prepared;
 
     public Parser(Class<V> viewClass) {
         this.viewClass = viewClass;
     }
 
-    protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<>();
-
     @Override
     public void prepare(Context context) {
-        if (handlers.size() == 0) {
+        if (!isPrepared()) {
             prepareHandlers(context);
+            prepared = true;
         }
+    }
+
+    @Override
+    public boolean isPrepared() {
+        return prepared;
     }
 
     public void addHandler(Attributes.Attribute key, AttributeProcessor<V> handler) {
@@ -106,12 +109,9 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
          * This whole method is a hack! To generate layout params, since no other way exists.
          * Refer : http://stackoverflow.com/questions/7018267/generating-a-layoutparams-based-on-the-type-of-parent
          */
-        if(null == sParser)
-        {
-            synchronized (Parser.class)
-            {
-                if(null == sParser)
-                {
+        if (null == sParser) {
+            synchronized (Parser.class) {
+                if (null == sParser) {
                     sParser = parent.getResources().getLayout(R.layout.layout_params_hack);
                     //noinspection StatementWithEmptyBody
                     while (sParser.nextToken() != XmlPullParser.START_TAG) {
@@ -137,7 +137,11 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
         return false;
     }
 
-    protected abstract void prepareHandlers(Context context);
+    protected void prepareHandlers(Context context) {
+        /**
+         * Meant to be overridden so that new {@link AttributeProcessor} can be added to new {@link Parser}
+         */
+    }
 
     @Override
     public void addChildren(ParserContext parserContext, ProteusView parent,

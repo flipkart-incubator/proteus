@@ -27,6 +27,8 @@ public interface LayoutHandler<V extends View> {
 
     void prepare(Context context);
 
+    boolean isPrepared();
+
     /**
      * This is a base implementation which calls addView() on the parent.
      *

@@ -22,10 +22,11 @@ public class WrappableParser<V extends View> extends Parser<V> {
     }
 
     @Override
-    protected void prepareHandlers(Context context) {
+    public void prepare(Context context) {
         if (wrappedParser != null) {
-            wrappedParser.prepareHandlers(context);
+            wrappedParser.prepare(context);
         }
+        super.prepare(context);
     }
 
     @Override
