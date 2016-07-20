@@ -45,6 +45,7 @@ import android.webkit.ValueCallback;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.ColorUtils;
 import com.flipkart.android.proteus.toolbox.NetworkDrawableHelper;
+import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 import com.google.gson.Gson;
@@ -85,7 +86,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     private static final String RADIAL_GRADIENT = "radial";
     private static final String SWEEP_GRADIENT = "sweep";
     private static Gson sGson = new Gson();
-    private Logger logger = LoggerFactory.getLogger(DrawableResourceProcessor.class);
+    private static Logger logger = LoggerFactory.getLogger(DrawableResourceProcessor.class);
 
     public static GradientDrawable loadGradientDrawable(Context context, JsonObject value) {
         ShapeDrawableJson shapeDrawable = sGson.fromJson(value, ShapeDrawableJson.class);
@@ -99,7 +100,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         } else if (value.isJsonObject()) {
             handleElement(key, value, view);
         } else {
-            if (logger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 logger.error("Resource for key: " + key + " must be a primitive or an object. value -> " + value.toString());
             }
         }

@@ -87,7 +87,7 @@ public class DataContext {
             try {
                 element = Utils.readJson(value, data, dataContext.getIndex());
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                if (logger.isErrorEnabled()) {
+                if (ProteusConstants.isLoggingEnabled()) {
                     logger.error("#getNewDataContext could not find: '" + value + "' for '" + key + "'. ERROR: " + e.getMessage());
                 }
                 element = new JsonObject();

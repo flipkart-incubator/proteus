@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.animation.Animation;
 
 import com.flipkart.android.proteus.toolbox.AnimationUtils;
+import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.google.gson.JsonElement;
 
 import org.slf4j.Logger;
@@ -38,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class TweenAnimationResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
-    private Logger mLogger = LoggerFactory.getLogger(TweenAnimationResourceProcessor.class);
+    private static Logger logger = LoggerFactory.getLogger(TweenAnimationResourceProcessor.class);
 
     @Override
     public void handle(String key, JsonElement value, V view) {
@@ -46,8 +47,8 @@ public abstract class TweenAnimationResourceProcessor<V extends View> extends At
         if (null != animation) {
             setAnimation(view, animation);
         } else {
-            if (mLogger.isErrorEnabled()) {
-                mLogger.error("Resource for key: " + key
+            if (ProteusConstants.isLoggingEnabled()) {
+                logger.error("Resource for key: " + key
                         + " must be a primitive or an object. value -> " + value.toString());
             }
         }

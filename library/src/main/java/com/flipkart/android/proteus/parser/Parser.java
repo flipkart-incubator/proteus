@@ -32,6 +32,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.R;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.JsonElement;
@@ -61,7 +62,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
     private static XmlResourceParser sParser = null;
     protected final Class<V> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
-    private Logger logger = LoggerFactory.getLogger(Parser.class);
+    private static Logger logger = LoggerFactory.getLogger(Parser.class);
 
     public Parser(Class<V> viewClass) {
         this.viewClass = viewClass;
@@ -83,7 +84,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                 v.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 logger.error("#createView()", e.getMessage() + "");
             }
         }
@@ -138,11 +139,11 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
             try {
                 constructor = viewClass.getDeclaredConstructor(Context.class);
                 constructorCache.put(viewClass, constructor);
-                if (logger.isDebugEnabled()) {
+                if (ProteusConstants.isLoggingEnabled()) {
                     logger.debug("constructor for " + viewClass + " was created and put into cache");
                 }
             } catch (NoSuchMethodException e) {
-                if (logger.isErrorEnabled()) {
+                if (ProteusConstants.isLoggingEnabled()) {
                     logger.error(e.getMessage() + "");
                 }
             }
