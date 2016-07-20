@@ -1,4 +1,4 @@
-Proteus : Android Layout Engine
+Proteus : Android Layout Engine  [![Build Status](https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master)](https://travis-ci.org/flipkart-incubator/proteus)
 =====================
 
 **Proteus** is an android library for achieving complete control over the visual appearance and data bindings on views/widgets rendered. It's meant to be a drop in replacement for androids' `LayoutInflater`. **proteus** allows inflating layouts at runtime unlike the compiled XML layouts bundled in the APK.
