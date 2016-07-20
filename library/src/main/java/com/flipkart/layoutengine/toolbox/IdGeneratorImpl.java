@@ -16,6 +16,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * this class to ensure uniqueness with other dynamic IDs.
  */
 public class IdGeneratorImpl implements IdGenerator {
+    public final static Parcelable.Creator<IdGeneratorImpl> CREATOR = new Creator<IdGeneratorImpl>() {
+        @Override
+        public IdGeneratorImpl createFromParcel(Parcel source) {
+            return new IdGeneratorImpl(source);
+        }
+
+        @Override
+        public IdGeneratorImpl[] newArray(int size) {
+            return new IdGeneratorImpl[size];
+        }
+    };
     private static final ClassLoader ID_MAP_CLASS_LOADER = new TypeToken<Map<String, Integer>>() {
     }.getClass().getClassLoader();
     private final HashMap<String, Integer> idMap = new HashMap<>();
@@ -42,7 +53,6 @@ public class IdGeneratorImpl implements IdGenerator {
         dest.writeInt(sNextGeneratedId.get());
         dest.writeMap(idMap);
     }
-
 
     /**
      * Generates and returns a unique id, for the given key.
@@ -97,16 +107,4 @@ public class IdGeneratorImpl implements IdGenerator {
     public int describeContents() {
         return 0;
     }
-
-    public final static Parcelable.Creator<IdGeneratorImpl> CREATOR = new Creator<IdGeneratorImpl>() {
-        @Override
-        public IdGeneratorImpl createFromParcel(Parcel source) {
-            return new IdGeneratorImpl(source);
-        }
-
-        @Override
-        public IdGeneratorImpl[] newArray(int size) {
-            return new IdGeneratorImpl[size];
-        }
-    };
 }

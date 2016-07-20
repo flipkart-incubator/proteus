@@ -99,18 +99,18 @@ public interface ProteusView {
     JsonObject getLayout();
 
     /**
-     * Returns the {@link Styles} used in this {@link ProteusView}
-     *
-     * @param styles Returns the {@link Styles} used in this {@link ProteusView}
-     */
-    void setStyles(Styles styles);
-
-    /**
      * Returns the current {@link Styles} used in this {@link ProteusView}
      *
      * @return Returns the current {@link Styles} used in this {@link ProteusView}
      */
     Styles getStyles();
+
+    /**
+     * Returns the {@link Styles} used in this {@link ProteusView}
+     *
+     * @param styles Returns the {@link Styles} used in this {@link ProteusView}
+     */
+    void setStyles(Styles styles);
 
     /**
      * Removes this {@link ProteusView} from the hierarchy and releases resources;

@@ -13,6 +13,42 @@ import java.util.Map;
  */
 public class Attributes {
 
+    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
+
+        JsonObject output = new JsonObject();
+        JsonObject priorities = new JsonObject();
+        Map<Integer, String> map = new HashMap<>();
+
+        Field[] fields = Priority.class.getFields();
+        for (Field field : fields) {
+            if (field.getName().equals("value")) {
+                continue;
+            }
+            Priority priority = (Priority) Priority.class.getField(field.getName()).get(new Priority(0));
+            priorities.addProperty(field.getName(), priority.value);
+            map.put(priority.value, field.getName());
+        }
+
+        JsonObject attributes = new JsonObject();
+        Class<?>[] list = Attributes.class.getDeclaredClasses();
+        for (Class type : list) {
+            if (type.equals(Attribute.class)) {
+                continue;
+            }
+            for (Field field : type.getFields()) {
+                Attribute attribute = (Attribute) type.getField(field.getName()).get(null);
+                JsonObject value = new JsonObject();
+                value.addProperty("priority", map.get(attribute.getPriority().value));
+                attributes.add(attribute.getName(), value);
+            }
+        }
+
+        output.add("all", attributes);
+        output.add("priority", priorities);
+
+        System.out.println(output.toString());
+    }
+
     public static class View {
         public static Attribute Weight = new Attribute("layout_weight");
         public static Attribute Width = new Attribute("layout_width");
@@ -166,29 +202,14 @@ public class Attributes {
         public static Attribute Progress = new Attribute("progress");
         public static Attribute Max = new Attribute("max");
         public static Attribute ProgressTint = new Attribute("progressTint");
-        public static Attribute IndeterminateTint   = new Attribute("indeterminateTint");
-        public static Attribute SecondaryProgressTint   = new Attribute("secondaryProgressTint");
+        public static Attribute IndeterminateTint = new Attribute("indeterminateTint");
+        public static Attribute SecondaryProgressTint = new Attribute("secondaryProgressTint");
     }
 
     public static class Attribute {
 
-        public static class Priority {
-            public static Priority HIGHEST = new Priority(0);
-            public static Priority HIGH = new Priority(1000);
-            public static Priority MEDIUM = new Priority(2000);
-            public static Priority LOW = new Priority(3000);
-            public static Priority LOWEST = new Priority(4000);
-
-            public final int value;
-
-            public Priority(int i) {
-                value = i;
-            }
-        }
-
         private final String name;
         private final Priority priority;
-
         public Attribute(String name) {
             this.name = name;
             this.priority = Priority.HIGH;
@@ -206,41 +227,19 @@ public class Attributes {
         public Priority getPriority() {
             return this.priority;
         }
-    }
 
-    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException {
+        public static class Priority {
+            public static Priority HIGHEST = new Priority(0);
+            public static Priority HIGH = new Priority(1000);
+            public static Priority MEDIUM = new Priority(2000);
+            public static Priority LOW = new Priority(3000);
+            public static Priority LOWEST = new Priority(4000);
 
-        JsonObject output = new JsonObject();
-        JsonObject priorities = new JsonObject();
-        Map<Integer, String> map = new HashMap<>();
+            public final int value;
 
-        Field[] fields = Priority.class.getFields();
-        for (Field field : fields) {
-            if (field.getName().equals("value")) {
-                continue;
-            }
-            Priority priority = (Priority) Priority.class.getField(field.getName()).get(new Priority(0));
-            priorities.addProperty(field.getName(), priority.value);
-            map.put(priority.value, field.getName());
-        }
-
-        JsonObject attributes = new JsonObject();
-        Class<?>[] list = Attributes.class.getDeclaredClasses();
-        for (Class type : list) {
-            if (type.equals(Attribute.class)) {
-                continue;
-            }
-            for (Field field : type.getFields()) {
-                Attribute attribute = (Attribute) type.getField(field.getName()).get(null);
-                JsonObject value = new JsonObject();
-                value.addProperty("priority", map.get(attribute.getPriority().value));
-                attributes.add(attribute.getName(), value);
+            public Priority(int i) {
+                value = i;
             }
         }
-
-        output.add("all", attributes);
-        output.add("priority", priorities);
-
-        System.out.println(output.toString());
     }
 }

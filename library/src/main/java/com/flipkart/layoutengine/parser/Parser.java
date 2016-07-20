@@ -13,8 +13,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -35,7 +33,6 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
     private static XmlResourceParser sParser = null;
     protected final Class<V> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
-    private Logger logger = LoggerFactory.getLogger(Parser.class);
     private boolean prepared;
 
     public Parser(Class<V> viewClass) {
@@ -70,9 +67,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                 v.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("#createView()", e.getMessage() + "");
-            }
+            e.printStackTrace();
         }
         //noinspection unchecked
         return (V) v;
@@ -91,13 +86,8 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
             try {
                 constructor = viewClass.getDeclaredConstructor(Context.class);
                 constructorCache.put(viewClass, constructor);
-                if (logger.isDebugEnabled()) {
-                    logger.debug("constructor for " + viewClass + " was created and put into cache");
-                }
             } catch (NoSuchMethodException e) {
-                if (logger.isErrorEnabled()) {
-                    logger.error(e.getMessage() + "");
-                }
+                e.printStackTrace();
             }
         }
         return constructor;

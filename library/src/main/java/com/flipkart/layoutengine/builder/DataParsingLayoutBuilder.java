@@ -25,9 +25,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,7 +37,6 @@ import java.util.regex.Matcher;
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private Map<String, Formatter> formatter = new HashMap<>();
-    private Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
 
     protected DataParsingLayoutBuilder(Context context, @Nullable IdGenerator idGenerator) {
         super(context, idGenerator);
@@ -49,10 +45,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     @Override
     protected List<ProteusView> parseChildren(LayoutHandler handler, ParserContext context,
                                               ProteusView view, JsonObject parentLayout, int childIndex, Styles styles) {
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
-        }
         JsonElement childrenElement = parentLayout.get(ProteusConstants.CHILDREN);
 
         if (childrenElement != null &&
@@ -74,13 +66,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 } else {
                     length = Integer.parseInt(attributeValue);
                 }
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-                logger.error(TAG_ERROR + "#parseChildren() " + e.getMessage());
-                length = 0;
-            } catch (NumberFormatException e) {
-                logger.error(TAG_ERROR + "#parseChildren() " + childrenElement.getAsString() +
-                        " is not a number. layout: " +
-                        parentLayout.toString());
+            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException | NumberFormatException e) {
                 length = 0;
             }
 
@@ -182,9 +168,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             parserContext.getDataContext().getDataProvider(),
                             childIndex);
                 } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                    if (logger.isErrorEnabled()) {
-                        logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
-                    }
                     failed = true;
                     elementFromData = new JsonPrimitive(ProteusConstants.DATA_NULL);
                 }
@@ -217,9 +200,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                     parserContext.getDataContext().getDataProvider(),
                                     parserContext.getDataContext().getIndex()).getAsString());
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            if (logger.isErrorEnabled()) {
-                                logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
-                            }
                             finalValue = dataPath;
                             failed = true;
                         }
@@ -237,9 +217,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                     parserContext.getDataContext().getIndex()),
                                     formatterName);
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            if (logger.isErrorEnabled()) {
-                                logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
-                            }
                             formattedValue = dataPath;
                             failed = true;
                         }
@@ -263,10 +240,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         }
 
         if (setVisibility && dataProteusView.getView() != null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Find '" + element.toString() + "' for " + attributeName
-                        + " for view with " + Utils.getLayoutIdentifier(layout));
-            }
             if (failed) {
                 if (layout != null && !layout.isJsonNull()
                         && ProteusConstants.DATA_VISIBILITY
@@ -314,9 +287,6 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         }
 
         if (oldParserContext.getDataContext().getDataProvider() == null) {
-            if (logger.isErrorEnabled()) {
-                logger.error(TAG_ERROR + "#getNewParserContext() When scope is specified, data provider cannot be null");
-            }
             newParserContext.setDataContext(newDataContext);
             newParserContext.setHasDataContext(false);
             return newParserContext;

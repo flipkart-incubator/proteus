@@ -17,9 +17,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 
 /**
@@ -40,7 +37,6 @@ public class DataProteusView extends SimpleProteusView {
      */
     private ArrayList<Binding> bindings;
     private ParserContext parserContext;
-    private Logger logger = LoggerFactory.getLogger(DataProteusView.class);
 
     public DataProteusView(ProteusView proteusView) {
         super(proteusView.getView(), proteusView.getLayout(), proteusView.getIndex(),
@@ -54,6 +50,12 @@ public class DataProteusView extends SimpleProteusView {
             childLayout = dataProteusView.getChildLayout();
             onUpdateDataListeners = dataProteusView.getOnUpdateDataListeners();
         }
+    }
+
+    public static boolean shouldSetVisibility(String attribute, View view) {
+        return !Attributes.View.Visibility.getName().equals(attribute) &&
+                !Attributes.View.Invisibility.getName().equals(attribute) &&
+                view != null;
     }
 
     @Override
@@ -77,10 +79,6 @@ public class DataProteusView extends SimpleProteusView {
 
     @Override
     protected View updateDataImpl(JsonObject data) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("START: update data " + (data != null ? "(top-level)" : "")
-                    + "for view with " + Utils.getLayoutIdentifier(layout));
-        }
         this.isViewUpdating = true;
 
         data = onBeforeUpdateData(data);
@@ -115,12 +113,9 @@ public class DataProteusView extends SimpleProteusView {
         }
 
         this.isViewUpdating = false;
-        if (logger.isDebugEnabled()) {
-            logger.debug("END: update data " + (data != null ? "(top-level)" : "")
-                    + "for view with " + Utils.getLayoutIdentifier(layout));
-        }
 
         onUpdateDataComplete();
+
         return this.getView();
     }
 
@@ -163,10 +158,7 @@ public class DataProteusView extends SimpleProteusView {
         try {
             childrenDataArray = Utils.getElementFromData(dataPathForChildren,
                     parserContext.getDataContext().getDataProvider(), index).getAsJsonArray();
-        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("#updateChildrenFromData " + e.getMessage());
-            }
+        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException ignored) {
         }
 
         if (children.size() > childrenDataArray.size()) {
@@ -220,9 +212,6 @@ public class DataProteusView extends SimpleProteusView {
                     this.getView().setVisibility(View.VISIBLE);
                 }
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("#handleBinding() " + e.getMessage());
-                }
                 if (shouldSetVisibility(binding.getAttributeKey(), view)) {
                     getView().setVisibility(View.GONE);
                 }
@@ -249,12 +238,12 @@ public class DataProteusView extends SimpleProteusView {
         return bindings;
     }
 
-    public void setParserContext(ParserContext parserContext) {
-        this.parserContext = parserContext;
-    }
-
     public ParserContext getParserContext() {
         return parserContext;
+    }
+
+    public void setParserContext(ParserContext parserContext) {
+        this.parserContext = parserContext;
     }
 
     public JsonElement get(String dataPath, int childIndex) {
@@ -273,10 +262,7 @@ public class DataProteusView extends SimpleProteusView {
         try {
             parent = Utils.getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
                     parserContext.getDataContext().getDataProvider(), childIndex);
-        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("#set() " + e.getMessage());
-            }
+        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException ignored) {
         }
         if (parent == null || !parent.isJsonObject()) {
             return;
@@ -330,12 +316,12 @@ public class DataProteusView extends SimpleProteusView {
         this.dataPathForChildren = dataPathForChildren;
     }
 
-    public void setChildLayout(JsonObject childLayout) {
-        this.childLayout = childLayout;
-    }
-
     public JsonObject getChildLayout() {
         return childLayout;
+    }
+
+    public void setChildLayout(JsonObject childLayout) {
+        this.childLayout = childLayout;
     }
 
     @Override
@@ -368,11 +354,5 @@ public class DataProteusView extends SimpleProteusView {
         JsonObject onAfterDataContext(@Nullable JsonObject data);
 
         void onUpdateDataComplete();
-    }
-
-    public static boolean shouldSetVisibility(String attribute, View view) {
-        return !Attributes.View.Visibility.getName().equals(attribute) &&
-                !Attributes.View.Invisibility.getName().equals(attribute) &&
-                view != null;
     }
 }

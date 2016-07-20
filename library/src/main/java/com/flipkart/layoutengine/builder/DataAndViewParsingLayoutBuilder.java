@@ -14,9 +14,6 @@ import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * A layout builder which can parse @data and @view blocks before passing it on to
  * {@link SimpleLayoutBuilder}
@@ -24,7 +21,6 @@ import org.slf4j.LoggerFactory;
 public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
     private Provider viewProvider;
-    private Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
 
     protected DataAndViewParsingLayoutBuilder(Context context, JsonObject viewProvider, @Nullable IdGenerator idGenerator) {
         super(context, idGenerator);
@@ -39,8 +35,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
         if (viewProvider != null) {
             try {
                 viewElement = viewProvider.getObject(viewType, childIndex);
-            } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
-                logger.error("onUnknownViewEncountered " + e.getMessage());
+            } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException ignored) {
             }
         }
         if (viewElement != null) {

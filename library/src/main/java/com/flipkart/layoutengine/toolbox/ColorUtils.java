@@ -14,17 +14,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 public class ColorUtils {
-    private static HashMap<String, Integer> sAttributesMap = null;
     private static final String TAG = ColorUtils.class.getSimpleName();
-    private static Logger mLogger = LoggerFactory.getLogger(ColorUtils.class);
+    private static HashMap<String, Integer> sAttributesMap = null;
 
     /**
      * @param context                Application context used to access resources
@@ -38,10 +34,6 @@ public class ColorUtils {
             handleString(context, value.getAsString(), colorCallback, colorStateListCallback);
         } else if (value.isJsonObject()) {
             handleElement(context, value.getAsJsonObject(), colorCallback, colorStateListCallback);
-        } else {
-            if (mLogger.isErrorEnabled()) {
-                mLogger.error("Could not color for : " + value.toString());
-            }
         }
     }
 
@@ -66,9 +58,7 @@ public class ColorUtils {
                     colorCallback.onReceiveValue(color);
                 }
             } catch (Exception ex) {
-                if (mLogger.isErrorEnabled()) {
-                    mLogger.error("Could not load local resource " + attributeValue);
-                }
+                ex.printStackTrace();
             }
         }
     }
