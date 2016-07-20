@@ -127,13 +127,13 @@ public class SimpleProteusView implements ProteusView {
     }
 
     @Override
-    public Styles getStyles() {
-        return styles;
+    public void setStyles(Styles styles) {
+        this.styles = styles;
     }
 
     @Override
-    public void setStyles(Styles styles) {
-        this.styles = styles;
+    public Styles getStyles() {
+        return styles;
     }
 
     @Override

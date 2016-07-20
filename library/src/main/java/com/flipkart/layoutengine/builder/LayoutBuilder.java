@@ -5,6 +5,7 @@ import android.view.View;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.parser.LayoutHandler;
 import com.flipkart.layoutengine.toolbox.BitmapLoader;
+import com.flipkart.layoutengine.toolbox.IdGeneratorImpl;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
@@ -74,11 +75,6 @@ public interface LayoutBuilder {
     ProteusView build(View parent, JsonObject layout, JsonObject data, int childIndex, Styles styles);
 
     /**
-     * @return The callback object used by this {@link LayoutBuilder}
-     */
-    LayoutBuilderCallback getListener();
-
-    /**
      * Used to set a callback object to handle unknown view types and unknown attributes and other
      * exceptions. This callback is also used for requesting {@link android.support.v4.view.PagerAdapter}s
      * and {@link android.widget.Adapter}s
@@ -86,6 +82,11 @@ public interface LayoutBuilder {
      * @param listener The callback object.
      */
     void setListener(LayoutBuilderCallback listener);
+
+    /**
+     * @return The callback object used by this {@link LayoutBuilder}
+     */
+    LayoutBuilderCallback getListener();
 
     /**
      * @return The helper object that is being used to handle drawables that need to fetched from a
@@ -105,18 +106,18 @@ public interface LayoutBuilder {
     void setBitmapLoader(BitmapLoader bitmapLoader);
 
     /**
-     * @return true when rendering preview immediately by this {@link LayoutBuilder} synchronously
-     * otherwise false.
-     */
-    boolean isSynchronousRendering();
-
-    /**
      * Set this to true for rendering preview immediately. This is to be used to decide whether
      * remote resources like remote images are to be downloaded synchronously or not
      *
      * @return true if the all views should be rendered immediately.
      */
     void setSynchronousRendering(boolean isSynchronousRendering);
+
+    /**
+     * @return true when rendering preview immediately by this {@link LayoutBuilder} synchronously
+     * otherwise false.
+     */
+    boolean isSynchronousRendering();
 
     /**
      * Give the View ID for this string. This will generally be given by the instance of ID Generator

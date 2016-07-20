@@ -11,6 +11,11 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -19,6 +24,7 @@ import java.util.regex.Pattern;
  */
 public class DataContext {
 
+    private static Logger logger = LoggerFactory.getLogger(DataContext.class);
     private JsonProvider dataProvider;
     private JsonObject reverseScope;
     private JsonObject scope;
@@ -29,73 +35,16 @@ public class DataContext {
         this.reverseScope = new JsonObject();
     }
 
-    public static DataContext updateDataContext(DataContext dataContext, JsonProvider dataProvider,
-                                                JsonObject scope, int childIndex) {
-        JsonObject reverseScope = new JsonObject();
-        JsonObject newData = new JsonObject();
-        JsonObject data = dataProvider.getData().getAsJsonObject();
-
-        if (data == null) {
-            data = new JsonObject();
-        }
-
-        for (Map.Entry<String, JsonElement> entry : scope.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue().getAsString();
-            JsonElement element;
-            try {
-                element = Utils.getElementFromData(value, dataProvider, childIndex);
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                element = new JsonObject();
-            }
-
-            newData.add(key, element);
-            String unAliasedValue = value.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
-            reverseScope.add(unAliasedValue, new JsonPrimitive(key));
-        }
-
-        Utils.addElements(newData, data, false);
-
-        if (dataContext.getDataProvider() == null) {
-            dataContext.setDataProvider(new JsonProvider(newData));
-        } else {
-            dataContext.getDataProvider().setData(newData);
-        }
-        dataContext.setScope(scope);
-        dataContext.setReverseScope(reverseScope);
-        dataContext.setIndex(childIndex);
-        return dataContext;
-    }
-
-    public static String getAliasedDataPath(String dataPath, JsonObject reverseScope, boolean isBindingPath) {
-        String[] segments;
-        if (isBindingPath) {
-            segments = dataPath.split(ProteusConstants.DATA_PATH_DELIMITER);
-        } else {
-            segments = dataPath.split(ProteusConstants.DATA_PATH_SIMPLE_DELIMITER);
-        }
-
-        if (reverseScope == null) {
-            return dataPath;
-        }
-        String alias = Utils.getPropertyAsString(reverseScope, segments[0]);
-        if (alias == null) {
-            return dataPath;
-        }
-
-        return dataPath.replaceFirst(Pattern.quote(segments[0]), alias);
-    }
-
     public JsonObject getScope() {
         return scope;
     }
 
-    public void setScope(JsonObject scope) {
-        this.scope = scope;
-    }
-
     public JsonObject getReverseScopeMap() {
         return reverseScope;
+    }
+
+    public void setScope(JsonObject scope) {
+        this.scope = scope;
     }
 
     public void setReverseScope(JsonObject reverseScope) {
@@ -136,5 +85,66 @@ public class DataContext {
     public void updateDataContext(JsonObject data) {
         JsonProvider dataProvider = new JsonProvider(data);
         updateDataContext(this, dataProvider, scope, index);
+    }
+
+    public static DataContext updateDataContext(DataContext dataContext, JsonProvider dataProvider,
+                                                JsonObject scope, int childIndex) {
+        JsonObject reverseScope = new JsonObject();
+        JsonObject newData = new JsonObject();
+        JsonObject data = dataProvider.getData().getAsJsonObject();
+
+        if (data == null) {
+            data = new JsonObject();
+        }
+
+        for (Map.Entry<String, JsonElement> entry : scope.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue().getAsString();
+            JsonElement element;
+            try {
+                element = Utils.getElementFromData(value, dataProvider, childIndex);
+            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("#getNewDataContext could not find: '" + value +
+                            "' for '" + key + "'. ERROR: " + e.getMessage());
+                }
+                element = new JsonObject();
+            }
+
+            newData.add(key, element);
+            String unAliasedValue = value.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
+            reverseScope.add(unAliasedValue, new JsonPrimitive(key));
+        }
+
+        Utils.addElements(newData, data, false);
+
+        if (dataContext.getDataProvider() == null) {
+            dataContext.setDataProvider(new JsonProvider(newData));
+        } else {
+            dataContext.getDataProvider().setData(newData);
+        }
+        dataContext.setScope(scope);
+        dataContext.setReverseScope(reverseScope);
+        dataContext.setIndex(childIndex);
+        return dataContext;
+    }
+
+    public static String getAliasedDataPath(String dataPath, JsonObject reverseScope, boolean isBindingPath) {
+        String[] segments;
+        if (isBindingPath) {
+            segments = dataPath.split(ProteusConstants.DATA_PATH_DELIMITER);
+        } else {
+            segments = dataPath.split(ProteusConstants.DATA_PATH_SIMPLE_DELIMITER);
+        }
+
+        if (reverseScope == null) {
+            return dataPath;
+        }
+        String alias = Utils.getPropertyAsString(reverseScope, segments[0]);
+        if (alias == null) {
+            return dataPath;
+        }
+
+        return dataPath.replaceFirst(Pattern.quote(segments[0]), alias);
     }
 }

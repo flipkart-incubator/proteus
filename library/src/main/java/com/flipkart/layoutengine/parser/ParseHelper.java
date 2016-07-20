@@ -22,6 +22,9 @@ import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,6 +96,10 @@ public class ParseHelper {
     private static final String ID_STR = "id";
 
     private static final Pattern sAttributePattern = Pattern.compile("(\\?)(\\S*)(:?)(attr\\/?)(\\S*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+
+    private static Map<String, Integer> styleMap = new HashMap<>();
+    private static Map<String, Integer> attributeMap = new HashMap<>();
+
     private static final Map<String, Class> sHashMap = new HashMap<>();
     private static final Map<String, Integer> sAttributeCache = new HashMap<>();
     private static final Map<String, Integer> sStateMap = new HashMap<>();
@@ -104,8 +111,8 @@ public class ParseHelper {
     private static final Map<String, Integer> sDimensionsMap = new HashMap<>();
     private static final Map<String, Integer> sDimensionsUnitsMap = new HashMap<>();
     private static final Map<String, ImageView.ScaleType> sImageScaleType = new HashMap<>();
-    private static Map<String, Integer> styleMap = new HashMap<>();
-    private static Map<String, Integer> attributeMap = new HashMap<>();
+
+    private static Logger logger = LoggerFactory.getLogger(ParseHelper.class);
 
     static {
         sStateMap.put("state_pressed", android.R.attr.state_pressed);
@@ -180,6 +187,9 @@ public class ParseHelper {
         try {
             number = Integer.parseInt(attributeValue);
         } catch (NumberFormatException e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(attributeValue + " is NAN. Error: " + e.getMessage());
+            }
             number = 0;
         }
         return number;
@@ -193,6 +203,9 @@ public class ParseHelper {
         try {
             number = Float.parseFloat(attributeValue);
         } catch (NumberFormatException e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(attributeValue + " is NAN. Error: " + e.getMessage());
+            }
             number = 0;
         }
         return number;
@@ -206,6 +219,9 @@ public class ParseHelper {
         try {
             number = Double.parseDouble(attributeValue);
         } catch (NumberFormatException e) {
+            if (logger.isErrorEnabled()) {
+                logger.error(attributeValue + " is NAN. Error: " + e.getMessage());
+            }
             number = 0;
         }
         return number;
@@ -294,6 +310,9 @@ public class ParseHelper {
                 int resourceId = context.getResources().getIdentifier(dimension, "dimen", context.getPackageName());
                 value = (int) context.getResources().getDimension(resourceId);
             } catch (Exception e) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                }
                 value = 0;
             }
             return value;
@@ -320,6 +339,9 @@ public class ParseHelper {
                 value = a.getDimensionPixelSize(0, 0);
                 a.recycle();
             } catch (Exception e) {
+                if (logger.isErrorEnabled()) {
+                    logger.error("could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                }
                 value = 0;
             }
             return value;
@@ -364,11 +386,17 @@ public class ParseHelper {
                 }
 
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage() + "");
+                }
             } catch (NoSuchFieldException e) {
-                e.printStackTrace();
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage() + "");
+                }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                if (logger.isErrorEnabled()) {
+                    logger.error(e.getMessage() + "");
+                }
             }
         }
         return result == null ? 0 : result;
@@ -382,6 +410,9 @@ public class ParseHelper {
         try {
             return Color.parseColor(color);
         } catch (IllegalArgumentException ex) {
+            if (logger.isErrorEnabled()) {
+                logger.error("Invalid color : " + color + ". Using #000000");
+            }
             return Color.BLACK;
         }
     }
@@ -393,7 +424,9 @@ public class ParseHelper {
         try {
             return Integer.valueOf(id);
         } catch (NumberFormatException ex) {
-            ex.printStackTrace();
+            if (logger.isErrorEnabled()) {
+                logger.error(id + " is not a valid resource ID.");
+            }
         }
         return null;
     }
@@ -412,6 +445,10 @@ public class ParseHelper {
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) layoutParams;
             params.addRule(verb, anchor);
             view.setLayoutParams(params);
+        } else {
+            if (logger.isErrorEnabled()) {
+                logger.error("cannot add relative layout rules when container is not relative");
+            }
         }
     }
 

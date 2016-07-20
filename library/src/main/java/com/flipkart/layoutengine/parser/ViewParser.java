@@ -28,6 +28,9 @@ import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +42,9 @@ public class ViewParser<V extends View> extends Parser<V> {
     private static final String ID_STRING_START_PATTERN = "@+id/";
     private static final String ID_STRING_START_PATTERN1 = "@id/";
     private static final String ID_STRING_NORMALIZED_PATTERN = ":id/";
+
+
+    private Logger logger = LoggerFactory.getLogger(ViewParser.class);
 
     public ViewParser(Class viewClass) {
         super(viewClass);
@@ -98,6 +104,10 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
                     layoutParams.weight = ParseHelper.parseFloat(attributeValue);
                     view.setLayoutParams(layoutParams);
+                } else {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(attributeKey + " is only supported for LinearLayouts");
+                    }
                 }
             }
         });
@@ -115,6 +125,10 @@ public class ViewParser<V extends View> extends Parser<V> {
                     FrameLayout.LayoutParams linearLayoutParams = (FrameLayout.LayoutParams) layoutParams;
                     linearLayoutParams.gravity = ParseHelper.parseGravity(attributeValue);
                     view.setLayoutParams(layoutParams);
+                } else {
+                    if (logger.isErrorEnabled()) {
+                        logger.error(attributeKey + " is only supported for LinearLayout and FrameLayout");
+                    }
                 }
             }
         });
@@ -156,6 +170,10 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
                     layoutParams.setMargins((int) dimension, (int) dimension, (int) dimension, (int) dimension);
                     view.setLayoutParams(layoutParams);
+                } else {
+                    if (logger.isErrorEnabled()) {
+                        logger.error("margins can only be applied to views with parent ViewGroup");
+                    }
                 }
             }
         });
@@ -167,6 +185,10 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
                     layoutParams.setMargins((int) dimension, layoutParams.topMargin, layoutParams.rightMargin, layoutParams.bottomMargin);
                     view.setLayoutParams(layoutParams);
+                } else {
+                    if (logger.isErrorEnabled()) {
+                        logger.error("margins can only be applied to views with parent ViewGroup");
+                    }
                 }
             }
         });
@@ -178,6 +200,10 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
                     layoutParams.setMargins(layoutParams.leftMargin, (int) dimension, layoutParams.rightMargin, layoutParams.bottomMargin);
                     view.setLayoutParams(layoutParams);
+                } else {
+                    if (logger.isErrorEnabled()) {
+                        logger.error("margins can only be applied to views with parent ViewGroup");
+                    }
                 }
             }
         });
@@ -189,6 +215,10 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
                     layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, (int) dimension, layoutParams.bottomMargin);
                     view.setLayoutParams(layoutParams);
+                } else {
+                    if (logger.isErrorEnabled()) {
+                        logger.error("margins can only be applied to views with parent ViewGroup");
+                    }
                 }
             }
         });
@@ -200,6 +230,10 @@ public class ViewParser<V extends View> extends Parser<V> {
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
                     layoutParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, layoutParams.rightMargin, (int) dimension);
                     view.setLayoutParams(layoutParams);
+                } else {
+                    if (logger.isErrorEnabled()) {
+                        logger.error("margins can only be applied to views with parent ViewGroup");
+                    }
                 }
             }
         });
@@ -260,17 +294,24 @@ public class ViewParser<V extends View> extends Parser<V> {
                             super.onInitializeAccessibilityNodeInfo(host, info);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                                 String normalizedResourceName;
-                                if (!TextUtils.isEmpty(resourceName)) {
+                                if(!TextUtils.isEmpty(resourceName))
+                                {
                                     String id;
-                                    if (resourceName.startsWith(ID_STRING_START_PATTERN)) {
+                                    if(resourceName.startsWith(ID_STRING_START_PATTERN))
+                                    {
                                         id = resourceName.substring(ID_STRING_START_PATTERN.length());
-                                    } else if (resourceName.startsWith(ID_STRING_START_PATTERN1)) {
+                                    }
+                                    else if(resourceName.startsWith(ID_STRING_START_PATTERN1))
+                                    {
                                         id = resourceName.substring(ID_STRING_START_PATTERN1.length());
-                                    } else {
+                                    }
+                                    else {
                                         id = resourceName;
                                     }
                                     normalizedResourceName = view.getContext().getPackageName() + ID_STRING_NORMALIZED_PATTERN + id;
-                                } else {
+                                }
+                                else
+                                {
                                     normalizedResourceName = "";
                                 }
                                 info.setViewIdResourceName(normalizedResourceName);
@@ -505,9 +546,11 @@ public class ViewParser<V extends View> extends Parser<V> {
 
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+                {
                     Integer textAlignment = ParseHelper.parseTextAlignment(attributeValue);
-                    if (null != textAlignment) {
+                    if(null != textAlignment)
+                    {
                         //noinspection ResourceType
                         view.setTextAlignment(textAlignment);
                     }
