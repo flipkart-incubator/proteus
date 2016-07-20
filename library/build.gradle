@@ -35,6 +35,10 @@ android {
         versionName "4.0.0"
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7

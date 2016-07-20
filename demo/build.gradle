@@ -35,6 +35,7 @@ android {
         versionCode 400000
         versionName "4.0.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
