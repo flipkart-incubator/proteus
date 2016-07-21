@@ -8,6 +8,7 @@ Proteus : Android Layout Engine  [![Build Status](https://travis-ci.org/flipkart
     <td style="border: 0px;">
       <ul class="task-list">
         <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#installation">Installation</a></li>
         <li><a href="#getting-started">Getting started</a></li>
         <li><a href="#contributing">Contributing</a></li>
         <li><a href="#license">License</a></li>
@@ -41,6 +42,27 @@ Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then
   ]
 }
 ```
+
+## Installation
+
+### gradle
+
+```javascript
+// Add it in your root build.gradle at the end of repositories:
+allprojects {
+	repositories {
+		...
+		maven { url "https://jitpack.io" }
+	}
+}
+
+// Add the dependency
+dependencies {
+        compile 'com.github.flipkart-incubator:proteus:4.0.0-RC1'
+}
+```
+
+check it out at [jitpack](https://jitpack.io/#flipkart-incubator/proteus/4.0.0-RC1)
 
 ## Getting started
 
