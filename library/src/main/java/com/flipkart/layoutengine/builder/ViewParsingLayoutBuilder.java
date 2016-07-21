@@ -20,8 +20,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
 
-    private Provider viewProvider;
     private static final Logger logger = LoggerFactory.getLogger(ViewParsingLayoutBuilder.class);
+    private Provider viewProvider;
 
     public ViewParsingLayoutBuilder(Activity activity, @Nullable IdGenerator idGenerator, Provider viewProvider) {
         super(activity, idGenerator);

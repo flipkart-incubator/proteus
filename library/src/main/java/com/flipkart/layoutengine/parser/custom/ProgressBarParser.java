@@ -1,6 +1,5 @@
 package com.flipkart.layoutengine.parser.custom;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -81,8 +80,7 @@ public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T>
 
             @Override
             public void setColor(T view, ColorStateList colors) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     view.setSecondaryProgressTintList(colors);
                 }
             }
@@ -96,8 +94,7 @@ public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T>
 
             @Override
             public void setColor(T view, ColorStateList colors) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     view.setIndeterminateTintList(colors);
                 }
             }

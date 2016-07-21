@@ -33,58 +33,6 @@ public class DataContext {
         this.reverseScope = new JsonObject();
     }
 
-    public JsonObject getScope() {
-        return scope;
-    }
-
-    public JsonObject getReverseScopeMap() {
-        return reverseScope;
-    }
-
-    public void setScope(JsonObject scope) {
-        this.scope = scope;
-    }
-
-    public void setReverseScope(JsonObject reverseScope) {
-        this.reverseScope = reverseScope;
-    }
-
-    public JsonProvider getDataProvider() {
-        return dataProvider;
-    }
-
-    public void setDataProvider(JsonProvider dataProvider) {
-        this.dataProvider = dataProvider;
-    }
-
-    public JsonElement get(String dataPath, int childIndex) {
-        String aliasedDataPath = getAliasedDataPath(dataPath, reverseScope, true);
-        try {
-            return Utils.getElementFromData(aliasedDataPath, dataProvider, childIndex);
-        } catch (JsonNullException e) {
-            return JsonNull.INSTANCE;
-        } catch (NoSuchDataPathException | InvalidDataPathException e) {
-            return null;
-        }
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public DataContext createChildDataContext(JsonObject scope, int childIndex) {
-        return updateDataContext(new DataContext(), dataProvider, scope, childIndex);
-    }
-
-    public void updateDataContext(JsonObject data) {
-        JsonProvider dataProvider = new JsonProvider(data);
-        updateDataContext(this, dataProvider, scope, index);
-    }
-
     public static DataContext updateDataContext(DataContext dataContext, JsonProvider dataProvider,
                                                 JsonObject scope, int childIndex) {
         JsonObject reverseScope = new JsonObject();
@@ -144,5 +92,57 @@ public class DataContext {
         }
 
         return dataPath.replaceFirst(Pattern.quote(segments[0]), alias);
+    }
+
+    public JsonObject getScope() {
+        return scope;
+    }
+
+    public void setScope(JsonObject scope) {
+        this.scope = scope;
+    }
+
+    public JsonObject getReverseScopeMap() {
+        return reverseScope;
+    }
+
+    public void setReverseScope(JsonObject reverseScope) {
+        this.reverseScope = reverseScope;
+    }
+
+    public JsonProvider getDataProvider() {
+        return dataProvider;
+    }
+
+    public void setDataProvider(JsonProvider dataProvider) {
+        this.dataProvider = dataProvider;
+    }
+
+    public JsonElement get(String dataPath, int childIndex) {
+        String aliasedDataPath = getAliasedDataPath(dataPath, reverseScope, true);
+        try {
+            return Utils.getElementFromData(aliasedDataPath, dataProvider, childIndex);
+        } catch (JsonNullException e) {
+            return JsonNull.INSTANCE;
+        } catch (NoSuchDataPathException | InvalidDataPathException e) {
+            return null;
+        }
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public DataContext createChildDataContext(JsonObject scope, int childIndex) {
+        return updateDataContext(new DataContext(), dataProvider, scope, childIndex);
+    }
+
+    public void updateDataContext(JsonObject data) {
+        JsonProvider dataProvider = new JsonProvider(data);
+        updateDataContext(this, dataProvider, scope, index);
     }
 }

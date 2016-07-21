@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class TweenAnimationResourceProcessor<V extends View> extends AttributeProcessor<V> {
     private static final String TAG = TweenAnimationResourceProcessor.class.getSimpleName();
-    private Context mContext;
     private static final Logger mLogger = LoggerFactory.getLogger(TweenAnimationResourceProcessor.class);
+    private Context mContext;
 
     public TweenAnimationResourceProcessor(Context context) {
         this.mContext = context;

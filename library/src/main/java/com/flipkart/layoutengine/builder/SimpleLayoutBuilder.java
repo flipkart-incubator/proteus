@@ -33,13 +33,12 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     public static final String TAG_DEBUG = Utils.TAG_DEBUG;
     public static final String TAG_ERROR = Utils.TAG_ERROR;
-
-    private HashMap<String, LayoutHandler> layoutHandlers = new HashMap<>();
+    private static Logger logger = LoggerFactory.getLogger(SimpleLayoutBuilder.class);
     protected LayoutBuilderCallback listener;
+    private HashMap<String, LayoutHandler> layoutHandlers = new HashMap<>();
     private BitmapLoader bitmapLoader;
     private boolean isSynchronousRendering = false;
     private Context context;
-    private static Logger logger = LoggerFactory.getLogger(SimpleLayoutBuilder.class);
     private IdGenerator idGenerator;
 
     protected SimpleLayoutBuilder(Context context, @Nullable IdGenerator idGenerator) {
@@ -324,6 +323,11 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         return isSynchronousRendering;
     }
 
+    @Override
+    public void setSynchronousRendering(boolean isSynchronousRendering) {
+        this.isSynchronousRendering = isSynchronousRendering;
+    }
+
     /**
      * Give the View ID for this string. This will generally be given by the instance of ID Generator
      * which will be available with the Layout Builder.
@@ -345,10 +349,5 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     @Override
     public IdGenerator getIdGenerator() {
         return idGenerator;
-    }
-
-    @Override
-    public void setSynchronousRendering(boolean isSynchronousRendering) {
-        this.isSynchronousRendering = isSynchronousRendering;
     }
 }

@@ -23,8 +23,8 @@ import org.slf4j.LoggerFactory;
  */
 public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
-    private Provider viewProvider;
     private static final Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
+    private Provider viewProvider;
 
     protected DataAndViewParsingLayoutBuilder(Context context, JsonObject viewProvider, @Nullable IdGenerator idGenerator) {
         super(context, idGenerator);

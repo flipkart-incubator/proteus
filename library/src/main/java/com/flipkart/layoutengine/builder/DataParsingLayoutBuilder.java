@@ -39,8 +39,8 @@ import java.util.regex.Matcher;
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
-    private Map<String, Formatter> formatter = new HashMap<>();
     private static final Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
+    private Map<String, Formatter> formatter = new HashMap<>();
 
     protected DataParsingLayoutBuilder(Context context, @Nullable IdGenerator idGenerator) {
         super(context, idGenerator);

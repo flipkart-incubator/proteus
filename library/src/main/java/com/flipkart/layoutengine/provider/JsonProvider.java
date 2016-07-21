@@ -20,13 +20,13 @@ public class JsonProvider implements Provider {
     }
 
     @Override
-    public void setData(JsonElement rootElement) {
-        this.rootElement = rootElement;
+    public JsonElement getData() {
+        return this.rootElement;
     }
 
     @Override
-    public JsonElement getData() {
-        return this.rootElement;
+    public void setData(JsonElement rootElement) {
+        this.rootElement = rootElement;
     }
 
     @Override

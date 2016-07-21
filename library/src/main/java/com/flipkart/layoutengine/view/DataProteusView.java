@@ -30,17 +30,16 @@ import java.util.ArrayList;
  */
 public class DataProteusView extends SimpleProteusView {
 
+    private static final Logger logger = LoggerFactory.getLogger(DataProteusView.class);
     private boolean isViewUpdating = false;
     private String dataPathForChildren;
     private JsonObject childLayout;
     private OnUpdateDataListener onUpdateDataListeners;
-
     /**
      * This Array holds a to the {@link Binding}s of this {@link DataProteusView}.
      */
     private ArrayList<Binding> bindings;
     private ParserContext parserContext;
-    private static final Logger logger = LoggerFactory.getLogger(DataProteusView.class);
 
     public DataProteusView(ProteusView proteusView) {
         super(proteusView.getView(), proteusView.getLayout(), proteusView.getIndex(),
@@ -54,6 +53,12 @@ public class DataProteusView extends SimpleProteusView {
             childLayout = dataProteusView.getChildLayout();
             onUpdateDataListeners = dataProteusView.getOnUpdateDataListeners();
         }
+    }
+
+    public static boolean shouldSetVisibility(String attribute, View view) {
+        return !Attributes.View.Visibility.getName().equals(attribute) &&
+                !Attributes.View.Invisibility.getName().equals(attribute) &&
+                view != null;
     }
 
     @Override
@@ -249,12 +254,12 @@ public class DataProteusView extends SimpleProteusView {
         return bindings;
     }
 
-    public void setParserContext(ParserContext parserContext) {
-        this.parserContext = parserContext;
-    }
-
     public ParserContext getParserContext() {
         return parserContext;
+    }
+
+    public void setParserContext(ParserContext parserContext) {
+        this.parserContext = parserContext;
     }
 
     public JsonElement get(String dataPath, int childIndex) {
@@ -330,12 +335,12 @@ public class DataProteusView extends SimpleProteusView {
         this.dataPathForChildren = dataPathForChildren;
     }
 
-    public void setChildLayout(JsonObject childLayout) {
-        this.childLayout = childLayout;
-    }
-
     public JsonObject getChildLayout() {
         return childLayout;
+    }
+
+    public void setChildLayout(JsonObject childLayout) {
+        this.childLayout = childLayout;
     }
 
     @Override
@@ -368,11 +373,5 @@ public class DataProteusView extends SimpleProteusView {
         JsonObject onAfterDataContext(@Nullable JsonObject data);
 
         void onUpdateDataComplete();
-    }
-
-    public static boolean shouldSetVisibility(String attribute, View view) {
-        return !Attributes.View.Visibility.getName().equals(attribute) &&
-                !Attributes.View.Invisibility.getName().equals(attribute) &&
-                view != null;
     }
 }

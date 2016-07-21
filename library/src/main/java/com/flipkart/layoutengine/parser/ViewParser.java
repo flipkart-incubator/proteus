@@ -293,24 +293,17 @@ public class ViewParser<V extends View> extends Parser<V> {
                             super.onInitializeAccessibilityNodeInfo(host, info);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                                 String normalizedResourceName;
-                                if(!TextUtils.isEmpty(resourceName))
-                                {
+                                if (!TextUtils.isEmpty(resourceName)) {
                                     String id;
-                                    if(resourceName.startsWith(ID_STRING_START_PATTERN))
-                                    {
+                                    if (resourceName.startsWith(ID_STRING_START_PATTERN)) {
                                         id = resourceName.substring(ID_STRING_START_PATTERN.length());
-                                    }
-                                    else if(resourceName.startsWith(ID_STRING_START_PATTERN1))
-                                    {
+                                    } else if (resourceName.startsWith(ID_STRING_START_PATTERN1)) {
                                         id = resourceName.substring(ID_STRING_START_PATTERN1.length());
-                                    }
-                                    else {
+                                    } else {
                                         id = resourceName;
                                     }
                                     normalizedResourceName = view.getContext().getPackageName() + ID_STRING_NORMALIZED_PATTERN + id;
-                                }
-                                else
-                                {
+                                } else {
                                     normalizedResourceName = "";
                                 }
                                 info.setViewIdResourceName(normalizedResourceName);
@@ -545,11 +538,9 @@ public class ViewParser<V extends View> extends Parser<V> {
 
             @Override
             public void handle(ParserContext parserContext, String attributeKey, String attributeValue, V view, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
-                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
-                {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                     Integer textAlignment = ParseHelper.parseTextAlignment(attributeValue);
-                    if(null != textAlignment)
-                    {
+                    if (null != textAlignment) {
                         //noinspection ResourceType
                         view.setTextAlignment(textAlignment);
                     }

@@ -96,10 +96,6 @@ public class ParseHelper {
     private static final String ID_STR = "id";
 
     private static final Pattern sAttributePattern = Pattern.compile("(\\?)(\\S*)(:?)(attr\\/?)(\\S*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-
-    private static Map<String, Integer> styleMap = new HashMap<>();
-    private static Map<String, Integer> attributeMap = new HashMap<>();
-
     private static final Map<String, Class> sHashMap = new HashMap<>();
     private static final Map<String, Integer> sAttributeCache = new HashMap<>();
     private static final Map<String, Integer> sStateMap = new HashMap<>();
@@ -111,8 +107,9 @@ public class ParseHelper {
     private static final Map<String, Integer> sDimensionsMap = new HashMap<>();
     private static final Map<String, Integer> sDimensionsUnitsMap = new HashMap<>();
     private static final Map<String, ImageView.ScaleType> sImageScaleType = new HashMap<>();
-
     private static final Logger logger = LoggerFactory.getLogger(ParseHelper.class);
+    private static Map<String, Integer> styleMap = new HashMap<>();
+    private static Map<String, Integer> attributeMap = new HashMap<>();
 
     static {
         sStateMap.put("state_pressed", android.R.attr.state_pressed);

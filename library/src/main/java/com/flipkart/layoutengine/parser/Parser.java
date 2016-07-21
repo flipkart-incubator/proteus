@@ -32,10 +32,10 @@ import java.util.Map;
 public abstract class Parser<V extends View> implements LayoutHandler<V> {
 
     protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(Parser.class);
     private static XmlResourceParser sParser = null;
     protected final Class<V> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
-    private static final Logger logger = LoggerFactory.getLogger(Parser.class);
     private boolean prepared;
 
     public Parser(Class<V> viewClass) {
