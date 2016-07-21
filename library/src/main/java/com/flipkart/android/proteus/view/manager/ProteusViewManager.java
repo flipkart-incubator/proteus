@@ -25,6 +25,7 @@
 package com.flipkart.android.proteus.view.manager;
 
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.binding.Binding;
@@ -47,6 +48,12 @@ public interface ProteusViewManager {
      * @param data New data for the view
      */
     void update(@Nullable JsonObject data);
+
+    /**
+     * Set the {@link View} which will be managed.
+     * @param view The view to manage.
+     */
+    void setView(View view);
 
     LayoutBuilder getLayoutBuilder();
 

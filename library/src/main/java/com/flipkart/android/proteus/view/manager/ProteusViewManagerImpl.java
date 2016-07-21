@@ -110,7 +110,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                 for (int index = 0; index < childCount; index++) {
                     child = parent.getChildAt(index);
                     if (child instanceof ProteusView) {
-                        ((ProteusView) child).getViewManager().update(data);
+                        ((ProteusView) child).getViewManager().update(dataContext.getData());
                     }
                 }
             }
@@ -124,8 +124,15 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         onUpdateDataComplete(dataContext.getData());
     }
 
+    @Override
+    public void setView(View view) {
+        this.view = view;
+    }
+
     private void updateDataContext(JsonObject data) {
-        if (!dataContext.isClone()) {
+        if (dataContext.isClone()) {
+            dataContext.setData(data);
+        } else {
             dataContext.updateDataContext(data);
         }
     }

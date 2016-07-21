@@ -1,0 +1,18 @@
+{
+  "user": {
+    "name": "Jane Doe",
+    "level": 9,
+    "achievements": 63,
+    "experience": 98123,
+    "location": {
+      "country": "India",
+      "city": "New Delhi",
+      "pincode": "110064"
+    },
+    "credits": "112871"
+  },
+  "data": {
+    "totalAchievements": 114,
+    "tags": ["Alpha", "Bravo", "Charlie"]
+  }
+}

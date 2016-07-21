@@ -110,6 +110,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         onAfterCreateView(handler, view, layout, data, index, styles);
 
         ProteusViewManager viewManager = createViewManager(handler, parent, layout, data, index, styles);
+        viewManager.setView((View) view);
         view.setViewManager(viewManager);
 
         /**
