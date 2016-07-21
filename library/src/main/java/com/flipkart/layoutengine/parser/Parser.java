@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.processor.AttributeProcessor;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -70,7 +71,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                 v.setLayoutParams(layoutParams);
             }
         } catch (Exception e) {
-            if (logger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 logger.error("#createView()", e.getMessage() + "");
             }
         }
@@ -95,7 +96,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                     logger.debug("constructor for " + viewClass + " was created and put into cache");
                 }
             } catch (NoSuchMethodException e) {
-                if (logger.isErrorEnabled()) {
+                if (ProteusConstants.isLoggingEnabled()) {
                     logger.error(e.getMessage() + "");
                 }
             }

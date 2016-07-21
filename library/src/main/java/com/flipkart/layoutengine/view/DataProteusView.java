@@ -169,7 +169,7 @@ public class DataProteusView extends SimpleProteusView {
             childrenDataArray = Utils.getElementFromData(dataPathForChildren,
                     parserContext.getDataContext().getDataProvider(), index).getAsJsonArray();
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-            if (logger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 logger.error("#updateChildrenFromData " + e.getMessage());
             }
         }
@@ -225,7 +225,7 @@ public class DataProteusView extends SimpleProteusView {
                     this.getView().setVisibility(View.VISIBLE);
                 }
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                if (logger.isErrorEnabled()) {
+                if (ProteusConstants.isLoggingEnabled()) {
                     logger.error("#handleBinding() " + e.getMessage());
                 }
                 if (shouldSetVisibility(binding.getAttributeKey(), view)) {
@@ -279,7 +279,7 @@ public class DataProteusView extends SimpleProteusView {
             parent = Utils.getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
                     parserContext.getDataContext().getDataProvider(), childIndex);
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-            if (logger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 logger.error("#set() " + e.getMessage());
             }
         }

@@ -208,7 +208,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
                     length = Integer.parseInt(attributeValue);
                 }
             } catch (NumberFormatException e) {
-                if (logger.isErrorEnabled()) {
+                if (ProteusConstants.isLoggingEnabled()) {
                     logger.error(childrenElement.getAsString() +
                             " is not a number. layout: " + parentLayout.toString());
                 }

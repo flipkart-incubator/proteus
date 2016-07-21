@@ -182,7 +182,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                             parserContext.getDataContext().getDataProvider(),
                             childIndex);
                 } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                    if (logger.isErrorEnabled()) {
+                    if (ProteusConstants.isLoggingEnabled()) {
                         logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
                     }
                     failed = true;
@@ -217,7 +217,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                     parserContext.getDataContext().getDataProvider(),
                                     parserContext.getDataContext().getIndex()).getAsString());
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            if (logger.isErrorEnabled()) {
+                            if (ProteusConstants.isLoggingEnabled()) {
                                 logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
                             }
                             finalValue = dataPath;
@@ -237,7 +237,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                     parserContext.getDataContext().getIndex()),
                                     formatterName);
                         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            if (logger.isErrorEnabled()) {
+                            if (ProteusConstants.isLoggingEnabled()) {
                                 logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
                             }
                             formattedValue = dataPath;
@@ -314,7 +314,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         }
 
         if (oldParserContext.getDataContext().getDataProvider() == null) {
-            if (logger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 logger.error(TAG_ERROR + "#getNewParserContext() When scope is specified, data provider cannot be null");
             }
             newParserContext.setDataContext(newDataContext);

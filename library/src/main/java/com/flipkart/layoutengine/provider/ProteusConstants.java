@@ -33,4 +33,14 @@ public class ProteusConstants {
     public static final String CHILD_INDEX_REFERENCE = "$index";
     public static final String ARRAY_DATA_LENGTH_REFERENCE = "$length";
     public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
+
+    private static boolean isLoggingEnabled = false;
+
+    public static boolean isLoggingEnabled() {
+        return isLoggingEnabled;
+    }
+
+    public static void setLoggingEnabled(boolean loggingEnabled) {
+        isLoggingEnabled = loggingEnabled;
+    }
 }
