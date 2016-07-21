@@ -40,7 +40,7 @@ public class DataProteusView extends SimpleProteusView {
      */
     private ArrayList<Binding> bindings;
     private ParserContext parserContext;
-    private Logger logger = LoggerFactory.getLogger(DataProteusView.class);
+    private static final Logger logger = LoggerFactory.getLogger(DataProteusView.class);
 
     public DataProteusView(ProteusView proteusView) {
         super(proteusView.getView(), proteusView.getLayout(), proteusView.getIndex(),

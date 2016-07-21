@@ -43,8 +43,7 @@ public class ViewParser<V extends View> extends Parser<V> {
     private static final String ID_STRING_START_PATTERN1 = "@id/";
     private static final String ID_STRING_NORMALIZED_PATTERN = ":id/";
 
-
-    private Logger logger = LoggerFactory.getLogger(ViewParser.class);
+    private static final Logger logger = LoggerFactory.getLogger(ViewParser.class);
 
     public ViewParser(Class viewClass) {
         super(viewClass);

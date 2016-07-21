@@ -14,8 +14,6 @@ import com.google.gson.JsonPrimitive;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -24,7 +22,7 @@ import java.util.regex.Pattern;
  */
 public class DataContext {
 
-    private static Logger logger = LoggerFactory.getLogger(DataContext.class);
+    private static final Logger logger = LoggerFactory.getLogger(DataContext.class);
     private JsonProvider dataProvider;
     private JsonObject reverseScope;
     private JsonObject scope;

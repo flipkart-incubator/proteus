@@ -39,7 +39,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     private BitmapLoader bitmapLoader;
     private boolean isSynchronousRendering = false;
     private Context context;
-    private Logger logger = LoggerFactory.getLogger(SimpleLayoutBuilder.class);
+    private static Logger logger = LoggerFactory.getLogger(SimpleLayoutBuilder.class);
     private IdGenerator idGenerator;
 
     protected SimpleLayoutBuilder(Context context, @Nullable IdGenerator idGenerator) {

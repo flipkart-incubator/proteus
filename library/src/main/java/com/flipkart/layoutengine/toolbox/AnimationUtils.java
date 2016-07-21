@@ -61,7 +61,7 @@ public class AnimationUtils {
     private static final String PERCENT_RELATIVE_PARENT = "%p";
 
     private static final String TAG = AnimationUtils.class.getSimpleName();
-    private static Logger mLogger = LoggerFactory.getLogger(AnimationUtils.class);
+    private static final Logger mLogger = LoggerFactory.getLogger(AnimationUtils.class);
 
     /**
      * Utility class to parse a string description of a size.

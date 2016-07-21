@@ -112,7 +112,7 @@ public class ParseHelper {
     private static final Map<String, Integer> sDimensionsUnitsMap = new HashMap<>();
     private static final Map<String, ImageView.ScaleType> sImageScaleType = new HashMap<>();
 
-    private static Logger logger = LoggerFactory.getLogger(ParseHelper.class);
+    private static final Logger logger = LoggerFactory.getLogger(ParseHelper.class);
 
     static {
         sStateMap.put("state_pressed", android.R.attr.state_pressed);

@@ -8,7 +8,6 @@ import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.provider.Provider;
-import com.flipkart.layoutengine.toolbox.IdGeneratorImpl;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -22,7 +21,7 @@ import org.slf4j.LoggerFactory;
 public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private Provider viewProvider;
-    private Logger logger = LoggerFactory.getLogger(ViewParsingLayoutBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(ViewParsingLayoutBuilder.class);
 
     public ViewParsingLayoutBuilder(Activity activity, @Nullable IdGenerator idGenerator, Provider viewProvider) {
         super(activity, idGenerator);

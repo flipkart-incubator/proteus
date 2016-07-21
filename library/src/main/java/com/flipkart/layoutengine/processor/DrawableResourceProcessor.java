@@ -42,7 +42,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
     private static final String TAG = DrawableResourceProcessor.class.getSimpleName();
     private Context context;
-    private Logger logger = LoggerFactory.getLogger(DrawableResourceProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(DrawableResourceProcessor.class);
 
     private static Gson sGson = new Gson();
 
