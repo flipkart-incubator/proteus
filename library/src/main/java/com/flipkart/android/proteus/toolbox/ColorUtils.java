@@ -48,7 +48,7 @@ import java.util.Set;
 public class ColorUtils {
     private static final String TAG = ColorUtils.class.getSimpleName();
     private static HashMap<String, Integer> sAttributesMap = null;
-    private static Logger mLogger = LoggerFactory.getLogger(ColorUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(ColorUtils.class);
 
     /**
      * @param context                Application context used to access resources
@@ -63,8 +63,8 @@ public class ColorUtils {
         } else if (value.isJsonObject()) {
             handleElement(context, value.getAsJsonObject(), colorCallback, colorStateListCallback);
         } else {
-            if (mLogger.isErrorEnabled()) {
-                mLogger.error("Could not color for : " + value.toString());
+            if (ProteusConstants.isLoggingEnabled()) {
+                logger.error("Could not color for : " + value.toString());
             }
         }
     }
@@ -90,8 +90,8 @@ public class ColorUtils {
                     colorCallback.onReceiveValue(color);
                 }
             } catch (Exception ex) {
-                if (mLogger.isErrorEnabled()) {
-                    mLogger.error("Could not load local resource " + attributeValue);
+                if (ProteusConstants.isLoggingEnabled()) {
+                    logger.error("Could not load local resource " + attributeValue);
                 }
             }
         }

@@ -57,4 +57,14 @@ public class ProteusConstants {
     public static final String INDEX = "$index";
     public static final String ARRAY_DATA_LENGTH_REFERENCE = "$length";
     public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
+
+    private static boolean isLoggingEnabled = false;
+
+    public static void setIsLoggingEnabled(boolean isLoggingEnabled) {
+        ProteusConstants.isLoggingEnabled = isLoggingEnabled;
+    }
+
+    public static boolean isLoggingEnabled() {
+        return ProteusConstants.isLoggingEnabled;
+    }
 }

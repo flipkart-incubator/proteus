@@ -35,6 +35,7 @@ import com.flipkart.android.proteus.exceptions.InvalidDataPathException;
 import com.flipkart.android.proteus.exceptions.JsonNullException;
 import com.flipkart.android.proteus.exceptions.NoSuchDataPathException;
 import com.flipkart.android.proteus.parser.LayoutHandler;
+import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusView;
@@ -72,11 +73,11 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     private ArrayList<Binding> bindings;
 
-    private Logger logger = LoggerFactory.getLogger(ProteusViewManagerImpl.class);
+    private static Logger logger = LoggerFactory.getLogger(ProteusViewManagerImpl.class);
 
     @Override
     public void update(@Nullable JsonObject data) {
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
         }
         this.isViewUpdating = true;
@@ -116,7 +117,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         }
 
         this.isViewUpdating = false;
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
         }
 
@@ -135,7 +136,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         try {
             dataList = Utils.readJson(dataPathForChildren, dataContext.getData(), dataContext.getIndex()).getAsJsonArray();
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-            if (logger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 logger.error("#updateChildrenFromData " + e.getMessage());
             }
         }
@@ -208,7 +209,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                 dataValue = Utils.readJson(binding.getBindingName(), dataContext.getData(), dataContext.getIndex());
 
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                if (logger.isErrorEnabled()) {
+                if (ProteusConstants.isLoggingEnabled()) {
                     logger.error("#handleBinding() " + e.getMessage());
                 }
                 dataValue = JsonNull.INSTANCE;
@@ -278,7 +279,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         try {
             parent = Utils.readJson(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")), dataContext.getData(), dataContext.getIndex());
         } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-            if (logger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 logger.error("#set() " + e.getMessage());
             }
         }

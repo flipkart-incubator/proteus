@@ -62,7 +62,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     private Map<String, Formatter> formatter = new HashMap<>();
 
-    private Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
+    private static Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
 
     protected DataParsingLayoutBuilder(@NonNull IdGenerator idGenerator) {
         super(idGenerator);
@@ -74,7 +74,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         ProteusViewManager viewManager = view.getViewManager();
         JsonObject layout = viewManager.getLayout();
 
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("Parsing children for view with " + Utils.getLayoutIdentifier(layout));
         }
 
@@ -210,7 +210,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         ProteusViewManager viewManager = view.getViewManager();
         DataContext dataContext = viewManager.getDataContext();
 
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("Find '" + stringValue + "' for " + attribute + " for view with " + Utils.getLayoutIdentifier(viewManager.getLayout()));
         }
 
@@ -229,7 +229,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     try {
                         finalValue = finalValue.replace(matchedString, Utils.readJson(dataPath, dataContext.getData(), dataContext.getIndex()).getAsString());
                     } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                        if (logger.isErrorEnabled()) {
+                        if (ProteusConstants.isLoggingEnabled()) {
                             logger.error("#findAndReplaceValues() " + e.getMessage());
                         }
                         finalValue = dataPath;
@@ -245,7 +245,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                     try {
                         formattedValue = format(Utils.readJson(dataPath, dataContext.getData(), dataContext.getIndex()), formatterName);
                     } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                        if (logger.isErrorEnabled()) {
+                        if (ProteusConstants.isLoggingEnabled()) {
                             logger.error("#findAndReplaceValues() " + e.getMessage());
                         }
                         formattedValue = dataPath;
@@ -268,7 +268,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             try {
                 elementFromData = Utils.readJson(dataPath, dataContext.getData(), dataContext.getIndex());
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                if (logger.isErrorEnabled()) {
+                if (ProteusConstants.isLoggingEnabled()) {
                     logger.error("#findAndReplaceValues() " + e.getMessage());
                 }
                 elementFromData = JsonNull.INSTANCE;
@@ -340,7 +340,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
     @Nullable
     protected JsonObject onLayoutRequired(String type, ProteusView parent) {
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("Fetching child layout: " + type);
         }
         if (listener != null) {

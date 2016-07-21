@@ -21,7 +21,7 @@ Proteus : Android Layout Engine  [![Build Status](https://travis-ci.org/flipkart
 
 ## How it works
 
-Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON`, which can be used to inflate native and android UI at runtime. The `JSON` layouts can be hosted anywhere (on the deive, on servers, etc.).
+Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON`, which can be used to inflate native and android UI at runtime. The `JSON` layouts can be hosted anywhere (on the device, on servers, etc.).
 
 Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. **Proteus** has built-in [runtime data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings) and formatters. Use data bindings within the `JSON` layouts itseld. You can even plugin in your custom views and attributes.
 
@@ -45,6 +45,12 @@ Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then
 ## Getting started
 
 Head over to the [wiki](https://github.com/flipkart-incubator/proteus/wiki) for detailed documentation
+
+## Logging Support
+
+The library provides support to enable/disable logging anytime with a single line of code. By default, logging is **disabled** in the library. 
+
+To enable logging, call `ProteusConstants.setIsLoggingEnabled(true)`.
 
 ## Contributing
 

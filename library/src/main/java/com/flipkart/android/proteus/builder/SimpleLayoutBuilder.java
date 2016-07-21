@@ -61,7 +61,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     private boolean isSynchronousRendering = false;
 
-    private Logger logger = LoggerFactory.getLogger(SimpleLayoutBuilder.class);
+    private static Logger logger = LoggerFactory.getLogger(SimpleLayoutBuilder.class);
 
     private IdGenerator idGenerator;
 
@@ -159,7 +159,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     protected ProteusViewManager createViewManager(LayoutHandler handler, View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("ProteusView created with " + Utils.getLayoutIdentifier(layout));
         }
 
@@ -178,7 +178,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     protected void handleChildren(LayoutHandler handler, ProteusView view) {
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("Parsing children for view with " + Utils.getLayoutIdentifier(view.getViewManager().getLayout()));
         }
 
@@ -186,7 +186,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     public boolean handleAttribute(LayoutHandler handler, ProteusView view, String attribute, JsonElement value) {
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("Handle '" + attribute + "' : " + value.toString() + " for view with " + Utils.getLayoutIdentifier(view.getViewManager().getLayout()));
         }
         //noinspection unchecked
@@ -201,7 +201,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     @Nullable
     protected ProteusView onUnknownViewEncountered(String type, View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("No LayoutHandler for: " + type);
         }
         if (listener != null) {
