@@ -1,7 +1,7 @@
 Proteus : Android Layout Engine  [![Build Status](https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master)](https://travis-ci.org/flipkart-incubator/proteus)
 =====================
 
-**Proteus** is an android library for achieving complete control over the visual appearance and data bindings on views/widgets rendered. It's meant to be a drop in replacement for androids' `LayoutInflater`. **proteus** allows inflating layouts at runtime unlike the compiled XML layouts bundled in the APK.
+**Proteus** is an android library for achieving complete control over the visual appearance and data bindings on views/widgets rendered. It is meant to be a drop-in replacement for androids' `LayoutInflater`. **proteus** allows inflating layouts at runtime unlike the compiled XML layouts bundled in the APK.
 
 <table>
   <tr style="border: 0px;">
@@ -22,9 +22,9 @@ Proteus : Android Layout Engine  [![Build Status](https://travis-ci.org/flipkart
 
 ## How it works
 
-Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON`, which can be used to inflate native and android UI at runtime. The `JSON` layouts can be hosted anywhere (on the device, on servers, etc.).
+Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON`, which can be used to inflate native android UI at runtime. The `JSON` layouts can be hosted anywhere (on the device, on servers, etc.).
 
-Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. **Proteus** has built-in [runtime data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings) and formatters. Use data bindings within the `JSON` layouts itseld. You can even plugin in your custom views and attributes.
+Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. **Proteus** has built-in [runtime data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings) and formatters. Use data bindings within the `JSON` layouts itself. You can even plugin in your custom views and attributes.
 
 ```javascript
 {
