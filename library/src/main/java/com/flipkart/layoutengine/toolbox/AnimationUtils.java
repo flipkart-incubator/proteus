@@ -23,6 +23,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
 import com.flipkart.layoutengine.parser.ParseHelper;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -79,7 +80,7 @@ public class AnimationUtils {
         } else if (value.isJsonObject()) {
             anim = handleElement(context, value.getAsJsonObject());
         } else {
-            if (mLogger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 mLogger.error("Could not load animation for : " + value.toString());
             }
         }
@@ -140,7 +141,7 @@ public class AnimationUtils {
         } else if (value.isJsonObject()) {
             interpolator = handleElementInterpolator(context, value.getAsJsonObject());
         } else {
-            if (mLogger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 mLogger.error("Could not load interpolator for : " + value.toString());
             }
         }
@@ -188,7 +189,7 @@ public class AnimationUtils {
         } else if (PATH_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
             interpolatorProperties = sGson.fromJson(value, PathInterpolatorProperties.class);
         } else {
-            if (mLogger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 mLogger.error("Unknown interpolator name: " + interpolatorType);
             }
             throw new RuntimeException("Unknown interpolator name: " + interpolatorType);

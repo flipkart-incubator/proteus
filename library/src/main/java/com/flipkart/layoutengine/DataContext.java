@@ -51,8 +51,7 @@ public class DataContext {
                 element = Utils.getElementFromData(value, dataProvider, childIndex);
             } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error("#getNewDataContext could not find: '" + value +
-                            "' for '" + key + "'. ERROR: " + e.getMessage());
+                    logger.error("#getNewDataContext could not find: '" + value + "' for '" + key + "'. ERROR: " + e.getMessage());
                 }
                 element = new JsonObject();
             }

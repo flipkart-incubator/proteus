@@ -10,6 +10,7 @@ import android.util.StateSet;
 import android.webkit.ValueCallback;
 
 import com.flipkart.layoutengine.parser.ParseHelper;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -39,7 +40,7 @@ public class ColorUtils {
         } else if (value.isJsonObject()) {
             handleElement(context, value.getAsJsonObject(), colorCallback, colorStateListCallback);
         } else {
-            if (mLogger.isErrorEnabled()) {
+            if (ProteusConstants.isLoggingEnabled()) {
                 mLogger.error("Could not color for : " + value.toString());
             }
         }
@@ -66,7 +67,7 @@ public class ColorUtils {
                     colorCallback.onReceiveValue(color);
                 }
             } catch (Exception ex) {
-                if (mLogger.isErrorEnabled()) {
+                if (ProteusConstants.isLoggingEnabled()) {
                     mLogger.error("Could not load local resource " + attributeValue);
                 }
             }

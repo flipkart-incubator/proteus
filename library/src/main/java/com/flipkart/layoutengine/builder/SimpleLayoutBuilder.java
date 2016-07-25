@@ -161,7 +161,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     protected ProteusView createProteusView(View createdView, JsonObject layout, int index, ProteusView parent) {
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("ProteusView created with " + Utils.getLayoutIdentifier(layout));
         }
         return new SimpleProteusView(createdView, layout, index, parent);
@@ -173,7 +173,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected List<ProteusView> parseChildren(LayoutHandler handler, ParserContext context, ProteusView view,
                                               JsonObject parentLayout, int childIndex, Styles styles) {
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
         }
         JsonElement childrenElement = parentLayout.get(ProteusConstants.CHILDREN);
@@ -209,8 +209,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
                 }
             } catch (NumberFormatException e) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error(childrenElement.getAsString() +
-                            " is not a number. layout: " + parentLayout.toString());
+                    logger.error(childrenElement.getAsString() + " is not a number. layout: " + parentLayout.toString());
                 }
                 return null;
             }
@@ -260,7 +259,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     public boolean handleAttribute(LayoutHandler handler, ParserContext context,
                                    String attribute, JsonElement element, JsonObject layout,
                                    ProteusView view, ProteusView parent, int index) {
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("Handle '" + attribute + "' : " + element.toString() + " for view with " + Utils.getLayoutIdentifier(layout));
         }
         //noinspection unchecked
@@ -278,7 +277,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     protected ProteusView onUnknownViewEncountered(ParserContext context, String viewType,
                                                    ProteusView parent, JsonObject layout,
                                                    int childIndex) {
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("No LayoutHandler for: " + viewType);
         }
         if (listener != null) {
@@ -289,7 +288,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected JsonObject onChildTypeLayoutRequired(ParserContext context, String viewType,
                                                    JsonObject parentLayout, ProteusView parent) {
-        if (logger.isDebugEnabled()) {
+        if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("Fetching child layout: " + viewType);
         }
         if (listener != null) {

@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.animation.Animation;
 
 import com.flipkart.layoutengine.ParserContext;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.AnimationUtils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
@@ -32,9 +33,8 @@ public abstract class TweenAnimationResourceProcessor<V extends View> extends At
         if (null != animation) {
             setAnimation(view, animation);
         } else {
-            if (mLogger.isErrorEnabled()) {
-                mLogger.error("Resource for key: " + attributeKey
-                        + " must be a primitive or an object. value -> " + attributeValue.toString());
+            if (ProteusConstants.isLoggingEnabled()) {
+                mLogger.error("Resource for key: " + attributeKey + " must be a primitive or an object. value -> " + attributeValue.toString());
             }
         }
     }

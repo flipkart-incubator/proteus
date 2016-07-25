@@ -82,9 +82,8 @@ public class DataProteusView extends SimpleProteusView {
 
     @Override
     protected View updateDataImpl(JsonObject data) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("START: update data " + (data != null ? "(top-level)" : "")
-                    + "for view with " + Utils.getLayoutIdentifier(layout));
+        if (ProteusConstants.isLoggingEnabled()) {
+            logger.debug("START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
         }
         this.isViewUpdating = true;
 
@@ -120,9 +119,8 @@ public class DataProteusView extends SimpleProteusView {
         }
 
         this.isViewUpdating = false;
-        if (logger.isDebugEnabled()) {
-            logger.debug("END: update data " + (data != null ? "(top-level)" : "")
-                    + "for view with " + Utils.getLayoutIdentifier(layout));
+        if (ProteusConstants.isLoggingEnabled()) {
+            logger.debug("END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
         }
 
         onUpdateDataComplete();

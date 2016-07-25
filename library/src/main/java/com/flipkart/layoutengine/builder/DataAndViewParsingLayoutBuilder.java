@@ -8,6 +8,7 @@ import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
 import com.flipkart.layoutengine.exceptions.JsonNullException;
 import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.provider.JsonProvider;
+import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.provider.Provider;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
@@ -40,7 +41,9 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
             try {
                 viewElement = viewProvider.getObject(viewType, childIndex);
             } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
-                logger.error("onUnknownViewEncountered " + e.getMessage());
+                if (ProteusConstants.isLoggingEnabled()) {
+                    logger.error("onUnknownViewEncountered " + e.getMessage());
+                }
             }
         }
         if (viewElement != null) {

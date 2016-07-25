@@ -92,7 +92,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
             try {
                 constructor = viewClass.getDeclaredConstructor(Context.class);
                 constructorCache.put(viewClass, constructor);
-                if (logger.isDebugEnabled()) {
+                if (ProteusConstants.isLoggingEnabled()) {
                     logger.debug("constructor for " + viewClass + " was created and put into cache");
                 }
             } catch (NoSuchMethodException e) {
