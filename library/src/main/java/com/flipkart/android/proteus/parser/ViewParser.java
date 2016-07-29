@@ -46,6 +46,7 @@ import com.flipkart.android.proteus.processor.TweenAnimationResourceProcessor;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
+import com.flipkart.android.proteus.view.ProteusAndroidView;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 import com.google.gson.JsonElement;
@@ -69,8 +70,9 @@ public class ViewParser<V extends View> extends Parser<V> {
 
     private static Logger logger = LoggerFactory.getLogger(ViewParser.class);
 
-    public ViewParser(Class viewClass) {
-        super(viewClass);
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusAndroidView(parent.getContext());
     }
 
     protected void prepareHandlers() {

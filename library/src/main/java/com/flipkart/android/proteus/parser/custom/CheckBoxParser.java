@@ -25,21 +25,31 @@
 package com.flipkart.android.proteus.parser.custom;
 
 import android.graphics.drawable.Drawable;
+import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusCheckBox;
+import com.flipkart.android.proteus.view.ProteusView;
+import com.google.gson.JsonObject;
 
 /**
  * Created by prateek.dixit on 1/8/15.
  */
-public class CheckBoxParser<T extends ProteusCheckBox> extends WrappableParser<T> {
+public class CheckBoxParser<T extends CheckBox> extends WrappableParser<T> {
 
     public CheckBoxParser(Parser<T> wrappedParser) {
-        super(ProteusCheckBox.class, wrappedParser);
+        super(wrappedParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusCheckBox(parent.getContext());
     }
 
     @Override

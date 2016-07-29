@@ -25,6 +25,7 @@
 package com.flipkart.android.proteus.parser.custom;
 
 import android.graphics.drawable.Drawable;
+import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -33,16 +34,25 @@ import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusFixedRatingBar;
+import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.view.custom.FixedRatingBar;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class RatingBarParser<T extends ProteusFixedRatingBar> extends WrappableParser<T> {
+public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T> {
 
     public RatingBarParser(Parser<T> wrappedParser) {
-        super(ProteusFixedRatingBar.class, wrappedParser);
+        super(wrappedParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusFixedRatingBar(parent.getContext());
     }
 
     @Override

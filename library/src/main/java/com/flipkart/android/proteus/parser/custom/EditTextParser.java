@@ -25,15 +25,27 @@
 package com.flipkart.android.proteus.parser.custom;
 
 
+import android.view.ViewGroup;
+import android.widget.EditText;
+
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
+import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusEditText;
+import com.flipkart.android.proteus.view.ProteusView;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kirankumar on 25/11/14.
  */
-public class EditTextParser<T extends ProteusEditText> extends WrappableParser<T> {
+public class EditTextParser<T extends EditText> extends WrappableParser<T> {
+
     public EditTextParser(Parser<T> wrappedParser) {
-        super(ProteusEditText.class, wrappedParser);
+        super(wrappedParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusEditText(parent.getContext());
     }
 }

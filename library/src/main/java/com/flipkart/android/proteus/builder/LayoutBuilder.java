@@ -25,6 +25,7 @@
 package com.flipkart.android.proteus.builder;
 
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.parser.LayoutHandler;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
@@ -83,7 +84,7 @@ public interface LayoutBuilder {
      * @param styles The styles to be applied to the view.
      * @return A {@link ProteusView} with the built view, an array of its children and optionally its bindings.
      */
-    ProteusView build(View parent, JsonObject layout, JsonObject data, int index, Styles styles);
+    ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data, int index, Styles styles);
 
     /**
      * Give the View ID for this string. This will generally be given by the instance of ID Generator

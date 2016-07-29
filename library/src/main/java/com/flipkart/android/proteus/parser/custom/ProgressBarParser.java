@@ -34,6 +34,8 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.os.Build;
 import android.view.Gravity;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -42,18 +44,25 @@ import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.JsonDataProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusProgressBar;
+import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
  * @author Aditya Sharat
  */
-public class ProgressBarParser<T extends ProteusProgressBar> extends WrappableParser<T> {
+public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T> {
 
     public ProgressBarParser(Parser<T> wrappedParser) {
-        super(ProteusProgressBar.class, wrappedParser);
+        super(wrappedParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusProgressBar(parent.getContext());
     }
 
     @Override

@@ -24,18 +24,29 @@
 
 package com.flipkart.android.proteus.parser.custom;
 
+import android.view.ViewGroup;
+import android.webkit.WebView;
+
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.ProteusWebView;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class WebViewParser<T extends ProteusWebView> extends WrappableParser<T> {
+public class WebViewParser<T extends WebView> extends WrappableParser<T> {
     public WebViewParser(Parser<T> wrappedParser) {
-        super(android.webkit.WebView.class, wrappedParser);
+        super(wrappedParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusWebView(parent.getContext());
     }
 
     @Override

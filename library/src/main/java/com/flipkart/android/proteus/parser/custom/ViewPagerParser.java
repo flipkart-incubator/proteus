@@ -25,16 +25,27 @@
 package com.flipkart.android.proteus.parser.custom;
 
 
+import android.support.v4.view.ViewPager;
+import android.view.ViewGroup;
+
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
+import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.ProteusViewPager;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 13/05/14.
  */
-public class ViewPagerParser<T extends ProteusViewPager> extends WrappableParser<T> {
+public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
 
     public ViewPagerParser(Parser<T> wrappedParser) {
-        super(ProteusViewPager.class, wrappedParser);
+        super(wrappedParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusViewPager(parent.getContext());
     }
 }

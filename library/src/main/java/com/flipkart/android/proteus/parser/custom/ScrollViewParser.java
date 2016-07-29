@@ -25,18 +25,30 @@
 package com.flipkart.android.proteus.parser.custom;
 
 
+import android.view.ViewGroup;
+import android.widget.ScrollView;
+
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusScrollView;
+import com.flipkart.android.proteus.view.ProteusView;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class ScrollViewParser<T extends ProteusScrollView> extends WrappableParser<T> {
+public class ScrollViewParser<T extends ScrollView> extends WrappableParser<T> {
+
     public ScrollViewParser(Parser<T> wrappedParser) {
-        super(ProteusScrollView.class, wrappedParser);
+        super( wrappedParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusScrollView(parent.getContext());
     }
 
     @Override

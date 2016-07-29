@@ -25,6 +25,8 @@
 package com.flipkart.android.proteus.parser.custom;
 
 import android.graphics.drawable.Drawable;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -32,16 +34,25 @@ import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.view.ProteusImageButton;
 import com.flipkart.android.proteus.view.ProteusImageView;
+import com.flipkart.android.proteus.view.ProteusView;
+import com.google.gson.JsonObject;
 
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class ImageViewParser<T extends ProteusImageView> extends WrappableParser<T> {
+public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
 
     public ImageViewParser(Parser<T> parentParser) {
-        super(ProteusImageView.class, parentParser);
+        super(parentParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusImageView(parent.getContext());
     }
 
     @Override

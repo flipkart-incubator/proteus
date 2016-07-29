@@ -25,6 +25,7 @@
 package com.flipkart.android.proteus.parser;
 
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -37,13 +38,13 @@ import com.google.gson.JsonObject;
  */
 public interface LayoutHandler<V extends View> {
 
+    void onBeforeCreateView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index);
+
+    ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index);
+
+    void onAfterCreateView(V view, ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index);
+
     void prepareAttributeHandlers();
-
-    void onBeforeCreateView(View parent, JsonObject layout, JsonObject data, int index, Styles styles);
-
-    V createView(View parent, JsonObject layout, JsonObject data, int index, Styles styles);
-
-    void onAfterCreateView(V view, JsonObject layout, JsonObject data, int index, Styles styles);
 
     void addHandler(Attributes.Attribute key, AttributeProcessor<V> handler);
 
