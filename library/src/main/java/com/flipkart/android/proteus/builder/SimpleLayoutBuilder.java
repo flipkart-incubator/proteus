@@ -27,6 +27,7 @@ package com.flipkart.android.proteus.builder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.parser.LayoutHandler;
@@ -88,7 +89,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     @Override
     @Nullable
-    public ProteusView build(View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
+    public ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data, int index, Styles styles) {
         String type = Utils.getPropertyAsString(layout, ProteusConstants.TYPE);
 
         if (type == null) {
@@ -107,7 +108,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
         onBeforeCreateView(handler, parent, layout, data, index, styles);
         view = createView(handler, parent, layout, data, index, styles);
-        onAfterCreateView(handler, view, layout, data, index, styles);
+        onAfterCreateView(handler, view, parent, layout, data, index, styles);
 
         ProteusViewManager viewManager = createViewManager(handler, parent, layout, data, index, styles);
         viewManager.setView((View) view);
@@ -142,21 +143,17 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         return view;
     }
 
-    protected void onBeforeCreateView(LayoutHandler handler, View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
-        handler.onBeforeCreateView(parent, layout, data, index, styles);
+    protected void onBeforeCreateView(LayoutHandler handler, ViewGroup parent, JsonObject layout, JsonObject data, int index, Styles styles) {
+        handler.onBeforeCreateView(parent, layout, data, styles, index);
     }
 
-    protected ProteusView createView(LayoutHandler handler, View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
-        View view = handler.createView(parent, layout, data, index, styles);
-        if (!(view instanceof ProteusView)) {
-            throw new IllegalStateException(layout.get(ProteusConstants.TYPE).getAsString() + " is not a ProteusView.");
-        }
-        return (ProteusView) view;
+    protected ProteusView createView(LayoutHandler handler, ViewGroup parent, JsonObject layout, JsonObject data, int index, Styles styles) {
+        return handler.createView(parent, layout, data, styles, index);
     }
 
-    protected void onAfterCreateView(LayoutHandler handler, ProteusView view, JsonObject layout, JsonObject data, int index, Styles styles) {
+    protected void onAfterCreateView(LayoutHandler handler, ProteusView view, ViewGroup parent, JsonObject layout, JsonObject data, int index, Styles styles) {
         //noinspection unchecked
-        handler.onAfterCreateView((View) view, layout, data, index, styles);
+        handler.onAfterCreateView((View) view, parent, layout, data, styles, index);
     }
 
     protected ProteusViewManager createViewManager(LayoutHandler handler, View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
@@ -201,7 +198,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     }
 
     @Nullable
-    protected ProteusView onUnknownViewEncountered(String type, View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
+    protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, JsonObject layout, JsonObject data, int index, Styles styles) {
         if (ProteusConstants.isLoggingEnabled()) {
             logger.debug("No LayoutHandler for: " + type);
         }

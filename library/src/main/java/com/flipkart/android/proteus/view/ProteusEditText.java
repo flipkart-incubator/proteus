@@ -32,28 +32,28 @@ import android.util.AttributeSet;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * Button
+ * EditText
  *
  * @author aditya.sharat
  */
-public class Button extends android.widget.Button implements ProteusView {
+public class ProteusEditText extends android.widget.EditText implements ProteusView {
 
-    ProteusViewManager viewManager;
+    private ProteusViewManager viewManager;
 
-    public Button(Context context) {
+    public ProteusEditText(Context context) {
         super(context);
     }
 
-    public Button(Context context, AttributeSet attrs) {
+    public ProteusEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public Button(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProteusEditText(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public Button(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProteusEditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

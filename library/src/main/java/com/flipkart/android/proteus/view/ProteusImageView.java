@@ -24,30 +24,37 @@
 
 package com.flipkart.android.proteus.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * FixedRatingBar
+ * ImageView
  *
  * @author aditya.sharat
  */
-public class FixedRatingBar extends com.flipkart.android.proteus.view.custom.FixedRatingBar implements ProteusView {
+public class ProteusImageView extends android.widget.ImageView implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public FixedRatingBar(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    public ProteusImageView(Context context) {
+        super(context);
     }
 
-    public FixedRatingBar(Context context, AttributeSet attrs) {
+    public ProteusImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public FixedRatingBar(Context context) {
-        super(context);
+    public ProteusImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public ProteusImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override

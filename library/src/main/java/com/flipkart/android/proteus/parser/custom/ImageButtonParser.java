@@ -24,15 +24,27 @@
 
 package com.flipkart.android.proteus.parser.custom;
 
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
-import com.flipkart.android.proteus.view.ImageButton;
+import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.view.ProteusImageButton;
+import com.flipkart.android.proteus.view.ProteusView;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kirankumar on 25/11/14.
  */
 public class ImageButtonParser<T extends ImageButton> extends WrappableParser<T> {
+
     public ImageButtonParser(Parser<T> parentParser) {
-        super(ImageButton.class, parentParser);
+        super( parentParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusImageButton(parent.getContext());
     }
 }

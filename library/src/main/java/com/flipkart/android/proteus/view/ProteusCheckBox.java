@@ -24,21 +24,37 @@
 
 package com.flipkart.android.proteus.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
+import android.util.AttributeSet;
 
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * HorizontalProgressBar
+ * CheckBox
  *
  * @author aditya.sharat
  */
-public class HorizontalProgressBar extends com.flipkart.android.proteus.view.custom.HorizontalProgressBar implements ProteusView {
+public class ProteusCheckBox extends android.widget.CheckBox implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public HorizontalProgressBar(Context context) {
+    public ProteusCheckBox(Context context) {
         super(context);
+    }
+
+    public ProteusCheckBox(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    public ProteusCheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public ProteusCheckBox(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override

@@ -25,12 +25,18 @@
 package com.flipkart.android.proteus.parser.custom;
 
 
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.RelativeLayout;
+import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.view.ProteusRelativeLayout;
+import com.flipkart.android.proteus.view.ProteusView;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kirankumar on 10/07/14.
@@ -38,7 +44,12 @@ import com.flipkart.android.proteus.view.RelativeLayout;
 public class RelativeLayoutParser<T extends RelativeLayout> extends WrappableParser<T> {
 
     public RelativeLayoutParser(Parser<T> parentParser) {
-        super(RelativeLayout.class, parentParser);
+        super(parentParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusRelativeLayout(parent.getContext());
     }
 
     @Override

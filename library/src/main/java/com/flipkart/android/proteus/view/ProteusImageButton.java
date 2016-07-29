@@ -32,28 +32,28 @@ import android.util.AttributeSet;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * WebView
+ * ImageButton
  *
  * @author aditya.sharat
  */
-public class WebView extends android.webkit.WebView implements ProteusView {
+public class ProteusImageButton extends android.widget.ImageButton implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public WebView(Context context) {
+    public ProteusImageButton(Context context) {
         super(context);
     }
 
-    public WebView(Context context, AttributeSet attrs) {
+    public ProteusImageButton(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public WebView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProteusImageButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public WebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProteusImageButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

@@ -26,6 +26,7 @@ package com.flipkart.android.proteus.builder;
 
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -50,7 +51,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
     }
 
     @Override
-    protected ProteusView onUnknownViewEncountered(String type, View parent, JsonObject source, JsonObject data, int index, Styles styles) {
+    protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, JsonObject source, JsonObject data, int index, Styles styles) {
         JsonElement element = null;
         if (layouts != null) {
             element = layouts.get(type);

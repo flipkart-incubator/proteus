@@ -36,6 +36,8 @@ import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
+import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 import com.google.gson.JsonArray;
@@ -48,7 +50,12 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
     private static final String LAYOUT_MODE_OPTICAL_BOUNDS = "opticalBounds";
 
     public ViewGroupParser(Parser<T> wrappedParser) {
-        super(ViewGroup.class, wrappedParser);
+        super(wrappedParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusAspectRatioFrameLayout(parent.getContext());
     }
 
     @Override
@@ -114,7 +121,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
 
         children = element.getAsJsonArray();
         for (int index = 0; index < children.size(); index++) {
-            child = layoutBuilder.build((View) view, children.get(index).getAsJsonObject(), data, viewManager.getDataContext().getIndex(), view.getViewManager().getStyles());
+            child = layoutBuilder.build((ViewGroup) view, children.get(index).getAsJsonObject(), data, viewManager.getDataContext().getIndex(), view.getViewManager().getStyles());
             addView(view, child);
         }
 

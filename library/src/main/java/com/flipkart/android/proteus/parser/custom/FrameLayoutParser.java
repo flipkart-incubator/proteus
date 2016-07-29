@@ -24,12 +24,18 @@
 
 package com.flipkart.android.proteus.parser.custom;
 
+import android.view.ViewGroup;
+
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.AspectRatioFrameLayout;
+import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
+import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.view.custom.AspectRatioFrameLayout;
+import com.google.gson.JsonObject;
 
 
 /**
@@ -38,7 +44,12 @@ import com.flipkart.android.proteus.view.AspectRatioFrameLayout;
 public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends WrappableParser<T> {
 
     public FrameLayoutParser(Parser<T> parentParser) {
-        super(AspectRatioFrameLayout.class, parentParser);
+        super(parentParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusAspectRatioFrameLayout(parent.getContext());
     }
 
     @Override

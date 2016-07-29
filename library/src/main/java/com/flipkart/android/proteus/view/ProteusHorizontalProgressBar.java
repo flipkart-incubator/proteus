@@ -24,37 +24,21 @@
 
 package com.flipkart.android.proteus.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
-import android.util.AttributeSet;
 
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * ImageButton
+ * HorizontalProgressBar
  *
  * @author aditya.sharat
  */
-public class ImageButton extends android.widget.ImageButton implements ProteusView {
+public class ProteusHorizontalProgressBar extends com.flipkart.android.proteus.view.custom.HorizontalProgressBar implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public ImageButton(Context context) {
+    public ProteusHorizontalProgressBar(Context context) {
         super(context);
-    }
-
-    public ImageButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public ImageButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ImageButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override

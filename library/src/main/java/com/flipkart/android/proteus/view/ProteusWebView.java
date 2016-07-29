@@ -32,28 +32,28 @@ import android.util.AttributeSet;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * RelativeLayout
+ * WebView
  *
  * @author aditya.sharat
  */
-public class RelativeLayout extends android.widget.RelativeLayout implements ProteusView {
+public class ProteusWebView extends android.webkit.WebView implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public RelativeLayout(Context context) {
+    public ProteusWebView(Context context) {
         super(context);
     }
 
-    public RelativeLayout(Context context, AttributeSet attrs) {
+    public ProteusWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public RelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProteusWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public RelativeLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProteusWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

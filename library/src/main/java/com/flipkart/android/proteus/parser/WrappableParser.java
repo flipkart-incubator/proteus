@@ -32,13 +32,11 @@ import com.google.gson.JsonElement;
 /**
  * @author kirankumar
  */
-public class WrappableParser<V extends View> extends Parser<V> {
+public abstract class WrappableParser<V extends View> extends Parser<V> {
 
     private final Parser<V> wrappedParser;
 
-    public WrappableParser(Class viewClass, Parser<V> wrappedParser) {
-        //noinspection unchecked
-        super(viewClass);
+    public WrappableParser(Parser<V> wrappedParser) {
         this.wrappedParser = wrappedParser;
     }
 

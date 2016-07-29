@@ -32,28 +32,28 @@ import android.util.AttributeSet;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * HorizontalScrollView
+ * ProgressBar
  *
  * @author aditya.sharat
  */
-public class HorizontalScrollView extends android.widget.HorizontalScrollView implements ProteusView {
+public class ProteusProgressBar extends android.widget.ProgressBar implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public HorizontalScrollView(Context context) {
+    public ProteusProgressBar(Context context) {
         super(context);
     }
 
-    public HorizontalScrollView(Context context, AttributeSet attrs) {
+    public ProteusProgressBar(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public HorizontalScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProteusProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public HorizontalScrollView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProteusProgressBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

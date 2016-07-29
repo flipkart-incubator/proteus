@@ -25,6 +25,8 @@
 package com.flipkart.android.proteus.parser.custom;
 
 import android.graphics.drawable.Drawable;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -32,7 +34,11 @@ import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.ImageView;
+import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.view.ProteusImageButton;
+import com.flipkart.android.proteus.view.ProteusImageView;
+import com.flipkart.android.proteus.view.ProteusView;
+import com.google.gson.JsonObject;
 
 
 /**
@@ -41,7 +47,12 @@ import com.flipkart.android.proteus.view.ImageView;
 public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
 
     public ImageViewParser(Parser<T> parentParser) {
-        super(ImageView.class, parentParser);
+        super(parentParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusImageView(parent.getContext());
     }
 
     @Override
@@ -58,7 +69,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
         addHandler(Attributes.ImageView.ScaleType, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
-                ImageView.ScaleType scaleType = null;
+                ProteusImageView.ScaleType scaleType = null;
                 scaleType = ParseHelper.parseScaleType(attributeValue);
                 if (scaleType != null)
                     view.setScaleType(scaleType);

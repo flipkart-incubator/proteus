@@ -32,28 +32,28 @@ import android.util.AttributeSet;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * LinearLayout
+ * RelativeLayout
  *
  * @author aditya.sharat
  */
-public class LinearLayout extends android.widget.LinearLayout implements ProteusView {
+public class ProteusRelativeLayout extends android.widget.RelativeLayout implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public LinearLayout(Context context) {
+    public ProteusRelativeLayout(Context context) {
         super(context);
     }
 
-    public LinearLayout(Context context, AttributeSet attrs) {
+    public ProteusRelativeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public LinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProteusRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public LinearLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProteusRelativeLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

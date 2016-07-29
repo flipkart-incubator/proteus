@@ -24,12 +24,18 @@
 
 package com.flipkart.android.proteus.parser.custom;
 
+import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
+
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.HorizontalScrollView;
+import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.view.ProteusHorizontalScrollView;
+import com.flipkart.android.proteus.view.ProteusView;
+import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 12/05/14.
@@ -37,7 +43,12 @@ import com.flipkart.android.proteus.view.HorizontalScrollView;
 public class HorizontalScrollViewParser<T extends HorizontalScrollView> extends WrappableParser<T> {
 
     public HorizontalScrollViewParser(Parser<T> parentParser) {
-        super(HorizontalScrollView.class, parentParser);
+        super(parentParser);
+    }
+
+    @Override
+    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+        return new ProteusHorizontalScrollView(parent.getContext());
     }
 
     @Override

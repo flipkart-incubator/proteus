@@ -147,7 +147,7 @@ public class LayoutBuilderFactory {
      */
     @SuppressWarnings("unchecked")
     protected void registerBuiltInHandlers(LayoutBuilder layoutBuilder) {
-        ViewParser viewParser = new ViewParser(View.class);
+        ViewParser viewParser = new ViewParser();
         ImageViewParser imageViewParser = new ImageViewParser(viewParser);
         ImageButtonParser imageButtonParser = new ImageButtonParser(imageViewParser);
         ViewGroupParser viewGroupParser = new ViewGroupParser(viewParser);

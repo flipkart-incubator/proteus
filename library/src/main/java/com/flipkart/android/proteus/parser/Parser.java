@@ -24,11 +24,9 @@
 
 package com.flipkart.android.proteus.parser;
 
-import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.view.View;
 import android.view.ViewGroup;
-
 
 import com.flipkart.android.proteus.R;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
@@ -44,7 +42,6 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,43 +55,25 @@ import java.util.Map;
  */
 public abstract class Parser<V extends View> implements LayoutHandler<V> {
 
-    protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<>();
     private static XmlResourceParser sParser = null;
-    protected final Class<V> viewClass;
-    private Map<String, AttributeProcessor> handlers = new HashMap<>();
     private static Logger logger = LoggerFactory.getLogger(Parser.class);
-
-    public Parser(Class<V> viewClass) {
-        this.viewClass = viewClass;
-    }
+    private Map<String, AttributeProcessor> handlers = new HashMap<>();
 
     @Override
-    public void onBeforeCreateView(View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
+    public void onBeforeCreateView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
         // nothing to do here
     }
 
     @Override
-    public V createView(View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
-        View v = null;
+    public void onAfterCreateView(V view, ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
         try {
-            Constructor<? extends View> constructor = getContextConstructor(viewClass);
-            if (constructor != null) {
-                v = constructor.newInstance(parent.getContext());
-                ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams((ViewGroup) parent, layout);
-                v.setLayoutParams(layoutParams);
-            }
+            ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent);
+            view.setLayoutParams(layoutParams);
         } catch (Exception e) {
             if (ProteusConstants.isLoggingEnabled()) {
                 logger.error("#createView()", e.getMessage() + "");
             }
         }
-        //noinspection unchecked
-        return (V) v;
-    }
-
-    @Override
-    public void onAfterCreateView(V view, JsonObject layout, JsonObject data, int index, Styles styles) {
-        // nothing to do here
     }
 
     protected abstract void prepareHandlers();
@@ -132,26 +111,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
         handlers.put(key.getName(), handler);
     }
 
-    protected Constructor<? extends V> getContextConstructor(Class<V> viewClass) {
-        //noinspection unchecked
-        Constructor<? extends V> constructor = (Constructor<? extends V>) constructorCache.get(viewClass);
-        if (constructor == null) {
-            try {
-                constructor = viewClass.getDeclaredConstructor(Context.class);
-                constructorCache.put(viewClass, constructor);
-                if (ProteusConstants.isLoggingEnabled()) {
-                    logger.debug("constructor for " + viewClass + " was created and put into cache");
-                }
-            } catch (NoSuchMethodException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error(e.getMessage() + "");
-                }
-            }
-        }
-        return constructor;
-    }
-
-    protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent, JsonObject layout) throws IOException, XmlPullParserException {
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent) throws IOException, XmlPullParserException {
 
         /**
          * This whole method is a hack! To generate layout params, since no other way exists.

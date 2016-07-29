@@ -32,28 +32,28 @@ import android.util.AttributeSet;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * ProgressBar
+ * LinearLayout
  *
  * @author aditya.sharat
  */
-public class ProgressBar extends android.widget.ProgressBar implements ProteusView {
+public class ProteusLinearLayout extends android.widget.LinearLayout implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public ProgressBar(Context context) {
+    public ProteusLinearLayout(Context context) {
         super(context);
     }
 
-    public ProgressBar(Context context, AttributeSet attrs) {
+    public ProteusLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProteusLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ProgressBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProteusLinearLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
