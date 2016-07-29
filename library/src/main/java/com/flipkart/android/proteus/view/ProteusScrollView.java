@@ -24,26 +24,37 @@
 
 package com.flipkart.android.proteus.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.util.AttributeSet;
 
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * ViewPager
+ * ScrollView
  *
  * @author aditya.sharat
  */
-public class ViewPager extends android.support.v4.view.ViewPager implements ProteusView {
+public class ProteusScrollView extends android.widget.ScrollView implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public ViewPager(Context context) {
+    public ProteusScrollView(Context context) {
         super(context);
     }
 
-    public ViewPager(Context context, AttributeSet attrs) {
+    public ProteusScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
+    }
+
+    public ProteusScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public ProteusScrollView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     @Override

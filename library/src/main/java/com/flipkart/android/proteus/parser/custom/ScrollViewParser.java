@@ -29,14 +29,14 @@ import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.ScrollView;
+import com.flipkart.android.proteus.view.ProteusScrollView;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class ScrollViewParser<T extends ScrollView> extends WrappableParser<T> {
+public class ScrollViewParser<T extends ProteusScrollView> extends WrappableParser<T> {
     public ScrollViewParser(Parser<T> wrappedParser) {
-        super(ScrollView.class, wrappedParser);
+        super(ProteusScrollView.class, wrappedParser);
     }
 
     @Override

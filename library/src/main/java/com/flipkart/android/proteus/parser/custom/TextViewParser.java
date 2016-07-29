@@ -40,16 +40,16 @@ import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.TextView;
+import com.flipkart.android.proteus.view.ProteusTextView;
 import com.google.gson.JsonElement;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class TextViewParser<T extends TextView> extends WrappableParser<T> {
+public class TextViewParser<T extends ProteusTextView> extends WrappableParser<T> {
 
     public TextViewParser(Parser<T> wrappedParser) {
-        super(TextView.class, wrappedParser);
+        super(ProteusTextView.class, wrappedParser);
     }
 
     @Override

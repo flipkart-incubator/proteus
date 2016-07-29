@@ -32,28 +32,28 @@ import android.util.AttributeSet;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * ScrollView
+ * Button
  *
  * @author aditya.sharat
  */
-public class ScrollView extends android.widget.ScrollView implements ProteusView {
+public class ProteusButton extends android.widget.Button implements ProteusView {
 
-    private ProteusViewManager viewManager;
+    ProteusViewManager viewManager;
 
-    public ScrollView(Context context) {
+    public ProteusButton(Context context) {
         super(context);
     }
 
-    public ScrollView(Context context, AttributeSet attrs) {
+    public ProteusButton(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProteusButton(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ScrollView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProteusButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

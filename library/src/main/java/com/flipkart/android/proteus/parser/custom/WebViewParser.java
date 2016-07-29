@@ -28,12 +28,12 @@ import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.WebView;
+import com.flipkart.android.proteus.view.ProteusWebView;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class WebViewParser<T extends WebView> extends WrappableParser<T> {
+public class WebViewParser<T extends ProteusWebView> extends WrappableParser<T> {
     public WebViewParser(Parser<T> wrappedParser) {
         super(android.webkit.WebView.class, wrappedParser);
     }

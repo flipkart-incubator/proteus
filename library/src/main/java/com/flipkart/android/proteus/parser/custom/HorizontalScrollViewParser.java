@@ -29,15 +29,15 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.HorizontalScrollView;
+import com.flipkart.android.proteus.view.ProteusHorizontalScrollView;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class HorizontalScrollViewParser<T extends HorizontalScrollView> extends WrappableParser<T> {
+public class HorizontalScrollViewParser<T extends ProteusHorizontalScrollView> extends WrappableParser<T> {
 
     public HorizontalScrollViewParser(Parser<T> parentParser) {
-        super(HorizontalScrollView.class, parentParser);
+        super(ProteusHorizontalScrollView.class, parentParser);
     }
 
     @Override

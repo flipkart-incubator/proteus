@@ -38,7 +38,7 @@ import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.JsonDataProcessor;
 import com.flipkart.android.proteus.toolbox.Utils;
-import com.flipkart.android.proteus.view.HorizontalProgressBar;
+import com.flipkart.android.proteus.view.ProteusHorizontalProgressBar;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -47,10 +47,10 @@ import com.google.gson.JsonObject;
  *
  * @author Aditya Sharat
  */
-public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extends WrappableParser<T> {
+public class HorizontalProgressBarParser<T extends ProteusHorizontalProgressBar> extends WrappableParser<T> {
 
     public HorizontalProgressBarParser(Parser<T> wrappedParser) {
-        super(HorizontalProgressBar.class, wrappedParser);
+        super(ProteusHorizontalProgressBar.class, wrappedParser);
     }
 
     @Override

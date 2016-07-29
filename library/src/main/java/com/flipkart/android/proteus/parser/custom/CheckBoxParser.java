@@ -31,15 +31,15 @@ import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.CheckBox;
+import com.flipkart.android.proteus.view.ProteusCheckBox;
 
 /**
  * Created by prateek.dixit on 1/8/15.
  */
-public class CheckBoxParser<T extends CheckBox> extends WrappableParser<T> {
+public class CheckBoxParser<T extends ProteusCheckBox> extends WrappableParser<T> {
 
     public CheckBoxParser(Parser<T> wrappedParser) {
-        super(CheckBox.class, wrappedParser);
+        super(ProteusCheckBox.class, wrappedParser);
     }
 
     @Override

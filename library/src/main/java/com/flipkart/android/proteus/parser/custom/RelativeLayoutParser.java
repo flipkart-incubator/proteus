@@ -30,15 +30,15 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.RelativeLayout;
+import com.flipkart.android.proteus.view.ProteusRelativeLayout;
 
 /**
  * Created by kirankumar on 10/07/14.
  */
-public class RelativeLayoutParser<T extends RelativeLayout> extends WrappableParser<T> {
+public class RelativeLayoutParser<T extends ProteusRelativeLayout> extends WrappableParser<T> {
 
     public RelativeLayoutParser(Parser<T> parentParser) {
-        super(RelativeLayout.class, parentParser);
+        super(ProteusRelativeLayout.class, parentParser);
     }
 
     @Override

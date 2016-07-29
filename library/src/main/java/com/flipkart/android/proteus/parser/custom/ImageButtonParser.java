@@ -26,13 +26,13 @@ package com.flipkart.android.proteus.parser.custom;
 
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
-import com.flipkart.android.proteus.view.ImageButton;
+import com.flipkart.android.proteus.view.ProteusImageButton;
 
 /**
  * Created by kirankumar on 25/11/14.
  */
-public class ImageButtonParser<T extends ImageButton> extends WrappableParser<T> {
+public class ImageButtonParser<T extends ProteusImageButton> extends WrappableParser<T> {
     public ImageButtonParser(Parser<T> parentParser) {
-        super(ImageButton.class, parentParser);
+        super(ProteusImageButton.class, parentParser);
     }
 }

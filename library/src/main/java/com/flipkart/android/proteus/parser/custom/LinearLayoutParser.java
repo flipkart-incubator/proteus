@@ -35,15 +35,15 @@ import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.LinearLayout;
+import com.flipkart.android.proteus.view.ProteusLinearLayout;
 import com.google.gson.JsonElement;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<T> {
+public class LinearLayoutParser<T extends ProteusLinearLayout> extends WrappableParser<T> {
     public LinearLayoutParser(Parser<T> wrappedParser) {
-        super(LinearLayout.class, wrappedParser);
+        super(ProteusLinearLayout.class, wrappedParser);
     }
 
     @Override
@@ -53,9 +53,9 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 if ("horizontal".equals(attributeValue)) {
-                    view.setOrientation(LinearLayout.HORIZONTAL);
+                    view.setOrientation(ProteusLinearLayout.HORIZONTAL);
                 } else {
-                    view.setOrientation(LinearLayout.VERTICAL);
+                    view.setOrientation(ProteusLinearLayout.VERTICAL);
                 }
             }
         });

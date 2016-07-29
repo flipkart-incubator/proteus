@@ -36,24 +36,24 @@ import com.flipkart.android.proteus.view.manager.ProteusViewManager;
  *
  * @author aditya.sharat
  */
-public class TextView extends android.widget.TextView implements ProteusView {
+public class ProteusTextView extends android.widget.TextView implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public TextView(Context context) {
+    public ProteusTextView(Context context) {
         super(context);
     }
 
-    public TextView(Context context, AttributeSet attrs) {
+    public ProteusTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public TextView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProteusTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public TextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProteusTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

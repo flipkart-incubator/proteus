@@ -32,16 +32,16 @@ import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.ImageView;
+import com.flipkart.android.proteus.view.ProteusImageView;
 
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
+public class ImageViewParser<T extends ProteusImageView> extends WrappableParser<T> {
 
     public ImageViewParser(Parser<T> parentParser) {
-        super(ImageView.class, parentParser);
+        super(ProteusImageView.class, parentParser);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
         addHandler(Attributes.ImageView.ScaleType, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
-                ImageView.ScaleType scaleType = null;
+                ProteusImageView.ScaleType scaleType = null;
                 scaleType = ParseHelper.parseScaleType(attributeValue);
                 if (scaleType != null)
                     view.setScaleType(scaleType);

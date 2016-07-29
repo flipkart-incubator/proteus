@@ -29,16 +29,16 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.view.AspectRatioFrameLayout;
+import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
 
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends WrappableParser<T> {
+public class FrameLayoutParser<T extends ProteusAspectRatioFrameLayout> extends WrappableParser<T> {
 
     public FrameLayoutParser(Parser<T> parentParser) {
-        super(AspectRatioFrameLayout.class, parentParser);
+        super(ProteusAspectRatioFrameLayout.class, parentParser);
     }
 
     @Override

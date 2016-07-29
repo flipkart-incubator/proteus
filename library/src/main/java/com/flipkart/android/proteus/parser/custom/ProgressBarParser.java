@@ -43,17 +43,17 @@ import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.JsonDataProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Utils;
-import com.flipkart.android.proteus.view.ProgressBar;
+import com.flipkart.android.proteus.view.ProteusProgressBar;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
  * @author Aditya Sharat
  */
-public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T> {
+public class ProgressBarParser<T extends ProteusProgressBar> extends WrappableParser<T> {
 
     public ProgressBarParser(Parser<T> wrappedParser) {
-        super(ProgressBar.class, wrappedParser);
+        super(ProteusProgressBar.class, wrappedParser);
     }
 
     @Override

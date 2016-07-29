@@ -32,28 +32,28 @@ import android.util.AttributeSet;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * EditText
+ * HorizontalScrollView
  *
  * @author aditya.sharat
  */
-public class EditText extends android.widget.EditText implements ProteusView {
+public class ProteusHorizontalScrollView extends android.widget.HorizontalScrollView implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public EditText(Context context) {
+    public ProteusHorizontalScrollView(Context context) {
         super(context);
     }
 
-    public EditText(Context context, AttributeSet attrs) {
+    public ProteusHorizontalScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public EditText(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProteusHorizontalScrollView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public EditText(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProteusHorizontalScrollView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

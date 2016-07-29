@@ -32,28 +32,28 @@ import android.util.AttributeSet;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 
 /**
- * CheckBox
+ * View
  *
  * @author aditya.sharat
  */
-public class CheckBox extends android.widget.CheckBox implements ProteusView {
+public class ProteusAndroidView extends android.view.View implements ProteusView {
 
-    private ProteusViewManager viewManager;
+    ProteusViewManager viewManager;
 
-    public CheckBox(Context context) {
+    public ProteusAndroidView(Context context) {
         super(context);
     }
 
-    public CheckBox(Context context, AttributeSet attrs) {
+    public ProteusAndroidView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CheckBox(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ProteusAndroidView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public CheckBox(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProteusAndroidView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 

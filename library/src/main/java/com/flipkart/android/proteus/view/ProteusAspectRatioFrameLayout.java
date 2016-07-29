@@ -36,24 +36,24 @@ import com.flipkart.android.proteus.view.manager.ProteusViewManager;
  *
  * @author aditya.sharat
  */
-public class AspectRatioFrameLayout extends com.flipkart.android.proteus.view.custom.AspectRatioFrameLayout implements ProteusView {
+public class ProteusAspectRatioFrameLayout extends com.flipkart.android.proteus.view.custom.AspectRatioFrameLayout implements ProteusView {
 
     private ProteusViewManager viewManager;
 
-    public AspectRatioFrameLayout(Context context) {
+    public ProteusAspectRatioFrameLayout(Context context) {
         super(context);
     }
 
-    public AspectRatioFrameLayout(Context context, AttributeSet attrs) {
+    public ProteusAspectRatioFrameLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public AspectRatioFrameLayout(Context context, AttributeSet attrs, int defStyle) {
+    public ProteusAspectRatioFrameLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public AspectRatioFrameLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public ProteusAspectRatioFrameLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
