@@ -82,7 +82,7 @@ To enable logging, call `ProteusConstants.setIsLoggingEnabled(true)`.
 
 ## License
 
-[The MIT License (MIT)](https://github.com/flipkart-incubator/proteus/blob/master/LICENSE)
+[Apache v2.0](https://github.com/flipkart-incubator/proteus/blob/master/LICENSE)
 
 ## One click XML to JSON conversion plugin
 
