@@ -26,6 +26,8 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
 
 Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. **Proteus** has built-in [runtime data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings) and formatters. Use data bindings within the `JSON` layouts itself. You can even plugin in your custom views and attributes.
 
+#### layout
+
 ```javascript
 {
   "type": "LinearLayout",
@@ -41,6 +43,23 @@ Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then
     }
   ]
 }
+```
+
+#### data
+
+```javascript
+{
+  "user": {
+    "profile": {
+      "name": "John Doe",
+      "imageUrl": "https://example.com/image.jpg"
+    }
+  }
+}
+```
+
+```java
+ProteusView view = layoutbuilder.build(parent, layout, data, null, 0);
 ```
 
 ## Installation
