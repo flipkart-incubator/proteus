@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.flipkart.android.proteus.demo;
+package com.flipkart.android.proteus.demo.performance;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
+
+import com.flipkart.android.proteus.demo.LogbackConfigureHelper;
 
 /**
  * BaseActivity

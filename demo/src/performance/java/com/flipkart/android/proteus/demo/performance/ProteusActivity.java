@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.flipkart.android.proteus.demo;
+package com.flipkart.android.proteus.demo.performance;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,7 +22,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,7 @@ import com.flipkart.android.proteus.ImageLoaderCallback;
 import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutBuilder;
 import com.flipkart.android.proteus.builder.LayoutBuilderCallback;
 import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
+import com.flipkart.android.proteus.demo.R;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
@@ -53,9 +53,16 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 
-public class ProteusActivity extends AppCompatActivity {
+public class ProteusActivity extends BaseActivity {
 
+    private ProteusView proteusView;
     private Gson gson;
+    private DataAndViewParsingLayoutBuilder builder;
+    private FrameLayout container;
+    private JsonObject pageLayout;
+    private JsonObject data;
+    private ViewGroup.LayoutParams layoutParams;
+    private Styles styles;
     private BitmapLoader bitmapLoader = new BitmapLoader() {
         @Override
         public Future<Bitmap> getBitmap(String imageUrl, View view) {
@@ -131,28 +138,40 @@ public class ProteusActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
         gson = new Gson();
-        Styles styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
+        styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
         Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
-        JsonObject pageLayout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
+        pageLayout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
 
-        JsonObject data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
+        data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
 
-        DataAndViewParsingLayoutBuilder builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(layoutProvider);
+        builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(layoutProvider);
         builder.setListener(callback);
         builder.setBitmapLoader(bitmapLoader);
 
-        FrameLayout container = new FrameLayout(ProteusActivity.this);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+        container = new FrameLayout(ProteusActivity.this);
+        layoutParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
+        super.onCreate(savedInstanceState);
+    }
 
-        ProteusView proteusView = builder.build(container, pageLayout, data, 0, styles);
+    @Override
+    View createAndBindView() {
+        proteusView = builder.build(container, pageLayout, data, 0, styles);
+        return (View) proteusView;
+    }
+
+    @Override
+    void attachView(View view) {
         container.addView((View) proteusView, layoutParams);
         setContentView(container);
+    }
+
+    @Override
+    void onBuildComplete(long time) {
+        com.flipkart.android.proteus.demo.performance.PerformanceTracker.instance(this).updateProteusRenderTime(time);
     }
 
     private JsonElement getJsonFromFile(int resId) {

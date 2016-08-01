@@ -26,24 +26,12 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
-        <activity
-            android:name="com.flipkart.android.proteus.demo.ProteusActivity"
-            android:label="@string/app_name">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            </intent-filter>
-            -->
-        </activity>
-        <activity android:name="com.flipkart.android.proteus.demo.MainActivity">
+        <activity android:name=".ProteusActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.flipkart.android.proteus.demo.NativeActivity"/>
     </application>
 
 </manifest>

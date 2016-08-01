@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.flipkart.android.proteus.demo;
+package com.flipkart.android.proteus.demo.performance;
 
 import android.content.Context;
 import android.content.SharedPreferences;

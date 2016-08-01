@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.flipkart.android.proteus.demo;
+package com.flipkart.android.proteus.demo.performance;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,6 +23,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Pair;
 import android.view.View;
 import android.widget.TextView;
+
+import com.flipkart.android.proteus.demo.R;
 
 public class MainActivity extends AppCompatActivity {
 

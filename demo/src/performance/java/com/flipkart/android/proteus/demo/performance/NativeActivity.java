@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.flipkart.android.proteus.demo;
+package com.flipkart.android.proteus.demo.performance;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.flipkart.android.proteus.demo.R;
 import com.flipkart.android.proteus.demo.models.Data;
 import com.google.gson.Gson;
 
@@ -109,7 +110,7 @@ public class NativeActivity extends BaseActivity {
 
     private String getJoinedString(List<String> tags) {
         StringBuilder builder = new StringBuilder();
-        for (String tag: tags) {
+        for (String tag : tags) {
             builder.append(tag).append(", ");
         }
         return builder.toString();
