@@ -1,7 +1,16 @@
-Proteus : Android Layout Engine  [![Build Status](https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master)](https://travis-ci.org/flipkart-incubator/proteus)
-=====================
+# Proteus : Android Layout Engine &nbsp; [![Build Status](https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master)](https://travis-ci.org/flipkart-incubator/proteus)
+===
 
-**Proteus** is an android library for achieving complete control over the visual appearance and data bindings on views/widgets rendered. It is meant to be a drop-in replacement for androids' `LayoutInflater`. **proteus** allows inflating layouts at runtime unlike the compiled XML layouts bundled in the APK.
+**Proteus** is meant to be a drop-in replacement for Android’s `LayoutInflater`; but unlike the compiled XML layouts bundled in the APK, Proteus inflates layouts at runtime.
+With Proteus, you can control your Apps layout from the backend (no WebViews). Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. Proteus has runtime data bindings and formatters. Plugin in your own custom views, attributes, and formatters.
+     
+<div style="text-align:center">
+  <img alt="proteus logo" title="Proteus"
+       src="https://github.com/flipkart-incubator/proteus/blob/master/assets/proteus-logo.png"/>
+</div>
+
+* ****
+* ***** ****
 
 <table>
   <tr style="border: 0px;">
@@ -15,7 +24,7 @@ Proteus : Android Layout Engine  [![Build Status](https://travis-ci.org/flipkart
       </ul>
     </td>
     <td style="width:60%; border: 0px; text-align:right;">
-      <img alt="proteus logo" src="https://github.com/flipkart-incubator/proteus/blob/master/assets/proteus-logo.png" width="250px"/>
+      
     </td>
   </tr>
 </table>
