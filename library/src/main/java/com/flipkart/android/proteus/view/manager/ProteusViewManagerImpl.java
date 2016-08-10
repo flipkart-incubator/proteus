@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
+import com.flipkart.android.proteus.providers.Layout;
 import com.flipkart.android.proteus.binding.Binding;
 import com.flipkart.android.proteus.builder.LayoutBuilder;
 import com.flipkart.android.proteus.exceptions.InvalidDataPathException;
@@ -49,28 +50,23 @@ import java.util.ArrayList;
  */
 public class ProteusViewManagerImpl implements ProteusViewManager {
 
+    private static Logger logger = LoggerFactory.getLogger(ProteusViewManagerImpl.class);
     private View view;
-
-    private JsonObject layout;
+    private Layout layout;
     private Styles styles;
     private DataContext dataContext;
-
     private LayoutBuilder layoutBuilder;
     private LayoutHandler layoutHandler;
     private OnUpdateDataListener onUpdateDataListener;
-
     private String dataPathForChildren;
-    private JsonObject childLayout;
+    private Layout childLayout;
     private boolean isViewUpdating;
-
     private ArrayList<Binding> bindings;
-
-    private static Logger logger = LoggerFactory.getLogger(ProteusViewManagerImpl.class);
 
     @Override
     public void update(@Nullable JsonObject data) {
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
+            logger.debug("START: update data " + (data != null ? "(top-level)" : "") + "for view with " + layout.getLayoutIdentifier());
         }
         this.isViewUpdating = true;
 
@@ -110,7 +106,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
         this.isViewUpdating = false;
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
+            logger.debug("END: update data " + (data != null ? "(top-level)" : "") + "for view with " + layout.getLayoutIdentifier());
         }
 
         onUpdateDataComplete(dataContext.getData());
@@ -238,12 +234,12 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     }
 
     @Override
-    public JsonObject getLayout() {
+    public Layout getLayout() {
         return layout;
     }
 
     @Override
-    public void setLayout(JsonObject layout) {
+    public void setLayout(Layout layout) {
         this.layout = layout;
     }
 
@@ -335,11 +331,11 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     @Nullable
     @Override
-    public JsonObject getChildLayout() {
+    public Layout getChildLayout() {
         return childLayout;
     }
 
-    public void setChildLayout(@Nullable JsonObject childLayout) {
+    public void setChildLayout(@Nullable Layout childLayout) {
         this.childLayout = childLayout;
     }
 

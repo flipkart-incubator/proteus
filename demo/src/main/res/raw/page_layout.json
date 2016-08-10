@@ -87,7 +87,7 @@
                       "layout_height": "32dp",
                       "layout_marginRight": "8dp",
                       "textSize": "12sp",
-                      "textColor": "#2cdb81",
+                      "textColor": "#ff0000",
                       "text": "3",
                       "layout_weight": "3",
                       "gravity": "center",

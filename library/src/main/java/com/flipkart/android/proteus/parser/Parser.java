@@ -20,6 +20,7 @@ import android.content.res.XmlResourceParser;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.providers.Layout;
 import com.flipkart.android.proteus.R;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -52,12 +53,12 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
 
     @Override
-    public void onBeforeCreateView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public void onBeforeCreateView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         // nothing to do here
     }
 
     @Override
-    public void onAfterCreateView(V view, ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public void onAfterCreateView(V view, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         try {
             ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent);
             view.setLayoutParams(layoutParams);

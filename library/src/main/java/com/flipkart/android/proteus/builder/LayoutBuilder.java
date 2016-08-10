@@ -19,6 +19,7 @@ package com.flipkart.android.proteus.builder;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.providers.Layout;
 import com.flipkart.android.proteus.parser.LayoutHandler;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
@@ -70,13 +71,13 @@ public interface LayoutBuilder {
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
      *
      * @param parent The intended parent view for the {@link View} that will be built.
-     * @param layout The {@link JsonObject} which defines the layout for the {@link View} to be built.
+     * @param layout The {@link Layout} which defines the layout for the {@link View} to be built.
      * @param data   The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
      * @param index  The index of this view in its parent. Pass 0 if it has no parent.
      * @param styles The styles to be applied to the view.
      * @return A {@link ProteusView} with the built view, an array of its children and optionally its bindings.
      */
-    ProteusView build(ViewGroup parent, JsonObject layout, JsonObject data, int index, Styles styles);
+    ProteusView build(ViewGroup parent, Layout layout, JsonObject data, int index, Styles styles);
 
     /**
      * Give the View ID for this string. This will generally be given by the instance of ID Generator

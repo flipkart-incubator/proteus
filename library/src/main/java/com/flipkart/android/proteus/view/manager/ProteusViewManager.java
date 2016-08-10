@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.DataContext;
+import com.flipkart.android.proteus.providers.Layout;
 import com.flipkart.android.proteus.binding.Binding;
 import com.flipkart.android.proteus.builder.LayoutBuilder;
 import com.flipkart.android.proteus.parser.LayoutHandler;
@@ -60,14 +61,14 @@ public interface ProteusViewManager {
      *
      * @return Returns the layout used to build this {@link android.view.View}
      */
-    JsonObject getLayout();
+    Layout getLayout();
 
     /**
      * Sets the layout used to build this {@link android.view.View}.
      *
      * @param layout The layout used to build this {@link android.view.View}
      */
-    void setLayout(JsonObject layout);
+    void setLayout(Layout layout);
 
     /**
      * Returns the current {@link Styles} set in this {@link android.view.View}.
@@ -95,9 +96,9 @@ public interface ProteusViewManager {
     void set(String dataPath, boolean newValue);
 
     @Nullable
-    JsonObject getChildLayout();
+    Layout getChildLayout();
 
-    void setChildLayout(@Nullable JsonObject childLayout);
+    void setChildLayout(@Nullable Layout childLayout);
 
     DataContext getDataContext();
 
