@@ -11,6 +11,7 @@ With Proteus, you can control your Apps layout from the backend (no WebViews). F
 
 * **[Getting started](#getting-started)**
 * **[How it Works](#how-it-works)**
+* **[Resources](#resources)**
 * **[Contributing](#contributing)**
 * **[License](#license)**
 
@@ -53,8 +54,6 @@ dependencies {
 
 Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON`, which can be used to inflate native android UI at runtime. The `JSON` layouts can be hosted anywhere (on the device, on servers, etc.).
 
-Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. **Proteus** has built-in [runtime data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings) and formatters. Use data bindings within the `JSON` layouts itself. You can even plugin in your custom views and attributes.
-
 #### layout
 
 ```javascript
@@ -91,13 +90,10 @@ Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then
 ProteusView view = layoutbuilder.build(parent, layout, data, null, 0);
 ```
 
-Head over to the [wiki](https://github.com/flipkart-incubator/proteus/wiki) for detailed documentation
+## Resources
 
-## Logging Support
-
-The library provides support to enable/disable logging anytime with a single line of code. By default, logging is **disabled** in the library.
-
-To enable logging, call `ProteusConstants.setIsLoggingEnabled(true)`.
+* [Detailed Guide](https://github.com/flipkart-incubator/proteus/wiki)
+* [API References]()
 
 ## Contributing
 
