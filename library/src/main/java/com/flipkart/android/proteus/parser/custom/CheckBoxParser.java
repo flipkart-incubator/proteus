@@ -20,6 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 
+import com.flipkart.android.proteus.providers.Layout;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
@@ -40,7 +41,7 @@ public class CheckBoxParser<T extends CheckBox> extends WrappableParser<T> {
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusCheckBox(parent.getContext());
     }
 

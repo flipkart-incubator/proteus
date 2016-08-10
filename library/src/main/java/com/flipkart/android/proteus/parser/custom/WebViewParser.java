@@ -19,6 +19,7 @@ package com.flipkart.android.proteus.parser.custom;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
+import com.flipkart.android.proteus.providers.Layout;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
@@ -37,7 +38,7 @@ public class WebViewParser<T extends WebView> extends WrappableParser<T> {
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusWebView(parent.getContext());
     }
 

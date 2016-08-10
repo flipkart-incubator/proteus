@@ -21,11 +21,18 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
+import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.providers.AttributeValuePair;
+import com.flipkart.android.proteus.providers.LayoutImpl;
+import com.flipkart.android.proteus.builder.LayoutBuilder;
 import com.flipkart.android.proteus.exceptions.InvalidDataPathException;
 import com.flipkart.android.proteus.exceptions.JsonNullException;
 import com.flipkart.android.proteus.exceptions.NoSuchDataPathException;
+import com.flipkart.android.proteus.parser.LayoutHandler;
 import com.flipkart.android.proteus.parser.ParseHelper;
+import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -33,6 +40,8 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -257,6 +266,25 @@ public class Utils {
         return string;
     }
 
+    public static List<AttributeValuePair> getAttributeValuePairList(LayoutHandler handler, ProteusView view, JsonObject layout) {
+        List<AttributeValuePair> attributeValuePairs = new ArrayList<>();
+
+        JsonElement value;
+        String attribute;
+
+        for (Map.Entry<String, JsonElement> entry : layout.entrySet()) {
+            if (ProteusConstants.TYPE.equals(entry.getKey()) || ProteusConstants.CHILDREN.equals(entry.getKey()) || ProteusConstants.CHILD_TYPE.equals(entry.getKey())) {
+                continue;
+            }
+
+            value = entry.getValue();
+            attribute = entry.getKey();
+
+            attributeValuePairs.add(new AttributeValuePair(value, attribute));
+        }
+        return attributeValuePairs;
+    }
+
     @NonNull
     public static String getLayoutIdentifier(JsonObject layout) {
         String noLayoutId = "no ID or TAG.";
@@ -319,5 +347,23 @@ public class Utils {
 
     public static String getVersion() {
         return VERSION;
+    }
+
+    public static List<ProteusView> getChildrenProteusViews(JsonObject layout, LayoutBuilder layoutBuilder,
+                                                            ProteusView view, ProteusViewManager viewManager, JsonObject data) {
+        List<ProteusView> proteusViews = new ArrayList<>();
+        JsonElement element = layout.get(ProteusConstants.CHILDREN);
+        JsonArray children;
+        if (!(element instanceof JsonArray) || layoutBuilder == null) {
+            return null;
+        }
+
+        children = element.getAsJsonArray();
+        int size = children.size();
+        for (int index = 0; index < size; index++) {
+            proteusViews.add(layoutBuilder.build((ViewGroup) view, new LayoutImpl(children.get(index).getAsJsonObject()),
+                    data, viewManager.getDataContext().getIndex(), view.getViewManager().getStyles()));
+        }
+        return proteusViews;
     }
 }

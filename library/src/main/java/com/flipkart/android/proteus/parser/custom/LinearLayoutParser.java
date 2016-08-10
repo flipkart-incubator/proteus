@@ -22,6 +22,7 @@ import android.os.Build;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.flipkart.android.proteus.providers.Layout;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
@@ -45,7 +46,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusLinearLayout(parent.getContext());
     }
 

@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.Adapter;
 
 import com.flipkart.android.proteus.EventType;
+import com.flipkart.android.proteus.providers.Layout;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.JsonElement;
@@ -46,7 +47,7 @@ public interface LayoutBuilderCallback {
      * called when the builder encounters a view type which it cannot understand.
      */
     @Nullable
-    ProteusView onUnknownViewType(String type, View parent, JsonObject layout, JsonObject data, int index, Styles styles);
+    ProteusView onUnknownViewType(String type, View parent, Layout layout, JsonObject data, int index, Styles styles);
 
     JsonObject onLayoutRequired(String type, ProteusView parent);
 
