@@ -1,33 +1,56 @@
-# Proteus : Android Layout Engine &nbsp; [![Build Status](https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master)](https://travis-ci.org/flipkart-incubator/proteus)
-===
-
-**Proteus** is meant to be a drop-in replacement for Android’s `LayoutInflater`; but unlike the compiled XML layouts bundled in the APK, Proteus inflates layouts at runtime.
-With Proteus, you can control your Apps layout from the backend (no WebViews). Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. Proteus has runtime data bindings and formatters. Plugin in your own custom views, attributes, and formatters.
-     
-<div style="text-align:center">
-  <img alt="proteus logo" title="Proteus"
-       src="https://github.com/flipkart-incubator/proteus/blob/master/assets/proteus-logo.png"/>
+<div>
+ <img src="https://github.com/flipkart-incubator/proteus/blob/master/assets/proteus-logo.png"
+      style="diplay:inline-block;" width="250px"/>
+ <a href="https://travis-ci.org/flipkart-incubator/proteus">
+   <img src="https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master"
+        style="diplay:inline-block;" alt="Build Status"/>
+ </a>
 </div>
 
-* ****
-* ***** ****
+# Proteus : Android Layout Engine 
 
-<table>
-  <tr style="border: 0px;">
-    <td style="border: 0px;">
-      <ul class="task-list">
-        <li><a href="#how-it-works">How it works</a></li>
-        <li><a href="#installation">Installation</a></li>
-        <li><a href="#getting-started">Getting started</a></li>
-        <li><a href="#contributing">Contributing</a></li>
-        <li><a href="#license">License</a></li>
-      </ul>
-    </td>
-    <td style="width:60%; border: 0px; text-align:right;">
-      
-    </td>
-  </tr>
-</table>
+**Proteus** is meant to be a drop-in replacement for Android’s `LayoutInflater`; but unlike the compiled XML layouts bundled in the APK, Proteus inflates layouts at runtime.
+With Proteus, you can control your Apps layout from the backend (no WebViews). Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. Proteus has runtime data bindings and formatters. Plugin in your own custom views and attributes and formatters.
+
+* **[Getting started](#getting-started)**
+* **[How it Works](#how-it-works)**
+* **[Contributing](#contributing)**
+* **[License](#license)**
+
+## Getting Started
+
+#### gradle
+
+```javascript
+// Add it in your root build.gradle at the end of repositories:
+allprojects {
+	repositories {
+		...
+		maven { url "https://jitpack.io" }
+	}
+}
+
+// Add the dependency
+dependencies {
+        compile 'com.github.flipkart-incubator:proteus:4.0.0-RC2'
+}
+```
+
+#### Include as a module
+
+* Clone the **proteus** in the project folder
+
+```javascript
+git clone https://github.com/flipkart-incubator/proteus.git
+```
+
+* Include the a project in you apps `build.gradle` file
+
+```javascript
+dependencies {
+  compile project('proteus:library')
+}
+```
 
 ## How it works
 
@@ -71,34 +94,11 @@ Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then
 ProteusView view = layoutbuilder.build(parent, layout, data, null, 0);
 ```
 
-## Installation
-
-### gradle
-
-```javascript
-// Add it in your root build.gradle at the end of repositories:
-allprojects {
-	repositories {
-		...
-		maven { url "https://jitpack.io" }
-	}
-}
-
-// Add the dependency
-dependencies {
-        compile 'com.github.flipkart-incubator:proteus:4.0.0-RC2'
-}
-```
-
-check it out at [jitpack](https://jitpack.io/#flipkart-incubator/proteus/4.0.0-RC1)
-
-## Getting started
-
 Head over to the [wiki](https://github.com/flipkart-incubator/proteus/wiki) for detailed documentation
 
 ## Logging Support
 
-The library provides support to enable/disable logging anytime with a single line of code. By default, logging is **disabled** in the library. 
+The library provides support to enable/disable logging anytime with a single line of code. By default, logging is **disabled** in the library.
 
 To enable logging, call `ProteusConstants.setIsLoggingEnabled(true)`.
 
