@@ -56,8 +56,11 @@ import java.util.concurrent.Future;
 
 
 public class ProteusActivity extends AppCompatActivity {
-
     private Gson gson;
+
+    /**
+     * Simple implementation of BitmapLoader for loading images from url in background.
+     */
     private BitmapLoader bitmapLoader = new BitmapLoader() {
         @Override
         public Future<Bitmap> getBitmap(String imageUrl, View view) {
@@ -67,14 +70,15 @@ public class ProteusActivity extends AppCompatActivity {
         @Override
         public void getBitmap(String imageUrl, final ImageLoaderCallback callback, View view, Layout layout) {
             URL url;
+
             try {
                 url = new URL(imageUrl);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return;
             }
-            new AsyncTask<URL, Integer, Bitmap>() {
 
+            new AsyncTask<URL, Integer, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(URL... params) {
                     try {
@@ -91,8 +95,12 @@ public class ProteusActivity extends AppCompatActivity {
             }.execute(url);
         }
     };
-    private LayoutBuilderCallback callback = new LayoutBuilderCallback() {
 
+    /**
+     * Implementation of LayoutBuilderCallback. This is where we get callbacks from proteus regarding
+     * errors and events.
+     */
+    private LayoutBuilderCallback callback = new LayoutBuilderCallback() {
         @Override
         public void onUnknownAttribute(String attribute, JsonElement value, ProteusView view) {
             Log.i("unknown-attribute", attribute + " in " + view.getViewManager().getLayout().toString());
@@ -135,7 +143,11 @@ public class ProteusActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Init gson instance
         gson = new Gson();
+
+        // Deserialize json data to objects. We will need this data for inflating proteus view.
+        // This data should come from remote server if we wish to change layouts without app updates.
         Styles styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
         Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
 
@@ -143,18 +155,26 @@ public class ProteusActivity extends AppCompatActivity {
 
         JsonObject data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
 
+        // Init dataAndViewParsingLayoutBuilder and set layoutProvider, layoutBuilderCallback
+        // and bitmapLoader we initialised before.
         DataAndViewParsingLayoutBuilder builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(layoutProvider);
         builder.setListener(callback);
         builder.setBitmapLoader(bitmapLoader);
 
+        // Make a container layout with activity context and layoutParams for it.
         FrameLayout container = new FrameLayout(ProteusActivity.this);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
         );
 
+        // Get instance of proteusView from dataAndViewParsingLayoutBuilder
         ProteusView proteusView = builder.build(container, pageLayout, data, 0, styles);
+
+        // Add proteusView and layoutParams to container layout.
         container.addView((View) proteusView, layoutParams);
+
+        // Set container layout to activity content view.
         setContentView(container);
     }
 
