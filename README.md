@@ -1,5 +1,5 @@
 <h1>
-  <img src="https://github.com/flipkart-incubator/proteus/blob/master/assets/proteus-logo.png" width="150px">
+  <img src="/assets/proteus-logo.png" width="150px">
   : Android Layout Engine
   <a href="https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master">
     <img src="https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master" alt="Build Status">
@@ -60,16 +60,19 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
 {
   "type": "LinearLayout",
   "orientation": "vertical",
-  "children": [
-    {
-      "type": "TextView",
-      "text": "$user.profile.name"
-    },
-    {
-      "type": "ImageView",
-      "src": "$user.profile.imageUrl"
-    }
-  ]
+  "padding": "16dp",
+  "children": [{
+    "layout_width": "200dp",
+    "gravity": "center",
+    "type": "TextView",
+    "text": "~{{user.profile.name}} ({{user.profile.experience}}$(number))"
+  }, {
+    "type": "HorizontalProgressBar",
+    "layout_width": "200dp",
+    "layout_marginTop": "8dp",
+    "max": 6000,
+    "progress": "$user.profile.experience"
+  }]
 }
 ```
 
@@ -80,15 +83,19 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
   "user": {
     "profile": {
       "name": "John Doe",
-      "imageUrl": "https://example.com/image.jpg"
+      "experience": 4192
     }
   }
 }
 ```
 
-```java
-ProteusView view = layoutbuilder.build(parent, layout, data, null, 0);
-```
+#### Get this
+
+<img src="/assets/example-small.png" width="300px"/>
+
+#### Change the layout and data; and get his
+
+<img src="/assets/example-full.png" width="300px"/>
 
 ## Resources
 
@@ -103,8 +110,8 @@ ProteusView view = layoutbuilder.build(parent, layout, data, null, 0);
 
 ## License
 
-[Apache v2.0](https://github.com/flipkart-incubator/proteus/blob/master/LICENSE)
+[Apache v2.0](LICENSE)
 
-## One click XML to JSON conversion plugin
+### One click XML to JSON conversion plugin
 
 Download [this plugin](https://github.com/flipkart-incubator/android-studio-proteus-plugin/blob/master/Plugin/Plugin.jar) for android studio and enable it. Once enabled, you can select any android XML layout file and go to **Tools > Convert XML to JSON**
