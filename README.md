@@ -117,6 +117,7 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
 
 * [adityasharat](mailto:adityasharat@gmail.com)
 * [thekirankumar](mailto:kiran.kumar@flipkart.com)
+* [yasirmhd](mailto:mohammad.yasir@flipkart.com)
 
 ### One click XML to JSON conversion plugin
 
