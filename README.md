@@ -14,7 +14,7 @@ With Proteus, you can control your Apps layout from the backend (no WebViews). F
 * **[Resources](#resources)**
 * **[Contributing](#contributing)**
 * **[License](#license)**
-* * **[Contributors](#contributors)**
+* **[Contributors](#contributors)**
 
 ## Getting Started
 
@@ -115,8 +115,8 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
 
 ## Contributors
 
-* [adityasharat](adityasharat@gmail.com)
-* [thekirankumar](kiran.kumar@flipkart.com)
+* [adityasharat](mailto:adityasharat@gmail.com)
+* [thekirankumar](mailto:kiran.kumar@flipkart.com)
 
 ### One click XML to JSON conversion plugin
 
