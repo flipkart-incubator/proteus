@@ -29,6 +29,7 @@ import java.util.ArrayList;
 public class DataProteusView extends SimpleProteusView {
 
     private static final Logger logger = LoggerFactory.getLogger(DataProteusView.class);
+    private static final String DELIMITER = ".";
     private boolean isViewUpdating = false;
     private String dataPathForChildren;
     private JsonObject childLayout;
@@ -243,6 +244,7 @@ public class DataProteusView extends SimpleProteusView {
         this.parserContext = parserContext;
     }
 
+    @Nullable
     public JsonElement get(String dataPath, int childIndex) {
         return parserContext.getDataContext().get(dataPath, childIndex);
     }
@@ -254,13 +256,13 @@ public class DataProteusView extends SimpleProteusView {
 
         String aliasedDataPath = DataContext.getAliasedDataPath(dataPath, parserContext.getDataContext().getReverseScopeMap(), true);
 
-        Result result = Utils.getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")), parserContext.getDataContext().getDataProvider(), childIndex);
+        Result result = Utils.getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(DELIMITER)), parserContext.getDataContext().getDataProvider(), childIndex);
         JsonElement parent = result.element;
         if (parent == null || !parent.isJsonObject()) {
             return;
         }
 
-        String propertyName = aliasedDataPath.substring(aliasedDataPath.lastIndexOf(".") + 1, aliasedDataPath.length());
+        String propertyName = aliasedDataPath.substring(aliasedDataPath.lastIndexOf(DELIMITER) + 1, aliasedDataPath.length());
         parent.getAsJsonObject().add(propertyName, newValue);
 
         updateView(aliasedDataPath);

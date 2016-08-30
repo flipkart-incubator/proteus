@@ -1,10 +1,13 @@
 package com.flipkart.layoutengine;
 
+import android.support.annotation.Nullable;
+
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Result;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -106,10 +109,16 @@ public class DataContext {
         this.dataProvider = dataProvider;
     }
 
+    @Nullable
     public JsonElement get(String dataPath, int childIndex) {
         String aliasedDataPath = getAliasedDataPath(dataPath, reverseScope, true);
         Result result = Utils.getElementFromData(aliasedDataPath, dataProvider, childIndex);
-        return result.isSuccess() ? result.element : null;
+        if (result.isSuccess()) {
+            return result.element;
+        } else if (result.RESULT_CODE == Result.RESULT_JSON_NULL_EXCEPTION) {
+            return JsonNull.INSTANCE;
+        }
+        return null;
     }
 
     public int getIndex() {
