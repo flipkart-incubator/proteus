@@ -4,24 +4,17 @@ import android.app.Activity;
 import android.support.annotation.Nullable;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
-import com.flipkart.layoutengine.exceptions.JsonNullException;
-import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
-import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.toolbox.Result;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A layout builder which can parse view blocks before passing it on to {@link SimpleLayoutBuilder}
  */
 public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(ViewParsingLayoutBuilder.class);
     private Provider viewProvider;
 
     public ViewParsingLayoutBuilder(Activity activity, @Nullable IdGenerator idGenerator, Provider viewProvider) {
@@ -34,13 +27,8 @@ public class ViewParsingLayoutBuilder extends SimpleLayoutBuilder {
                                                    ProteusView parent, JsonObject layout, int childIndex) {
         JsonElement viewElement = null;
         if (viewProvider != null) {
-            try {
-                viewElement = viewProvider.getObject(viewType, childIndex);
-            } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error(e.getMessage());
-                }
-            }
+            Result result = viewProvider.getObject(viewType, childIndex);
+            viewElement = result.isSuccess() ? result.element : null;
         }
         if (viewElement != null) {
             JsonObject viewLayoutObject = viewElement.getAsJsonObject();

@@ -1,10 +1,10 @@
 package com.flipkart.layoutengine;
 
-import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
-import com.flipkart.layoutengine.exceptions.JsonNullException;
-import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import android.support.annotation.Nullable;
+
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.ProteusConstants;
+import com.flipkart.layoutengine.toolbox.Result;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -46,16 +46,8 @@ public class DataContext {
         for (Map.Entry<String, JsonElement> entry : scope.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue().getAsString();
-            JsonElement element;
-            try {
-                element = Utils.getElementFromData(value, dataProvider, childIndex);
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error("#getNewDataContext could not find: '" + value + "' for '" + key + "'. ERROR: " + e.getMessage());
-                }
-                element = new JsonObject();
-            }
-
+            Result result = Utils.getElementFromData(value, dataProvider, childIndex);
+            JsonElement element = result.isSuccess() ? result.element : new JsonObject();
             newData.add(key, element);
             String unAliasedValue = value.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
             reverseScope.add(unAliasedValue, new JsonPrimitive(key));
@@ -117,15 +109,16 @@ public class DataContext {
         this.dataProvider = dataProvider;
     }
 
+    @Nullable
     public JsonElement get(String dataPath, int childIndex) {
         String aliasedDataPath = getAliasedDataPath(dataPath, reverseScope, true);
-        try {
-            return Utils.getElementFromData(aliasedDataPath, dataProvider, childIndex);
-        } catch (JsonNullException e) {
+        Result result = Utils.getElementFromData(aliasedDataPath, dataProvider, childIndex);
+        if (result.isSuccess()) {
+            return result.element;
+        } else if (result.RESULT_CODE == Result.RESULT_JSON_NULL_EXCEPTION) {
             return JsonNull.INSTANCE;
-        } catch (NoSuchDataPathException | InvalidDataPathException e) {
-            return null;
         }
+        return null;
     }
 
     public int getIndex() {
