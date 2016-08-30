@@ -53,17 +53,17 @@ public class Result {
     public static final int RESULT_JSON_NULL_EXCEPTION = -3;
 
     /**
-     *
+     * singleton for No Such Data Path Exception.
      */
     public static final Result NO_SUCH_DATA_PATH_EXCEPTION = new Result(Result.RESULT_NO_SUCH_DATA_PATH_EXCEPTION, null);
 
     /**
-     *
+     * singleton for Invalid Data Path Exception.
      */
     public static final Result INVALID_DATA_PATH_EXCEPTION = new Result(Result.RESULT_INVALID_DATA_PATH_EXCEPTION, null);
 
     /**
-     *
+     * singleton for JSON Null Exception.
      */
     public static final Result JSON_NULL_EXCEPTION = new Result(Result.RESULT_JSON_NULL_EXCEPTION, null);
 
@@ -89,15 +89,18 @@ public class Result {
     }
 
     /**
-     * @param result
-     * @return
+     * This method return a {@link Result} object with {@code RESULT_CODE} == {@code RESULT_SUCCESS}
+     * and {@code this.element} == {@code element}.
+     *
+     * @param element The {@link JsonElement} to be wrapped.
+     * @return A {@link Result} object with with {@code RESULT_CODE} == {@code RESULT_SUCCESS}.
      */
-    public static Result success(JsonElement result) {
-        return new Result(RESULT_SUCCESS, result);
+    public static Result success(JsonElement element) {
+        return new Result(RESULT_SUCCESS, element);
     }
 
     /**
-     * @return
+     * @return true if and only if {@code RESULT_CODE} == {@code RESULT_SUCCESS}.
      */
     public boolean isSuccess() {
         return this.RESULT_CODE == RESULT_SUCCESS;
