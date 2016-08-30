@@ -8,14 +8,13 @@ import android.view.View;
 import com.flipkart.layoutengine.DataContext;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
-import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
-import com.flipkart.layoutengine.exceptions.JsonNullException;
-import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.parser.LayoutHandler;
+import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.Formatter;
+import com.flipkart.layoutengine.toolbox.Result;
 import com.flipkart.layoutengine.toolbox.Styles;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.DataProteusView;
@@ -63,27 +62,12 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
             String dataPathLength = childrenElement.getAsString().substring(1);
             String dataPath = dataPathLength.substring(0, dataPathLength.lastIndexOf("."));
-            int length;
-            try {
-                JsonElement elementFromData = Utils.getElementFromData(dataPathLength,
-                        context.getDataContext().getDataProvider(),
-                        childIndex);
-                String attributeValue = elementFromData.getAsString();
-                if (ProteusConstants.DATA_NULL.equals(attributeValue)) {
-                    length = 0;
-                } else {
-                    length = Integer.parseInt(attributeValue);
-                }
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error(TAG_ERROR + "#parseChildren() " + e.getMessage());
-                }
-                length = 0;
-            } catch (NumberFormatException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error(TAG_ERROR + "#parseChildren() " + childrenElement.getAsString() + " is not a number. layout: " + parentLayout.toString());
-                }
-                length = 0;
+            int length = 0;
+            Result result = Utils.getElementFromData(dataPathLength, context.getDataContext().getDataProvider(), childIndex);
+            JsonElement elementFromData = result.isSuccess() ? result.element : null;
+
+            if (null != elementFromData) {
+                length = ParseHelper.parseInt(elementFromData.getAsString());
             }
 
             // get the child type
@@ -174,19 +158,17 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         char firstChar = TextUtils.isEmpty(attributeValue) ? 0 : attributeValue.charAt(0);
         boolean setVisibility = false;
         String dataPath;
+        Result result;
         switch (firstChar) {
             case ProteusConstants.DATA_PREFIX:
                 setVisibility = true;
                 dataPath = attributeValue.substring(1);
                 JsonElement elementFromData;
-                try {
-                    elementFromData = Utils.getElementFromData(dataPath,
-                            parserContext.getDataContext().getDataProvider(),
-                            childIndex);
-                } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                    if (ProteusConstants.isLoggingEnabled()) {
-                        logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
-                    }
+                result = Utils.getElementFromData(dataPath, parserContext.getDataContext().getDataProvider(), childIndex);
+
+                if (result.isSuccess()) {
+                    elementFromData = result.element;
+                } else {
                     failed = true;
                     elementFromData = new JsonPrimitive(ProteusConstants.DATA_NULL);
                 }
@@ -194,12 +176,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                 if (elementFromData != null) {
                     element = elementFromData;
                 }
-                addBinding(dataProteusView,
-                        dataPath,
-                        attributeName,
-                        attributeValue,
-                        handler,
-                        false);
+                addBinding(dataProteusView, dataPath, attributeName, attributeValue, handler, false);
                 break;
             case ProteusConstants.REGEX_PREFIX:
                 setVisibility = true;
@@ -213,15 +190,10 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
                         // has NO formatter
                         dataPath = regexMatcher.group(3);
-                        try {
-                            finalValue = finalValue.replace(matchedString, Utils.getElementFromData(
-                                    dataPath,
-                                    parserContext.getDataContext().getDataProvider(),
-                                    parserContext.getDataContext().getIndex()).getAsString());
-                        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            if (ProteusConstants.isLoggingEnabled()) {
-                                logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
-                            }
+                        result = Utils.getElementFromData(dataPath, parserContext.getDataContext().getDataProvider(), parserContext.getDataContext().getIndex());
+                        if (result.isSuccess() && null != result.element) {
+                            finalValue = finalValue.replace(matchedString, result.element.getAsString());
+                        } else {
                             finalValue = dataPath;
                             failed = true;
                         }
@@ -233,27 +205,17 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         String formatterName = regexMatcher.group(2);
 
                         String formattedValue;
-                        try {
-                            formattedValue = format(Utils.getElementFromData(dataPath,
-                                    parserContext.getDataContext().getDataProvider(),
-                                    parserContext.getDataContext().getIndex()),
-                                    formatterName);
-                        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                            if (ProteusConstants.isLoggingEnabled()) {
-                                logger.error(TAG_ERROR + "#findAndReplaceValues() " + e.getMessage());
-                            }
+                        result = Utils.getElementFromData(dataPath, parserContext.getDataContext().getDataProvider(), parserContext.getDataContext().getIndex());
+                        if (result.isSuccess() && null != result.element) {
+                            formattedValue = format(result.element, formatterName);
+                        } else {
                             formattedValue = dataPath;
                             failed = true;
                         }
                         finalValue = finalValue.replace(matchedString, formattedValue != null ? formattedValue : "");
                         bindingName = dataPath;
                     }
-                    addBinding(dataProteusView,
-                            bindingName,
-                            attributeName,
-                            attributeValue,
-                            handler,
-                            true);
+                    addBinding(dataProteusView, bindingName, attributeName, attributeValue, handler, true);
                 }
 
                 // remove the REGEX_PREFIX
@@ -290,11 +252,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         // check if the view is in update mode if not that means that the update flow
         // is running and we must not add more bindings for they will be duplicates
         if (!dataProteusView.isViewUpdating()) {
-            Binding binding = new Binding(handler,
-                    bindingName,
-                    attributeName,
-                    attributeValue,
-                    hasRegEx);
+            Binding binding = new Binding(handler, bindingName, attributeName, attributeValue, hasRegEx);
 
             dataProteusView.addBinding(binding);
         }

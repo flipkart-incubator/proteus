@@ -6,9 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 
-import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
-import com.flipkart.layoutengine.exceptions.JsonNullException;
-import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.provider.JsonProvider;
 import com.flipkart.layoutengine.provider.ProteusConstants;
@@ -37,12 +34,11 @@ public class Utils {
     public static final String ATTRIBUTE_BORDER_RADIUS = "radius";
     public static final String ATTRIBUTE_BG_COLOR = "bgColor";
 
-    public static JsonElement getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex)
-            throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
+    public static Result getElementFromData(String dataPath, JsonProvider dataProvider, int childIndex) {
         // replace CHILD_INDEX_REFERENCE reference with index value
         if (ProteusConstants.CHILD_INDEX_REFERENCE.equals(dataPath)) {
             dataPath = dataPath.replace(ProteusConstants.CHILD_INDEX_REFERENCE, String.valueOf(childIndex));
-            return new JsonPrimitive(dataPath);
+            return Result.success(new JsonPrimitive(dataPath));
         } else {
             return dataProvider.getObject(dataPath, childIndex);
         }

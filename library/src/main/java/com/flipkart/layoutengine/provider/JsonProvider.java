@@ -1,8 +1,6 @@
 package com.flipkart.layoutengine.provider;
 
-import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
-import com.flipkart.layoutengine.exceptions.JsonNullException;
-import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
+import com.flipkart.layoutengine.toolbox.Result;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -30,13 +28,11 @@ public class JsonProvider implements Provider {
     }
 
     @Override
-    public JsonElement getObject(String key, int childIndex)
-            throws InvalidDataPathException, NoSuchDataPathException, JsonNullException {
+    public Result getObject(String key, int childIndex) {
         return getFromObject(key, childIndex);
     }
 
-    private JsonElement getFromObject(String path, int childIndex)
-            throws InvalidDataPathException, JsonNullException, NoSuchDataPathException {
+    private Result getFromObject(String path, int childIndex) {
         JsonElement root = this.rootElement;
         StringTokenizer tokenizer = new StringTokenizer(path, ProteusConstants.DATA_PATH_DELIMITERS);
         JsonElement elementToReturn = root;
@@ -46,63 +42,60 @@ public class JsonProvider implements Provider {
         while (tokenizer.hasMoreTokens()) {
             String segment = tokenizer.nextToken();
             if (elementToReturn == null) {
-                throw new NoSuchDataPathException(path);
+                return Result.NO_SUCH_DATA_PATH_EXCEPTION;
             }
             if (elementToReturn.isJsonNull()) {
-                throw new JsonNullException(path);
+                return Result.JSON_NULL_EXCEPTION;
             }
             if ("".equals(segment)) {
                 continue;
             }
             if (elementToReturn.isJsonArray()) {
                 tempArray = elementToReturn.getAsJsonArray();
-                if (tempArray != null) {
-                    if (ProteusConstants.CHILD_INDEX_REFERENCE.equals(segment)) {
-                        if (childIndex < tempArray.size()) {
-                            elementToReturn = tempArray.get(childIndex);
-                        } else {
-                            throw new NoSuchDataPathException(path + "@[" + childIndex + "]");
-                        }
-                    } else if (ProteusConstants.ARRAY_DATA_LENGTH_REFERENCE.equals(segment)) {
-                        elementToReturn = new JsonPrimitive(tempArray.size());
-                    } else if (ProteusConstants.ARRAY_DATA_LAST_INDEX_REFERENCE.equals(segment)) {
-                        if (tempArray.size() == 0) {
-                            throw new NoSuchDataPathException(path + "@[" + segment + "]");
-                        }
-                        elementToReturn = tempArray.get(tempArray.size() - 1);
+                if (ProteusConstants.CHILD_INDEX_REFERENCE.equals(segment)) {
+                    if (childIndex < tempArray.size()) {
+                        elementToReturn = tempArray.get(childIndex);
                     } else {
-                        int index;
-                        try {
-                            index = Integer.parseInt(segment);
-                        } catch (NumberFormatException e) {
-                            throw new InvalidDataPathException(path + "@[" + segment + "]");
-                        }
-                        if (index < tempArray.size()) {
-                            elementToReturn = tempArray.get(index);
-                        } else {
-                            throw new NoSuchDataPathException(path + "@[" + index + "]");
-                        }
+                        return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                     }
+                } else if (ProteusConstants.ARRAY_DATA_LENGTH_REFERENCE.equals(segment)) {
+                    elementToReturn = new JsonPrimitive(tempArray.size());
+                } else if (ProteusConstants.ARRAY_DATA_LAST_INDEX_REFERENCE.equals(segment)) {
+                    if (tempArray.size() == 0) {
+                        return Result.NO_SUCH_DATA_PATH_EXCEPTION;
+                    }
+                    elementToReturn = tempArray.get(tempArray.size() - 1);
                 } else {
-                    throw new NoSuchDataPathException(path);
+                    int index;
+                    try {
+                        index = Integer.parseInt(segment);
+                    } catch (NumberFormatException e) {
+                        return Result.INVALID_DATA_PATH_EXCEPTION;
+                    }
+                    if (index < tempArray.size()) {
+                        elementToReturn = tempArray.get(index);
+                    } else {
+                        return Result.NO_SUCH_DATA_PATH_EXCEPTION;
+                    }
                 }
+
             } else if (elementToReturn.isJsonObject()) {
                 tempElement = elementToReturn.getAsJsonObject().get(segment);
                 if (tempElement != null) {
                     elementToReturn = tempElement;
                 } else {
-                    throw new NoSuchDataPathException(path);
+                    return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                 }
             } else if (elementToReturn.isJsonPrimitive()) {
-                throw new InvalidDataPathException(path);
+                return Result.INVALID_DATA_PATH_EXCEPTION;
             } else {
-                throw new NoSuchDataPathException(path);
+                return Result.NO_SUCH_DATA_PATH_EXCEPTION;
             }
         }
         if (elementToReturn.isJsonNull()) {
-            throw new JsonNullException(path);
+            return Result.JSON_NULL_EXCEPTION;
         }
-        return elementToReturn;
+        return Result.success(elementToReturn);
     }
 
     @Override

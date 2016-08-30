@@ -4,19 +4,13 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.flipkart.layoutengine.ParserContext;
-import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
-import com.flipkart.layoutengine.exceptions.JsonNullException;
-import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.provider.JsonProvider;
-import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.provider.Provider;
+import com.flipkart.layoutengine.toolbox.Result;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A layout builder which can parse @data and @view blocks before passing it on to
@@ -24,7 +18,6 @@ import org.slf4j.LoggerFactory;
  */
 public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
     private Provider viewProvider;
 
     protected DataAndViewParsingLayoutBuilder(Context context, JsonObject viewProvider, @Nullable IdGenerator idGenerator) {
@@ -38,13 +31,8 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
                                                    int childIndex) {
         JsonElement viewElement = null;
         if (viewProvider != null) {
-            try {
-                viewElement = viewProvider.getObject(viewType, childIndex);
-            } catch (InvalidDataPathException | NoSuchDataPathException | JsonNullException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error("onUnknownViewEncountered " + e.getMessage());
-                }
-            }
+            Result result = viewProvider.getObject(viewType, childIndex);
+            viewElement = result.isSuccess() ? result.element : null;
         }
         if (viewElement != null) {
             JsonObject viewLayoutObject = viewElement.getAsJsonObject();

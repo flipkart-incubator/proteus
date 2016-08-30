@@ -6,11 +6,9 @@ import android.view.View;
 import com.flipkart.layoutengine.DataContext;
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.binding.Binding;
-import com.flipkart.layoutengine.exceptions.InvalidDataPathException;
-import com.flipkart.layoutengine.exceptions.JsonNullException;
-import com.flipkart.layoutengine.exceptions.NoSuchDataPathException;
 import com.flipkart.layoutengine.parser.Attributes;
 import com.flipkart.layoutengine.provider.ProteusConstants;
+import com.flipkart.layoutengine.toolbox.Result;
 import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -163,13 +161,9 @@ public class DataProteusView extends SimpleProteusView {
 
     private void updateChildrenFromData() {
         JsonArray childrenDataArray = new JsonArray();
-        try {
-            childrenDataArray = Utils.getElementFromData(dataPathForChildren,
-                    parserContext.getDataContext().getDataProvider(), index).getAsJsonArray();
-        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-            if (ProteusConstants.isLoggingEnabled()) {
-                logger.error("#updateChildrenFromData " + e.getMessage());
-            }
+        Result result = Utils.getElementFromData(dataPathForChildren, parserContext.getDataContext().getDataProvider(), index);
+        if (result.isSuccess() && null != result.element && result.element.isJsonArray()) {
+            childrenDataArray = result.element.getAsJsonArray();
         }
 
         if (children.size() > childrenDataArray.size()) {
@@ -215,31 +209,20 @@ public class DataProteusView extends SimpleProteusView {
                     parent,
                     index);
         } else {
-            JsonElement dataValue;
-            try {
-                dataValue = Utils.getElementFromData(binding.getBindingName(),
-                        parserContext.getDataContext().getDataProvider(), index);
+            JsonElement dataValue = new JsonPrimitive(ProteusConstants.DATA_NULL);
+            Result result = Utils.getElementFromData(binding.getBindingName(), parserContext.getDataContext().getDataProvider(), index);
+
+            if (result.isSuccess() && null != result.element) {
+                dataValue = result.element;
                 if (shouldSetVisibility(binding.getAttributeKey(), view)) {
                     this.getView().setVisibility(View.VISIBLE);
                 }
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error("#handleBinding() " + e.getMessage());
-                }
-                if (shouldSetVisibility(binding.getAttributeKey(), view)) {
-                    getView().setVisibility(View.GONE);
-                }
-                dataValue = new JsonPrimitive(ProteusConstants.DATA_NULL);
+            } else if (shouldSetVisibility(binding.getAttributeKey(), view)) {
+                getView().setVisibility(View.GONE);
             }
-            parserContext.getLayoutBuilder().handleAttribute(
-                    binding.getLayoutHandler(),
-                    parserContext,
-                    binding.getAttributeKey(),
-                    dataValue,
-                    layout,
-                    this,
-                    parent,
-                    index);
+
+            parserContext.getLayoutBuilder().handleAttribute(binding.getLayoutHandler(), parserContext,
+                    binding.getAttributeKey(), dataValue, layout, this, parent, index);
 
         }
     }
@@ -269,18 +252,10 @@ public class DataProteusView extends SimpleProteusView {
             return;
         }
 
-        String aliasedDataPath = DataContext.getAliasedDataPath(dataPath,
-                parserContext.getDataContext().getReverseScopeMap(), true);
+        String aliasedDataPath = DataContext.getAliasedDataPath(dataPath, parserContext.getDataContext().getReverseScopeMap(), true);
 
-        JsonElement parent = null;
-        try {
-            parent = Utils.getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")),
-                    parserContext.getDataContext().getDataProvider(), childIndex);
-        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-            if (ProteusConstants.isLoggingEnabled()) {
-                logger.error("#set() " + e.getMessage());
-            }
-        }
+        Result result = Utils.getElementFromData(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")), parserContext.getDataContext().getDataProvider(), childIndex);
+        JsonElement parent = result.element;
         if (parent == null || !parent.isJsonObject()) {
             return;
         }
@@ -316,8 +291,7 @@ public class DataProteusView extends SimpleProteusView {
         if (getChildren() != null) {
             for (ProteusView proteusView : getChildren()) {
                 DataProteusView dataProteusView = (DataProteusView) proteusView;
-                String aliasedDataPath = DataContext.getAliasedDataPath(dataPath,
-                        dataProteusView.getParserContext().getDataContext().getReverseScopeMap(), false);
+                String aliasedDataPath = DataContext.getAliasedDataPath(dataPath, dataProteusView.getParserContext().getDataContext().getReverseScopeMap(), false);
                 dataProteusView.updateView(aliasedDataPath);
             }
         }
