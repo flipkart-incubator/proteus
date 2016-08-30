@@ -1,5 +1,6 @@
 package com.flipkart.layoutengine.builder;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -31,7 +32,6 @@ import com.google.gson.JsonObject;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -144,6 +144,9 @@ public class LayoutBuilderFactory {
     protected void registerFormatter(DataParsingLayoutBuilder layoutBuilder) {
 
         Formatter NumberFormatter = new Formatter() {
+
+            private DecimalFormat formatter;
+
             @Override
             public String format(JsonElement elementValue) {
                 double valueAsNumber;
@@ -152,13 +155,13 @@ public class LayoutBuilderFactory {
                 } catch (NumberFormatException e) {
                     return elementValue.toString();
                 }
-                NumberFormat numberFormat = new DecimalFormat("#,###");
+                formatter = new DecimalFormat("#,###");
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
-                    numberFormat.setRoundingMode(RoundingMode.FLOOR);
+                    formatter.setRoundingMode(RoundingMode.FLOOR);
                 }
-                numberFormat.setMinimumFractionDigits(0);
-                numberFormat.setMaximumFractionDigits(2);
-                return numberFormat.format(valueAsNumber);
+                formatter.setMinimumFractionDigits(0);
+                formatter.setMaximumFractionDigits(2);
+                return formatter.format(valueAsNumber);
             }
 
             @Override
@@ -168,12 +171,18 @@ public class LayoutBuilderFactory {
         };
 
         Formatter DateFormatter = new Formatter() {
+
+            @SuppressLint("SimpleDateFormat")
+            private SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            @SuppressLint("SimpleDateFormat")
+            private SimpleDateFormat to = new SimpleDateFormat("d MMM, E");
+
             @Override
             public String format(JsonElement elementValue) {
                 try {
                     // 2015-06-18 12:01:37
-                    Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(elementValue.getAsString());
-                    return new SimpleDateFormat("d MMM, E").format(date);
+                    Date date = from.parse(elementValue.getAsString());
+                    return to.format(date);
                 } catch (Exception e) {
                     return elementValue.toString();
                 }
