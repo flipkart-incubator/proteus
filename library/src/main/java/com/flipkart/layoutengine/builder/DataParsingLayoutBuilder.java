@@ -3,6 +3,7 @@ package com.flipkart.layoutengine.builder;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.flipkart.layoutengine.DataContext;
@@ -24,9 +25,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +36,8 @@ import java.util.regex.Matcher;
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
+    private static final String TAG = "LayoutBuilder";
+
     private Map<String, Formatter> formatter = new HashMap<>();
 
     protected DataParsingLayoutBuilder(Context context, @Nullable IdGenerator idGenerator) {
@@ -50,7 +49,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                               ProteusView view, JsonObject parentLayout, int childIndex, Styles styles) {
 
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
+            Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
         }
         JsonElement childrenElement = parentLayout.get(ProteusConstants.CHILDREN);
 
@@ -228,7 +227,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         if (setVisibility && dataProteusView.getView() != null) {
             if (ProteusConstants.isLoggingEnabled()) {
-                logger.debug("Find '" + element.toString() + "' for " + attributeName + " for view with " + Utils.getLayoutIdentifier(layout));
+                Log.d(TAG, "Find '" + element.toString() + "' for " + attributeName + " for view with " + Utils.getLayoutIdentifier(layout));
             }
             if (failed) {
                 if (layout != null && !layout.isJsonNull()
@@ -274,7 +273,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         if (oldParserContext.getDataContext().getDataProvider() == null) {
             if (ProteusConstants.isLoggingEnabled()) {
-                logger.error(TAG_ERROR + "#getNewParserContext() When scope is specified, data provider cannot be null");
+                Log.e(TAG, "#getNewParserContext() When scope is specified, data provider cannot be null");
             }
             newParserContext.setDataContext(newDataContext);
             newParserContext.setHasDataContext(false);

@@ -210,6 +210,7 @@ public class Attributes {
 
         private final String name;
         private final Priority priority;
+
         public Attribute(String name) {
             this.name = name;
             this.priority = Priority.HIGH;
