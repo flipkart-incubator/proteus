@@ -24,7 +24,6 @@ import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.ColorUtils;
 import com.flipkart.layoutengine.toolbox.NetworkDrawableHelper;
-import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -82,7 +81,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             handleElement(parserContext, attributeKey, attributeValue, view, proteusView, parent, layout, index);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(Utils.TAG_ERROR, "Resource for key: " + attributeKey + " must be a primitive or an object. value -> " + attributeValue.toString());
+                Log.e(TAG, "Resource for key: " + attributeKey + " must be a primitive or an object. value -> " + attributeValue.toString());
             }
         }
     }

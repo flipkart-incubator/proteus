@@ -36,6 +36,8 @@ import java.util.regex.Matcher;
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
+    private static final String TAG = "LayoutBuilder";
+
     private Map<String, Formatter> formatter = new HashMap<>();
 
     protected DataParsingLayoutBuilder(Context context, @Nullable IdGenerator idGenerator) {
@@ -47,7 +49,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                                               ProteusView view, JsonObject parentLayout, int childIndex, Styles styles) {
 
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(Utils.TAG_DEBUG, "Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
+            Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
         }
         JsonElement childrenElement = parentLayout.get(ProteusConstants.CHILDREN);
 
@@ -225,7 +227,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         if (setVisibility && dataProteusView.getView() != null) {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.d(Utils.TAG_DEBUG, "Find '" + element.toString() + "' for " + attributeName + " for view with " + Utils.getLayoutIdentifier(layout));
+                Log.d(TAG, "Find '" + element.toString() + "' for " + attributeName + " for view with " + Utils.getLayoutIdentifier(layout));
             }
             if (failed) {
                 if (layout != null && !layout.isJsonNull()
@@ -271,7 +273,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         if (oldParserContext.getDataContext().getDataProvider() == null) {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(Utils.TAG_ERROR, "#getNewParserContext() When scope is specified, data provider cannot be null");
+                Log.e(TAG, "#getNewParserContext() When scope is specified, data provider cannot be null");
             }
             newParserContext.setDataContext(newDataContext);
             newParserContext.setHasDataContext(false);

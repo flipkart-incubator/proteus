@@ -38,7 +38,7 @@ public class ColorUtils {
             handleElement(context, value.getAsJsonObject(), colorCallback, colorStateListCallback);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(Utils.TAG_ERROR, "Could not color for : " + value.toString());
+                Log.e(TAG, "Could not color for : " + value.toString());
             }
         }
     }
@@ -65,7 +65,7 @@ public class ColorUtils {
                 }
             } catch (Exception ex) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(Utils.TAG_ERROR, "Could not load local resource " + attributeValue);
+                    Log.e(TAG, "Could not load local resource " + attributeValue);
                 }
             }
         }

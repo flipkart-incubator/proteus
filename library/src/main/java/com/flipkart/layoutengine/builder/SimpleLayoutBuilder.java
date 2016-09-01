@@ -29,6 +29,7 @@ import java.util.Map;
  */
 public class SimpleLayoutBuilder implements LayoutBuilder {
 
+    private static final String TAG = "SimpleLayoutBuilder";
     protected LayoutBuilderCallback listener;
     private HashMap<String, LayoutHandler> layoutHandlers = new HashMap<>();
     private BitmapLoader bitmapLoader;
@@ -157,7 +158,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected ProteusView createProteusView(View createdView, JsonObject layout, int index, ProteusView parent) {
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(Utils.TAG_DEBUG, "ProteusView created with " + Utils.getLayoutIdentifier(layout));
+            Log.d(TAG, "ProteusView created with " + Utils.getLayoutIdentifier(layout));
         }
         return new SimpleProteusView(createdView, layout, index, parent);
     }
@@ -169,7 +170,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     protected List<ProteusView> parseChildren(LayoutHandler handler, ParserContext context, ProteusView view,
                                               JsonObject parentLayout, int childIndex, Styles styles) {
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(Utils.TAG_DEBUG, "Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
+            Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(parentLayout));
         }
         JsonElement childrenElement = parentLayout.get(ProteusConstants.CHILDREN);
         if (childrenElement == null) {
@@ -204,7 +205,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
                 }
             } catch (NumberFormatException e) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(Utils.TAG_ERROR, childrenElement.getAsString() + " is not a number. layout: " + parentLayout.toString());
+                    Log.e(TAG, childrenElement.getAsString() + " is not a number. layout: " + parentLayout.toString());
                 }
                 return null;
             }
@@ -255,7 +256,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
                                    String attribute, JsonElement element, JsonObject layout,
                                    ProteusView view, ProteusView parent, int index) {
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(Utils.TAG_DEBUG, "Handle '" + attribute + "' : " + element.toString() + " for view with " + Utils.getLayoutIdentifier(layout));
+            Log.d(TAG, "Handle '" + attribute + "' : " + element.toString() + " for view with " + Utils.getLayoutIdentifier(layout));
         }
         //noinspection unchecked
         return handler.handleAttribute(context, attribute, element, layout, view.getView(), view, parent, index);
@@ -273,7 +274,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
                                                    ProteusView parent, JsonObject layout,
                                                    int childIndex) {
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(Utils.TAG_DEBUG, "No LayoutHandler for: " + viewType);
+            Log.d(TAG, "No LayoutHandler for: " + viewType);
         }
         if (listener != null) {
             return listener.onUnknownViewType(context, viewType, layout, parent, childIndex);
@@ -284,7 +285,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     protected JsonObject onChildTypeLayoutRequired(ParserContext context, String viewType,
                                                    JsonObject parentLayout, ProteusView parent) {
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(Utils.TAG_DEBUG, "Fetching child layout: " + viewType);
+            Log.d(TAG, "Fetching child layout: " + viewType);
         }
         if (listener != null) {
             return listener.onChildTypeLayoutRequired(context, viewType, parentLayout, parent);

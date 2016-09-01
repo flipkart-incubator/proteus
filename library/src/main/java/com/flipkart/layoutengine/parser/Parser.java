@@ -10,7 +10,6 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.processor.AttributeProcessor;
 import com.flipkart.layoutengine.provider.ProteusConstants;
-import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -33,6 +32,7 @@ import java.util.Map;
 public abstract class Parser<V extends View> implements LayoutHandler<V> {
 
     protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<>();
+    private static final String TAG = "Parser";
     private static XmlResourceParser sParser = null;
     protected final Class<V> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
@@ -71,7 +71,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
             }
         } catch (Exception e) {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(Utils.TAG_ERROR, "#createView()" + e.getMessage());
+                Log.e(TAG, "#createView()" + e.getMessage());
             }
         }
         //noinspection unchecked
@@ -92,11 +92,11 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                 constructor = viewClass.getDeclaredConstructor(Context.class);
                 constructorCache.put(viewClass, constructor);
                 if (ProteusConstants.isLoggingEnabled()) {
-                    Log.d(Utils.TAG_DEBUG, "constructor for " + viewClass + " was created and put into cache");
+                    Log.d(TAG, "constructor for " + viewClass + " was created and put into cache");
                 }
             } catch (NoSuchMethodException e) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(Utils.TAG_ERROR, e.getMessage() + "");
+                    Log.e(TAG, e.getMessage() + "");
                 }
             }
         }

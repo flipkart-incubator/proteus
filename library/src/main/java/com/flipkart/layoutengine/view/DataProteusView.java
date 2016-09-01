@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class DataProteusView extends SimpleProteusView {
 
     private static final String DELIMITER = ".";
+    private static final String TAG = "DataProteusView";
     private boolean isViewUpdating = false;
     private String dataPathForChildren;
     private JsonObject childLayout;
@@ -79,7 +80,7 @@ public class DataProteusView extends SimpleProteusView {
     @Override
     protected View updateDataImpl(JsonObject data) {
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(Utils.TAG_DEBUG, "START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
+            Log.d(TAG, "START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
         }
         this.isViewUpdating = true;
 
@@ -116,7 +117,7 @@ public class DataProteusView extends SimpleProteusView {
 
         this.isViewUpdating = false;
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(Utils.TAG_DEBUG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
+            Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
         }
 
         onUpdateDataComplete();

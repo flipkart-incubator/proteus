@@ -20,7 +20,6 @@ import android.widget.RelativeLayout;
 
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.provider.ProteusConstants;
-import com.flipkart.layoutengine.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -37,6 +36,8 @@ import java.util.regex.Pattern;
  * @author kiran.kumar
  */
 public class ParseHelper {
+
+    private static final String TAG = "ParseHelper";
 
     private static final String TRUE = "true";
     private static final String FALSE = "false";
@@ -183,7 +184,7 @@ public class ParseHelper {
             number = Integer.parseInt(attributeValue);
         } catch (NumberFormatException e) {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(Utils.TAG_ERROR, attributeValue + " is NAN. Error: " + e.getMessage());
+                Log.e(TAG, attributeValue + " is NAN. Error: " + e.getMessage());
             }
             number = 0;
         }
@@ -199,7 +200,7 @@ public class ParseHelper {
             number = Float.parseFloat(attributeValue);
         } catch (NumberFormatException e) {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(Utils.TAG_ERROR, attributeValue + " is NAN. Error: " + e.getMessage());
+                Log.e(TAG, attributeValue + " is NAN. Error: " + e.getMessage());
             }
             number = 0;
         }
@@ -215,7 +216,7 @@ public class ParseHelper {
             number = Double.parseDouble(attributeValue);
         } catch (NumberFormatException e) {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(Utils.TAG_ERROR, attributeValue + " is NAN. Error: " + e.getMessage());
+                Log.e(TAG, attributeValue + " is NAN. Error: " + e.getMessage());
             }
             number = 0;
         }
@@ -306,7 +307,7 @@ public class ParseHelper {
                 value = (int) context.getResources().getDimension(resourceId);
             } catch (Exception e) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(Utils.TAG_ERROR, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                    Log.e(TAG, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
                 }
                 value = 0;
             }
@@ -335,7 +336,7 @@ public class ParseHelper {
                 a.recycle();
             } catch (Exception e) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(Utils.TAG_ERROR, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
+                    Log.e(TAG, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
                 }
                 value = 0;
             }
@@ -382,15 +383,15 @@ public class ParseHelper {
 
             } catch (ClassNotFoundException e) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(Utils.TAG_ERROR, e.getMessage() + "");
+                    Log.e(TAG, e.getMessage() + "");
                 }
             } catch (NoSuchFieldException e) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(Utils.TAG_ERROR, e.getMessage() + "");
+                    Log.e(TAG, e.getMessage() + "");
                 }
             } catch (IllegalAccessException e) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(Utils.TAG_ERROR, e.getMessage() + "");
+                    Log.e(TAG, e.getMessage() + "");
                 }
             }
         }
@@ -406,7 +407,7 @@ public class ParseHelper {
             return Color.parseColor(color);
         } catch (IllegalArgumentException ex) {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(Utils.TAG_ERROR, "Invalid color : " + color + ". Using #000000");
+                Log.e(TAG, "Invalid color : " + color + ". Using #000000");
             }
             return Color.BLACK;
         }
@@ -420,7 +421,7 @@ public class ParseHelper {
             return Integer.valueOf(id);
         } catch (NumberFormatException ex) {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(Utils.TAG_ERROR, id + " is not a valid resource ID.");
+                Log.e(TAG, id + " is not a valid resource ID.");
             }
         }
         return null;
@@ -442,7 +443,7 @@ public class ParseHelper {
             view.setLayoutParams(params);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(Utils.TAG_ERROR, "cannot add relative layout rules when container is not relative");
+                Log.e(TAG, "cannot add relative layout rules when container is not relative");
             }
         }
     }
