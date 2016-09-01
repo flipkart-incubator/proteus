@@ -13,6 +13,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.webkit.URLUtil;
@@ -23,15 +24,13 @@ import com.flipkart.layoutengine.parser.ParseHelper;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.ColorUtils;
 import com.flipkart.layoutengine.toolbox.NetworkDrawableHelper;
+import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,6 @@ import java.util.List;
 public abstract class DrawableResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
     private static final String TAG = DrawableResourceProcessor.class.getSimpleName();
-    private static final Logger logger = LoggerFactory.getLogger(DrawableResourceProcessor.class);
     private static final String DRAWABLE_SELECTOR = "selector";
     private static final String DRAWABLE_SHAPE = "shape";
     private static final String DRAWABLE_LAYER_LIST = "layer-list";
@@ -84,7 +82,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             handleElement(parserContext, attributeKey, attributeValue, view, proteusView, parent, layout, index);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                logger.error("Resource for key: " + attributeKey + " must be a primitive or an object. value -> " + attributeValue.toString());
+                Log.e(Utils.TAG_ERROR, "Resource for key: " + attributeKey + " must be a primitive or an object. value -> " + attributeValue.toString());
             }
         }
     }

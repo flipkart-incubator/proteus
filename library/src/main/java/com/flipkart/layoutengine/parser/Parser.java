@@ -2,6 +2,7 @@ package com.flipkart.layoutengine.parser;
 
 import android.content.Context;
 import android.content.res.XmlResourceParser;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -9,13 +10,12 @@ import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.library.R;
 import com.flipkart.layoutengine.processor.AttributeProcessor;
 import com.flipkart.layoutengine.provider.ProteusConstants;
+import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -33,7 +33,6 @@ import java.util.Map;
 public abstract class Parser<V extends View> implements LayoutHandler<V> {
 
     protected static final Map<Class<?>, Constructor<? extends View>> constructorCache = new HashMap<>();
-    private static final Logger logger = LoggerFactory.getLogger(Parser.class);
     private static XmlResourceParser sParser = null;
     protected final Class<V> viewClass;
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
@@ -72,7 +71,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
             }
         } catch (Exception e) {
             if (ProteusConstants.isLoggingEnabled()) {
-                logger.error("#createView()", e.getMessage() + "");
+                Log.e(Utils.TAG_ERROR, "#createView()" + e.getMessage());
             }
         }
         //noinspection unchecked
@@ -93,11 +92,11 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
                 constructor = viewClass.getDeclaredConstructor(Context.class);
                 constructorCache.put(viewClass, constructor);
                 if (ProteusConstants.isLoggingEnabled()) {
-                    logger.debug("constructor for " + viewClass + " was created and put into cache");
+                    Log.d(Utils.TAG_DEBUG, "constructor for " + viewClass + " was created and put into cache");
                 }
             } catch (NoSuchMethodException e) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error(e.getMessage() + "");
+                    Log.e(Utils.TAG_ERROR, e.getMessage() + "");
                 }
             }
         }

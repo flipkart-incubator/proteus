@@ -1,6 +1,7 @@
 package com.flipkart.layoutengine.view;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 
 import com.flipkart.layoutengine.DataContext;
@@ -15,9 +16,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 
 /**
@@ -28,7 +26,6 @@ import java.util.ArrayList;
  */
 public class DataProteusView extends SimpleProteusView {
 
-    private static final Logger logger = LoggerFactory.getLogger(DataProteusView.class);
     private static final String DELIMITER = ".";
     private boolean isViewUpdating = false;
     private String dataPathForChildren;
@@ -82,7 +79,7 @@ public class DataProteusView extends SimpleProteusView {
     @Override
     protected View updateDataImpl(JsonObject data) {
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
+            Log.d(Utils.TAG_DEBUG, "START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
         }
         this.isViewUpdating = true;
 
@@ -119,7 +116,7 @@ public class DataProteusView extends SimpleProteusView {
 
         this.isViewUpdating = false;
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
+            Log.d(Utils.TAG_DEBUG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
         }
 
         onUpdateDataComplete();

@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.StateSet;
 import android.webkit.ValueCallback;
 
@@ -15,9 +16,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +23,6 @@ import java.util.Set;
 public class ColorUtils {
     private static final String TAG = ColorUtils.class.getSimpleName();
     private static HashMap<String, Integer> sAttributesMap = null;
-    private static Logger mLogger = LoggerFactory.getLogger(ColorUtils.class);
 
     /**
      * @param context                Application context used to access resources
@@ -41,7 +38,7 @@ public class ColorUtils {
             handleElement(context, value.getAsJsonObject(), colorCallback, colorStateListCallback);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                mLogger.error("Could not color for : " + value.toString());
+                Log.e(Utils.TAG_ERROR, "Could not color for : " + value.toString());
             }
         }
     }
@@ -68,7 +65,7 @@ public class ColorUtils {
                 }
             } catch (Exception ex) {
                 if (ProteusConstants.isLoggingEnabled()) {
-                    mLogger.error("Could not load local resource " + attributeValue);
+                    Log.e(Utils.TAG_ERROR, "Could not load local resource " + attributeValue);
                 }
             }
         }

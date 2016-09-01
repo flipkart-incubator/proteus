@@ -1,25 +1,23 @@
 package com.flipkart.layoutengine.processor;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 
 import com.flipkart.layoutengine.ParserContext;
 import com.flipkart.layoutengine.provider.ProteusConstants;
 import com.flipkart.layoutengine.toolbox.AnimationUtils;
+import com.flipkart.layoutengine.toolbox.Utils;
 import com.flipkart.layoutengine.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Use this as the base processor for references like @anim
  */
 public abstract class TweenAnimationResourceProcessor<V extends View> extends AttributeProcessor<V> {
     private static final String TAG = TweenAnimationResourceProcessor.class.getSimpleName();
-    private static final Logger mLogger = LoggerFactory.getLogger(TweenAnimationResourceProcessor.class);
     private Context mContext;
 
     public TweenAnimationResourceProcessor(Context context) {
@@ -34,7 +32,7 @@ public abstract class TweenAnimationResourceProcessor<V extends View> extends At
             setAnimation(view, animation);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                mLogger.error("Resource for key: " + attributeKey + " must be a primitive or an object. value -> " + attributeValue.toString());
+                Log.e(Utils.TAG_ERROR, "Resource for key: " + attributeKey + " must be a primitive or an object. value -> " + attributeValue.toString());
             }
         }
     }
