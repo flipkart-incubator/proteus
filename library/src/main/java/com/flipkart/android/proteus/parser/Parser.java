@@ -17,6 +17,7 @@
 package com.flipkart.android.proteus.parser;
 
 import android.content.res.XmlResourceParser;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -28,8 +29,6 @@ import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -47,8 +46,9 @@ import java.util.Map;
  */
 public abstract class Parser<V extends View> implements LayoutHandler<V> {
 
+    private static final String TAG = "Parser";
+
     private static XmlResourceParser sParser = null;
-    private static Logger logger = LoggerFactory.getLogger(Parser.class);
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
 
     @Override
@@ -63,7 +63,7 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
             view.setLayoutParams(layoutParams);
         } catch (Exception e) {
             if (ProteusConstants.isLoggingEnabled()) {
-                logger.error("#createView()", e.getMessage() + "");
+                Log.e(TAG, "#createView() : " + e.getMessage());
             }
         }
     }

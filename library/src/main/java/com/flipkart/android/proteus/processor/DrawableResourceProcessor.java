@@ -29,6 +29,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.webkit.URLUtil;
@@ -46,9 +47,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +55,8 @@ import java.util.List;
  */
 public abstract class DrawableResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
-    private static final String TAG = DrawableResourceProcessor.class.getSimpleName();
+    private static final String TAG = "DrawableResource";
+
     private static final String DRAWABLE_SELECTOR = "selector";
     private static final String DRAWABLE_SHAPE = "shape";
     private static final String DRAWABLE_LAYER_LIST = "layer-list";
@@ -78,7 +77,6 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     private static final String RADIAL_GRADIENT = "radial";
     private static final String SWEEP_GRADIENT = "sweep";
     private static Gson sGson = new Gson();
-    private static Logger logger = LoggerFactory.getLogger(DrawableResourceProcessor.class);
 
     public static GradientDrawable loadGradientDrawable(Context context, JsonObject value) {
         ShapeDrawableJson shapeDrawable = sGson.fromJson(value, ShapeDrawableJson.class);
@@ -93,7 +91,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             handleElement(key, value, view);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                logger.error("Resource for key: " + key + " must be a primitive or an object. value -> " + value.toString());
+                Log.e(TAG, "Resource for key: " + key + " must be a primitive or an object. value -> " + value.toString());
             }
         }
     }

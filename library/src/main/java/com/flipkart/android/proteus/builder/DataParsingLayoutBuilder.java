@@ -19,6 +19,7 @@ package com.flipkart.android.proteus.builder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,9 +40,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -51,7 +49,7 @@ import java.util.regex.Matcher;
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
-    private static Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
+    private static final String TAG = "LayoutBuilder";
     private Map<String, Formatter> formatter = new HashMap<>();
 
     protected DataParsingLayoutBuilder(@NonNull IdGenerator idGenerator) {
@@ -65,7 +63,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         JsonObject layout = viewManager.getLayout();
 
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("Parsing children for view with " + Utils.getLayoutIdentifier(layout));
+            Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(layout));
         }
 
         if (layout == null) {
@@ -188,7 +186,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         DataContext dataContext = viewManager.getDataContext();
 
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("Find '" + stringValue + "' for " + attribute + " for view with " + Utils.getLayoutIdentifier(viewManager.getLayout()));
+            Log.d(TAG, "Find '" + stringValue + "' for " + attribute + " for view with " + Utils.getLayoutIdentifier(viewManager.getLayout()));
         }
 
         char firstChar = TextUtils.isEmpty(stringValue) ? 0 : stringValue.charAt(0);
@@ -318,7 +316,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     @Nullable
     protected JsonObject onLayoutRequired(String type, ProteusView parent) {
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("Fetching child layout: " + type);
+            Log.d(TAG, "Fetching child layout: " + type);
         }
         if (listener != null) {
             return listener.onLayoutRequired(type, parent);

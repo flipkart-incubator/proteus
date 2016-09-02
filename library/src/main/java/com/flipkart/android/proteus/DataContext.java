@@ -26,9 +26,6 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -37,7 +34,6 @@ import java.util.regex.Pattern;
  */
 public class DataContext {
 
-    private static Logger logger = LoggerFactory.getLogger(DataContext.class);
     private final boolean isClone;
     private JsonObject data;
     @Nullable

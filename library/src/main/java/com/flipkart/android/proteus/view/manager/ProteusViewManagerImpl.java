@@ -17,6 +17,7 @@
 package com.flipkart.android.proteus.view.manager;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -35,9 +36,6 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 
 /**
@@ -47,7 +45,7 @@ import java.util.ArrayList;
  */
 public class ProteusViewManagerImpl implements ProteusViewManager {
 
-    private static Logger logger = LoggerFactory.getLogger(ProteusViewManagerImpl.class);
+    private static final String TAG = "ProteusViewManagerImpl";
     private View view;
     private JsonObject layout;
     private Styles styles;
@@ -63,7 +61,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     @Override
     public void update(@Nullable JsonObject data) {
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
+            Log.d(TAG, "START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
         }
         this.isViewUpdating = true;
 
@@ -103,7 +101,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
         this.isViewUpdating = false;
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
+            Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
         }
 
         onUpdateDataComplete(dataContext.getData());

@@ -19,6 +19,7 @@ package com.flipkart.android.proteus.parser;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -44,9 +45,6 @@ import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,12 +53,11 @@ import java.util.Map;
  */
 public class ViewParser<V extends View> extends Parser<V> {
 
+    private static final String TAG = "ViewParser";
+
     private static final String ID_STRING_START_PATTERN = "@+id/";
     private static final String ID_STRING_START_PATTERN1 = "@id/";
     private static final String ID_STRING_NORMALIZED_PATTERN = ":id/";
-
-
-    private static Logger logger = LoggerFactory.getLogger(ViewParser.class);
 
     @Override
     public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
@@ -121,7 +118,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     view.setLayoutParams(layoutParams);
                 } else {
                     if (ProteusConstants.isLoggingEnabled()) {
-                        logger.error(attributeKey + " is only supported for LinearLayouts");
+                        Log.e(TAG, attributeKey + " is only supported for LinearLayouts");
                     }
                 }
             }
@@ -142,7 +139,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     view.setLayoutParams(layoutParams);
                 } else {
                     if (ProteusConstants.isLoggingEnabled()) {
-                        logger.error(attributeKey + " is only supported for LinearLayout and FrameLayout");
+                        Log.e(TAG, attributeKey + " is only supported for LinearLayout and FrameLayout");
                     }
                 }
             }
@@ -187,7 +184,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     view.setLayoutParams(layoutParams);
                 } else {
                     if (ProteusConstants.isLoggingEnabled()) {
-                        logger.error("margins can only be applied to views with parent ViewGroup");
+                        Log.e(TAG, "margins can only be applied to views with parent ViewGroup");
                     }
                 }
             }
@@ -202,7 +199,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     view.setLayoutParams(layoutParams);
                 } else {
                     if (ProteusConstants.isLoggingEnabled()) {
-                        logger.error("margins can only be applied to views with parent ViewGroup");
+                        Log.e(TAG, "margins can only be applied to views with parent ViewGroup");
                     }
                 }
             }
@@ -217,7 +214,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     view.setLayoutParams(layoutParams);
                 } else {
                     if (ProteusConstants.isLoggingEnabled()) {
-                        logger.error("margins can only be applied to views with parent ViewGroup");
+                        Log.e(TAG, "margins can only be applied to views with parent ViewGroup");
                     }
                 }
             }
@@ -232,7 +229,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     view.setLayoutParams(layoutParams);
                 } else {
                     if (ProteusConstants.isLoggingEnabled()) {
-                        logger.error("margins can only be applied to views with parent ViewGroup");
+                        Log.e(TAG, "margins can only be applied to views with parent ViewGroup");
                     }
                 }
             }
@@ -247,7 +244,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                     view.setLayoutParams(layoutParams);
                 } else {
                     if (ProteusConstants.isLoggingEnabled()) {
-                        logger.error("margins can only be applied to views with parent ViewGroup");
+                        Log.e(TAG, "margins can only be applied to views with parent ViewGroup");
                     }
                 }
             }

@@ -20,6 +20,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Build;
+import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
@@ -45,14 +46,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Defines common utilities for working with animations.
  */
 public class AnimationUtils {
 
+    private static final String TAG = "AnimationUtils";
 
     private static final String LINEAR_INTERPOLATOR = "linearInterpolator";
     private static final String ACCELERATE_INTERPOLATOR = "accelerateInterpolator";
@@ -76,8 +75,6 @@ public class AnimationUtils {
     private static final String PERCENT_SELF = "%";
     private static final String PERCENT_RELATIVE_PARENT = "%p";
 
-    private static final String TAG = AnimationUtils.class.getSimpleName();
-    private static Logger logger = LoggerFactory.getLogger(AnimationUtils.class);
     private static Gson sGson = new Gson();
 
     /**
@@ -96,7 +93,7 @@ public class AnimationUtils {
             anim = handleElement(context, value.getAsJsonObject());
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                logger.error("Could not load animation for : " + value.toString());
+                Log.e(TAG, "Could not load animation for : " + value.toString());
             }
         }
         return anim;
@@ -157,7 +154,7 @@ public class AnimationUtils {
             interpolator = handleElementInterpolator(context, value.getAsJsonObject());
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                logger.error("Could not load interpolator for : " + value.toString());
+                Log.e(TAG, "Could not load interpolator for : " + value.toString());
             }
         }
         return interpolator;
@@ -205,7 +202,7 @@ public class AnimationUtils {
             interpolatorProperties = sGson.fromJson(value, PathInterpolatorProperties.class);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                logger.error("Unknown interpolator name: " + interpolatorType);
+                Log.e(TAG, "Unknown interpolator name: " + interpolatorType);
             }
             throw new RuntimeException("Unknown interpolator name: " + interpolatorType);
         }

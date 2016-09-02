@@ -21,8 +21,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.flipkart.android.proteus.demo.LogbackConfigureHelper;
-
 /**
  * BaseActivity
  *
@@ -37,8 +35,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        LogbackConfigureHelper.configure();
 
         long startTime = System.currentTimeMillis();
 

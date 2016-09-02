@@ -48,7 +48,6 @@ dependencies {
     compile 'com.android.support:support-annotations:24.1.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.code.gson:gson:2.4'
-    compile 'org.slf4j:slf4j-api:1.7.6'
 
     testCompile 'junit:junit:4.12'
 }

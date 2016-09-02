@@ -18,6 +18,7 @@ package com.flipkart.android.proteus.builder;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,9 +35,6 @@ import com.flipkart.android.proteus.view.manager.ProteusViewManagerImpl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +44,8 @@ import java.util.Map;
  */
 public class SimpleLayoutBuilder implements LayoutBuilder {
 
+    private static final String TAG = "SimpleLayoutBuilder";
+
     @Nullable
     protected LayoutBuilderCallback listener;
     private HashMap<String, LayoutHandler> layoutHandlers = new HashMap<>();
@@ -53,8 +53,6 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     private BitmapLoader bitmapLoader;
 
     private boolean isSynchronousRendering = false;
-
-    private static Logger logger = LoggerFactory.getLogger(SimpleLayoutBuilder.class);
 
     private IdGenerator idGenerator;
 
@@ -150,7 +148,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected ProteusViewManager createViewManager(LayoutHandler handler, View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("ProteusView created with " + Utils.getLayoutIdentifier(layout));
+            Log.d(TAG, "ProteusView created with " + Utils.getLayoutIdentifier(layout));
         }
 
         ProteusViewManagerImpl viewManager = new ProteusViewManagerImpl();
@@ -169,7 +167,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     protected void handleChildren(LayoutHandler handler, ProteusView view) {
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("Parsing children for view with " + Utils.getLayoutIdentifier(view.getViewManager().getLayout()));
+            Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(view.getViewManager().getLayout()));
         }
 
         handler.handleChildren(view);
@@ -177,7 +175,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
 
     public boolean handleAttribute(LayoutHandler handler, ProteusView view, String attribute, JsonElement value) {
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("Handle '" + attribute + "' : " + value.toString() + " for view with " + Utils.getLayoutIdentifier(view.getViewManager().getLayout()));
+            Log.d(TAG, "Handle '" + attribute + "' : " + value.toString() + " for view with " + Utils.getLayoutIdentifier(view.getViewManager().getLayout()));
         }
         //noinspection unchecked
         return handler.handleAttribute((View) view, attribute, value);
@@ -192,7 +190,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
     @Nullable
     protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, JsonObject layout, JsonObject data, int index, Styles styles) {
         if (ProteusConstants.isLoggingEnabled()) {
-            logger.debug("No LayoutHandler for: " + type);
+            Log.d(TAG, "No LayoutHandler for: " + type);
         }
         if (listener != null) {
             return listener.onUnknownViewType(type, parent, layout, data, index, styles);
