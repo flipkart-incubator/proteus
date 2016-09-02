@@ -22,9 +22,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 
-import com.flipkart.android.proteus.exceptions.InvalidDataPathException;
-import com.flipkart.android.proteus.exceptions.JsonNullException;
-import com.flipkart.android.proteus.exceptions.NoSuchDataPathException;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -49,11 +46,11 @@ public class Utils {
     public static final String ATTRIBUTE_BORDER_RADIUS = "radius";
     public static final String ATTRIBUTE_BG_COLOR = "bgColor";
 
-    public static JsonElement readJson(String path, JsonObject data, int index) throws JsonNullException, NoSuchDataPathException, InvalidDataPathException {
+    public static Result readJson(String path, JsonObject data, int index) {
         // replace INDEX reference with index value
         if (ProteusConstants.INDEX.equals(path)) {
             path = path.replace(ProteusConstants.INDEX, String.valueOf(index));
-            return new JsonPrimitive(path);
+            return Result.success(new JsonPrimitive(path));
         } else {
             StringTokenizer tokenizer = new StringTokenizer(path, ProteusConstants.DATA_PATH_DELIMITERS);
             JsonElement elementToReturn = data;
@@ -63,62 +60,59 @@ public class Utils {
             while (tokenizer.hasMoreTokens()) {
                 String segment = tokenizer.nextToken();
                 if (elementToReturn == null) {
-                    throw new NoSuchDataPathException(path);
+                    return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                 }
                 if (elementToReturn.isJsonNull()) {
-                    throw new JsonNullException(path);
+                    return Result.JSON_NULL_EXCEPTION;
                 }
                 if ("".equals(segment)) {
                     continue;
                 }
                 if (elementToReturn.isJsonArray()) {
                     tempArray = elementToReturn.getAsJsonArray();
-                    if (tempArray != null) {
-                        if (ProteusConstants.INDEX.equals(segment)) {
-                            if (index < tempArray.size()) {
-                                elementToReturn = tempArray.get(index);
-                            } else {
-                                throw new NoSuchDataPathException(path + "@[" + index + "]");
-                            }
-                        } else if (ProteusConstants.ARRAY_DATA_LENGTH_REFERENCE.equals(segment)) {
-                            elementToReturn = new JsonPrimitive(tempArray.size());
-                        } else if (ProteusConstants.ARRAY_DATA_LAST_INDEX_REFERENCE.equals(segment)) {
-                            if (tempArray.size() == 0) {
-                                throw new NoSuchDataPathException(path + "@[" + segment + "]");
-                            }
-                            elementToReturn = tempArray.get(tempArray.size() - 1);
+
+                    if (ProteusConstants.INDEX.equals(segment)) {
+                        if (index < tempArray.size()) {
+                            elementToReturn = tempArray.get(index);
                         } else {
-                            try {
-                                index = Integer.parseInt(segment);
-                            } catch (NumberFormatException e) {
-                                throw new InvalidDataPathException(path + "@[" + segment + "]");
-                            }
-                            if (index < tempArray.size()) {
-                                elementToReturn = tempArray.get(index);
-                            } else {
-                                throw new NoSuchDataPathException(path + "@[" + index + "]");
-                            }
+                            return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                         }
+                    } else if (ProteusConstants.ARRAY_DATA_LENGTH_REFERENCE.equals(segment)) {
+                        elementToReturn = new JsonPrimitive(tempArray.size());
+                    } else if (ProteusConstants.ARRAY_DATA_LAST_INDEX_REFERENCE.equals(segment)) {
+                        if (tempArray.size() == 0) {
+                            return Result.NO_SUCH_DATA_PATH_EXCEPTION;
+                        }
+                        elementToReturn = tempArray.get(tempArray.size() - 1);
                     } else {
-                        throw new NoSuchDataPathException(path);
+                        try {
+                            index = Integer.parseInt(segment);
+                        } catch (NumberFormatException e) {
+                            return Result.INVALID_DATA_PATH_EXCEPTION;
+                        }
+                        if (index < tempArray.size()) {
+                            elementToReturn = tempArray.get(index);
+                        } else {
+                            return Result.NO_SUCH_DATA_PATH_EXCEPTION;
+                        }
                     }
                 } else if (elementToReturn.isJsonObject()) {
                     tempElement = elementToReturn.getAsJsonObject().get(segment);
                     if (tempElement != null) {
                         elementToReturn = tempElement;
                     } else {
-                        throw new NoSuchDataPathException(path);
+                        return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                     }
                 } else if (elementToReturn.isJsonPrimitive()) {
-                    throw new InvalidDataPathException(path);
+                    return Result.INVALID_DATA_PATH_EXCEPTION;
                 } else {
-                    throw new NoSuchDataPathException(path);
+                    return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                 }
             }
             if (elementToReturn.isJsonNull()) {
-                throw new JsonNullException(path);
+                return Result.JSON_NULL_EXCEPTION;
             }
-            return elementToReturn;
+            return Result.success(elementToReturn);
         }
     }
 

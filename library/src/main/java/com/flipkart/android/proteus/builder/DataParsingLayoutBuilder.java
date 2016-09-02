@@ -24,20 +24,18 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.binding.Binding;
-import com.flipkart.android.proteus.exceptions.InvalidDataPathException;
-import com.flipkart.android.proteus.exceptions.JsonNullException;
-import com.flipkart.android.proteus.exceptions.NoSuchDataPathException;
 import com.flipkart.android.proteus.parser.LayoutHandler;
+import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
+import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 import com.flipkart.android.proteus.view.manager.ProteusViewManagerImpl;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -53,9 +51,8 @@ import java.util.regex.Matcher;
  */
 public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
-    private Map<String, Formatter> formatter = new HashMap<>();
-
     private static Logger logger = LoggerFactory.getLogger(DataAndViewParsingLayoutBuilder.class);
+    private Map<String, Formatter> formatter = new HashMap<>();
 
     protected DataParsingLayoutBuilder(@NonNull IdGenerator idGenerator) {
         super(idGenerator);
@@ -79,28 +76,15 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
 
         if (element != null) {
 
+            int length = 0;
             String dataPath = element.getAsString().substring(1);
-            int length;
-
             viewManager.setDataPathForChildren(dataPath);
 
-            try {
+            Result result = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
+            JsonElement elementFromData = result.isSuccess() ? result.element : null;
 
-                @SuppressWarnings("ConstantConditions")
-                JsonElement dataElement = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
-
-                if (dataElement.isJsonArray()) {
-                    length = dataElement.getAsJsonArray().size();
-                } else {
-                    length = 0;
-                }
-
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-                logger.error("#handleChildren() " + e.getMessage());
-                length = 0;
-            } catch (NumberFormatException e) {
-                logger.error("#handleChildren() " + element.getAsString() + " is not a number. layout: " + layout.toString());
-                length = 0;
+            if (null != elementFromData) {
+                length = ParseHelper.parseInt(elementFromData.getAsString());
             }
 
             // get the child type
@@ -208,69 +192,69 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         }
 
         char firstChar = TextUtils.isEmpty(stringValue) ? 0 : stringValue.charAt(0);
-        if (firstChar == ProteusConstants.REGEX_PREFIX) {
-            Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(stringValue);
-            String finalValue = stringValue;
-            String dataPath;
-            while (regexMatcher.find()) {
-                String matchedString = regexMatcher.group(0);
-                String bindingName;
-                if (regexMatcher.group(3) != null) {
+        String dataPath;
+        Result result;
+        switch (firstChar) {
+            case ProteusConstants.DATA_PREFIX:
+                JsonElement elementFromData;
+                dataPath = stringValue.substring(1);
+                result = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
 
-                    // has NO formatter
-                    dataPath = regexMatcher.group(3);
-                    try {
-                        finalValue = finalValue.replace(matchedString, Utils.readJson(dataPath, dataContext.getData(), dataContext.getIndex()).getAsString());
-                    } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                        if (ProteusConstants.isLoggingEnabled()) {
-                            logger.error("#findAndReplaceValues() " + e.getMessage());
-                        }
-                        finalValue = dataPath;
-                    }
-                    bindingName = dataPath;
+                if (result.isSuccess()) {
+                    elementFromData = result.element;
                 } else {
+                    elementFromData = new JsonPrimitive(ProteusConstants.DATA_NULL);
+                }
 
-                    // has formatter
-                    dataPath = regexMatcher.group(1);
-                    String formatterName = regexMatcher.group(2);
+                if (elementFromData != null) {
+                    value = elementFromData;
+                }
+                addBinding(viewManager, dataPath, attribute, stringValue, false);
+                break;
+            case ProteusConstants.REGEX_PREFIX:
+                Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(stringValue);
+                String finalValue = stringValue;
+                while (regexMatcher.find()) {
+                    String matchedString = regexMatcher.group(0);
+                    String bindingName;
+                    if (regexMatcher.group(3) != null) {
 
-                    String formattedValue;
-                    try {
-                        formattedValue = format(Utils.readJson(dataPath, dataContext.getData(), dataContext.getIndex()), formatterName);
-                    } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                        if (ProteusConstants.isLoggingEnabled()) {
-                            logger.error("#findAndReplaceValues() " + e.getMessage());
+                        // has NO formatter
+                        dataPath = regexMatcher.group(3);
+                        result = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
+                        if (result.isSuccess() && null != result.element) {
+                            finalValue = finalValue.replace(matchedString, result.element.getAsString());
+                        } else {
+                            finalValue = dataPath;
                         }
-                        formattedValue = dataPath;
+                        bindingName = dataPath;
+                    } else {
+
+                        // has formatter
+                        dataPath = regexMatcher.group(1);
+                        String formatterName = regexMatcher.group(2);
+
+                        String formattedValue;
+                        result = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
+                        if (result.isSuccess() && null != result.element) {
+                            formattedValue = format(result.element, formatterName);
+                        } else {
+                            formattedValue = dataPath;
+                        }
+
+                        finalValue = finalValue.replace(matchedString, formattedValue != null ? formattedValue : "");
+                        bindingName = dataPath;
                     }
-                    finalValue = finalValue.replace(matchedString, formattedValue != null ? formattedValue : "");
-                    bindingName = dataPath;
+                    addBinding(viewManager, bindingName, attribute, stringValue, true);
                 }
-                addBinding(viewManager, bindingName, attribute, stringValue, true);
-            }
 
-            // remove the REGEX_PREFIX
-            finalValue = finalValue.substring(1);
+                // remove the REGEX_PREFIX
+                finalValue = finalValue.substring(1);
 
-            // return as a JsonPrimitive
-            value = new JsonPrimitive(finalValue);
+                // return as a JsonPrimitive
+                value = new JsonPrimitive(finalValue);
 
-        } else if (stringValue.charAt(0) == ProteusConstants.DATA_PREFIX) {
-            JsonElement elementFromData;
-            String dataPath = stringValue.substring(1);
-            try {
-                elementFromData = Utils.readJson(dataPath, dataContext.getData(), dataContext.getIndex());
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error("#findAndReplaceValues() " + e.getMessage());
-                }
-                elementFromData = JsonNull.INSTANCE;
-            }
-
-            if (elementFromData != null) {
-                value = elementFromData;
-            }
-            addBinding(viewManager, dataPath, attribute, stringValue, false);
+                break;
         }
 
         return value;

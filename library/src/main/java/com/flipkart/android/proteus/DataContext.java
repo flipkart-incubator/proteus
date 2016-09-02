@@ -18,10 +18,8 @@ package com.flipkart.android.proteus;
 
 import android.support.annotation.Nullable;
 
-import com.flipkart.android.proteus.exceptions.InvalidDataPathException;
-import com.flipkart.android.proteus.exceptions.JsonNullException;
-import com.flipkart.android.proteus.exceptions.NoSuchDataPathException;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
+import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -75,16 +73,8 @@ public class DataContext {
         for (Map.Entry<String, JsonElement> entry : scope.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue().getAsString();
-            JsonElement element;
-            try {
-                element = Utils.readJson(value, data, dataContext.getIndex());
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error("#getNewDataContext could not find: '" + value + "' for '" + key + "'. ERROR: " + e.getMessage());
-                }
-                element = new JsonObject();
-            }
-
+            Result result = Utils.readJson(value, data, dataContext.getIndex());
+            JsonElement element = result.isSuccess() ? result.element : new JsonObject();
             newData.add(key, element);
             String unAliasedValue = value.replace(ProteusConstants.INDEX, String.valueOf(dataContext.getIndex()));
             reverseScope.add(unAliasedValue, new JsonPrimitive(key));
@@ -154,13 +144,13 @@ public class DataContext {
     @Nullable
     public JsonElement get(String dataPath) {
         String aliasedDataPath = getAliasedDataPath(dataPath, reverseScope, true);
-        try {
-            return Utils.readJson(aliasedDataPath, data, index);
-        } catch (JsonNullException e) {
+        Result result = Utils.readJson(aliasedDataPath, data, index);
+        if (result.isSuccess()) {
+            return result.element;
+        } else if (result.RESULT_CODE == Result.RESULT_JSON_NULL_EXCEPTION) {
             return JsonNull.INSTANCE;
-        } catch (NoSuchDataPathException | InvalidDataPathException e) {
-            return null;
         }
+        return null;
     }
 
     public int getIndex() {

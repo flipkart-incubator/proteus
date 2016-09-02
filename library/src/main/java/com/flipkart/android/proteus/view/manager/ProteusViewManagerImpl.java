@@ -23,11 +23,9 @@ import android.view.ViewGroup;
 import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.binding.Binding;
 import com.flipkart.android.proteus.builder.LayoutBuilder;
-import com.flipkart.android.proteus.exceptions.InvalidDataPathException;
-import com.flipkart.android.proteus.exceptions.JsonNullException;
-import com.flipkart.android.proteus.exceptions.NoSuchDataPathException;
 import com.flipkart.android.proteus.parser.LayoutHandler;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
+import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusView;
@@ -49,23 +47,18 @@ import java.util.ArrayList;
  */
 public class ProteusViewManagerImpl implements ProteusViewManager {
 
+    private static Logger logger = LoggerFactory.getLogger(ProteusViewManagerImpl.class);
     private View view;
-
     private JsonObject layout;
     private Styles styles;
     private DataContext dataContext;
-
     private LayoutBuilder layoutBuilder;
     private LayoutHandler layoutHandler;
     private OnUpdateDataListener onUpdateDataListener;
-
     private String dataPathForChildren;
     private JsonObject childLayout;
     private boolean isViewUpdating;
-
     private ArrayList<Binding> bindings;
-
-    private static Logger logger = LoggerFactory.getLogger(ProteusViewManagerImpl.class);
 
     @Override
     public void update(@Nullable JsonObject data) {
@@ -132,12 +125,9 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     private void updateChildrenFromData() {
         JsonArray dataList = new JsonArray();
         ViewGroup parent = ((ViewGroup) view);
-        try {
-            dataList = Utils.readJson(dataPathForChildren, dataContext.getData(), dataContext.getIndex()).getAsJsonArray();
-        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException | IllegalStateException e) {
-            if (ProteusConstants.isLoggingEnabled()) {
-                logger.error("#updateChildrenFromData " + e.getMessage());
-            }
+        Result result = Utils.readJson(dataPathForChildren, dataContext.getData(), dataContext.getIndex());
+        if (result.isSuccess() && null != result.element && result.element.isJsonArray()) {
+            dataList = result.element.getAsJsonArray();
         }
 
         int childCount = parent.getChildCount();
@@ -203,16 +193,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         if (binding.hasRegEx()) {
             layoutBuilder.handleAttribute(layoutHandler, (ProteusView) view, binding.getAttributeKey(), new JsonPrimitive(binding.getAttributeValue()));
         } else {
-            JsonElement dataValue;
-            try {
-                dataValue = Utils.readJson(binding.getBindingName(), dataContext.getData(), dataContext.getIndex());
-
-            } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    logger.error("#handleBinding() " + e.getMessage());
-                }
-                dataValue = JsonNull.INSTANCE;
-            }
+            Result result = Utils.readJson(binding.getBindingName(), dataContext.getData(), dataContext.getIndex());
+            JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
             layoutBuilder.handleAttribute(layoutHandler, (ProteusView) view, binding.getAttributeKey(), dataValue);
         }
     }
@@ -273,15 +255,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         }
 
         String aliasedDataPath = DataContext.getAliasedDataPath(dataPath, dataContext.getReverseScope(), true);
-        JsonElement parent = null;
-
-        try {
-            parent = Utils.readJson(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")), dataContext.getData(), dataContext.getIndex());
-        } catch (JsonNullException | NoSuchDataPathException | InvalidDataPathException e) {
-            if (ProteusConstants.isLoggingEnabled()) {
-                logger.error("#set() " + e.getMessage());
-            }
-        }
+        Result result = Utils.readJson(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")), dataContext.getData(), dataContext.getIndex());
+        JsonElement parent = result.isSuccess() ? result.element : null;
         if (parent == null || !parent.isJsonObject()) {
             return;
         }
