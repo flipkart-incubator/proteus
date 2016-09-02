@@ -39,7 +39,7 @@ import java.util.StringTokenizer;
 public class Utils {
 
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "4.0.0-SNAPSHOT";
+    public static final String VERSION = "4.1.0-SNAPSHOT";
 
     public static final String ATTRIBUTE_BORDER_WIDTH = "width";
     public static final String ATTRIBUTE_BORDER_COLOR = "color";
