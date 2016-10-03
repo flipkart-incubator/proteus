@@ -1,5 +1,6 @@
 package com.flipkart.layoutengine.view;
 
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -150,7 +151,7 @@ public class SimpleProteusView implements ProteusView {
     }
 
     protected void unsetParent(View child) {
-        if (child.getParent() != null) {
+        if (null != child && child.getParent() != null) {
             ((ViewGroup) child.getParent()).removeView(child);
         }
     }
