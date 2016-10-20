@@ -20,8 +20,8 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.view.View;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.google.gson.JsonElement;
 
 /**
  * @author kirankumar
@@ -32,11 +32,11 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
      * @param view View
      */
     @Override
-    public void handle(String key, JsonElement value, V view) {
-        if (value.isJsonPrimitive()) {
-            handle(key, getStringFromAttribute(view, value.getAsString()), view);
+    public void handle(V view, String key, LayoutParser parser) {
+        if (parser.isJsonPrimitive()) {
+            handle(key, getStringFromAttribute(view, parser.getAsString()), view);
         } else {
-            handle(key, value.toString(), view);
+            handle(key, parser.toString(), view);
         }
     }
 

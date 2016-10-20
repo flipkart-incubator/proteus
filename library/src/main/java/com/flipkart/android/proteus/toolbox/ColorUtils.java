@@ -21,19 +21,16 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.StateSet;
 import android.webkit.ValueCallback;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 
 public class ColorUtils {
     private static final String TAG = "ColorUtils";
@@ -41,19 +38,19 @@ public class ColorUtils {
 
     /**
      * @param context                Application context used to access resources
-     * @param value                  JSON representation of the Color
+     * @param parser                 JSON representation of the Color
      * @param colorCallback          Callback for return Value if it is a Color Resource
      * @param colorStateListCallback Callback for return Value if it is a ColorStateList
      * @throws android.content.res.Resources.NotFoundException when the animation cannot be loaded
      */
-    public static void loadColor(Context context, JsonElement value, ValueCallback<Integer> colorCallback, ValueCallback<ColorStateList> colorStateListCallback) throws Resources.NotFoundException {
-        if (value.isJsonPrimitive()) {
-            handleString(context, value.getAsString(), colorCallback, colorStateListCallback);
-        } else if (value.isJsonObject()) {
-            handleElement(context, value.getAsJsonObject(), colorCallback, colorStateListCallback);
+    public static void loadColor(Context context, LayoutParser parser, ValueCallback<Integer> colorCallback, ValueCallback<ColorStateList> colorStateListCallback) throws Resources.NotFoundException {
+        if (parser.isString()) {
+            handleString(context, parser.getString(), colorCallback, colorStateListCallback);
+        } else if (parser.isObject()) {
+            handleElement(context, parser, colorCallback, colorStateListCallback);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Could not color for : " + value.toString());
+                Log.e(TAG, "Could not color for : " + parser.toString());
             }
         }
     }
@@ -86,9 +83,8 @@ public class ColorUtils {
         }
     }
 
-    private static void handleElement(Context context, JsonObject value, ValueCallback<Integer> colorCallback, ValueCallback<ColorStateList> colorStateListCallback) {
-        JsonObject jsonObject = value.getAsJsonObject();
-        ColorStateList colorStateList = inflateFromJson(context, jsonObject);
+    private static void handleElement(Context context, LayoutParser parser, ValueCallback<Integer> colorCallback, ValueCallback<ColorStateList> colorStateListCallback) {
+        ColorStateList colorStateList = inflateFromParser(context, parser);
 
         if (null != colorStateList) {
             colorStateListCallback.onReceiveValue(colorStateList);
@@ -162,69 +158,73 @@ public class ColorUtils {
         return getAttributesMap().get(attribute);
     }
 
-    private static ColorStateList inflateFromJson(Context context, JsonObject jsonObject) {
+    @Nullable
+    private static ColorStateList inflateFromParser(Context context, LayoutParser parser) {
         ColorStateList result = null;
-        JsonElement type = jsonObject.get("type");
-        if (null != type && type.isJsonPrimitive()) {
-            String colorType = type.getAsString();
-            if (TextUtils.equals(colorType, "selector")) {
-                JsonElement childrenElement = jsonObject.get("children");
 
-                if (null != childrenElement && childrenElement.isJsonArray()) {
-                    JsonArray children = childrenElement.getAsJsonArray();
+        if (parser.isString("type")) {
+            String colorType = parser.getString("type");
+            if (TextUtils.equals(colorType, "selector")) {
+
+                if (parser.isArray("children")) {
+
+                    parser.peek();
+
                     int listAllocated = 20;
                     int listSize = 0;
                     int[] colorList = new int[listAllocated];
                     int[][] stateSpecList = new int[listAllocated][];
 
-                    for (int idx = 0; idx < children.size(); idx++) {
-                        JsonElement itemObject = children.get(idx);
-                        if (!itemObject.isJsonObject()) {
+                    while (parser.hasNext()) {
+                        if (!parser.isObject()) {
                             continue;
                         }
 
-                        Set<Map.Entry<String, JsonElement>> entrySet = ((JsonObject) itemObject).entrySet();
-                        if (entrySet.size() == 0) {
+                        parser.peek();
+
+                        if (parser.size() == 0) {
                             continue;
                         }
 
                         int j = 0;
                         Integer baseColor = null;
                         float alphaMod = 1.0f;
-
-                        int[] stateSpec = new int[entrySet.size() - 1];
+                        int[] stateSpec = new int[parser.size() - 1];
                         boolean ignoreItem = false;
-                        for (Map.Entry<String, JsonElement> entry : entrySet) {
+
+                        while (parser.hasNext()) {
+                            parser.next();
+
                             if (ignoreItem) {
                                 break;
                             }
-                            if (!entry.getValue().isJsonPrimitive()) {
+
+                            if (!parser.isString()) {
                                 continue;
                             }
-                            Integer attributeId = getAttribute(entry.getKey());
+
+                            Integer attributeId = getAttribute(parser.getName());
                             if (null != attributeId) {
                                 switch (attributeId) {
                                     case android.R.attr.type:
-                                        if (!TextUtils.equals("item", entry.getValue().getAsString())) {
+                                        if (!TextUtils.equals("item", parser.getString())) {
                                             ignoreItem = true;
                                         }
                                         break;
                                     case android.R.attr.color:
-                                        String colorRes = entry.getValue().getAsString();
+                                        String colorRes = parser.getString();
                                         if (!TextUtils.isEmpty(colorRes)) {
                                             baseColor = getColorFromAttributeValue(context, colorRes);
                                         }
                                         break;
                                     case android.R.attr.alpha:
-                                        String alphaStr = entry.getValue().getAsString();
+                                        String alphaStr = parser.getString();
                                         if (!TextUtils.isEmpty(alphaStr)) {
                                             alphaMod = Float.parseFloat(alphaStr);
                                         }
                                         break;
                                     default:
-                                        stateSpec[j++] = entry.getValue().getAsBoolean()
-                                                ? attributeId
-                                                : -attributeId;
+                                        stateSpec[j++] = parser.getBoolean() ? attributeId : -attributeId;
                                         break;
                                 }
                             }

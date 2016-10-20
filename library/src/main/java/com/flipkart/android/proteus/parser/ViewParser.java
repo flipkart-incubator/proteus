@@ -29,7 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.flipkart.android.proteus.EventType;
-import com.flipkart.android.proteus.builder.LayoutBuilder;
+import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
@@ -60,7 +61,7 @@ public class ViewParser<V extends View> extends Parser<V> {
     private static final String ID_STRING_NORMALIZED_PATTERN = ":id/";
 
     @Override
-    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
         return new ProteusAndroidView(parent.getContext());
     }
 
@@ -68,11 +69,11 @@ public class ViewParser<V extends View> extends Parser<V> {
 
         addHandler(Attributes.View.OnClick, new EventProcessor<V>() {
             @Override
-            public void setOnEventListener(final V view, final JsonElement attributeValue) {
+            public void setOnEventListener(final V view, final LayoutParser parser) {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fireEvent((ProteusView) view, EventType.OnClick, attributeValue);
+                        fireEvent((ProteusView) view, EventType.OnClick, parser);
                     }
                 });
             }
@@ -90,7 +91,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.Height, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
                 if (layoutParams != null) {
                     layoutParams.height = (int) dimension;
@@ -100,7 +101,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.Width, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
                 if (layoutParams != null) {
                     layoutParams.width = (int) dimension;
@@ -146,37 +147,37 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.Padding, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setPadding((int) dimension, (int) dimension, (int) dimension, (int) dimension);
             }
         });
         addHandler(Attributes.View.PaddingLeft, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setPadding((int) dimension, view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
             }
         });
         addHandler(Attributes.View.PaddingTop, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setPadding(view.getPaddingLeft(), (int) dimension, view.getPaddingRight(), view.getPaddingBottom());
             }
         });
         addHandler(Attributes.View.PaddingRight, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), (int) dimension, view.getPaddingBottom());
             }
         });
         addHandler(Attributes.View.PaddingBottom, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), (int) dimension);
             }
         });
         addHandler(Attributes.View.Margin, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -191,7 +192,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.MarginLeft, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -206,7 +207,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.MarginTop, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -221,7 +222,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.MarginRight, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -236,7 +237,7 @@ public class ViewParser<V extends View> extends Parser<V> {
         });
         addHandler(Attributes.View.MarginBottom, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
                     ViewGroup.MarginLayoutParams layoutParams;
                     layoutParams = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
@@ -252,21 +253,21 @@ public class ViewParser<V extends View> extends Parser<V> {
 
         addHandler(Attributes.View.MinHeight, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setMinimumHeight((int) dimension);
             }
         });
 
         addHandler(Attributes.View.MinWidth, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setMinimumWidth((int) dimension);
             }
         });
 
         addHandler(Attributes.View.Elevation, new DimensionAttributeProcessor<V>() {
             @Override
-            public void setDimension(float dimension, V view, String key, JsonElement value) {
+            public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     view.setElevation(dimension);
                 }
@@ -378,7 +379,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 ProteusViewManager viewManager = ((ProteusView) view).getViewManager();
                 Styles styles = viewManager.getStyles();
 
-                LayoutHandler handler = viewManager.getLayoutBuilder().getHandler(Utils.getPropertyAsString(viewManager.getLayout(), ProteusConstants.TYPE));
+                TypeHandler handler = viewManager.getProteusLayoutInflater().getHandler(Utils.getPropertyAsString(viewManager.getLayout(), ProteusConstants.TYPE));
                 if (styles == null) {
                     return;
                 }
@@ -386,12 +387,12 @@ public class ViewParser<V extends View> extends Parser<V> {
                 String[] styleSet = attributeValue.split(ProteusConstants.STYLE_DELIMITER);
                 for (String styleName : styleSet) {
                     if (styles.contains(styleName)) {
-                        process(styles.getStyle(styleName), viewManager.getLayout(), (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getLayoutBuilder());
+                        process(styles.getStyle(styleName), viewManager.getLayout(), (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater());
                     }
                 }
             }
 
-            private void process(Map<String, JsonElement> style, JsonObject layout, ProteusView proteusView, LayoutHandler handler, LayoutBuilder builder) {
+            private void process(Map<String, JsonElement> style, JsonObject layout, ProteusView proteusView, TypeHandler handler, ProteusLayoutInflater builder) {
                 for (Map.Entry<String, JsonElement> attribute : style.entrySet()) {
                     if (layout.has(attribute.getKey())) {
                         continue;

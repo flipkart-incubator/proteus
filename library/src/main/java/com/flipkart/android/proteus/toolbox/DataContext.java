@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.toolbox;
 
 import android.support.annotation.Nullable;
 
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
-import com.flipkart.android.proteus.toolbox.Result;
-import com.flipkart.android.proteus.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;

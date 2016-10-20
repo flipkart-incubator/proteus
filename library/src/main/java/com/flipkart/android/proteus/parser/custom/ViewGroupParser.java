@@ -21,7 +21,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
-import com.flipkart.android.proteus.builder.LayoutBuilder;
+import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
@@ -46,7 +47,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
         return new ProteusAspectRatioFrameLayout(parent.getContext());
     }
 
@@ -94,7 +95,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
     @Override
     public boolean handleChildren(ProteusView view) {
         ProteusViewManager viewManager = view.getViewManager();
-        LayoutBuilder layoutBuilder = viewManager.getLayoutBuilder();
+        ProteusLayoutInflater proteusLayoutInflater = viewManager.getProteusLayoutInflater();
         DataContext dataContext = viewManager.getDataContext();
         JsonObject layout = viewManager.getLayout();
 
@@ -107,13 +108,13 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
         JsonArray children;
         ProteusView child;
 
-        if (!(element instanceof JsonArray) || layoutBuilder == null) {
+        if (!(element instanceof JsonArray) || proteusLayoutInflater == null) {
             return false;
         }
 
         children = element.getAsJsonArray();
         for (int index = 0; index < children.size(); index++) {
-            child = layoutBuilder.build((ViewGroup) view, children.get(index).getAsJsonObject(), data, viewManager.getDataContext().getIndex(), view.getViewManager().getStyles());
+            child = proteusLayoutInflater.build((ViewGroup) view, children.get(index).getAsJsonObject(), data, view.getViewManager().getStyles(), viewManager.getDataContext().getIndex());
             addView(view, child);
         }
 

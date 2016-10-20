@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package com.flipkart.android.proteus.processor;
-
-import com.google.gson.JsonElement;
+package com.flipkart.android.proteus.toolbox;
 
 /**
- *
+ * Created by prateek.dixit on 1/21/15.
  */
-public abstract class JsonDataProcessor<E> extends AttributeProcessor<E> {
-    @Override
-    abstract public void handle(String key, JsonElement value, E view);
+public enum EventType {
+
+    OnClick, OnLongClick, OnTouch
+
 }

@@ -31,7 +31,7 @@ import android.widget.FrameLayout;
 
 import com.flipkart.android.proteus.EventType;
 import com.flipkart.android.proteus.ImageLoaderCallback;
-import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutBuilder;
+import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.builder.LayoutBuilderCallback;
 import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
@@ -61,7 +61,7 @@ public class ProteusActivity extends AppCompatActivity {
      */
     private BitmapLoader bitmapLoader = new BitmapLoader() {
         @Override
-        public Future<Bitmap> getBitmap(String imageUrl, View view) {
+        public Future<Bitmap> getBitmap(String imageUrl, ProteusView view) {
             return null;
         }
 
@@ -153,7 +153,7 @@ public class ProteusActivity extends AppCompatActivity {
 
         // Init dataAndViewParsingLayoutBuilder and set layoutProvider, layoutBuilderCallback
         // and bitmapLoader we initialised before.
-        DataAndViewParsingLayoutBuilder builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(layoutProvider);
+        DataAndViewParsingLayoutInflater builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(layoutProvider);
         builder.setListener(callback);
         builder.setBitmapLoader(bitmapLoader);
 
@@ -165,7 +165,7 @@ public class ProteusActivity extends AppCompatActivity {
         );
 
         // Get instance of proteusView from dataAndViewParsingLayoutBuilder
-        ProteusView proteusView = builder.build(container, pageLayout, data, 0, styles);
+        ProteusView proteusView = builder.build(container, pageLayout, data, styles, 0);
 
         // Add proteusView and layoutParams to container layout.
         container.addView((View) proteusView, layoutParams);

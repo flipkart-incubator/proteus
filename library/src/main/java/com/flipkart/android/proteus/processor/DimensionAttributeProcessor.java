@@ -19,8 +19,8 @@ package com.flipkart.android.proteus.processor;
 
 import android.view.View;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.google.gson.JsonElement;
 
 public abstract class DimensionAttributeProcessor<T extends View> extends AttributeProcessor<T> {
 
@@ -28,17 +28,17 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
      * @param view View
      */
     @Override
-    public final void handle(String key, JsonElement value, T view) {
-        if (value != null && value.isJsonPrimitive()) {
-            float dimension = ParseHelper.parseDimension(value.getAsString(), view.getContext());
-            setDimension(dimension, view, key, value);
+    public final void handle(T view, String key, LayoutParser parser) {
+        if (parser != null && parser.isString()) {
+            float dimension = ParseHelper.parseDimension(parser.getString(), view.getContext());
+            setDimension(view, key, dimension, parser);
         }
     }
 
     /**
-     * @param view  View
-     * @param key   Attribute Key
-     * @param value Attribute Value
+     * @param view   View
+     * @param key    Attribute Key
+     * @param parser Attribute Value
      */
-    public abstract void setDimension(float dimension, T view, String key, JsonElement value);
+    public abstract void setDimension(T view, String key, float dimension, LayoutParser parser);
 }

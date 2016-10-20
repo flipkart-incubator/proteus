@@ -19,10 +19,10 @@ package com.flipkart.android.proteus.view.manager;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.flipkart.android.proteus.DataContext;
-import com.flipkart.android.proteus.binding.Binding;
-import com.flipkart.android.proteus.builder.LayoutBuilder;
-import com.flipkart.android.proteus.parser.LayoutHandler;
+import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
+import com.flipkart.android.proteus.parser.TypeHandler;
+import com.flipkart.android.proteus.toolbox.Binding;
+import com.flipkart.android.proteus.toolbox.DataContext;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,31 +43,32 @@ public interface ProteusViewManager {
 
     /**
      * Set the {@link View} which will be managed.
+     *
      * @param view The view to manage.
      */
     void setView(View view);
 
-    LayoutBuilder getLayoutBuilder();
+    ProteusLayoutInflater getProteusLayoutInflater();
 
-    void setLayoutBuilder(LayoutBuilder layoutBuilder);
+    void setProteusLayoutInflater(ProteusLayoutInflater proteusLayoutInflater);
 
-    LayoutHandler getLayoutHandler();
+    TypeHandler getTypeHandler();
 
-    void setLayoutHandler(LayoutHandler layoutHandler);
+    void setTypeHandler(TypeHandler typeHandler);
 
     /**
      * Returns the layout used to build this {@link android.view.View}.
      *
      * @return Returns the layout used to build this {@link android.view.View}
      */
-    JsonObject getLayout();
+    Object getLayout();
 
     /**
      * Sets the layout used to build this {@link android.view.View}.
      *
-     * @param layout The layout used to build this {@link android.view.View}
+     * @param layout The layout used to build this {@link View}
      */
-    void setLayout(JsonObject layout);
+    void setLayout(Object layout);
 
     /**
      * Returns the current {@link Styles} set in this {@link android.view.View}.

@@ -16,10 +16,11 @@
 
 package com.flipkart.android.proteus.processor;
 
-import com.flipkart.android.proteus.EventType;
-import com.flipkart.android.proteus.builder.LayoutBuilderCallback;
+
+import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.toolbox.EventType;
+import com.flipkart.android.proteus.toolbox.LayoutBuilderCallback;
 import com.flipkart.android.proteus.view.ProteusView;
-import com.google.gson.JsonElement;
 
 /**
  * Use this as the base processor for handling events like OnClick , OnLongClick , OnTouch etc.
@@ -29,17 +30,17 @@ import com.google.gson.JsonElement;
 public abstract class EventProcessor<T> extends AttributeProcessor<T> {
 
     @Override
-    public void handle(String key, JsonElement value, T view) {
-        setOnEventListener(view, value);
+    public void handle(T view, String key, LayoutParser parser) {
+        setOnEventListener(view, parser);
     }
 
-    public abstract void setOnEventListener(T view, JsonElement attributeValue);
+    public abstract void setOnEventListener(T view, LayoutParser parser);
 
     /**
      * This delegates Event with required attributes to client
      */
-    public void fireEvent(ProteusView view, EventType eventType, JsonElement attributeValue) {
-        LayoutBuilderCallback layoutBuilderCallback = view.getViewManager().getLayoutBuilder().getListener();
-        layoutBuilderCallback.onEvent(view, attributeValue, eventType);
+    public void fireEvent(ProteusView view, EventType eventType, LayoutParser parser) {
+        LayoutBuilderCallback layoutBuilderCallback = view.getViewManager().getProteusLayoutInflater().getListener();
+        layoutBuilderCallback.onEvent(view, eventType, parser);
     }
 }

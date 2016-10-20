@@ -58,28 +58,28 @@ import java.util.Map;
  */
 public class LayoutBuilderFactory {
 
-    private SimpleLayoutBuilder simpleLayoutBuilderInstance;
-    private DataParsingLayoutBuilder dataParsingLayoutBuilderInstance;
-    private DataAndViewParsingLayoutBuilder dataAndViewParsingLayoutBuilderInstance;
+    private SimpleLayoutInflater simpleLayoutBuilderInstance;
+    private DataParsingLayoutInflater dataParsingLayoutBuilderInstance;
+    private DataAndViewParsingLayoutInflater dataAndViewParsingLayoutBuilderInstance;
 
     /**
      * Returns a layout builder which can parse @data blocks as well as custom view blocks.
-     * See {@link DataParsingLayoutBuilder}
+     * See {@link DataParsingLayoutInflater}
      *
-     * @return A new {@link DataAndViewParsingLayoutBuilder}
+     * @return A new {@link DataAndViewParsingLayoutInflater}
      */
-    public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Map<String, JsonObject> layouts, @NonNull IdGenerator idGenerator) {
+    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutBuilder(Map<String, JsonObject> layouts, @NonNull IdGenerator idGenerator) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
-            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(layouts, idGenerator);
+            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutInflater(layouts, idGenerator);
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
             registerFormatter(dataAndViewParsingLayoutBuilderInstance);
         }
         return dataAndViewParsingLayoutBuilderInstance;
     }
 
-    public DataAndViewParsingLayoutBuilder getDataAndViewParsingLayoutBuilder(Map<String, JsonObject> layouts) {
+    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutBuilder(Map<String, JsonObject> layouts) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
-            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutBuilder(layouts, new IdGeneratorImpl());
+            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutInflater(layouts, new IdGeneratorImpl());
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
             registerFormatter(dataAndViewParsingLayoutBuilderInstance);
         }
@@ -87,22 +87,22 @@ public class LayoutBuilderFactory {
     }
 
     /**
-     * Returns a layout builder which can parse @data blocks. See {@link DataParsingLayoutBuilder}
+     * Returns a layout builder which can parse @data blocks. See {@link DataParsingLayoutInflater}
      *
-     * @return A new {@link DataParsingLayoutBuilder}
+     * @return A new {@link DataParsingLayoutInflater}
      */
-    public DataParsingLayoutBuilder getDataParsingLayoutBuilder(@NonNull IdGenerator idGenerator) {
+    public DataParsingLayoutInflater getDataParsingLayoutBuilder(@NonNull IdGenerator idGenerator) {
         if (dataParsingLayoutBuilderInstance == null) {
-            dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder(idGenerator);
+            dataParsingLayoutBuilderInstance = new DataParsingLayoutInflater(idGenerator);
             registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
             registerFormatter(dataParsingLayoutBuilderInstance);
         }
         return dataParsingLayoutBuilderInstance;
     }
 
-    public DataParsingLayoutBuilder getDataParsingLayoutBuilder() {
+    public DataParsingLayoutInflater getDataParsingLayoutBuilder() {
         if (dataParsingLayoutBuilderInstance == null) {
-            dataParsingLayoutBuilderInstance = new DataParsingLayoutBuilder(new IdGeneratorImpl());
+            dataParsingLayoutBuilderInstance = new DataParsingLayoutInflater(new IdGeneratorImpl());
             registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
             registerFormatter(dataParsingLayoutBuilderInstance);
         }
@@ -110,21 +110,21 @@ public class LayoutBuilderFactory {
     }
 
     /**
-     * Returns a simple layout builder. See {@link SimpleLayoutBuilder}
+     * Returns a simple layout builder. See {@link SimpleLayoutInflater}
      *
-     * @return A new {@link SimpleLayoutBuilder}
+     * @return A new {@link SimpleLayoutInflater}
      */
-    public SimpleLayoutBuilder getSimpleLayoutBuilder(@NonNull IdGenerator idGenerator) {
+    public SimpleLayoutInflater getSimpleLayoutBuilder(@NonNull IdGenerator idGenerator) {
         if (simpleLayoutBuilderInstance == null) {
-            simpleLayoutBuilderInstance = new SimpleLayoutBuilder(idGenerator);
+            simpleLayoutBuilderInstance = new SimpleLayoutInflater(idGenerator);
             registerBuiltInHandlers(simpleLayoutBuilderInstance);
         }
         return simpleLayoutBuilderInstance;
     }
 
-    public SimpleLayoutBuilder getSimpleLayoutBuilder() {
+    public SimpleLayoutInflater getSimpleLayoutBuilder() {
         if (simpleLayoutBuilderInstance == null) {
-            simpleLayoutBuilderInstance = new SimpleLayoutBuilder(new IdGeneratorImpl());
+            simpleLayoutBuilderInstance = new SimpleLayoutInflater(new IdGeneratorImpl());
             registerBuiltInHandlers(simpleLayoutBuilderInstance);
         }
         return simpleLayoutBuilderInstance;
@@ -134,10 +134,10 @@ public class LayoutBuilderFactory {
     /**
      * This method will register all the internal layout handlers to the builder specified.
      *
-     * @param layoutBuilder The layout builder which will have handlers registered to it.
+     * @param proteusLayoutInflater The layout builder which will have handlers registered to it.
      */
     @SuppressWarnings("unchecked")
-    protected void registerBuiltInHandlers(LayoutBuilder layoutBuilder) {
+    protected void registerBuiltInHandlers(ProteusLayoutInflater proteusLayoutInflater) {
         ViewParser viewParser = new ViewParser();
         ImageViewParser imageViewParser = new ImageViewParser(viewParser);
         ImageButtonParser imageButtonParser = new ImageButtonParser(imageViewParser);
@@ -157,27 +157,27 @@ public class LayoutBuilderFactory {
         ProgressBarParser progressBarParser = new ProgressBarParser(viewParser);
         HorizontalProgressBarParser horizontalProgressBarParser = new HorizontalProgressBarParser(progressBarParser);
 
-        layoutBuilder.registerHandler("View", viewParser);
-        layoutBuilder.registerHandler("ViewGroup", viewGroupParser);
-        layoutBuilder.registerHandler("RelativeLayout", relativeLayoutParser);
-        layoutBuilder.registerHandler("LinearLayout", linearLayoutParser);
-        layoutBuilder.registerHandler("FrameLayout", frameLayoutParser);
-        layoutBuilder.registerHandler("ScrollView", scrollViewParser);
-        layoutBuilder.registerHandler("HorizontalScrollView", horizontalScrollViewParser);
-        layoutBuilder.registerHandler("ImageView", imageViewParser);
-        layoutBuilder.registerHandler("TextView", textViewParser);
-        layoutBuilder.registerHandler("EditText", editTextParser);
-        layoutBuilder.registerHandler("Button", buttonParser);
-        layoutBuilder.registerHandler("ImageButton", imageButtonParser);
-        layoutBuilder.registerHandler("ViewPager", viewPagerParser);
-        layoutBuilder.registerHandler("WebView", webViewParser);
-        layoutBuilder.registerHandler("RatingBar", ratingBarParser);
-        layoutBuilder.registerHandler("CheckBox", checkBoxParser);
-        layoutBuilder.registerHandler("ProgressBar", progressBarParser);
-        layoutBuilder.registerHandler("HorizontalProgressBar", horizontalProgressBarParser);
+        proteusLayoutInflater.registerHandler("View", viewParser);
+        proteusLayoutInflater.registerHandler("ViewGroup", viewGroupParser);
+        proteusLayoutInflater.registerHandler("RelativeLayout", relativeLayoutParser);
+        proteusLayoutInflater.registerHandler("LinearLayout", linearLayoutParser);
+        proteusLayoutInflater.registerHandler("FrameLayout", frameLayoutParser);
+        proteusLayoutInflater.registerHandler("ScrollView", scrollViewParser);
+        proteusLayoutInflater.registerHandler("HorizontalScrollView", horizontalScrollViewParser);
+        proteusLayoutInflater.registerHandler("ImageView", imageViewParser);
+        proteusLayoutInflater.registerHandler("TextView", textViewParser);
+        proteusLayoutInflater.registerHandler("EditText", editTextParser);
+        proteusLayoutInflater.registerHandler("Button", buttonParser);
+        proteusLayoutInflater.registerHandler("ImageButton", imageButtonParser);
+        proteusLayoutInflater.registerHandler("ViewPager", viewPagerParser);
+        proteusLayoutInflater.registerHandler("WebView", webViewParser);
+        proteusLayoutInflater.registerHandler("RatingBar", ratingBarParser);
+        proteusLayoutInflater.registerHandler("CheckBox", checkBoxParser);
+        proteusLayoutInflater.registerHandler("ProgressBar", progressBarParser);
+        proteusLayoutInflater.registerHandler("HorizontalProgressBar", horizontalProgressBarParser);
     }
 
-    protected void registerFormatter(DataParsingLayoutBuilder layoutBuilder) {
+    protected void registerFormatter(DataParsingLayoutInflater layoutBuilder) {
 
         Formatter NumberFormatter = new Formatter() {
 

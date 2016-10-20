@@ -19,6 +19,7 @@ package com.flipkart.android.proteus.parser.custom;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -36,7 +37,7 @@ public class ImageButtonParser<T extends ImageButton> extends WrappableParser<T>
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
         return new ProteusImageButton(parent.getContext());
     }
 }

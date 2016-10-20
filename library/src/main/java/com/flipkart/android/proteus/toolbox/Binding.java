@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.flipkart.android.proteus.binding;
+package com.flipkart.android.proteus.toolbox;
 
 /**
  * @author kirankumar

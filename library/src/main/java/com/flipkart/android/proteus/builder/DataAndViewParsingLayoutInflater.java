@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
@@ -31,19 +32,19 @@ import java.util.Map;
 
 /**
  * A layout builder which can parse @data and @view blocks before passing it on to
- * {@link SimpleLayoutBuilder}
+ * {@link SimpleLayoutInflater}
  */
-public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
+public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater {
 
     private Map<String, JsonObject> layouts;
 
-    protected DataAndViewParsingLayoutBuilder(Map<String, JsonObject> layouts, @NonNull IdGenerator idGenerator) {
+    protected DataAndViewParsingLayoutInflater(Map<String, JsonObject> layouts, @NonNull IdGenerator idGenerator) {
         super(idGenerator);
         this.layouts = layouts;
     }
 
     @Override
-    protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, JsonObject source, JsonObject data, int index, Styles styles) {
+    protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, LayoutParser source, JsonObject data, int index, Styles styles) {
         JsonElement element = null;
         if (layouts != null) {
             element = layouts.get(type);
@@ -51,7 +52,7 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
         if (element != null && !element.isJsonNull()) {
             JsonObject layout = element.getAsJsonObject();
             layout = Utils.mergeLayouts(layout, source);
-            ProteusView view = build(parent, layout, data, index, styles);
+            ProteusView view = build(parent, layout, data, styles, index);
             onViewBuiltFromViewProvider(view, type, parent, index);
             return view;
         }

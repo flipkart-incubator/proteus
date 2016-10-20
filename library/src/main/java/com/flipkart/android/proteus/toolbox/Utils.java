@@ -22,6 +22,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -252,16 +253,16 @@ public class Utils {
     }
 
     @NonNull
-    public static String getLayoutIdentifier(JsonObject layout) {
+    public static String getLayoutIdentifier(LayoutParser layout) {
         String noLayoutId = "no ID or TAG.";
         if (layout == null) {
             return noLayoutId;
         }
-        String value = Utils.getPropertyAsString(layout, ProteusConstants.ID);
+        String value = layout.getString(ProteusConstants.ID);
         if (value != null) {
             return "ID: " + value + ".";
         }
-        value = Utils.getPropertyAsString(layout, ProteusConstants.TAG);
+        value = layout.getString(ProteusConstants.TAG);
         if (value != null) {
             return "TAG: " + value + ".";
         }

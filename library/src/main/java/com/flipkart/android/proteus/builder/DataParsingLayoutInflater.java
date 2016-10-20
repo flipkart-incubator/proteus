@@ -24,8 +24,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.binding.Binding;
-import com.flipkart.android.proteus.parser.LayoutHandler;
+import com.flipkart.android.proteus.parser.TypeHandler;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
@@ -45,19 +46,19 @@ import java.util.Map;
 import java.util.regex.Matcher;
 
 /**
- * A layout builder which can parse data bindings before passing it on to {@link SimpleLayoutBuilder}
+ * A layout builder which can parse data bindings before passing it on to {@link SimpleLayoutInflater}
  */
-public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
+public class DataParsingLayoutInflater extends SimpleLayoutInflater {
 
-    private static final String TAG = "LayoutBuilder";
+    private static final String TAG = "ProteusLayoutInflater";
     private Map<String, Formatter> formatter = new HashMap<>();
 
-    protected DataParsingLayoutBuilder(@NonNull IdGenerator idGenerator) {
+    protected DataParsingLayoutInflater(@NonNull IdGenerator idGenerator) {
         super(idGenerator);
     }
 
     @Override
-    protected void handleChildren(LayoutHandler handler, ProteusView view) {
+    protected void handleChildren(TypeHandler handler, LayoutParser parser, ProteusView view) {
 
         ProteusViewManager viewManager = view.getViewManager();
         JsonObject layout = viewManager.getLayout();
@@ -100,14 +101,14 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
             viewManager.setChildLayout(childLayout);
 
             for (int index = 0; index < length; index++) {
-                ProteusView child = build((ViewGroup) view, childLayout, viewManager.getDataContext().getData(), index, viewManager.getStyles());
+                ProteusView child = build((ViewGroup) view, childLayout, viewManager.getDataContext().getData(), viewManager.getStyles(), index);
                 if (child != null) {
                     handler.addView(view, child);
                 }
             }
         }
 
-        super.handleChildren(handler, view);
+        super.handleChildren(handler, parser, view);
     }
 
     @Nullable
@@ -132,7 +133,7 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
     }
 
     @Override
-    protected ProteusViewManager createViewManager(LayoutHandler handler, View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
+    protected ProteusViewManager createViewManager(TypeHandler handler, View parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
         ProteusViewManagerImpl viewManager = new ProteusViewManagerImpl();
         DataContext dataContext, parentDataContext = null;
         JsonElement scope = layout.get(ProteusConstants.DATA_CONTEXT);
@@ -162,26 +163,26 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
         viewManager.setLayout(layout);
         viewManager.setDataContext(dataContext);
         viewManager.setStyles(styles);
-        viewManager.setLayoutBuilder(this);
-        viewManager.setLayoutHandler(handler);
+        viewManager.setProteusLayoutInflater(this);
+        viewManager.setTypeHandler(handler);
 
         return viewManager;
     }
 
     @Override
-    public boolean handleAttribute(LayoutHandler handler, ProteusView view, String attribute, JsonElement value) {
+    public boolean handleAttribute(TypeHandler handler, ProteusView view, String attribute, LayoutParser parser) {
 
         if (ProteusConstants.DATA_CONTEXT.equals(attribute)) {
             return true;
         }
-        String stringValue = isDataPath(value);
+        String stringValue = isDataPath(parser);
         if (stringValue != null) {
-            value = this.findAndReplaceValues(handler, view, attribute, stringValue, value);
+            parser = this.findAndReplaceValues(handler, view, attribute, stringValue, parser);
         }
-        return super.handleAttribute(handler, view, attribute, value);
+        return super.handleAttribute(handler, view, attribute, parser);
     }
 
-    private JsonElement findAndReplaceValues(LayoutHandler handler, ProteusView view, String attribute, String stringValue, JsonElement value) {
+    private JsonElement findAndReplaceValues(TypeHandler handler, ProteusView view, String attribute, String stringValue, JsonElement value) {
         ProteusViewManager viewManager = view.getViewManager();
         DataContext dataContext = viewManager.getDataContext();
 

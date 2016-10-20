@@ -21,12 +21,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.R;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -44,7 +44,7 @@ import java.util.Map;
  * @author kiran.kumar
  * @author aditya.sharat
  */
-public abstract class Parser<V extends View> implements LayoutHandler<V> {
+public abstract class Parser<V extends View> implements TypeHandler<V> {
 
     private static final String TAG = "Parser";
 
@@ -52,12 +52,12 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
     private Map<String, AttributeProcessor> handlers = new HashMap<>();
 
     @Override
-    public void onBeforeCreateView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public void onBeforeCreateView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
         // nothing to do here
     }
 
     @Override
-    public void onAfterCreateView(V view, ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public void onAfterCreateView(ViewGroup parent, V view, LayoutParser layout, JsonObject data, Styles styles, int index) {
         try {
             ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent);
             view.setLayoutParams(layoutParams);
@@ -71,11 +71,11 @@ public abstract class Parser<V extends View> implements LayoutHandler<V> {
     protected abstract void prepareHandlers();
 
     @Override
-    public boolean handleAttribute(V view, String attribute, JsonElement value) {
+    public boolean handleAttribute(V view, String attribute, LayoutParser parser) {
         AttributeProcessor attributeProcessor = handlers.get(attribute);
         if (attributeProcessor != null) {
             //noinspection unchecked
-            attributeProcessor.handle(attribute, value, view);
+            attributeProcessor.handle(view, attribute, parser);
             return true;
         }
         return false;

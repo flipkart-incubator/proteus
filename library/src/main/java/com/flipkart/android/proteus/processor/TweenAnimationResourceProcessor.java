@@ -20,9 +20,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.toolbox.AnimationUtils;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
-import com.google.gson.JsonElement;
 
 /**
  * Use this as the base processor for references like @anim
@@ -32,13 +32,13 @@ public abstract class TweenAnimationResourceProcessor<V extends View> extends At
     private static final String TAG = "TweenAnimationResource";
 
     @Override
-    public void handle(String key, JsonElement value, V view) {
-        Animation animation = AnimationUtils.loadAnimation(view.getContext(), value);
+    public void handle(V view, String key, LayoutParser parser) {
+        Animation animation = AnimationUtils.loadAnimation(view.getContext(), parser);
         if (null != animation) {
             setAnimation(view, animation);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Resource for key: " + key + " must be a primitive or an object. value -> " + value.toString());
+                Log.e(TAG, "Resource for key: " + key + " must be a primitive or an object. value -> " + parser.toString());
             }
         }
     }

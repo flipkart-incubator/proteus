@@ -22,6 +22,7 @@ import android.os.Build;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
@@ -32,7 +33,6 @@ import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusLinearLayout;
 import com.flipkart.android.proteus.view.ProteusView;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -45,7 +45,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
         return new ProteusLinearLayout(parent.getContext());
     }
 
@@ -86,7 +86,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
         addHandler(Attributes.LinearLayout.DividerPadding, new DimensionAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
-            public void setDimension(float dimension, T view, String key, JsonElement value) {
+            public void setDimension(T view, String key, float dimension, LayoutParser parser) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
                     view.setDividerPadding((int) dimension);
                 }

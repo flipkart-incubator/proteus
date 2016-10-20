@@ -20,8 +20,8 @@ import android.content.res.ColorStateList;
 import android.view.View;
 import android.webkit.ValueCallback;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.toolbox.ColorUtils;
-import com.google.gson.JsonElement;
 
 public abstract class ColorResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
@@ -30,8 +30,8 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
     }
 
     @Override
-    public void handle(String key, JsonElement value, final V view) {
-        ColorUtils.loadColor(view.getContext(), value, new ValueCallback<Integer>() {
+    public void handle(final V view, String key, LayoutParser parser) {
+        ColorUtils.loadColor(view.getContext(), parser, new ValueCallback<Integer>() {
             /**
              * Invoked when the value is available.
              *

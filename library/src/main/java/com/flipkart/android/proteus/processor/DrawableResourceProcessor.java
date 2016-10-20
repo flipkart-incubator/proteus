@@ -35,6 +35,7 @@ import android.view.View;
 import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.ColorUtils;
 import com.flipkart.android.proteus.toolbox.NetworkDrawableHelper;
@@ -44,7 +45,6 @@ import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -78,20 +78,20 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     private static final String SWEEP_GRADIENT = "sweep";
     private static Gson sGson = new Gson();
 
-    public static GradientDrawable loadGradientDrawable(Context context, JsonObject value) {
-        ShapeDrawableJson shapeDrawable = sGson.fromJson(value, ShapeDrawableJson.class);
+    public static GradientDrawable loadGradientDrawable(Context context, LayoutParser parser) {
+        ShapeDrawableJson shapeDrawable = sGson.fromJson(parser, ShapeDrawableJson.class);
         return shapeDrawable.init(context);
     }
 
     @Override
-    public void handle(String key, JsonElement value, V view) {
-        if (value.isJsonPrimitive()) {
-            handleString(key, value.getAsString(), view);
-        } else if (value.isJsonObject()) {
-            handleElement(key, value, view);
+    public void handle(V view, String key, LayoutParser parser) {
+        if (parser.isString()) {
+            handleString(view, key, parser.getString());
+        } else if (parser.isObject()) {
+            handleElement(view, key, parser);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Resource for key: " + key + " must be a primitive or an object. value -> " + value.toString());
+                Log.e(TAG, "Resource for key: " + key + " must be a primitive or an object. value -> " + parser.toString());
             }
         }
     }
@@ -101,26 +101,21 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
      * Selector and LayerListDrawable are handled here.
      * Override this to handle more types of drawables
      *
-     * @param attributeKey
-     * @param attributeValue
      * @param view
+     * @param attributeKey
      */
-    protected void handleElement(String attributeKey, JsonElement attributeValue, V view) {
+    protected void handleElement(V view, String attributeKey, LayoutParser parser) {
 
-        JsonObject jsonObject = attributeValue.getAsJsonObject();
+        String type = parser.getString(TYPE);
 
-        JsonElement type = jsonObject.get(TYPE);
-        String drawableType = type.getAsString();
-        JsonElement childrenElement = null;
-        switch (drawableType) {
+        switch (type) {
             case DRAWABLE_SELECTOR:
                 final StateListDrawable stateListDrawable = new StateListDrawable();
-                childrenElement = jsonObject.get(CHILDREN);
-                if (childrenElement != null) {
-                    JsonArray children = childrenElement.getAsJsonArray();
-                    for (JsonElement childElement : children) {
-                        JsonObject child = childElement.getAsJsonObject();
-                        final Pair<int[], JsonElement> state = ParseHelper.parseState(child);
+                if (parser.isArray(CHILDREN)) {
+                    parser.peek(CHILDREN);
+                    while (parser.hasNext()) {
+                        parser.next();
+                        final Pair<int[], LayoutParser> state = ParseHelper.parseState(parser);
                         if (state != null) {
                             DrawableResourceProcessor<V> processor = new DrawableResourceProcessor<V>() {
                                 @Override
@@ -128,7 +123,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                                     stateListDrawable.addState(state.first, drawable);
                                 }
                             };
-                            processor.handle(attributeKey, state.second, view);
+                            processor.handle(view, attributeKey, state.second);
                         }
 
                     }
@@ -136,19 +131,18 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 setDrawable(view, stateListDrawable);
                 break;
             case DRAWABLE_SHAPE:
-                GradientDrawable gradientDrawable = loadGradientDrawable(view.getContext(), jsonObject);
+                GradientDrawable gradientDrawable = loadGradientDrawable(view.getContext(), parser);
                 if (null != gradientDrawable) {
                     setDrawable(view, gradientDrawable);
                 }
                 break;
             case DRAWABLE_LAYER_LIST:
                 final List<Pair<Integer, Drawable>> drawables = new ArrayList<>();
-                childrenElement = jsonObject.get(CHILDREN);
-                if (childrenElement != null) {
-                    JsonArray children = childrenElement.getAsJsonArray();
-                    for (JsonElement childElement : children) {
-                        JsonObject child = childElement.getAsJsonObject();
-                        final Pair<Integer, JsonElement> layerPair = ParseHelper.parseLayer(child);
+                if (parser.isArray(CHILDREN)) {
+                    parser.peek(CHILDREN);
+                    while (parser.hasNext()) {
+                        parser.next();
+                        final Pair<Integer, LayoutParser> layerPair = ParseHelper.parseLayer(parser);
                         if (null != layerPair) {
                             DrawableResourceProcessor<V> processor = new DrawableResourceProcessor<V>() {
                                 @Override
@@ -157,18 +151,18 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                                     onLayerDrawableFinish(view, drawables);
                                 }
                             };
-                            processor.handle(attributeKey, layerPair.second, view);
+                            processor.handle(view, attributeKey, layerPair.second);
                         }
                     }
                 }
                 break;
             case DRAWABLE_LEVEL_LIST:
                 final LevelListDrawable levelListDrawable = new LevelListDrawable();
-                childrenElement = jsonObject.get(CHILDREN);
-                if (childrenElement != null) {
-                    JsonArray children = childrenElement.getAsJsonArray();
-                    for (JsonElement childElement : children) {
-                        LayerListDrawableItem layerListDrawableItem = sGson.fromJson(childElement, LayerListDrawableItem.class);
+                if (parser.isArray(CHILDREN)) {
+                    parser.peek(CHILDREN);
+                    while (parser.hasNext()) {
+                        parser.next();
+                        LayerListDrawableItem layerListDrawableItem = sGson.fromJson(parser, LayerListDrawableItem.class);
                         layerListDrawableItem.addItem(view.getContext(), levelListDrawable);
                     }
                 }
@@ -200,13 +194,13 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     /**
      * Any string based drawables are handled here. Color, local resource and remote image urls.
      *
+     * @param view
      * @param attributeKey
      * @param attributeValue
-     * @param view
      */
-    protected void handleString(String attributeKey, final String attributeValue, final V view) {
+    protected void handleString(final V view, String attributeKey, final String attributeValue) {
         ProteusViewManager viewManager = ((ProteusView) view).getViewManager();
-        boolean synchronousRendering = viewManager.getLayoutBuilder().isSynchronousRendering();
+        boolean synchronousRendering = viewManager.getProteusLayoutInflater().isSynchronousRendering();
 
         if (ParseHelper.isLocalResourceAttribute(attributeValue)) {
             int attributeId = ParseHelper.getAttributeId(view.getContext(), attributeValue);
@@ -242,7 +236,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                     }
                 }
             };
-            new NetworkDrawableHelper(view, attributeValue, synchronousRendering, callback, viewManager.getLayoutBuilder().getNetworkDrawableHelper(), viewManager.getLayout());
+            new NetworkDrawableHelper((ProteusView) view, attributeValue, viewManager.getProteusLayoutInflater().getNetworkDrawableHelper(), callback, null, synchronousRendering);
         }
 
     }
@@ -254,10 +248,10 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
         public abstract void apply(Context context, GradientDrawable gradientDrawable);
 
-        protected int loadColor(Context context, JsonElement colorValue) {
+        protected int loadColor(Context context, LayoutParser parser) {
             mTempColor = 0;
-            if (null != colorValue && !colorValue.isJsonNull()) {
-                ColorUtils.loadColor(context, colorValue, new ValueCallback<Integer>() {
+            if (!parser.isNull()) {
+                ColorUtils.loadColor(context, parser, new ValueCallback<Integer>() {
                     @Override
                     public void onReceiveValue(Integer value) {
                         mTempColor = value;

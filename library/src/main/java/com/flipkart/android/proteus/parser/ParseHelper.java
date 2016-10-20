@@ -34,10 +34,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.R;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -516,14 +516,14 @@ public class ParseHelper {
     }
 
 
-    public static Pair<int[], JsonElement> parseState(JsonObject stateObject) {
+    public static Pair<int[], LayoutParser> parseState(LayoutParser parser) {
 
         //drawable
-        JsonElement drawableJson = stateObject.get(DRAWABLE_STR);
-        if (null != drawableJson) {
+        JsonElement drawableJson = parser.get(DRAWABLE_STR);
+        if (parser.) {
 
             //states
-            Set<Map.Entry<String, JsonElement>> entries = stateObject.entrySet();
+            Set<Map.Entry<String, JsonElement>> entries = parser.entrySet();
             List<Integer> statesToReturn = new ArrayList<>();
             for (Map.Entry<String, JsonElement> entry : entries) {
                 JsonElement value = entry.getValue();
@@ -591,22 +591,20 @@ public class ParseHelper {
      * Parses a single layer item (represented by {@param child}) inside a layer list and gives
      * a pair of android:id and a string for the drawable path.
      *
-     * @param child
+     * @param parser
      * @return The layer info as a {@link Pair}
      */
-    public static Pair<Integer, JsonElement> parseLayer(JsonObject child) {
+    public static Pair<Integer, LayoutParser> parseLayer(LayoutParser parser) {
 
-        JsonElement id = child.get(ID_STR);
+        String idAsString = parser.getString(ID_STR);
         int androidResIdByXmlResId = View.NO_ID;
-        String idAsString = null;
-        if (id != null) {
-            idAsString = id.getAsString();
-        }
         if (idAsString != null) {
             androidResIdByXmlResId = getAndroidResIdByXmlResId(idAsString);
         }
-        JsonElement drawableElement = child.get(DRAWABLE_STR);
-        return (drawableElement != null) ? new Pair<>(androidResIdByXmlResId, drawableElement) : null;
+        if (!parser.isNull(DRAWABLE_STR)) {
+            return new Pair<>(androidResIdByXmlResId, parser);
+        }
+        return null;
     }
 
     /**

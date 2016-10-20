@@ -18,8 +18,8 @@ package com.flipkart.android.proteus.parser;
 
 import android.view.View;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.view.ProteusView;
-import com.google.gson.JsonElement;
 
 /**
  * @author kirankumar
@@ -40,10 +40,10 @@ public abstract class WrappableParser<V extends View> extends Parser<V> {
     }
 
     @Override
-    public boolean handleAttribute(V view, String attribute, JsonElement value) {
-        boolean handled = super.handleAttribute(view, attribute, value);
+    public boolean handleAttribute(V view, String attribute, LayoutParser parser) {
+        boolean handled = super.handleAttribute(view, attribute, parser);
         if (wrappedParser != null && !handled) {
-            handled = wrappedParser.handleAttribute(view, attribute, value);
+            handled = wrappedParser.handleAttribute(view, attribute, parser);
         }
         return handled;
     }

@@ -19,6 +19,7 @@ package com.flipkart.android.proteus.parser.custom;
 import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
@@ -30,7 +31,6 @@ import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusFixedRatingBar;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.custom.FixedRatingBar;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -43,7 +43,7 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
         return new ProteusFixedRatingBar(parent.getContext());
     }
 
@@ -76,7 +76,7 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
         });
         addHandler(Attributes.RatingBar.MinHeight, new DimensionAttributeProcessor<T>() {
             @Override
-            public void setDimension(float dimension, T view, String key, JsonElement value) {
+            public void setDimension(T view, String key, float dimension, LayoutParser parser) {
                 view.setMinimumHeight((int) dimension);
             }
         });

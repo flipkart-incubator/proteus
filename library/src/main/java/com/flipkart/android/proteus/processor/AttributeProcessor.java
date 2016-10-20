@@ -16,7 +16,7 @@
 
 package com.flipkart.android.proteus.processor;
 
-import com.google.gson.JsonElement;
+import com.flipkart.android.proteus.LayoutParser;
 
 /**
  * @author kirankumar
@@ -24,6 +24,6 @@ import com.google.gson.JsonElement;
  */
 public abstract class AttributeProcessor<V> {
 
-    public abstract void handle(String key, JsonElement value, V view);
+    public abstract void handle(V view, String key, LayoutParser parser);
 
 }

@@ -21,10 +21,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.DataContext;
-import com.flipkart.android.proteus.binding.Binding;
-import com.flipkart.android.proteus.builder.LayoutBuilder;
-import com.flipkart.android.proteus.parser.LayoutHandler;
+import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
+import com.flipkart.android.proteus.parser.TypeHandler;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -50,8 +48,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     private JsonObject layout;
     private Styles styles;
     private DataContext dataContext;
-    private LayoutBuilder layoutBuilder;
-    private LayoutHandler layoutHandler;
+    private ProteusLayoutInflater proteusLayoutInflater;
+    private TypeHandler typeHandler;
     private OnUpdateDataListener onUpdateDataListener;
     private String dataPathForChildren;
     private JsonObject childLayout;
@@ -153,8 +151,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                     ((ProteusView) child).getViewManager().update(data);
                 }
             } else if (childLayout != null) {
-                childView = layoutBuilder.build(parent, childLayout, data, dataContext.getIndex(), styles);
-                layoutHandler.addView((ProteusView) view, childView);
+                childView = proteusLayoutInflater.build(parent, childLayout, data, styles, dataContext.getIndex());
+                typeHandler.addView((ProteusView) view, childView);
             }
         }
     }
@@ -189,41 +187,37 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     private void handleBinding(Binding binding) {
         if (binding.hasRegEx()) {
-            layoutBuilder.handleAttribute(layoutHandler, (ProteusView) view, binding.getAttributeKey(), new JsonPrimitive(binding.getAttributeValue()));
+            proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), new JsonPrimitive(binding.getAttributeValue()));
         } else {
             Result result = Utils.readJson(binding.getBindingName(), dataContext.getData(), dataContext.getIndex());
             JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
-            layoutBuilder.handleAttribute(layoutHandler, (ProteusView) view, binding.getAttributeKey(), dataValue);
+            proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), dataValue);
         }
     }
 
-    @Override
-    public LayoutBuilder getLayoutBuilder() {
-        return layoutBuilder;
+    public ProteusLayoutInflater getProteusLayoutInflater() {
+        return proteusLayoutInflater;
+    }
+
+    public void setProteusLayoutInflater(ProteusLayoutInflater proteusLayoutInflater) {
+        this.proteusLayoutInflater = proteusLayoutInflater;
+    }
+
+    public TypeHandler getTypeHandler() {
+        return typeHandler;
+    }
+
+    public void setTypeHandler(TypeHandler typeHandler) {
+        this.typeHandler = typeHandler;
     }
 
     @Override
-    public void setLayoutBuilder(LayoutBuilder layoutBuilder) {
-        this.layoutBuilder = layoutBuilder;
-    }
-
-    @Override
-    public LayoutHandler getLayoutHandler() {
-        return layoutHandler;
-    }
-
-    @Override
-    public void setLayoutHandler(LayoutHandler layoutHandler) {
-        this.layoutHandler = layoutHandler;
-    }
-
-    @Override
-    public JsonObject getLayout() {
+    public Object getLayout() {
         return layout;
     }
 
     @Override
-    public void setLayout(JsonObject layout) {
+    public void setLayout(Object layout) {
         this.layout = layout;
     }
 
@@ -240,7 +234,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     @Override
     public int getUniqueViewId(String id) {
-        return layoutBuilder.getUniqueViewId(id);
+        return proteusLayoutInflater.getUniqueViewId(id);
     }
 
     public JsonElement get(String dataPath, int index) {
@@ -354,8 +348,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         layout = null;
         childLayout = null;
         styles = null;
-        layoutBuilder = null;
-        layoutHandler = null;
+        proteusLayoutInflater = null;
+        typeHandler = null;
         onUpdateDataListener = null;
         dataPathForChildren = null;
         bindings = null;
