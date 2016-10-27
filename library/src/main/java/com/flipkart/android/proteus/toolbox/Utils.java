@@ -269,32 +269,32 @@ public class Utils {
         return noLayoutId;
     }
 
-    public static Drawable getBorderDrawable(JsonElement attributeValue, Context context) {
+    public static Drawable getBorderDrawable(LayoutParser parser, Context context) {
 
-        if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
+        if (!parser.isObject() || parser.isNull()) {
             return null;
         }
 
         float cornerRadius = 0;
         int borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
-        JsonObject data = attributeValue.getAsJsonObject();
+        parser.peek();
 
-        String value = Utils.getPropertyAsString(data, ATTRIBUTE_BG_COLOR);
+        String value = parser.getString(ATTRIBUTE_BG_COLOR);
         if (value != null && !value.equals("-1")) {
             bgColor = ParseHelper.parseColor(value);
         }
 
-        value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_COLOR);
+        value = parser.getString(ATTRIBUTE_BORDER_COLOR);
         if (value != null) {
             borderColor = ParseHelper.parseColor(value);
         }
 
-        value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_RADIUS);
+        value = parser.getString(ATTRIBUTE_BORDER_RADIUS);
         if (value != null) {
             cornerRadius = ParseHelper.parseDimension(value, context);
         }
 
-        value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_WIDTH);
+        value = parser.getString(ATTRIBUTE_BORDER_WIDTH);
         if (value != null) {
             borderWidth = (int) ParseHelper.parseDimension(value, context);
         }

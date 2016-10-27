@@ -39,6 +39,7 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -81,19 +82,19 @@ public class AnimationUtils {
      * Loads an {@link Animation} object from a resource
      *
      * @param context Application context used to access resources
-     * @param value   JSON representation of the Animation
+     * @param parser   JSON representation of the Animation
      * @return The animation object reference by the specified id
      * @throws android.content.res.Resources.NotFoundException when the animation cannot be loaded
      */
-    public static Animation loadAnimation(Context context, JsonElement value) throws Resources.NotFoundException {
+    public static Animation loadAnimation(Context context, LayoutParser parser) throws Resources.NotFoundException {
         Animation anim = null;
-        if (value.isJsonPrimitive()) {
-            anim = handleString(context, value.getAsString());
-        } else if (value.isJsonObject()) {
-            anim = handleElement(context, value.getAsJsonObject());
+        if (parser.isString()) {
+            anim = handleString(context, parser.getString());
+        } else if (parser.isObject()) {
+            anim = handleElement(context, parser.peek());
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Could not load animation for : " + value.toString());
+                Log.e(TAG, "Could not load animation for : " + parser.toString());
             }
         }
         return anim;
@@ -113,21 +114,21 @@ public class AnimationUtils {
         return anim;
     }
 
-    private static Animation handleElement(Context c, JsonObject value) {
+    private static Animation handleElement(Context c, LayoutParser parser) {
         Animation anim = null;
-        JsonElement type = value.get(TYPE);
+        JsonElement type = parser.get(TYPE);
         String animationType = type.getAsString();
         AnimationProperties animationProperties = null;
         if (SET.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, AnimationSetProperties.class);
+            animationProperties = sGson.fromJson(parser, AnimationSetProperties.class);
         } else if (ALPHA.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, AlphaAnimProperties.class);
+            animationProperties = sGson.fromJson(parser, AlphaAnimProperties.class);
         } else if (SCALE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, ScaleAnimProperties.class);
+            animationProperties = sGson.fromJson(parser, ScaleAnimProperties.class);
         } else if (ROTATE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, RotateAnimProperties.class);
+            animationProperties = sGson.fromJson(parser, RotateAnimProperties.class);
         } else if (TRANSLATE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, TranslateAnimProperties.class);
+            animationProperties = sGson.fromJson(parser, TranslateAnimProperties.class);
         }
 
         if (null != animationProperties) {

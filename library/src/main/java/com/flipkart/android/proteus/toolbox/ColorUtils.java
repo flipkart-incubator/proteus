@@ -47,10 +47,10 @@ public class ColorUtils {
         if (parser.isString()) {
             handleString(context, parser.getString(), colorCallback, colorStateListCallback);
         } else if (parser.isObject()) {
-            handleElement(context, parser, colorCallback, colorStateListCallback);
+            handleElement(context, parser.peek(), colorCallback, colorStateListCallback);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Could not color for : " + parser.toString());
+                Log.e(TAG, "Could not resolve color for : " + parser.toString());
             }
         }
     }

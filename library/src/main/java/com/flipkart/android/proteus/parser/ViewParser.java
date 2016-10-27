@@ -28,15 +28,15 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.flipkart.android.proteus.EventType;
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
-import com.flipkart.android.proteus.processor.JsonDataProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.processor.TweenAnimationResourceProcessor;
+import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
@@ -279,18 +279,18 @@ public class ViewParser<V extends View> extends Parser<V> {
                 view.setAlpha(ParseHelper.parseFloat(attributeValue));
             }
         });
-        addHandler(Attributes.View.Visibility, new JsonDataProcessor<V>() {
+        addHandler(Attributes.View.Visibility, new AttributeProcessor<V>() {
             @Override
-            public void handle(String key, JsonElement value, V view) {
+            public void handle(V view, String key, LayoutParser parser) {
                 // noinspection ResourceType
-                view.setVisibility(ParseHelper.parseVisibility(value));
+                view.setVisibility(ParseHelper.parseVisibility(parser));
             }
         });
-        addHandler(Attributes.View.Invisibility, new JsonDataProcessor<V>() {
+        addHandler(Attributes.View.Invisibility, new AttributeProcessor<V>() {
             @Override
-            public void handle(String key, JsonElement value, V view) {
+            public void handle(V view, String key, LayoutParser parser) {
                 // noinspection ResourceType
-                view.setVisibility(ParseHelper.parseInvisibility(value));
+                view.setVisibility(ParseHelper.parseInvisibility(parser));
             }
         });
         addHandler(Attributes.View.Id, new StringAttributeProcessor<V>() {
@@ -348,10 +348,10 @@ public class ViewParser<V extends View> extends Parser<V> {
                 view.setTag(attributeValue);
             }
         });
-        addHandler(Attributes.View.Border, new JsonDataProcessor<V>() {
+        addHandler(Attributes.View.Border, new AttributeProcessor<V>() {
             @Override
-            public void handle(String key, JsonElement value, V view) {
-                Drawable border = Utils.getBorderDrawable(value, view.getContext());
+            public void handle(V view, String key, LayoutParser parser) {
+                Drawable border = Utils.getBorderDrawable(parser, view.getContext());
                 if (border == null) {
                     return;
                 }
@@ -377,9 +377,10 @@ public class ViewParser<V extends View> extends Parser<V> {
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {
                 ProteusViewManager viewManager = ((ProteusView) view).getViewManager();
+                LayoutParser parser = viewManager.getLayoutParser();
                 Styles styles = viewManager.getStyles();
 
-                TypeHandler handler = viewManager.getProteusLayoutInflater().getHandler(Utils.getPropertyAsString(viewManager.getLayout(), ProteusConstants.TYPE));
+                TypeHandler handler = viewManager.getProteusLayoutInflater().getHandler(parser.setInput(viewManager.getLayout()).getType());
                 if (styles == null) {
                     return;
                 }
@@ -387,14 +388,14 @@ public class ViewParser<V extends View> extends Parser<V> {
                 String[] styleSet = attributeValue.split(ProteusConstants.STYLE_DELIMITER);
                 for (String styleName : styleSet) {
                     if (styles.contains(styleName)) {
-                        process(styles.getStyle(styleName), viewManager.getLayout(), (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater());
+                        process(styles.getStyle(styleName), parser.setInput(viewManager.getLayout()), (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater());
                     }
                 }
             }
 
-            private void process(Map<String, JsonElement> style, JsonObject layout, ProteusView proteusView, TypeHandler handler, ProteusLayoutInflater builder) {
+            private void process(Map<String, JsonElement> style, LayoutParser layout, ProteusView proteusView, TypeHandler handler, ProteusLayoutInflater builder) {
                 for (Map.Entry<String, JsonElement> attribute : style.entrySet()) {
-                    if (layout.has(attribute.getKey())) {
+                    if (!layout.isNull(attribute.getKey())) {
                         continue;
                     }
                     builder.handleAttribute(handler, proteusView, attribute.getKey(), attribute.getValue());

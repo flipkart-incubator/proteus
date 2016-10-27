@@ -14,7 +14,7 @@ public interface LayoutParser {
 
     void next();
 
-    void peek();
+    LayoutParser peek();
 
 
     String getType();
@@ -72,13 +72,16 @@ public interface LayoutParser {
     String getString(String property);
 
 
-    void peek(String property);
+    LayoutParser peek(String property);
 
     void add(Object value);
 
     void remove(Object value);
 
 
-    void setInput(Object input);
+    LayoutParser setInput(Object input);
+
+
+    String toString();
 
 }

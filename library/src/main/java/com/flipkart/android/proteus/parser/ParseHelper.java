@@ -37,14 +37,12 @@ import android.widget.RelativeLayout;
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.R;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
-import com.google.gson.JsonElement;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -262,33 +260,33 @@ public class ParseHelper {
         return returnValue == null ? TextUtils.TruncateAt.END : returnValue;
     }
 
-    public static int parseVisibility(JsonElement element) {
+    public static int parseVisibility(LayoutParser parser) {
         Integer returnValue = null;
-        if (element.isJsonPrimitive()) {
-            String attributeValue = element.getAsString();
+        if (parser.isString()) {
+            String attributeValue = parser.getString();
             returnValue = sVisibilityMode.get(attributeValue);
             if (null == returnValue && (attributeValue.isEmpty() ||
                     FALSE.equals(attributeValue) ||
                     ProteusConstants.DATA_NULL.equals(attributeValue))) {
                 returnValue = View.GONE;
             }
-        } else if (element.isJsonNull()) {
+        } else if (parser.isNull()) {
             returnValue = View.GONE;
         }
         return returnValue == null ? View.VISIBLE : returnValue;
     }
 
-    public static int parseInvisibility(JsonElement element) {
+    public static int parseInvisibility(LayoutParser parser) {
         Integer returnValue = null;
-        if (element.isJsonPrimitive()) {
-            String attributeValue = element.getAsString();
+        if (parser.isString()) {
+            String attributeValue = parser.getString();
             returnValue = sVisibilityMode.get(attributeValue);
             if (null == returnValue && (attributeValue.isEmpty() ||
                     FALSE.equals(attributeValue) ||
                     ProteusConstants.DATA_NULL.equals(attributeValue))) {
                 returnValue = View.VISIBLE;
             }
-        } else if (element.isJsonNull()) {
+        } else if (parser.isNull()) {
             returnValue = View.VISIBLE;
         }
 
@@ -518,19 +516,14 @@ public class ParseHelper {
 
     public static Pair<int[], LayoutParser> parseState(LayoutParser parser) {
 
-        //drawable
-        JsonElement drawableJson = parser.get(DRAWABLE_STR);
-        if (parser.) {
-
-            //states
-            Set<Map.Entry<String, JsonElement>> entries = parser.entrySet();
+        if (parser.isObject(DRAWABLE_STR)) {
+            parser.peek(DRAWABLE_STR);
             List<Integer> statesToReturn = new ArrayList<>();
-            for (Map.Entry<String, JsonElement> entry : entries) {
-                JsonElement value = entry.getValue();
-                String state = entry.getKey();
-                Integer stateInteger = sStateMap.get(state);
+            while (parser.hasNext()) {
+                parser.next();
+                Integer stateInteger = sStateMap.get(parser.getName());
                 if (stateInteger != null) {
-                    String stateValue = value.getAsString();
+                    String stateValue = parser.getString();
                     //e.g state_pressed = true state_pressed = false
                     statesToReturn.add(ParseHelper.parseBoolean(stateValue) ? stateInteger : -stateInteger);
                 }
@@ -541,7 +534,7 @@ public class ParseHelper {
                 statesToReturnInteger[i] = statesToReturn.get(i);
             }
 
-            return new Pair<>(statesToReturnInteger, drawableJson);
+            return new Pair<>(statesToReturnInteger, parser.peek(DRAWABLE_STR));
         }
         return null;
     }

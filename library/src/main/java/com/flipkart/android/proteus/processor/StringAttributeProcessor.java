@@ -18,25 +18,32 @@ package com.flipkart.android.proteus.processor;
 
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.util.Log;
 import android.view.View;
 
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
+import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
 /**
  * @author kirankumar
  * @author aditya.sharat
  */
 public abstract class StringAttributeProcessor<V extends View> extends AttributeProcessor<V> {
+
+    private static final String TAG = "StringProcessor";
+
     /**
      * @param view View
      */
     @Override
     public void handle(V view, String key, LayoutParser parser) {
-        if (parser.isJsonPrimitive()) {
-            handle(key, getStringFromAttribute(view, parser.getAsString()), view);
+        if (parser.isString()) {
+            handle(key, getStringFromAttribute(view, parser.getString()), view);
         } else {
-            handle(key, parser.toString(), view);
+            if (ProteusConstants.isLoggingEnabled()) {
+                Log.e(TAG, "Could not resolve string for : " + parser.toString());
+            }
         }
     }
 

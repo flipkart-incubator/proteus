@@ -88,7 +88,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         if (parser.isString()) {
             handleString(view, key, parser.getString());
         } else if (parser.isObject()) {
-            handleElement(view, key, parser);
+            handleElement(view, key, parser.peek());
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
                 Log.e(TAG, "Resource for key: " + key + " must be a primitive or an object. value -> " + parser.toString());

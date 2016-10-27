@@ -21,8 +21,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.TypeHandler;
+import com.flipkart.android.proteus.toolbox.Binding;
+import com.flipkart.android.proteus.toolbox.DataContext;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -45,21 +48,22 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     private static final String TAG = "ProteusViewManagerImpl";
     private View view;
-    private JsonObject layout;
+    private Object layout;
     private Styles styles;
     private DataContext dataContext;
     private ProteusLayoutInflater proteusLayoutInflater;
     private TypeHandler typeHandler;
     private OnUpdateDataListener onUpdateDataListener;
     private String dataPathForChildren;
-    private JsonObject childLayout;
+    private Object childLayout;
     private boolean isViewUpdating;
     private ArrayList<Binding> bindings;
+    private LayoutParser parser;
 
     @Override
     public void update(@Nullable JsonObject data) {
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
+            Log.d(TAG, "START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(parser.setInput(layout)));
         }
         this.isViewUpdating = true;
 
@@ -99,7 +103,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
         this.isViewUpdating = false;
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(layout));
+            Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(parser.setInput(layout)));
         }
 
         onUpdateDataComplete(dataContext.getData());
@@ -151,7 +155,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                     ((ProteusView) child).getViewManager().update(data);
                 }
             } else if (childLayout != null) {
-                childView = proteusLayoutInflater.build(parent, childLayout, data, styles, dataContext.getIndex());
+                childView = proteusLayoutInflater.build(parent, parser.setInput(childLayout), data, styles, dataContext.getIndex());
                 typeHandler.addView((ProteusView) view, childView);
             }
         }
@@ -187,7 +191,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     private void handleBinding(Binding binding) {
         if (binding.hasRegEx()) {
-            proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), new JsonPrimitive(binding.getAttributeValue()));
+            proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), parser.setInput(binding.getAttributeValue()));
         } else {
             Result result = Utils.readJson(binding.getBindingName(), dataContext.getData(), dataContext.getIndex());
             JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
@@ -219,6 +223,16 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     @Override
     public void setLayout(Object layout) {
         this.layout = layout;
+    }
+
+    @Override
+    public void setLayoutParser(LayoutParser parser) {
+        this.parser = parser;
+    }
+
+    @Override
+    public LayoutParser getLayoutParser() {
+        return this.parser;
     }
 
     @Nullable
@@ -302,11 +316,11 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     @Nullable
     @Override
-    public JsonObject getChildLayout() {
+    public Object getChildLayout() {
         return childLayout;
     }
 
-    public void setChildLayout(@Nullable JsonObject childLayout) {
+    public void setChildLayout(@Nullable Object childLayout) {
         this.childLayout = childLayout;
     }
 
