@@ -102,6 +102,8 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
 
 * [Detailed Guide](https://github.com/flipkart-incubator/proteus/wiki)
 * [API References]()
+* [Demo App](https://github.com/adityasharat/proteus-demo)
+* [Videos - silent :|](https://www.youtube.com/playlist?list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp)
 
 ## Contributing
 
