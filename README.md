@@ -11,7 +11,7 @@ With Proteus, you can control your Apps layout from the backend (no WebViews). F
 
 * **[Getting started](#getting-started)**
 * **[How it Works](#how-it-works)**
-* **[Resources](#resources)**
+* **[Resources <- *NEW*](#resources)**
 * **[Contributing](#contributing)**
 * **[License](#license)**
 * **[Contributors](#contributors)**
