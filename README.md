@@ -99,7 +99,7 @@ container.addView((View) view);
 
 #### Get this
 
-<img src="/assets/example-small.png" width="300px"/>
+<img src="/assets/example-full.png" width="300px"/>
 
 #### Setting up the Demo App
 
