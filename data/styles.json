@@ -1,0 +1,9 @@
+{
+  "money": {
+    "textColor": "#56a411",
+    "textSize": "28sp"
+  },
+  "center": {
+    "layout_gravity": "center"
+  }
+}

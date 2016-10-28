@@ -19,10 +19,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/action_get_set_data"
+        android:id="@+id/settings"
         android:orderInCategory="100"
-        android:title="todo"
-        app:showAsAction="never"
+        android:title="Settings"
+        app:showAsAction="always"
         tools:ignore="HardcodedText" />
 
 </menu>

@@ -42,6 +42,10 @@ public class DataAndViewParsingLayoutBuilder extends DataParsingLayoutBuilder {
         this.layouts = layouts;
     }
 
+    public void setLayouts(Map<String, JsonObject> layouts) {
+        this.layouts = layouts;
+    }
+
     @Override
     protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, JsonObject source, JsonObject data, int index, Styles styles) {
         JsonElement element = null;

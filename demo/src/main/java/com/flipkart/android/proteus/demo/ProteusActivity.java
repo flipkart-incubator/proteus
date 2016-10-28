@@ -21,40 +21,59 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
-import android.widget.FrameLayout;
 
 import com.flipkart.android.proteus.EventType;
 import com.flipkart.android.proteus.ImageLoaderCallback;
 import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutBuilder;
+import com.flipkart.android.proteus.builder.LayoutBuilder;
 import com.flipkart.android.proteus.builder.LayoutBuilderCallback;
 import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
+import com.flipkart.android.proteus.demo.models.JsonResource;
+import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class ProteusActivity extends AppCompatActivity {
-    private Gson gson;
+
+    private static final String BASE_URL = "http://10.0.2.2:8080/data/";
+    private Retrofit retrofit;
+    private JsonResource resources;
+
+    private ViewGroup container;
+
+    private DataAndViewParsingLayoutBuilder layoutBuilder;
+
+    private JsonObject data;
+    private JsonObject layout;
+
+    private Styles styles;
+    private Map<String, JsonObject> layouts;
 
     /**
      * Simple implementation of BitmapLoader for loading images from url in background.
@@ -138,52 +157,124 @@ public class ProteusActivity extends AppCompatActivity {
     };
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (null == retrofit) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+
+        if (null == resources) {
+            resources = retrofit.create(JsonResource.class);
+        }
+
+        // create a new DataAndViewParsingLayoutBuilder
+        // and set layouts, callback and image loader.
+        layoutBuilder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(layouts);
+        layoutBuilder.setListener(callback);
+        layoutBuilder.setBitmapLoader(bitmapLoader);
+
+        registerCustomViews(layoutBuilder);
+
+        fetch();
+    }
+
+    private void registerCustomViews(LayoutBuilder layoutBuilder) {
+        Parser parser = (Parser) layoutBuilder.getHandler("View");
+        layoutBuilder.registerHandler("CircleView", new CircleViewParser(parser));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Init gson instance
-        gson = new Gson();
+        setContentView(R.layout.activity_proteus);
 
-        // Deserialize json data to objects. We will need this data for inflating proteus view.
-        // This data should come from remote server if we wish to change layouts without app updates.
-        Styles styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
-        Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
-        JsonObject pageLayout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
-        JsonObject data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
+        // set the toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        // Init dataAndViewParsingLayoutBuilder and set layoutProvider, layoutBuilderCallback
-        // and bitmapLoader we initialised before.
-        DataAndViewParsingLayoutBuilder builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(layoutProvider);
-        builder.setListener(callback);
-        builder.setBitmapLoader(bitmapLoader);
+        // handle refresh button click
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fetch();
+            }
+        });
 
-        // Make a container layout with activity context and layoutParams for it.
-        FrameLayout container = new FrameLayout(ProteusActivity.this);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-        );
-
-        // Get instance of proteusView from dataAndViewParsingLayoutBuilder
-        ProteusView proteusView = builder.build(container, pageLayout, data, 0, styles);
-
-        // Add proteusView and layoutParams to container layout.
-        container.addView((View) proteusView, layoutParams);
-
-        // Set container layout to activity content view.
-        setContentView(container);
+        container = (ViewGroup) findViewById(R.id.content_main);
     }
 
-    private JsonElement getJsonFromFile(int resId) {
-        InputStream inputStream = getResources().openRawResource(resId);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        return gson.fromJson(reader, JsonElement.class);
+    private void render() {
+
+        layoutBuilder.setLayouts(layouts);
+
+        // Inflate a new view using proteus
+        ProteusView view = layoutBuilder.build(container, layout, data, 0, styles);
+
+        container.removeAllViews();
+        container.addView((View) view);
     }
 
-    private Map<String, JsonObject> getProviderFromFile(int resId) {
-        InputStream inputStream = getResources().openRawResource(resId);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        return gson.fromJson(reader, (new TypeToken<Map<String, JsonObject>>() {
-        }).getType());
+    private void fetch() {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+
+                    Call<JsonObject> call = resources.get("user.json");
+                    data = call.execute().body();
+
+                    call = resources.get("layout.json");
+                    layout = call.execute().body();
+
+                    Call<Map<String, JsonObject>> layoutsCall = resources.getLayouts();
+                    layouts = layoutsCall.execute().body();
+
+                    Call<Styles> stylesCall = resources.getStyles();
+                    styles = stylesCall.execute().body();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                try {
+                    render();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

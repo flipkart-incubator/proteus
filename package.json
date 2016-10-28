@@ -1,0 +1,28 @@
+{
+  "name": "proteus-demo-app-server",
+  "version": "1.0.0",
+  "description": "This server is used to mock layout and data for the proteus demo app.",
+  "main": "index.js",
+  "dependencies": {
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flipkart-incubator/proteus.git"
+  },
+  "keywords": [
+    "proteus",
+    "proteus-demo",
+    "proteus-demo-server"
+  ],
+  "author": "adityasharat",
+  "license": "Apache v2.0",
+  "bugs": {
+    "url": "https://github.com/flipkart-incubator/proteus/issues"
+  },
+  "homepage": "https://github.com/flipkart-incubator/proteus#readme"
+}
