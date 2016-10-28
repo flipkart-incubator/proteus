@@ -101,9 +101,19 @@ container.addView((View) view);
 
 <img src="/assets/example-small.png" width="300px"/>
 
-#### Change the layout and data; and get his
+#### Setting up the Demo App
 
-<img src="/assets/example-full.png" width="300px"/>
+* Install NodeJS [here](https://nodejs.org/en/download/)
+* open a terminal
+* cd into the project directory
+* run `npm start`
+* Start an AVD emulator
+* Install the Demo App
+
+**Ready to tinker**
+
+* Tinker around with the [layout](https://github.com/adityasharat/proteus-demo/blob/master/data/layout.json) and [data](https://github.com/adityasharat/proteus-demo/blob/master/data/user.json)
+* Hit the FAB to refresh the app.
 
 ## Resources
 
