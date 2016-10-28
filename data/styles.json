@@ -5,5 +5,18 @@
   },
   "center": {
     "layout_gravity": "center"
+  },
+  "mini": {
+    "textSize": "8sp",
+    "layout_width": "wrap_content",
+    "layout_height": "wrap_content",
+    "layout_margin": "4dp"
+  },
+  "blue": {
+    "textColor": "#027cd5"
+  },
+  "default": {
+    "textColor": "#323232",
+    "textSize": "14sp"
   }
 }

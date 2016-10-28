@@ -210,12 +210,13 @@ public class ProteusActivity extends AppCompatActivity {
 
     private void render() {
 
+        container.removeAllViews();
+
         layoutBuilder.setLayouts(layouts);
 
         // Inflate a new view using proteus
         ProteusView view = layoutBuilder.build(container, layout, data, 0, styles);
 
-        container.removeAllViews();
         container.addView((View) view);
     }
 
