@@ -92,12 +92,12 @@
             "children": [
               {
                 "type": "TextView",
+                "id": "name",
                 "layout_width": "wrap_content",
                 "layout_height": "wrap_content",
-                "textSize": "24dp",
-                "text": "$user.name",
-                "id": "name",
-                "layout_marginRight": "4dp"
+                "layout_marginRight": "4dp",
+                "textSize": "18dp",
+                "text": "$user.name"
               },
               {
                 "type": "TextView",
