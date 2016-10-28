@@ -11,7 +11,7 @@ With Proteus, you can control your Apps layout from the backend (no WebViews). F
 
 * **[Getting started](#getting-started)**
 * **[How it Works](#how-it-works)**
-* **[Resources <- *NEW*](#resources)**
+* **[Resources](#resources)**
 * **[Contributing](#contributing)**
 * **[License](#license)**
 * **[Contributors](#contributors)**
@@ -31,7 +31,7 @@ allprojects {
 
 // Add the dependency
 dependencies {
-        compile 'com.github.flipkart-incubator:proteus:4.0.0-RC2'
+        compile 'com.github.flipkart-incubator:proteus:4.1.0'
 }
 ```
 
@@ -90,6 +90,13 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
 }
 ```
 
+### Java
+
+```java
+ProteusView view = layoutBuilder.build(container, layout, data, 0, styles);
+container.addView((View) view);
+```
+
 #### Get this
 
 <img src="/assets/example-small.png" width="300px"/>
@@ -101,7 +108,7 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
 ## Resources
 
 * [Detailed Guide](https://github.com/flipkart-incubator/proteus/wiki)
-* [API References]()
+* [API References]() *under construction*
 * [Demo App](https://github.com/adityasharat/proteus-demo)
 * [Videos - silent :|](https://www.youtube.com/playlist?list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp)
 
