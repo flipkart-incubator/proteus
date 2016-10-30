@@ -101,7 +101,7 @@ container.addView((View) view);
 
 <img src="/assets/example-full.png" width="300px"/>
 
-#### Setting up the Demo App
+### Setting up the Demo App
 
 * Install NodeJS [here](https://nodejs.org/en/download/)
 * open a terminal
