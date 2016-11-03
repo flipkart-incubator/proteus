@@ -34,14 +34,12 @@ import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
-import com.flipkart.android.proteus.processor.JsonDataProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusProgressBar;
 import com.flipkart.android.proteus.view.ProteusView;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -74,21 +72,21 @@ public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T>
             }
         });
 
-        addHandler(Attributes.ProgressBar.ProgressTint, new JsonDataProcessor<T>() {
+        addHandler(Attributes.ProgressBar.ProgressTint, new AttributeProcessor<T>() {
             @Override
-            public void handle(String key, JsonElement valueElement, T view) {
-                if (!valueElement.isJsonObject() || valueElement.isJsonNull()) {
+            public void handle(T view, String key, LayoutParser parser) {
+                if (!parser.isObject()) {
                     return;
                 }
-                JsonObject data = valueElement.getAsJsonObject();
+                parser.peek();
                 int background = Color.TRANSPARENT;
                 int progress = Color.TRANSPARENT;
 
-                String value = Utils.getPropertyAsString(data, "background");
+                String value = parser.getString("background");
                 if (value != null) {
                     background = ParseHelper.parseColor(value);
                 }
-                value = Utils.getPropertyAsString(data, "progress");
+                value = parser.getString("progress");
                 if (value != null) {
                     progress = ParseHelper.parseColor(value);
                 }

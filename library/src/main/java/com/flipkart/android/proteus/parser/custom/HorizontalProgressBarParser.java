@@ -30,13 +30,11 @@ import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
-import com.flipkart.android.proteus.processor.JsonDataProcessor;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusHorizontalProgressBar;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.custom.HorizontalProgressBar;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -59,21 +57,21 @@ public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extend
     protected void prepareHandlers() {
         super.prepareHandlers();
 
-        addHandler(Attributes.ProgressBar.ProgressTint, new JsonDataProcessor<T>() {
+        addHandler(Attributes.ProgressBar.ProgressTint, new AttributeProcessor<T>() {
             @Override
-            public void handle(String key, JsonElement attributeValue, T view) {
-                if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
+            public void handle(T view, String key, LayoutParser parser) {
+                if (!parser.isObject()) {
                     return;
                 }
-                JsonObject data = attributeValue.getAsJsonObject();
+                parser.peek();
                 int background = Color.TRANSPARENT;
                 int progress = Color.TRANSPARENT;
 
-                String value = Utils.getPropertyAsString(data, "background");
+                String value = parser.getString("background");
                 if (value != null) {
                     background = ParseHelper.parseColor(value);
                 }
-                value = Utils.getPropertyAsString(data, "progress");
+                value = parser.getString("progress");
                 if (value != null) {
                     progress = ParseHelper.parseColor(value);
                 }

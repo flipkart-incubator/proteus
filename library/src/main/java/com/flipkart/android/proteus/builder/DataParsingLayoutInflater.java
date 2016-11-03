@@ -23,11 +23,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.LayoutParser;
-import com.flipkart.android.proteus.binding.Binding;
-import com.flipkart.android.proteus.parser.TypeHandler;
 import com.flipkart.android.proteus.parser.ParseHelper;
+import com.flipkart.android.proteus.parser.TypeHandler;
+import com.flipkart.android.proteus.toolbox.Binding;
+import com.flipkart.android.proteus.toolbox.DataContext;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -61,22 +61,23 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     protected void handleChildren(TypeHandler handler, LayoutParser parser, ProteusView view) {
 
         ProteusViewManager viewManager = view.getViewManager();
-        JsonObject layout = viewManager.getLayout();
+        Object layout = viewManager.getLayout();
+        parser.setInput(layout);
 
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(layout));
+            Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(parser));
         }
 
         if (layout == null) {
             return;
         }
 
-        JsonElement element = isDataDriven(viewManager);
+        String children = isDataDriven(viewManager);
 
-        if (element != null) {
+        if (children != null) {
 
             int length = 0;
-            String dataPath = element.getAsString().substring(1);
+            String dataPath = children.substring(1);
             viewManager.setDataPathForChildren(dataPath);
 
             Result result = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
@@ -87,21 +88,12 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
             }
 
             // get the child type
-            JsonObject childLayout = getChildLayout(layout.get(ProteusConstants.CHILD_TYPE), layout, view);
-
-            JsonElement childDataContext = childLayout.get(ProteusConstants.CHILD_DATA_CONTEXT);
-            JsonElement childDataContextFromParent = layout.get(ProteusConstants.CHILD_DATA_CONTEXT);
-
-            if (childDataContextFromParent != null && childDataContext != null) {
-                Utils.addElements(childDataContext.getAsJsonObject(), childDataContextFromParent.getAsJsonObject(), true);
-            } else if (childDataContextFromParent != null) {
-                childLayout.add(ProteusConstants.DATA_CONTEXT, childDataContextFromParent);
-            }
+            Object childLayout = getChildLayout(parser, layout, view);
 
             viewManager.setChildLayout(childLayout);
 
             for (int index = 0; index < length; index++) {
-                ProteusView child = build((ViewGroup) view, childLayout, viewManager.getDataContext().getData(), viewManager.getStyles(), index);
+                ProteusView child = build((ViewGroup) view, parser.setInput(childLayout), viewManager.getDataContext().getData(), viewManager.getStyles(), index);
                 if (child != null) {
                     handler.addView(view, child);
                 }
@@ -112,23 +104,19 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     }
 
     @Nullable
-    protected JsonElement isDataDriven(ProteusViewManager viewManager) {
+    protected String isDataDriven(ProteusViewManager viewManager) {
         if (viewManager.getLayout() == null || viewManager.getDataContext() == null || viewManager.getDataContext().getData() == null) {
             return null;
         }
 
-        JsonElement element = viewManager.getLayout().get(ProteusConstants.CHILDREN);
-        JsonElement child = viewManager.getLayout().get(ProteusConstants.CHILD_TYPE);
+        Object layout = viewManager.getLayout();
+        LayoutParser parser = viewManager.getLayoutParser();
+        parser.setInput(layout);
+        parser.peek();
 
-        if (child == null || child.isJsonNull()) {
-            return null;
+        if (parser.isString(ProteusConstants.CHILD_TYPE) && parser.getString(ProteusConstants.CHILD_TYPE).charAt(0) == ProteusConstants.DATA_PREFIX) {
+            return parser.getString(ProteusConstants.CHILD_TYPE);
         }
-
-        if (element != null && element.isJsonPrimitive() && !element.getAsString().isEmpty()
-                && element.getAsString().charAt(0) == ProteusConstants.DATA_PREFIX) {
-            return element;
-        }
-
         return null;
     }
 
@@ -136,13 +124,13 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     protected ProteusViewManager createViewManager(TypeHandler handler, View parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
         ProteusViewManagerImpl viewManager = new ProteusViewManagerImpl();
         DataContext dataContext, parentDataContext = null;
-        JsonElement scope = layout.get(ProteusConstants.DATA_CONTEXT);
+        Map<String, String> scope = layout.getScope();
 
         if (parent instanceof ProteusView) {
             parentDataContext = ((ProteusView) parent).getViewManager().getDataContext();
         }
 
-        if (scope == null || scope.isJsonNull()) {
+        if (scope == null) {
             if (parentDataContext != null) {
                 dataContext = new DataContext(parentDataContext);
             } else {
@@ -152,11 +140,11 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
             }
         } else {
             if (parentDataContext != null) {
-                dataContext = parentDataContext.createChildDataContext(scope.getAsJsonObject(), index);
+                dataContext = parentDataContext.createChildDataContext(scope, index);
             } else {
                 dataContext = new DataContext();
                 dataContext.setData(data);
-                dataContext = dataContext.createChildDataContext(scope.getAsJsonObject(), index);
+                dataContext = dataContext.createChildDataContext(scope, index);
             }
         }
 
@@ -176,9 +164,9 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
             return true;
         }
         String stringValue = isDataPath(parser);
-        if (stringValue != null) {
+        /*if (stringValue != null) {
             parser = this.findAndReplaceValues(handler, view, attribute, stringValue, parser);
-        }
+        }*/
         return super.handleAttribute(handler, view, attribute, parser);
     }
 
@@ -187,7 +175,7 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
         DataContext dataContext = viewManager.getDataContext();
 
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "Find '" + stringValue + "' for " + attribute + " for view with " + Utils.getLayoutIdentifier(viewManager.getLayout()));
+            //Log.d(TAG, "Find '" + stringValue + "' for " + attribute + " for view with " + Utils.getLayoutIdentifier(viewManager.getLayout()));
         }
 
         char firstChar = TextUtils.isEmpty(stringValue) ? 0 : stringValue.charAt(0);
@@ -259,11 +247,11 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
         return value;
     }
 
-    public String isDataPath(JsonElement element) {
-        if (!element.isJsonPrimitive()) {
+    public String isDataPath(LayoutParser element) {
+        if (!element.isString()) {
             return null;
         }
-        String attributeValue = element.getAsString();
+        String attributeValue = element.getString();
         if (attributeValue != null && !"".equals(attributeValue) &&
                 (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX || attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX)) {
             return attributeValue;
@@ -289,33 +277,16 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     }
 
     // TODO: possible NPE, re-factor required
-    public JsonObject getChildLayout(JsonElement type, JsonObject source, ProteusView view) {
-        if (type == null) {
-            return null;
+    public Object getChildLayout(LayoutParser type, Object source, ProteusView view) {
+        if (type.isObject()) {
+            type.peek();
+            return onLayoutRequired(type.getString(ProteusConstants.TYPE), view);
         }
-
-        JsonObject layout;
-        if (type.isJsonObject() && !type.isJsonNull()) {
-            layout = type.getAsJsonObject();
-            layout = Utils.mergeLayouts(layout, source);
-        } else if (type.isJsonPrimitive()) {
-            layout = onLayoutRequired(type.getAsString(), view);
-            if (layout == null) {
-                layout = new JsonObject();
-                layout.add(ProteusConstants.TYPE, type);
-            } else {
-                layout = Utils.mergeLayouts(layout, source);
-            }
-        } else {
-            layout = Utils.mergeLayouts(new JsonObject(), source);
-            layout.add(ProteusConstants.TYPE, type);
-        }
-
-        return layout;
+        return null;
     }
 
     @Nullable
-    protected JsonObject onLayoutRequired(String type, ProteusView parent) {
+    protected Object onLayoutRequired(String type, ProteusView parent) {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "Fetching child layout: " + type);
         }

@@ -79,8 +79,9 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     private static Gson sGson = new Gson();
 
     public static GradientDrawable loadGradientDrawable(Context context, LayoutParser parser) {
-        ShapeDrawableJson shapeDrawable = sGson.fromJson(parser, ShapeDrawableJson.class);
-        return shapeDrawable.init(context);
+        //ShapeDrawableJson shapeDrawable = sGson.fromJson(parser, ShapeDrawableJson.class);
+        //sreturn shapeDrawable.init(context);
+        return null;
     }
 
     @Override
@@ -162,8 +163,8 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                     parser.peek(CHILDREN);
                     while (parser.hasNext()) {
                         parser.next();
-                        LayerListDrawableItem layerListDrawableItem = sGson.fromJson(parser, LayerListDrawableItem.class);
-                        layerListDrawableItem.addItem(view.getContext(), levelListDrawable);
+                        //LayerListDrawableItem layerListDrawableItem = sGson.fromJson(parser, LayerListDrawableItem.class);
+                        //layerListDrawableItem.addItem(view.getContext(), levelListDrawable);
                     }
                 }
                 break;
@@ -310,29 +311,29 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
         @Override
         public void apply(Context context, final GradientDrawable gradientDrawable) {
-            ColorUtils.loadColor(context, color, new ValueCallback<Integer>() {
-                /**
+            /*ColorUtils.loadColor(context, color, new ValueCallback<Integer>() {
+                *//**
                  * Invoked when the value is available.
                  *
                  * @param value The value.
-                 */
+                 *//*
                 @Override
                 public void onReceiveValue(Integer value) {
                     gradientDrawable.setColor(value);
                 }
             }, new ValueCallback<ColorStateList>() {
-                /**
+                *//**
                  * Invoked when the value is available.
                  *
                  * @param value The value.
-                 */
+                 *//*
                 @Override
                 public void onReceiveValue(ColorStateList value) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         gradientDrawable.setColor(value);
                     }
                 }
-            });
+            });*/
         }
     }
 
@@ -428,13 +429,13 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             int[] colors = null;
             if (centerColor != null) {
                 colors = new int[3];
-                colors[0] = loadColor(context, startColor);
+                /*colors[0] = loadColor(context, startColor);
                 colors[1] = loadColor(context, centerColor);
-                colors[2] = loadColor(context, endColor);
+                colors[2] = loadColor(context, endColor);*/
             } else {
                 colors = new int[2];
-                colors[0] = loadColor(context, startColor);
-                colors[1] = loadColor(context, endColor);
+                /*colors[0] = loadColor(context, startColor);
+                colors[1] = loadColor(context, endColor);*/
             }
 
             return init(colors, angle);
@@ -468,9 +469,9 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         @Override
         public void apply(Context context, GradientDrawable gradientDrawable) {
             if (null == dashWidth) {
-                gradientDrawable.setStroke((int) ParseHelper.parseDimension(width, context), loadColor(context, color));
+                //gradientDrawable.setStroke((int) ParseHelper.parseDimension(width, context), loadColor(context, color));
             } else if (null != dashWidth) {
-                gradientDrawable.setStroke((int) ParseHelper.parseDimension(width, context), loadColor(context, color), ParseHelper.parseDimension(dashWidth, context), ParseHelper.parseDimension(dashGap, context));
+                //gradientDrawable.setStroke((int) ParseHelper.parseDimension(width, context), loadColor(context, color), ParseHelper.parseDimension(dashWidth, context), ParseHelper.parseDimension(dashGap, context));
             }
         }
     }

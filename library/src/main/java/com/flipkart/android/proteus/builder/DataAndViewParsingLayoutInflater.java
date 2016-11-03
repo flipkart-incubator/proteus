@@ -23,9 +23,7 @@ import android.view.ViewGroup;
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusView;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.Map;
@@ -36,23 +34,22 @@ import java.util.Map;
  */
 public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater {
 
-    private Map<String, JsonObject> layouts;
+    private Map<String, Object> layouts;
 
-    protected DataAndViewParsingLayoutInflater(Map<String, JsonObject> layouts, @NonNull IdGenerator idGenerator) {
+    protected DataAndViewParsingLayoutInflater(Map<String, Object> layouts, @NonNull IdGenerator idGenerator) {
         super(idGenerator);
         this.layouts = layouts;
     }
 
     @Override
     protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, LayoutParser source, JsonObject data, int index, Styles styles) {
-        JsonElement element = null;
+        Object layout = null;
         if (layouts != null) {
-            element = layouts.get(type);
+            layout = layouts.get(type);
         }
-        if (element != null && !element.isJsonNull()) {
-            JsonObject layout = element.getAsJsonObject();
-            layout = Utils.mergeLayouts(layout, source);
-            ProteusView view = build(parent, layout, data, styles, index);
+        if (layout != null) {
+            source.merge(layout);
+            ProteusView view = build(parent, source, data, styles, index);
             onViewBuiltFromViewProvider(view, type, parent, index);
             return view;
         }

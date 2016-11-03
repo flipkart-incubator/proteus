@@ -116,19 +116,18 @@ public class AnimationUtils {
 
     private static Animation handleElement(Context c, LayoutParser parser) {
         Animation anim = null;
-        JsonElement type = parser.get(TYPE);
-        String animationType = type.getAsString();
+        String type = parser.getString(TYPE);
         AnimationProperties animationProperties = null;
-        if (SET.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(parser, AnimationSetProperties.class);
-        } else if (ALPHA.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(parser, AlphaAnimProperties.class);
-        } else if (SCALE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(parser, ScaleAnimProperties.class);
-        } else if (ROTATE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(parser, RotateAnimProperties.class);
-        } else if (TRANSLATE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(parser, TranslateAnimProperties.class);
+        if (SET.equalsIgnoreCase(type)) {
+            //animationProperties = sGson.fromJson(parser, AnimationSetProperties.class);
+        } else if (ALPHA.equalsIgnoreCase(type)) {
+            //animationProperties = sGson.fromJson(parser, AlphaAnimProperties.class);
+        } else if (SCALE.equalsIgnoreCase(type)) {
+            //animationProperties = sGson.fromJson(parser, ScaleAnimProperties.class);
+        } else if (ROTATE.equalsIgnoreCase(type)) {
+            //animationProperties = sGson.fromJson(parser, RotateAnimProperties.class);
+        } else if (TRANSLATE.equalsIgnoreCase(type)) {
+            //animationProperties = sGson.fromJson(parser, TranslateAnimProperties.class);
         }
 
         if (null != animationProperties) {
@@ -361,17 +360,17 @@ public class AnimationUtils {
 
             if (null != children) {
                 if (children.isJsonArray()) {
-                    for (JsonElement element : children.getAsJsonArray()) {
+                    /*for (JsonElement element : children.getAsJsonArray()) {
                         Animation animation = loadAnimation(c, element);
                         if (null != animation) {
                             animationSet.addAnimation(animation);
                         }
-                    }
+                    }*/
                 } else if (children.isJsonObject() || children.isJsonPrimitive()) {
-                    Animation animation = loadAnimation(c, children);
+                    /*Animation animation = loadAnimation(c, children);
                     if (null != animation) {
                         animationSet.addAnimation(animation);
-                    }
+                    }*/
                 }
             }
             return animationSet;

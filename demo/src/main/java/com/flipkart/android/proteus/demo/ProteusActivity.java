@@ -29,12 +29,13 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
 
-import com.flipkart.android.proteus.EventType;
-import com.flipkart.android.proteus.ImageLoaderCallback;
+import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutInflater;
-import com.flipkart.android.proteus.builder.LayoutBuilderCallback;
 import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
+import com.flipkart.android.proteus.toolbox.EventType;
+import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
+import com.flipkart.android.proteus.toolbox.LayoutBuilderCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.Gson;
@@ -48,6 +49,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -66,7 +68,7 @@ public class ProteusActivity extends AppCompatActivity {
         }
 
         @Override
-        public void getBitmap(String imageUrl, final ImageLoaderCallback callback, View view, JsonObject layout) {
+        public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback callback, LayoutParser parser) {
             URL url;
 
             try {
@@ -91,6 +93,7 @@ public class ProteusActivity extends AppCompatActivity {
                     callback.onResponse(result);
                 }
             }.execute(url);
+
         }
     };
 
@@ -99,14 +102,16 @@ public class ProteusActivity extends AppCompatActivity {
      * errors and events.
      */
     private LayoutBuilderCallback callback = new LayoutBuilderCallback() {
+
+
         @Override
-        public void onUnknownAttribute(String attribute, JsonElement value, ProteusView view) {
-            Log.i("unknown-attribute", attribute + " in " + view.getViewManager().getLayout().toString());
+        public void onUnknownAttribute(ProteusView view, String attribute, LayoutParser parser) {
+
         }
 
         @Nullable
         @Override
-        public ProteusView onUnknownViewType(String type, View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
+        public ProteusView onUnknownViewType(String type, View parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
             return null;
         }
 
@@ -121,18 +126,17 @@ public class ProteusActivity extends AppCompatActivity {
         }
 
         @Override
-        public View onEvent(ProteusView view, JsonElement value, EventType eventType) {
-            Log.d("event", value.toString());
-            return (View) view;
-        }
-
-        @Override
-        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, JsonObject layout) {
+        public View onEvent(ProteusView view, EventType eventType, LayoutParser value) {
             return null;
         }
 
         @Override
-        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, JsonObject layout) {
+        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, LayoutParser layout) {
+            return null;
+        }
+
+        @Override
+        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, LayoutParser layout) {
             return null;
         }
     };
@@ -153,7 +157,7 @@ public class ProteusActivity extends AppCompatActivity {
 
         // Init dataAndViewParsingLayoutBuilder and set layoutProvider, layoutBuilderCallback
         // and bitmapLoader we initialised before.
-        DataAndViewParsingLayoutInflater builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(layoutProvider);
+        DataAndViewParsingLayoutInflater builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(new HashMap<String, Object>());
         builder.setListener(callback);
         builder.setBitmapLoader(bitmapLoader);
 
@@ -165,10 +169,10 @@ public class ProteusActivity extends AppCompatActivity {
         );
 
         // Get instance of proteusView from dataAndViewParsingLayoutBuilder
-        ProteusView proteusView = builder.build(container, pageLayout, data, styles, 0);
+        //ProteusView proteusView = builder.build(container, pageLayout, data, styles, 0);
 
         // Add proteusView and layoutParams to container layout.
-        container.addView((View) proteusView, layoutParams);
+        //container.addView((View) proteusView, layoutParams);
 
         // Set container layout to activity content view.
         setContentView(container);

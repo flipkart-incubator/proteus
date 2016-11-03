@@ -20,7 +20,6 @@ import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.Attributes;
@@ -28,13 +27,12 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.DataContext;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
@@ -96,25 +94,34 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
     public boolean handleChildren(ProteusView view) {
         ProteusViewManager viewManager = view.getViewManager();
         ProteusLayoutInflater proteusLayoutInflater = viewManager.getProteusLayoutInflater();
+        LayoutParser parser = viewManager.getLayoutParser();
         DataContext dataContext = viewManager.getDataContext();
-        JsonObject layout = viewManager.getLayout();
+        Object layout = viewManager.getLayout();
+        parser.setInput(layout);
 
         if (dataContext == null || layout == null) {
             return false;
         }
 
         JsonObject data = dataContext.getData();
-        JsonElement element = layout.get(ProteusConstants.CHILDREN);
-        JsonArray children;
         ProteusView child;
 
-        if (!(element instanceof JsonArray) || proteusLayoutInflater == null) {
+        if (!parser.isObject()) {
             return false;
         }
 
-        children = element.getAsJsonArray();
-        for (int index = 0; index < children.size(); index++) {
-            child = proteusLayoutInflater.build((ViewGroup) view, children.get(index).getAsJsonObject(), data, view.getViewManager().getStyles(), viewManager.getDataContext().getIndex());
+        parser.peek();
+
+        if (!parser.isArray(ProteusConstants.CHILDREN)) {
+            return false;
+        }
+
+        parser.peek(ProteusConstants.CHILDREN);
+
+
+        while (parser.hasNext()) {
+            parser.next();
+            child = proteusLayoutInflater.build((ViewGroup) view, parser, data, view.getViewManager().getStyles(), viewManager.getDataContext().getIndex());
             addView(view, child);
         }
 

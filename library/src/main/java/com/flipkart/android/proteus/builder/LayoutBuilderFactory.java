@@ -68,7 +68,7 @@ public class LayoutBuilderFactory {
      *
      * @return A new {@link DataAndViewParsingLayoutInflater}
      */
-    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutBuilder(Map<String, JsonObject> layouts, @NonNull IdGenerator idGenerator) {
+    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutBuilder(Map<String, Object> layouts, @NonNull IdGenerator idGenerator) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
             dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutInflater(layouts, idGenerator);
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
@@ -77,7 +77,7 @@ public class LayoutBuilderFactory {
         return dataAndViewParsingLayoutBuilderInstance;
     }
 
-    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutBuilder(Map<String, JsonObject> layouts) {
+    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutBuilder(Map<String, Object> layouts) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
             dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutInflater(layouts, new IdGeneratorImpl());
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);

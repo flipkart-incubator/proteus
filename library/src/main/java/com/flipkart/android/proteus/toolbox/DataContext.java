@@ -23,6 +23,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -34,15 +35,15 @@ public class DataContext {
     private final boolean isClone;
     private JsonObject data;
     @Nullable
-    private JsonObject reverseScope;
+    private Map<String, String> reverseScope;
     @Nullable
-    private JsonObject scope;
+    private Map<String, String> scope;
     private int index;
 
     public DataContext() {
         this.data = new JsonObject();
-        this.scope = new JsonObject();
-        this.reverseScope = new JsonObject();
+        this.scope = new HashMap<>();
+        this.reverseScope = new HashMap<>();
         this.index = -1;
         this.isClone = false;
     }
@@ -55,22 +56,22 @@ public class DataContext {
         this.isClone = true;
     }
 
-    public static DataContext updateDataContext(DataContext dataContext, JsonObject data, JsonObject scope) {
-        JsonObject reverseScope = new JsonObject();
+    public static DataContext updateDataContext(DataContext dataContext, JsonObject data, Map<String, String> scope) {
+        Map<String, String> reverseScope = new HashMap<>();
         JsonObject newData = new JsonObject();
 
         if (data == null) {
             data = new JsonObject();
         }
 
-        for (Map.Entry<String, JsonElement> entry : scope.entrySet()) {
+        for (Map.Entry<String, String> entry : scope.entrySet()) {
             String key = entry.getKey();
-            String value = entry.getValue().getAsString();
+            String value = entry.getValue();
             Result result = Utils.readJson(value, data, dataContext.getIndex());
             JsonElement element = result.isSuccess() ? result.element : new JsonObject();
             newData.add(key, element);
             String unAliasedValue = value.replace(ProteusConstants.INDEX, String.valueOf(dataContext.getIndex()));
-            reverseScope.add(unAliasedValue, new JsonPrimitive(key));
+            reverseScope.put(unAliasedValue, key);
         }
 
         Utils.addElements(newData, data, false);
@@ -85,7 +86,7 @@ public class DataContext {
         return dataContext;
     }
 
-    public static String getAliasedDataPath(String dataPath, JsonObject reverseScope, boolean isBindingPath) {
+    public static String getAliasedDataPath(String dataPath, Map<String, String> reverseScope, boolean isBindingPath) {
         String[] segments;
         if (isBindingPath) {
             segments = dataPath.split(ProteusConstants.DATA_PATH_DELIMITER);
@@ -96,7 +97,7 @@ public class DataContext {
         if (reverseScope == null) {
             return dataPath;
         }
-        String alias = Utils.getPropertyAsString(reverseScope, segments[0]);
+        String alias = reverseScope.get(segments[0]);
         if (alias == null) {
             return dataPath;
         }
@@ -113,20 +114,20 @@ public class DataContext {
     }
 
     @Nullable
-    public JsonObject getScope() {
+    public Map<String, String> getScope() {
         return scope;
     }
 
-    public void setScope(@Nullable JsonObject scope) {
+    public void setScope(@Nullable Map<String, String> scope) {
         this.scope = scope;
     }
 
     @Nullable
-    public JsonObject getReverseScope() {
+    public Map<String, String> getReverseScope() {
         return reverseScope;
     }
 
-    public void setReverseScope(@Nullable JsonObject reverseScope) {
+    public void setReverseScope(@Nullable Map<String, String> reverseScope) {
         this.reverseScope = reverseScope;
     }
 
@@ -154,7 +155,7 @@ public class DataContext {
         this.index = index;
     }
 
-    public DataContext createChildDataContext(JsonObject scope, int childIndex) {
+    public DataContext createChildDataContext(Map<String, String> scope, int childIndex) {
         return updateDataContext(new DataContext(), data, scope);
     }
 

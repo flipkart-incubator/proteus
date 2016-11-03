@@ -194,8 +194,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
             proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), parser.setInput(binding.getAttributeValue()));
         } else {
             Result result = Utils.readJson(binding.getBindingName(), dataContext.getData(), dataContext.getIndex());
-            JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
-            proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), dataValue);
+            //JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
+            //proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), dataValue);
         }
     }
 

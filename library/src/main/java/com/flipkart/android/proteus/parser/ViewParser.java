@@ -388,17 +388,20 @@ public class ViewParser<V extends View> extends Parser<V> {
                 String[] styleSet = attributeValue.split(ProteusConstants.STYLE_DELIMITER);
                 for (String styleName : styleSet) {
                     if (styles.contains(styleName)) {
-                        process(styles.getStyle(styleName), parser.setInput(viewManager.getLayout()), (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater());
+                        //process(styles.getStyle(styleName), parser.setInput(viewManager.getLayout()), (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater());
                     }
                 }
             }
 
-            private void process(Map<String, JsonElement> style, LayoutParser layout, ProteusView proteusView, TypeHandler handler, ProteusLayoutInflater builder) {
-                for (Map.Entry<String, JsonElement> attribute : style.entrySet()) {
-                    if (!layout.isNull(attribute.getKey())) {
+            private void process(LayoutParser style, LayoutParser layout, ProteusView proteusView, TypeHandler handler, ProteusLayoutInflater builder) {
+                while (style.hasNext()) {
+                    style.next();
+                    style.peek();
+                    String key = layout.getName();
+                    if (!layout.isNull(key)) {
                         continue;
                     }
-                    builder.handleAttribute(handler, proteusView, attribute.getKey(), attribute.getValue());
+                    builder.handleAttribute(handler, proteusView, key, style);
                 }
             }
         });

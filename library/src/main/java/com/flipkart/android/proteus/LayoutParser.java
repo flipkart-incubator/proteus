@@ -43,6 +43,8 @@ public interface LayoutParser {
 
     int getInt();
 
+    float getLFloat();
+
     double getDouble();
 
     long getLong();
@@ -65,6 +67,8 @@ public interface LayoutParser {
 
     int getInt(String property);
 
+    float getFloat(String property);
+
     double getDouble(String property);
 
     long getLong(String property);
@@ -83,5 +87,7 @@ public interface LayoutParser {
 
 
     String toString();
+
+    void merge(Object layout);
 
 }
