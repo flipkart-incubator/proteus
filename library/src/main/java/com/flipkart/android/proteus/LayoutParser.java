@@ -89,8 +89,6 @@ public interface LayoutParser extends Cloneable {
 
     LayoutParser clone();
 
-    Object getLayout();
-
     Value getValueParser(Object value);
 
     interface Value extends LayoutParser {
