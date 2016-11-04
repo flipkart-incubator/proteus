@@ -21,7 +21,6 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -61,18 +60,12 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     protected void handleChildren(TypeHandler handler, LayoutParser parser, ProteusView view) {
 
         ProteusViewManager viewManager = view.getViewManager();
-        Object layout = viewManager.getLayout();
-        parser.setInput(layout);
 
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(parser));
         }
 
-        if (layout == null) {
-            return;
-        }
-
-        String children = isDataDriven(viewManager);
+        String children = hasDataDrivenChildren(viewManager);
 
         if (children != null) {
 
@@ -81,50 +74,39 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
             viewManager.setDataPathForChildren(dataPath);
 
             Result result = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
-            JsonElement elementFromData = result.isSuccess() ? result.element : null;
+            JsonElement data = result.isSuccess() ? result.element : null;
 
-            if (null != elementFromData) {
-                length = ParseHelper.parseInt(elementFromData.getAsString());
+            if (null != data) {
+                length = ParseHelper.parseInt(data.getAsString());
             }
 
-            // get the child type
-            Object childLayout = getChildLayout(parser, layout, view);
-
-            viewManager.setChildLayout(childLayout);
-
-            for (int index = 0; index < length; index++) {
-                ProteusView child = build((ViewGroup) view, parser.setInput(childLayout), viewManager.getDataContext().getData(), viewManager.getStyles(), index);
-                if (child != null) {
-                    handler.addView(view, child);
-                }
-            }
+            // get the child layout parser
+            LayoutParser childLayoutParser = getChildLayoutParser(parser);
+            childLayoutParser.addAttribute(ProteusConstants.CHILDREN, length);
+            viewManager.setChildLayoutParser(childLayoutParser);
         }
 
         super.handleChildren(handler, parser, view);
     }
 
     @Nullable
-    protected String isDataDriven(ProteusViewManager viewManager) {
-        if (viewManager.getLayout() == null || viewManager.getDataContext() == null || viewManager.getDataContext().getData() == null) {
+    protected String hasDataDrivenChildren(ProteusViewManager viewManager) {
+        if (viewManager.getDataContext() == null || viewManager.getDataContext().getData() == null) {
             return null;
         }
 
-        Object layout = viewManager.getLayout();
         LayoutParser parser = viewManager.getLayoutParser();
-        parser.setInput(layout);
-        parser.peek();
-
-        if (parser.isString(ProteusConstants.CHILD_TYPE) && parser.getString(ProteusConstants.CHILD_TYPE).charAt(0) == ProteusConstants.DATA_PREFIX) {
-            return parser.getString(ProteusConstants.CHILD_TYPE);
+        if (parser.isString(ProteusConstants.CHILDREN)) {
+            return parser.getString(ProteusConstants.CHILDREN);
         }
         return null;
     }
 
     @Override
-    protected ProteusViewManager createViewManager(TypeHandler handler, View parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+    protected ProteusViewManager createViewManager(TypeHandler handler, View parent, LayoutParser parser, JsonObject data, Styles styles, int index) {
         ProteusViewManagerImpl viewManager = new ProteusViewManagerImpl();
         DataContext dataContext, parentDataContext = null;
-        Map<String, String> scope = layout.getScope();
+        Map<String, String> scope = parser.getScope();
 
         if (parent instanceof ProteusView) {
             parentDataContext = ((ProteusView) parent).getViewManager().getDataContext();
@@ -148,7 +130,7 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
             }
         }
 
-        viewManager.setLayout(layout);
+        viewManager.setLayoutParser(parser);
         viewManager.setDataContext(dataContext);
         viewManager.setStyles(styles);
         viewManager.setProteusLayoutInflater(this);
@@ -163,28 +145,28 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
         if (ProteusConstants.DATA_CONTEXT.equals(attribute)) {
             return true;
         }
-        String stringValue = isDataPath(parser);
-        /*if (stringValue != null) {
-            parser = this.findAndReplaceValues(handler, view, attribute, stringValue, parser);
-        }*/
+        String dataPath = isDataPath(parser);
+        if (dataPath != null) {
+            parser = this.findAndReturnValue(view, handler, parser, attribute, dataPath);
+        }
         return super.handleAttribute(handler, view, attribute, parser);
     }
 
-    private JsonElement findAndReplaceValues(TypeHandler handler, ProteusView view, String attribute, String stringValue, JsonElement value) {
+    private LayoutParser findAndReturnValue(ProteusView view, TypeHandler handler, LayoutParser parser, String key, String value) {
+
         ProteusViewManager viewManager = view.getViewManager();
-        DataContext dataContext = viewManager.getDataContext();
 
         if (ProteusConstants.isLoggingEnabled()) {
-            //Log.d(TAG, "Find '" + stringValue + "' for " + attribute + " for view with " + Utils.getLayoutIdentifier(viewManager.getLayout()));
+            Log.d(TAG, "Find '" + value + "' for " + key + " for view with " + Utils.getLayoutIdentifier(viewManager.getLayoutParser()));
         }
 
-        char firstChar = TextUtils.isEmpty(stringValue) ? 0 : stringValue.charAt(0);
+        char firstChar = TextUtils.isEmpty(value) ? 0 : value.charAt(0);
         String dataPath;
         Result result;
         switch (firstChar) {
             case ProteusConstants.DATA_PREFIX:
                 JsonElement elementFromData;
-                dataPath = stringValue.substring(1);
+                dataPath = value.substring(1);
                 result = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
 
                 if (result.isSuccess()) {
@@ -194,13 +176,13 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
                 }
 
                 if (elementFromData != null) {
-                    value = elementFromData;
+                    parser = parser.getValueParser(elementFromData);
                 }
-                addBinding(viewManager, dataPath, attribute, stringValue, false);
+                addBinding(viewManager, dataPath, key, value, false);
                 break;
             case ProteusConstants.REGEX_PREFIX:
-                Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(stringValue);
-                String finalValue = stringValue;
+                Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(value);
+                String finalValue = value;
                 while (regexMatcher.find()) {
                     String matchedString = regexMatcher.group(0);
                     String bindingName;
@@ -232,28 +214,28 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
                         finalValue = finalValue.replace(matchedString, formattedValue != null ? formattedValue : "");
                         bindingName = dataPath;
                     }
-                    addBinding(viewManager, bindingName, attribute, stringValue, true);
+                    addBinding(viewManager, bindingName, key, value, true);
                 }
 
                 // remove the REGEX_PREFIX
                 finalValue = finalValue.substring(1);
 
                 // return as a JsonPrimitive
-                value = new JsonPrimitive(finalValue);
+                parser = parser.getValueParser(new JsonPrimitive(finalValue));
 
                 break;
         }
 
-        return value;
+        return parser;
     }
 
-    public String isDataPath(LayoutParser element) {
-        if (!element.isString()) {
+    @Nullable
+    public String isDataPath(LayoutParser parser) {
+        if (!parser.isString()) {
             return null;
         }
-        String attributeValue = element.getString();
-        if (attributeValue != null && !"".equals(attributeValue) &&
-                (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX || attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX)) {
+        String attributeValue = parser.getString();
+        if (attributeValue != null && !"".equals(attributeValue) && (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX || attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX)) {
             return attributeValue;
         }
         return null;
@@ -276,24 +258,12 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
         return formatter.format(toFormat);
     }
 
-    // TODO: possible NPE, re-factor required
-    public Object getChildLayout(LayoutParser type, Object source, ProteusView view) {
-        if (type.isObject()) {
-            type.peek();
-            return onLayoutRequired(type.getString(ProteusConstants.TYPE), view);
+    public LayoutParser getChildLayoutParser(LayoutParser parent) {
+        if (parent.isLayout(ProteusConstants.CHILD_TYPE)) {
+            return parent.peek(ProteusConstants.CHILD_TYPE).clone();
+        } else {
+            throw new IllegalStateException("child type is not a layout : " + parent.toString());
         }
-        return null;
-    }
-
-    @Nullable
-    protected Object onLayoutRequired(String type, ProteusView parent) {
-        if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "Fetching child layout: " + type);
-        }
-        if (listener != null) {
-            return listener.onLayoutRequired(type, parent);
-        }
-        return null;
     }
 
     public void registerFormatter(Formatter formatter) {

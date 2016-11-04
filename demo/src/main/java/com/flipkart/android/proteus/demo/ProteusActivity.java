@@ -23,7 +23,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
@@ -116,7 +115,7 @@ public class ProteusActivity extends AppCompatActivity {
         }
 
         @Override
-        public JsonObject onLayoutRequired(String type, ProteusView parent) {
+        public JsonObject onLayoutRequired(String type, LayoutParser parent) {
             return null;
         }
 

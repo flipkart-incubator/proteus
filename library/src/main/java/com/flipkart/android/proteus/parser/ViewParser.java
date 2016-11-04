@@ -43,11 +43,9 @@ import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusAndroidView;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author kiran.kumar
@@ -380,7 +378,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 LayoutParser parser = viewManager.getLayoutParser();
                 Styles styles = viewManager.getStyles();
 
-                TypeHandler handler = viewManager.getProteusLayoutInflater().getHandler(parser.setInput(viewManager.getLayout()).getType());
+                TypeHandler handler = viewManager.getProteusLayoutInflater().getHandler(parser.getType());
                 if (styles == null) {
                     return;
                 }
@@ -388,7 +386,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 String[] styleSet = attributeValue.split(ProteusConstants.STYLE_DELIMITER);
                 for (String styleName : styleSet) {
                     if (styles.contains(styleName)) {
-                        //process(styles.getStyle(styleName), parser.setInput(viewManager.getLayout()), (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater());
+                        process(parser.getValueParser(styles.getStyle(styleName)), parser, (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater());
                     }
                 }
             }

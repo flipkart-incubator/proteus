@@ -1,5 +1,7 @@
 package com.flipkart.android.proteus;
 
+import android.support.annotation.Nullable;
+
 import java.util.Map;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Map;
  * @author aditya.sharat
  */
 
-public interface LayoutParser {
+public interface LayoutParser extends Cloneable {
 
     boolean hasNext();
 
@@ -16,15 +18,9 @@ public interface LayoutParser {
 
     LayoutParser peek();
 
-
-    String getType();
-
-    Map<String, String> getScope();
-
     String getName();
 
     int size();
-
 
     boolean isBoolean();
 
@@ -35,6 +31,8 @@ public interface LayoutParser {
     boolean isArray();
 
     boolean isObject();
+
+    boolean isLayout();
 
     boolean isNull();
 
@@ -51,6 +49,9 @@ public interface LayoutParser {
 
     String getString();
 
+    String getType();
+
+    Map<String, String> getScope();
 
     boolean isBoolean(String property);
 
@@ -63,6 +64,8 @@ public interface LayoutParser {
     boolean isObject(String property);
 
     boolean isNull(String property);
+
+    boolean isLayout(String property);
 
 
     int getInt(String property);
@@ -78,16 +81,20 @@ public interface LayoutParser {
 
     LayoutParser peek(String property);
 
-    void add(Object value);
-
-    void remove(Object value);
-
-
-    LayoutParser setInput(Object input);
-
+    void addAttribute(String name, Object value);
 
     String toString();
 
-    void merge(Object layout);
+    LayoutParser merge(@Nullable Object layout);
+
+    LayoutParser clone();
+
+    Object getLayout();
+
+    Value getValueParser(Object value);
+
+    interface Value extends LayoutParser {
+
+    }
 
 }

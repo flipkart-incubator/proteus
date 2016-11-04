@@ -57,20 +57,6 @@ public interface ProteusViewManager {
 
     void setTypeHandler(TypeHandler typeHandler);
 
-    /**
-     * Returns the layout used to build this {@link android.view.View}.
-     *
-     * @return Returns the layout used to build this {@link android.view.View}
-     */
-    Object getLayout();
-
-    /**
-     * Sets the layout used to build this {@link android.view.View}.
-     *
-     * @param layout The layout used to build this {@link View}
-     */
-    void setLayout(Object layout);
-
     void setLayoutParser(LayoutParser parser);
 
     LayoutParser getLayoutParser();
@@ -101,9 +87,9 @@ public interface ProteusViewManager {
     void set(String dataPath, boolean newValue);
 
     @Nullable
-    Object getChildLayout();
+    LayoutParser getChildLayoutParser();
 
-    void setChildLayout(@Nullable Object childLayout);
+    void setChildLayoutParser(@Nullable LayoutParser childLayoutParser);
 
     DataContext getDataContext();
 

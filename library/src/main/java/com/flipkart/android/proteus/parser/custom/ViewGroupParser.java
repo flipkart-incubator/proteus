@@ -27,7 +27,6 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.toolbox.DataContext;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
@@ -95,34 +94,29 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
         ProteusViewManager viewManager = view.getViewManager();
         ProteusLayoutInflater proteusLayoutInflater = viewManager.getProteusLayoutInflater();
         LayoutParser parser = viewManager.getLayoutParser();
-        DataContext dataContext = viewManager.getDataContext();
-        Object layout = viewManager.getLayout();
-        parser.setInput(layout);
-
-        if (dataContext == null || layout == null) {
-            return false;
-        }
-
-        JsonObject data = dataContext.getData();
+        JsonObject data = viewManager.getDataContext().getData();
         ProteusView child;
 
-        if (!parser.isObject()) {
-            return false;
+        if (!parser.isLayout()) {
+            throw new IllegalStateException("parser is not at a Layout : " + parser.toString());
         }
 
-        parser.peek();
-
-        if (!parser.isArray(ProteusConstants.CHILDREN)) {
-            return false;
-        }
-
-        parser.peek(ProteusConstants.CHILDREN);
-
-
-        while (parser.hasNext()) {
-            parser.next();
-            child = proteusLayoutInflater.build((ViewGroup) view, parser, data, view.getViewManager().getStyles(), viewManager.getDataContext().getIndex());
-            addView(view, child);
+        if (parser.isArray(ProteusConstants.CHILDREN)) {
+            parser.peek(ProteusConstants.CHILDREN);
+            while (parser.hasNext()) {
+                parser.next();
+                child = proteusLayoutInflater.build((ViewGroup) view, parser, data, view.getViewManager().getStyles(), viewManager.getDataContext().getIndex());
+                addView(view, child);
+            }
+        } else if (parser.isNumber(ProteusConstants.CHILDREN)) {
+            int length = parser.getInt(ProteusConstants.CHILDREN);
+            LayoutParser childLayoutParser = viewManager.getChildLayoutParser();
+            for (int index = 0; index < length; index++) {
+                child = proteusLayoutInflater.build((ViewGroup) view, childLayoutParser.clone(), viewManager.getDataContext().getData(), viewManager.getStyles(), index);
+                if (child != null) {
+                    this.addView(view, child);
+                }
+            }
         }
 
         return true;

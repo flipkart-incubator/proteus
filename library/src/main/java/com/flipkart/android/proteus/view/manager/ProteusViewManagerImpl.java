@@ -48,14 +48,13 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     private static final String TAG = "ProteusViewManagerImpl";
     private View view;
-    private Object layout;
     private Styles styles;
     private DataContext dataContext;
     private ProteusLayoutInflater proteusLayoutInflater;
     private TypeHandler typeHandler;
     private OnUpdateDataListener onUpdateDataListener;
     private String dataPathForChildren;
-    private Object childLayout;
+    private LayoutParser childLayoutParser;
     private boolean isViewUpdating;
     private ArrayList<Binding> bindings;
     private LayoutParser parser;
@@ -63,7 +62,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     @Override
     public void update(@Nullable JsonObject data) {
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(parser.setInput(layout)));
+            Log.d(TAG, "START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(getLayoutParser()));
         }
         this.isViewUpdating = true;
 
@@ -103,7 +102,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
         this.isViewUpdating = false;
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(parser.setInput(layout)));
+            Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(getLayoutParser()));
         }
 
         onUpdateDataComplete(dataContext.getData());
@@ -154,8 +153,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                 if (child instanceof ProteusView) {
                     ((ProteusView) child).getViewManager().update(data);
                 }
-            } else if (childLayout != null) {
-                childView = proteusLayoutInflater.build(parent, parser.setInput(childLayout), data, styles, dataContext.getIndex());
+            } else if (childLayoutParser != null) {
+                childView = proteusLayoutInflater.build(parent, getLayoutParser(), data, styles, dataContext.getIndex());
                 typeHandler.addView((ProteusView) view, childView);
             }
         }
@@ -191,11 +190,11 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     private void handleBinding(Binding binding) {
         if (binding.hasRegEx()) {
-            proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), parser.setInput(binding.getAttributeValue()));
+            proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), getLayoutParser().getValueParser(binding.getAttributeValue()));
         } else {
             Result result = Utils.readJson(binding.getBindingName(), dataContext.getData(), dataContext.getIndex());
-            //JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
-            //proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), dataValue);
+            JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
+            proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), getLayoutParser().getValueParser(dataValue));
         }
     }
 
@@ -213,16 +212,6 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     public void setTypeHandler(TypeHandler typeHandler) {
         this.typeHandler = typeHandler;
-    }
-
-    @Override
-    public Object getLayout() {
-        return layout;
-    }
-
-    @Override
-    public void setLayout(Object layout) {
-        this.layout = layout;
     }
 
     @Override
@@ -316,12 +305,12 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     @Nullable
     @Override
-    public Object getChildLayout() {
-        return childLayout;
+    public LayoutParser getChildLayoutParser() {
+        return childLayoutParser;
     }
 
-    public void setChildLayout(@Nullable Object childLayout) {
-        this.childLayout = childLayout;
+    public void setChildLayoutParser(@Nullable LayoutParser childLayoutParser) {
+        this.childLayoutParser = childLayoutParser;
     }
 
     @Override
@@ -359,8 +348,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     @Override
     public void destroy() {
         view = null;
-        layout = null;
-        childLayout = null;
+        childLayoutParser = null;
         styles = null;
         proteusLayoutInflater = null;
         typeHandler = null;
