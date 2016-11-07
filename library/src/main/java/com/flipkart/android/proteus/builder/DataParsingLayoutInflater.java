@@ -130,7 +130,7 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
             }
         }
 
-        viewManager.setLayoutParser(parser);
+        viewManager.setLayoutParser(parser.clone());
         viewManager.setDataContext(dataContext);
         viewManager.setStyles(styles);
         viewManager.setProteusLayoutInflater(this);

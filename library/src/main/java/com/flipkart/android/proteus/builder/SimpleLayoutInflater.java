@@ -109,17 +109,13 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
          * Parsing each attribute and setting it on the view.
          */
         while (parser.hasNext()) {
+            parser.next();
             boolean handled = handleAttribute(handler, view, parser.getName(), parser);
 
             if (!handled) {
                 onUnknownAttributeEncountered(view, parser.getName(), parser);
             }
         }
-
-        /**
-         * Process the children.
-         */
-        handleChildren(handler, parser, view);
 
         return view;
     }
@@ -149,7 +145,6 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         dataContext.setIndex(index);
 
         viewManager.setDataContext(dataContext);
-
         viewManager.setLayoutParser(parser.clone());
         viewManager.setStyles(styles);
         viewManager.setProteusLayoutInflater(this);

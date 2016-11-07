@@ -279,24 +279,33 @@ public class Utils {
         int borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
         parser = parser.peek();
 
-        String value = parser.getString(ATTRIBUTE_BG_COLOR);
-        if (value != null && !value.equals("-1")) {
-            bgColor = ParseHelper.parseColor(value);
+        String value;
+        if (parser.isString(ATTRIBUTE_BG_COLOR)) {
+            value = parser.getString(ATTRIBUTE_BG_COLOR);
+            if (value != null && !value.equals("-1")) {
+                bgColor = ParseHelper.parseColor(value);
+            }
         }
 
-        value = parser.getString(ATTRIBUTE_BORDER_COLOR);
-        if (value != null) {
-            borderColor = ParseHelper.parseColor(value);
+        if (parser.isString(ATTRIBUTE_BORDER_COLOR)) {
+            value = parser.getString(ATTRIBUTE_BORDER_COLOR);
+            if (value != null) {
+                borderColor = ParseHelper.parseColor(value);
+            }
         }
 
-        value = parser.getString(ATTRIBUTE_BORDER_RADIUS);
-        if (value != null) {
-            cornerRadius = ParseHelper.parseDimension(value, context);
+        if (parser.isString(ATTRIBUTE_BORDER_RADIUS)) {
+            value = parser.getString(ATTRIBUTE_BORDER_RADIUS);
+            if (value != null) {
+                cornerRadius = ParseHelper.parseDimension(value, context);
+            }
         }
 
-        value = parser.getString(ATTRIBUTE_BORDER_WIDTH);
-        if (value != null) {
-            borderWidth = (int) ParseHelper.parseDimension(value, context);
+        if (parser.isString(ATTRIBUTE_BORDER_WIDTH)) {
+            value = parser.getString(ATTRIBUTE_BORDER_WIDTH);
+            if (value != null) {
+                borderWidth = (int) ParseHelper.parseDimension(value, context);
+            }
         }
 
         GradientDrawable border = new GradientDrawable();

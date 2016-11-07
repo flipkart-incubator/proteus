@@ -63,7 +63,7 @@ public class JsonLayoutParser implements LayoutParser {
 
     @Override
     public LayoutParser peek() {
-        return new JsonLayoutParser(element);
+        return new JsonLayoutParser(current);
     }
 
     @Override
@@ -203,27 +203,27 @@ public class JsonLayoutParser implements LayoutParser {
 
     @Override
     public int getInt(String property) {
-        return ((JsonObject) current).get(property).getAsInt();
+        return ((JsonObject) current).has(property) ? ((JsonObject) current).get(property).getAsInt() : 0;
     }
 
     @Override
     public float getFloat(String property) {
-        return ((JsonObject) current).get(property).getAsFloat();
+        return ((JsonObject) current).has(property) ? ((JsonObject) current).get(property).getAsFloat(): 0;
     }
 
     @Override
     public double getDouble(String property) {
-        return ((JsonObject) current).get(property).getAsDouble();
+        return ((JsonObject) current).has(property) ? ((JsonObject) current).get(property).getAsDouble() : 0;
     }
 
     @Override
     public long getLong(String property) {
-        return ((JsonObject) current).get(property).getAsLong();
+        return ((JsonObject) current).has(property) ? ((JsonObject) current).get(property).getAsLong() : 0;
     }
 
     @Override
     public String getString(String property) {
-        return ((JsonObject) current).get(property).getAsString();
+        return ((JsonObject) current).has(property) ? ((JsonObject) current).get(property).getAsString() : null;
     }
 
     @Override

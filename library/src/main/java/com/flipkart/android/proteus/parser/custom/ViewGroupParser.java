@@ -26,6 +26,7 @@ import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -87,6 +88,13 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
                 view.setMotionEventSplittingEnabled(splitMotionEvents);
             }
         });
+
+        addHandler(Attributes.ViewGroup.Children, new AttributeProcessor<T>() {
+            @Override
+            public void handle(T view, String key, LayoutParser parser) {
+                handleChildren((ProteusView) view);
+            }
+        });
     }
 
     @Override
@@ -102,10 +110,10 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
         }
 
         if (parser.isArray(ProteusConstants.CHILDREN)) {
-            parser.peek(ProteusConstants.CHILDREN);
-            while (parser.hasNext()) {
-                parser.next();
-                child = proteusLayoutInflater.build((ViewGroup) view, parser, data, view.getViewManager().getStyles(), viewManager.getDataContext().getIndex());
+            LayoutParser children = parser.peek(ProteusConstants.CHILDREN);
+            while (children.hasNext()) {
+                children.next();
+                child = proteusLayoutInflater.build((ViewGroup) view, children.clone(), data, view.getViewManager().getStyles(), viewManager.getDataContext().getIndex());
                 addView(view, child);
             }
         } else if (parser.isNumber(ProteusConstants.CHILDREN)) {
