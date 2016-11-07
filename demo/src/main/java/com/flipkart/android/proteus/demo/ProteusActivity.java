@@ -31,6 +31,7 @@ import android.widget.FrameLayout;
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
+import com.flipkart.android.proteus.json.JsonLayoutParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
@@ -48,7 +49,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -154,9 +154,9 @@ public class ProteusActivity extends AppCompatActivity {
         JsonObject pageLayout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
         JsonObject data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
 
-        // Init dataAndViewParsingLayoutBuilder and set layoutProvider, layoutBuilderCallback
-        // and bitmapLoader we initialised before.
-        DataAndViewParsingLayoutInflater builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(new HashMap<String, Object>());
+        // Init dataAndViewParsingLayoutBuilder and set layoutProvider,
+        // layoutBuilderCallback and bitmapLoader we initialised before.
+        DataAndViewParsingLayoutInflater builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(null);
         builder.setListener(callback);
         builder.setBitmapLoader(bitmapLoader);
 
@@ -168,10 +168,10 @@ public class ProteusActivity extends AppCompatActivity {
         );
 
         // Get instance of proteusView from dataAndViewParsingLayoutBuilder
-        //ProteusView proteusView = builder.build(container, pageLayout, data, styles, 0);
+        ProteusView proteusView = builder.build(container, new JsonLayoutParser(pageLayout), data, styles, 0);
 
         // Add proteusView and layoutParams to container layout.
-        //container.addView((View) proteusView, layoutParams);
+        container.addView((View) proteusView, layoutParams);
 
         // Set container layout to activity content view.
         setContentView(container);

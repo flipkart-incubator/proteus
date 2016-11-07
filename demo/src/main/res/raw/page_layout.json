@@ -102,16 +102,6 @@
               ]
             }
           ]
-        },
-        {
-          "type": "RelativeLayoutExample",
-          "padding": "16dp",
-          "paddingBottom": "0dp"
-        },
-        {
-          "type": "SimpleDataBindingExample",
-          "padding": "16dp",
-          "paddingBottom": "0dp"
         }
       ]
     }
