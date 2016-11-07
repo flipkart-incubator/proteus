@@ -394,12 +394,11 @@ public class ViewParser<V extends View> extends Parser<V> {
             private void process(LayoutParser style, LayoutParser layout, ProteusView proteusView, TypeHandler handler, ProteusLayoutInflater builder) {
                 while (style.hasNext()) {
                     style.next();
-                    style.peek();
-                    String key = layout.getName();
+                    String key = style.getName();
                     if (!layout.isNull(key)) {
                         continue;
                     }
-                    builder.handleAttribute(handler, proteusView, key, style);
+                    builder.handleAttribute(handler, proteusView, key, style.peek());
                 }
             }
         });

@@ -78,7 +78,7 @@ public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T>
                 if (!parser.isObject()) {
                     return;
                 }
-                parser.peek();
+                parser = parser.peek();
                 int background = Color.TRANSPARENT;
                 int progress = Color.TRANSPARENT;
 

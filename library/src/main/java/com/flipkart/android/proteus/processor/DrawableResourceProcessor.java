@@ -78,9 +78,10 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     private static final String SWEEP_GRADIENT = "sweep";
     private static Gson sGson = new Gson();
 
+    @Nullable
     public static GradientDrawable loadGradientDrawable(Context context, LayoutParser parser) {
         //ShapeDrawableJson shapeDrawable = sGson.fromJson(parser, ShapeDrawableJson.class);
-        //sreturn shapeDrawable.init(context);
+        //return shapeDrawable.init(context);
         return null;
     }
 
@@ -108,15 +109,15 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     protected void handleElement(V view, String attributeKey, LayoutParser parser) {
 
         String type = parser.getString(TYPE);
-
+        LayoutParser children;
         switch (type) {
             case DRAWABLE_SELECTOR:
                 final StateListDrawable stateListDrawable = new StateListDrawable();
                 if (parser.isArray(CHILDREN)) {
-                    parser.peek(CHILDREN);
-                    while (parser.hasNext()) {
-                        parser.next();
-                        final Pair<int[], LayoutParser> state = ParseHelper.parseState(parser);
+                    children = parser.peek(CHILDREN);
+                    while (children.hasNext()) {
+                        children.next();
+                        final Pair<int[], LayoutParser> state = ParseHelper.parseState(children);
                         if (state != null) {
                             DrawableResourceProcessor<V> processor = new DrawableResourceProcessor<V>() {
                                 @Override
@@ -140,10 +141,10 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             case DRAWABLE_LAYER_LIST:
                 final List<Pair<Integer, Drawable>> drawables = new ArrayList<>();
                 if (parser.isArray(CHILDREN)) {
-                    parser.peek(CHILDREN);
-                    while (parser.hasNext()) {
-                        parser.next();
-                        final Pair<Integer, LayoutParser> layerPair = ParseHelper.parseLayer(parser);
+                    children = parser.peek(CHILDREN);
+                    while (children.hasNext()) {
+                        children.next();
+                        final Pair<Integer, LayoutParser> layerPair = ParseHelper.parseLayer(children);
                         if (null != layerPair) {
                             DrawableResourceProcessor<V> processor = new DrawableResourceProcessor<V>() {
                                 @Override
@@ -160,9 +161,9 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             case DRAWABLE_LEVEL_LIST:
                 final LevelListDrawable levelListDrawable = new LevelListDrawable();
                 if (parser.isArray(CHILDREN)) {
-                    parser.peek(CHILDREN);
-                    while (parser.hasNext()) {
-                        parser.next();
+                    children = parser.peek(CHILDREN);
+                    while (children.hasNext()) {
+                        children.next();
                         //LayerListDrawableItem layerListDrawableItem = sGson.fromJson(parser, LayerListDrawableItem.class);
                         //layerListDrawableItem.addItem(view.getContext(), levelListDrawable);
                     }

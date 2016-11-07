@@ -63,7 +63,7 @@ public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extend
                 if (!parser.isObject()) {
                     return;
                 }
-                parser.peek();
+                parser = parser.peek();
                 int background = Color.TRANSPARENT;
                 int progress = Color.TRANSPARENT;
 

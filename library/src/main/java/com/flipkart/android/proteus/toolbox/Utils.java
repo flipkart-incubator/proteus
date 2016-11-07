@@ -277,7 +277,7 @@ public class Utils {
 
         float cornerRadius = 0;
         int borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
-        parser.peek();
+        parser = parser.peek();
 
         String value = parser.getString(ATTRIBUTE_BG_COLOR);
         if (value != null && !value.equals("-1")) {

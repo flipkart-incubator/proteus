@@ -168,63 +168,65 @@ public class ColorUtils {
 
                 if (parser.isArray("children")) {
 
-                    parser.peek();
+                    LayoutParser children = parser.peek("children");
+                    LayoutParser child;
 
                     int listAllocated = 20;
                     int listSize = 0;
                     int[] colorList = new int[listAllocated];
                     int[][] stateSpecList = new int[listAllocated][];
 
-                    while (parser.hasNext()) {
-                        if (!parser.isObject()) {
+                    while (children.hasNext()) {
+                        children.next();
+                        if (!children.isObject()) {
                             continue;
                         }
 
-                        parser.peek();
+                        child = children.peek();
 
-                        if (parser.size() == 0) {
+                        if (child.size() == 0) {
                             continue;
                         }
 
                         int j = 0;
                         Integer baseColor = null;
                         float alphaMod = 1.0f;
-                        int[] stateSpec = new int[parser.size() - 1];
+                        int[] stateSpec = new int[child.size() - 1];
                         boolean ignoreItem = false;
 
-                        while (parser.hasNext()) {
-                            parser.next();
+                        while (child.hasNext()) {
+                            child.next();
 
                             if (ignoreItem) {
                                 break;
                             }
 
-                            if (!parser.isString()) {
+                            if (!child.isString()) {
                                 continue;
                             }
 
-                            Integer attributeId = getAttribute(parser.getName());
+                            Integer attributeId = getAttribute(child.getName());
                             if (null != attributeId) {
                                 switch (attributeId) {
                                     case android.R.attr.type:
-                                        if (!TextUtils.equals("item", parser.getString())) {
+                                        if (!TextUtils.equals("item", child.getString())) {
                                             ignoreItem = true;
                                         }
                                         break;
                                     case android.R.attr.color:
-                                        String colorRes = parser.getString();
+                                        String colorRes = child.getString();
                                         if (!TextUtils.isEmpty(colorRes)) {
                                             baseColor = getColorFromAttributeValue(context, colorRes);
                                         }
                                         break;
                                     case android.R.attr.alpha:
-                                        String alphaStr = parser.getString();
+                                        String alphaStr = child.getString();
                                         if (!TextUtils.isEmpty(alphaStr)) {
                                             alphaMod = Float.parseFloat(alphaStr);
                                         }
                                         break;
                                     default:
-                                        stateSpec[j++] = parser.getBoolean() ? attributeId : -attributeId;
+                                        stateSpec[j++] = child.getBoolean() ? attributeId : -attributeId;
                                         break;
                                 }
                             }
