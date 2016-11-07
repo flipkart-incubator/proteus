@@ -11,6 +11,7 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -22,29 +23,47 @@ import java.util.Map;
 public class JsonLayoutParser implements LayoutParser {
 
     private JsonElement element;
-    @Nullable
-    private JsonElement previous;
-
+    private JsonElement current;
+    private Iterator<JsonElement> arrayIterator;
+    private Iterator<Map.Entry<String, JsonElement>> entriesIterator;
     private String name;
 
     public JsonLayoutParser(JsonElement element) {
         this.element = element;
-        this.previous = null;
+        this.current = element;
+        if (element.isJsonArray()) {
+            arrayIterator = element.getAsJsonArray().iterator();
+            entriesIterator = null;
+        } else if (element.isJsonObject()) {
+            entriesIterator = element.getAsJsonObject().entrySet().iterator();
+            arrayIterator = null;
+        }
     }
 
     @Override
     public boolean hasNext() {
+        if (element.isJsonObject()) {
+            return entriesIterator.hasNext();
+        } else if (element.isJsonArray()) {
+            return arrayIterator.hasNext();
+        }
         return false;
     }
 
     @Override
     public void next() {
-
+        if (element.isJsonObject()) {
+            Map.Entry<String, JsonElement> entry = entriesIterator.next();
+            name = entry.getKey();
+            current = entry.getValue();
+        } else if (element.isJsonArray()) {
+            current = arrayIterator.next();
+        }
     }
 
     @Override
     public LayoutParser peek() {
-        return this;
+        return new JsonLayoutParser(element);
     }
 
     @Override
@@ -54,82 +73,85 @@ public class JsonLayoutParser implements LayoutParser {
 
     @Override
     public int size() {
-        return ((JsonArray) element).size();
+        return ((JsonArray) current).size();
     }
 
     @Override
     public boolean isBoolean() {
-        return element.isJsonPrimitive() && element.getAsJsonPrimitive().isBoolean();
+        return current.isJsonPrimitive() && current.getAsJsonPrimitive().isBoolean();
     }
 
     @Override
     public boolean isNumber() {
-        return element.isJsonPrimitive() && element.getAsJsonPrimitive().isNumber();
+        return current.isJsonPrimitive() && current.getAsJsonPrimitive().isNumber();
     }
 
     @Override
     public boolean isString() {
-        return element.isJsonPrimitive();
+        return current.isJsonPrimitive();
     }
 
     @Override
     public boolean isArray() {
-        return element.isJsonArray();
+        return current.isJsonArray();
     }
 
     @Override
     public boolean isObject() {
-        return element.isJsonObject();
+        return current.isJsonObject();
     }
 
     @Override
     public boolean isLayout() {
-        return element != null && element != JsonNull.INSTANCE && element.isJsonObject() && element.getAsJsonObject().has(ProteusConstants.TYPE);
+        return current != null && current != JsonNull.INSTANCE && current.isJsonObject() && current.getAsJsonObject().has(ProteusConstants.TYPE);
     }
 
     @Override
     public boolean isNull() {
-        return element == null || element == JsonNull.INSTANCE;
+        return current == null || current == JsonNull.INSTANCE;
     }
 
     @Override
     public boolean getBoolean() {
-        return element.getAsJsonPrimitive().getAsBoolean();
+        return current.getAsJsonPrimitive().getAsBoolean();
     }
 
     @Override
     public int getInt() {
-        return element.getAsJsonPrimitive().getAsInt();
+        return current.getAsJsonPrimitive().getAsInt();
     }
 
     @Override
     public float getLFloat() {
-        return element.getAsJsonPrimitive().getAsFloat();
+        return current.getAsJsonPrimitive().getAsFloat();
     }
 
     @Override
     public double getDouble() {
-        return element.getAsJsonPrimitive().getAsDouble();
+        return current.getAsJsonPrimitive().getAsDouble();
     }
 
     @Override
     public long getLong() {
-        return element.getAsJsonPrimitive().getAsLong();
+        return current.getAsJsonPrimitive().getAsLong();
     }
 
     @Override
     public String getString() {
-        return element.getAsString();
+        return current.getAsString();
     }
 
     @Override
     public String getType() {
-        return element.getAsJsonObject().getAsJsonPrimitive(ProteusConstants.TYPE).getAsString();
+        return current.getAsJsonObject().getAsJsonPrimitive(ProteusConstants.TYPE).getAsString();
     }
 
     @Override
     public Map<String, String> getScope() {
-        JsonObject jScope = element.getAsJsonObject().getAsJsonObject(ProteusConstants.DATA_CONTEXT);
+        JsonObject jScope = current.getAsJsonObject().getAsJsonObject(ProteusConstants.DATA_CONTEXT);
+        if (null == jScope) {
+            return null;
+        }
         Map<String, String> scope = new HashMap<>();
         for (Map.Entry<String, JsonElement> entry : jScope.entrySet()) {
             scope.put(entry.getKey(), entry.getValue().getAsString());
@@ -139,74 +161,74 @@ public class JsonLayoutParser implements LayoutParser {
 
     @Override
     public boolean isBoolean(String property) {
-        JsonElement value = ((JsonObject) element).get(property);
+        JsonElement value = ((JsonObject) current).get(property);
         return value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isBoolean();
     }
 
     @Override
     public boolean isNumber(String property) {
-        JsonElement value = ((JsonObject) element).get(property);
+        JsonElement value = ((JsonObject) current).get(property);
         return value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isNumber();
     }
 
     @Override
     public boolean isString(String property) {
-        JsonElement value = ((JsonObject) element).get(property);
+        JsonElement value = ((JsonObject) current).get(property);
         return value != null && value.isJsonPrimitive();
     }
 
     @Override
     public boolean isArray(String property) {
-        JsonElement value = ((JsonObject) element).get(property);
+        JsonElement value = ((JsonObject) current).get(property);
         return value != null && value.isJsonArray();
     }
 
     @Override
     public boolean isObject(String property) {
-        JsonElement value = ((JsonObject) element).get(property);
+        JsonElement value = ((JsonObject) current).get(property);
         return value != null && value.isJsonObject();
     }
 
     @Override
     public boolean isNull(String property) {
-        JsonElement value = ((JsonObject) element).get(property);
+        JsonElement value = ((JsonObject) current).get(property);
         return value == null || value == JsonNull.INSTANCE;
     }
 
     @Override
     public boolean isLayout(String property) {
-        JsonElement value = ((JsonObject) element).get(property);
+        JsonElement value = ((JsonObject) current).get(property);
         return value != null && value != JsonNull.INSTANCE && value.isJsonObject() && value.getAsJsonObject().has(ProteusConstants.TYPE);
     }
 
     @Override
     public int getInt(String property) {
-        return ((JsonObject) element).get(property).getAsInt();
+        return ((JsonObject) current).get(property).getAsInt();
     }
 
     @Override
     public float getFloat(String property) {
-        return ((JsonObject) element).get(property).getAsFloat();
+        return ((JsonObject) current).get(property).getAsFloat();
     }
 
     @Override
     public double getDouble(String property) {
-        return ((JsonObject) element).get(property).getAsDouble();
+        return ((JsonObject) current).get(property).getAsDouble();
     }
 
     @Override
     public long getLong(String property) {
-        return ((JsonObject) element).get(property).getAsLong();
+        return ((JsonObject) current).get(property).getAsLong();
     }
 
     @Override
     public String getString(String property) {
-        return ((JsonObject) element).get(property).getAsString();
+        return ((JsonObject) current).get(property).getAsString();
     }
 
     @Override
     public LayoutParser peek(String property) {
-        return new JsonLayoutParser(((JsonObject) element).get(property));
+        return new JsonLayoutParser(((JsonObject) current).get(property));
     }
 
     @Override
@@ -216,13 +238,13 @@ public class JsonLayoutParser implements LayoutParser {
 
     @Override
     public LayoutParser merge(@Nullable Object layout) {
-        return new JsonLayoutParser(Utils.mergeLayouts((JsonObject) element, (JsonObject) layout));
+        return new JsonLayoutParser(Utils.mergeLayouts((JsonObject) current, (JsonObject) layout));
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone")
     @Override
     public LayoutParser clone() {
-        return new JsonLayoutParser(Utils.addElements(new JsonObject(), (JsonObject) element, true));
+        return new JsonLayoutParser(Utils.addElements(new JsonObject(), (JsonObject) current, true));
     }
 
     @Override
