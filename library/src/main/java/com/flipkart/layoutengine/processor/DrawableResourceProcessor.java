@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.LevelListDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -39,7 +42,9 @@ import java.util.List;
  */
 public abstract class DrawableResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
-    private static final String TAG = DrawableResourceProcessor.class.getSimpleName();
+    private static final String TAG = "DrawableResource";
+
+    private static final String DRAWABLE_RIPPLE = "ripple";
     private static final String DRAWABLE_SELECTOR = "selector";
     private static final String DRAWABLE_SHAPE = "shape";
     private static final String DRAWABLE_LAYER_LIST = "layer-list";
@@ -70,6 +75,12 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     public static GradientDrawable loadGradientDrawable(Context context, JsonObject value) {
         ShapeDrawableJson shapeDrawable = sGson.fromJson(value, ShapeDrawableJson.class);
         return shapeDrawable.init(context);
+    }
+
+    private static Drawable loadRippleDrawable(@NonNull Context context, @NonNull JsonObject value,
+                                              @NonNull String attributeKey, @NonNull View view) {
+        RippleDrawableJson rippleDrawable = sGson.fromJson(value, RippleDrawableJson.class);
+        return rippleDrawable.init(context, attributeKey, view);
     }
 
     @Override
@@ -167,6 +178,12 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                         LayerListDrawableItem layerListDrawableItem = sGson.fromJson(childElement, LayerListDrawableItem.class);
                         layerListDrawableItem.addItem(context, levelListDrawable);
                     }
+                }
+                break;
+            case DRAWABLE_RIPPLE:
+                Drawable rippleDrawable = loadRippleDrawable(view.getContext(), jsonObject, attributeKey, view);
+                if (null != rippleDrawable) {
+                    setDrawable(view, rippleDrawable);
                 }
                 break;
         }
@@ -580,4 +597,95 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         }
     }
 
+    private static class RippleDrawableJson {
+
+        @SerializedName("color")
+        @NonNull
+        public JsonElement color;
+
+        @SerializedName("mask")
+        @Nullable
+        public JsonElement mask;
+
+        @SerializedName("content")
+        @Nullable
+        public JsonElement content;
+
+        @SerializedName("defaultBackground")
+        @Nullable
+        public JsonElement defaultBackground;
+
+        private transient ColorStateList colorStateList = null;
+        private transient Drawable contentDrawable = null;
+        private transient Drawable maskDrawable = null;
+        private transient Drawable defaultBackgroundDrawable = null;
+
+        @Nullable
+        Drawable init(@NonNull Context context, @NonNull String attributeKey, @NonNull View view) {
+            Drawable resultDrawable = null;
+            ColorUtils.loadColor(context, color, new ValueCallback<Integer>() {
+                @Override
+                public void onReceiveValue(Integer value) {
+                    int[][] states = new int[][] {
+                            new int[] {}
+                    };
+
+                    int[] colors = new int[] {
+                            value
+                    };
+
+                    colorStateList = new ColorStateList(states, colors);
+                }
+            }, new ValueCallback<ColorStateList>() {
+                @Override
+                public void onReceiveValue(ColorStateList value) {
+                    colorStateList = value;
+                }
+            });
+
+            if (null != content) {
+                DrawableResourceProcessor contentDrawableProcessor = new DrawableResourceProcessor() {
+                    @Override
+                    public void setDrawable(View view, Drawable drawable) {
+                        contentDrawable = drawable;
+                    }
+                };
+                contentDrawableProcessor.handle(attributeKey, content, view);
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && null != colorStateList) {
+                if (null != mask) {
+                    DrawableResourceProcessor maskDrawableProcessor = new DrawableResourceProcessor() {
+                        @Override
+                        public void setDrawable(View view, Drawable drawable) {
+                            maskDrawable = drawable;
+                        }
+                    };
+                    maskDrawableProcessor.handle(attributeKey, mask, view);
+                }
+
+                resultDrawable = new RippleDrawable(colorStateList, contentDrawable, maskDrawable);
+            } else if (null != defaultBackground) {
+                DrawableResourceProcessor defaultDrawableProcessor = new DrawableResourceProcessor() {
+                    @Override
+                    public void setDrawable(View view, Drawable drawable) {
+                        defaultBackgroundDrawable = drawable;
+                    }
+                };
+                defaultDrawableProcessor.handle(attributeKey, defaultBackground, view);
+                resultDrawable = defaultBackgroundDrawable;
+            } else if (null != colorStateList && contentDrawable != null) {
+                int pressedColor = colorStateList.getColorForState(new int[]{android.R.attr.state_pressed}, colorStateList.getDefaultColor());
+                int focussedColor = colorStateList.getColorForState(new int[]{android.R.attr.state_focused}, pressedColor);
+                ColorDrawable pressedColorDrawable = new ColorDrawable(pressedColor);
+                ColorDrawable focussedColorDrawable = new ColorDrawable(focussedColor);
+                StateListDrawable stateListDrawable = new StateListDrawable();
+                stateListDrawable.addState(new int[]{android.R.attr.state_enabled, android.R.attr.state_pressed}, pressedColorDrawable);
+                stateListDrawable.addState(new int[]{android.R.attr.state_enabled, android.R.attr.state_focused}, focussedColorDrawable);
+                stateListDrawable.addState(new int[]{android.R.attr.state_enabled}, contentDrawable);
+                resultDrawable = stateListDrawable;
+            }
+            return resultDrawable;
+        }
+    }
 }
