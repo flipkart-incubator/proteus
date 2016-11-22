@@ -78,9 +78,11 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     private static Drawable loadRippleDrawable(@NonNull Context context, @NonNull JsonObject value,
-                                              @NonNull String attributeKey, @NonNull View view) {
+                                              @NonNull String attributeKey, @NonNull View view,
+                                               ParserContext parserContext, ProteusView proteusView,
+                                               ProteusView parent, JsonObject layout, int index) {
         RippleDrawableJson rippleDrawable = sGson.fromJson(value, RippleDrawableJson.class);
-        return rippleDrawable.init(context, attributeKey, view);
+        return rippleDrawable.init(context, attributeKey, view, parserContext, proteusView, parent, layout, index);
     }
 
     @Override
@@ -181,7 +183,8 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 }
                 break;
             case DRAWABLE_RIPPLE:
-                Drawable rippleDrawable = loadRippleDrawable(view.getContext(), jsonObject, attributeKey, view);
+                Drawable rippleDrawable = loadRippleDrawable(view.getContext(), jsonObject, attributeKey, view,
+                        parserContext, proteusView, parent, layout, index);
                 if (null != rippleDrawable) {
                     setDrawable(view, rippleDrawable);
                 }
@@ -621,7 +624,8 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         private transient Drawable defaultBackgroundDrawable = null;
 
         @Nullable
-        Drawable init(@NonNull Context context, @NonNull String attributeKey, @NonNull View view) {
+        Drawable init(@NonNull Context context, @NonNull String attributeKey, @NonNull View view,
+                      ParserContext parserContext, ProteusView proteusView, ProteusView parent, JsonObject layout, int index) {
             Drawable resultDrawable = null;
             ColorUtils.loadColor(context, color, new ValueCallback<Integer>() {
                 @Override
@@ -644,35 +648,38 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             });
 
             if (null != content) {
-                DrawableResourceProcessor contentDrawableProcessor = new DrawableResourceProcessor() {
+                DrawableResourceProcessor contentDrawableProcessor = new DrawableResourceProcessor(context) {
                     @Override
                     public void setDrawable(View view, Drawable drawable) {
                         contentDrawable = drawable;
                     }
                 };
-                contentDrawableProcessor.handle(attributeKey, content, view);
+                contentDrawableProcessor.handle(parserContext, attributeKey, content,
+                        view, proteusView, parent, layout, index);
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && null != colorStateList) {
                 if (null != mask) {
-                    DrawableResourceProcessor maskDrawableProcessor = new DrawableResourceProcessor() {
+                    DrawableResourceProcessor maskDrawableProcessor = new DrawableResourceProcessor(context) {
                         @Override
                         public void setDrawable(View view, Drawable drawable) {
                             maskDrawable = drawable;
                         }
                     };
-                    maskDrawableProcessor.handle(attributeKey, mask, view);
+                    maskDrawableProcessor.handle(parserContext, attributeKey, mask,
+                            view, proteusView, parent, layout, index);
                 }
 
                 resultDrawable = new RippleDrawable(colorStateList, contentDrawable, maskDrawable);
             } else if (null != defaultBackground) {
-                DrawableResourceProcessor defaultDrawableProcessor = new DrawableResourceProcessor() {
+                DrawableResourceProcessor defaultDrawableProcessor = new DrawableResourceProcessor(context) {
                     @Override
                     public void setDrawable(View view, Drawable drawable) {
                         defaultBackgroundDrawable = drawable;
                     }
                 };
-                defaultDrawableProcessor.handle(attributeKey, defaultBackground, view);
+                defaultDrawableProcessor.handle(parserContext, attributeKey, defaultBackground,
+                        view, proteusView, parent, layout, index);
                 resultDrawable = defaultBackgroundDrawable;
             } else if (null != colorStateList && contentDrawable != null) {
                 int pressedColor = colorStateList.getColorForState(new int[]{android.R.attr.state_pressed}, colorStateList.getDefaultColor());
