@@ -117,6 +117,28 @@
               "textColor": "#444444"
             },
             {
+              "type": "Button",
+              "layout_height": "50dp",
+              "layout_width": "150dp",
+              "gravity": "center",
+              "layout_marginTop" : "10dp",
+              "text" : "ADD TO CART",
+              "background" : {
+                "type" : "ripple",
+                "content": {
+                  "type": "shape",
+                  "shape": "rectangle",
+                  "children": [
+                    {
+                      "type": "solid",
+                      "color": "#F2575B"
+                    }
+                  ]
+                },
+                "color": "#f0f0f0"
+              }
+            },
+            {
               "type": "LinearLayout",
               "layout_width": "wrap_content",
               "layout_height": "wrap_content",
