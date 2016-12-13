@@ -111,7 +111,7 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         String attribute;
 
         for (Map.Entry<String, JsonElement> entry : layout.entrySet()) {
-            if (ProteusConstants.TYPE.equals(entry.getKey()) || ProteusConstants.CHILDREN.equals(entry.getKey()) || ProteusConstants.CHILD_TYPE.equals(entry.getKey())) {
+            if (ProteusConstants.TYPE.equals(entry.getKey())) {
                 continue;
             }
 
@@ -124,11 +124,6 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
                 onUnknownAttributeEncountered(attribute, value, view);
             }
         }
-
-        /**
-         * Process the children.
-         */
-        handleChildren(handler, view);
 
         return view;
     }
@@ -163,14 +158,6 @@ public class SimpleLayoutBuilder implements LayoutBuilder {
         viewManager.setLayoutHandler(handler);
 
         return viewManager;
-    }
-
-    protected void handleChildren(LayoutHandler handler, ProteusView view) {
-        if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(view.getViewManager().getLayout()));
-        }
-
-        handler.handleChildren(view);
     }
 
     public boolean handleAttribute(LayoutHandler handler, ProteusView view, String attribute, JsonElement value) {

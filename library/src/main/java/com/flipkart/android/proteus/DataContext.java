@@ -58,9 +58,11 @@ public class DataContext {
         this.isClone = true;
     }
 
-    public static DataContext updateDataContext(DataContext dataContext, JsonObject data, JsonObject scope) {
+    public static DataContext updateDataContext(DataContext dataContext, JsonObject data, JsonObject scope, int dataIndex) {
         JsonObject reverseScope = new JsonObject();
         JsonObject newData = new JsonObject();
+
+        dataContext.setIndex(dataIndex);
 
         if (data == null) {
             data = new JsonObject();
@@ -157,11 +159,11 @@ public class DataContext {
         this.index = index;
     }
 
-    public DataContext createChildDataContext(JsonObject scope, int childIndex) {
-        return updateDataContext(new DataContext(), data, scope);
+    public DataContext createChildDataContext(JsonObject scope, int dataIndex) {
+        return updateDataContext(new DataContext(), data, scope, dataIndex);
     }
 
     public void updateDataContext(JsonObject data) {
-        updateDataContext(this, data, scope);
+        updateDataContext(this, data, scope, index);
     }
 }

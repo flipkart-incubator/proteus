@@ -16,10 +16,10 @@
   -->
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
+       android:shape="rectangle">
     <stroke
         android:width="2dp"
-        android:color="#cccccc" />
+        android:color="#cccccc"/>
 
-    <solid android:color="#efefef" />
+    <solid android:color="#efefef"/>
 </shape>

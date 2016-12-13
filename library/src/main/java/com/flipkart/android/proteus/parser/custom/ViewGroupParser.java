@@ -20,19 +20,20 @@ import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.builder.LayoutBuilder;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
+import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -89,35 +90,65 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
                 view.setMotionEventSplittingEnabled(splitMotionEvents);
             }
         });
+
+        addHandler(Attributes.ViewGroup.Children, new AttributeProcessor<T>() {
+            @Override
+            public void handle(String key, JsonElement value, T view) {
+                handleChildren((ProteusView) view);
+            }
+        });
     }
 
     @Override
     public boolean handleChildren(ProteusView view) {
         ProteusViewManager viewManager = view.getViewManager();
-        LayoutBuilder layoutBuilder = viewManager.getLayoutBuilder();
-        DataContext dataContext = viewManager.getDataContext();
+        LayoutBuilder builder = viewManager.getLayoutBuilder();
         JsonObject layout = viewManager.getLayout();
+        JsonElement children = layout.get(ProteusConstants.CHILDREN);
+        JsonObject data = viewManager.getDataContext().getData();
+        int dataIndex = viewManager.getDataContext().getIndex();
+        Styles styles = view.getViewManager().getStyles();
 
-        if (dataContext == null || layout == null) {
-            return false;
-        }
-
-        JsonObject data = dataContext.getData();
-        JsonElement element = layout.get(ProteusConstants.CHILDREN);
-        JsonArray children;
-        ProteusView child;
-
-        if (!(element instanceof JsonArray) || layoutBuilder == null) {
-            return false;
-        }
-
-        children = element.getAsJsonArray();
-        for (int index = 0; index < children.size(); index++) {
-            child = layoutBuilder.build((ViewGroup) view, children.get(index).getAsJsonObject(), data, viewManager.getDataContext().getIndex(), view.getViewManager().getStyles());
-            addView(view, child);
+        if (null != children && !children.isJsonNull()) {
+            if (children.isJsonArray()) {
+                ProteusView child;
+                for (JsonElement jsonElement : children.getAsJsonArray()) {
+                    child = builder.build((ViewGroup) view, jsonElement.getAsJsonObject(), data, dataIndex, styles);
+                    addView(view, child);
+                }
+            } else if (children.isJsonObject()) {
+                handleDataDrivenChildren(builder, view, viewManager, children.getAsJsonObject(), data, dataIndex);
+            }
         }
 
         return true;
+    }
+
+    private void handleDataDrivenChildren(LayoutBuilder builder, ProteusView parent, ProteusViewManager viewManager, JsonObject children, JsonObject data, int dataIndex) {
+
+        String dataPath = children.get(ProteusConstants.DATA).getAsString().substring(1);
+        viewManager.setDataPathForChildren(dataPath);
+
+        Result result = Utils.readJson(dataPath, data, dataIndex);
+        JsonElement element = result.isSuccess() ? result.element : null;
+
+        JsonObject childLayout = children.getAsJsonObject(ProteusConstants.LAYOUT);
+
+        viewManager.setChildLayout(childLayout);
+
+        if (null == element || element.isJsonNull()) {
+            return;
+        }
+
+        int length = element.getAsJsonArray().size();
+
+        ProteusView child;
+        for (int index = 0; index < length; index++) {
+            child = builder.build((ViewGroup) parent, childLayout, viewManager.getDataContext().getData(), index, viewManager.getStyles());
+            if (child != null) {
+                this.addView(parent, child);
+            }
+        }
     }
 
     @Override

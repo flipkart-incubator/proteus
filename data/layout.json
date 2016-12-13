@@ -136,6 +136,11 @@
           "paddingBottom": "0dp"
         },
         {
+          "type": "DataDrivenExample",
+          "padding": "16dp",
+          "paddingBottom": "0dp"
+        },
+        {
           "type": "CircleView",
           "layout_width": "150dp",
           "layout_height": "150dp",
