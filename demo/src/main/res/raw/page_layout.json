@@ -30,6 +30,17 @@
                   "type": "TextView",
                   "text": "TextView",
                   "textColor": "#000000",
+                  "animation": {
+                    "interpolator": {
+                      "type":"anticipateOvershootInterpolator"
+                    },
+                    "type": "rotate",
+                    "fromDegrees": "-720",
+                    "toDegrees": "0",
+                    "pivotX": "50%",
+                    "pivotY": "50%",
+                    "duration": "1500"
+                  },
                   "background": {
                     "type": "shape",
                     "shape": "oval",

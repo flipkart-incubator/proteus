@@ -122,7 +122,7 @@ public class JsonLayoutParser implements LayoutParser {
     }
 
     @Override
-    public float getLFloat() {
+    public float getFloat() {
         return current.getAsJsonPrimitive().getAsFloat();
     }
 

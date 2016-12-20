@@ -41,7 +41,7 @@ public interface LayoutParser extends Cloneable {
 
     int getInt();
 
-    float getLFloat();
+    float getFloat();
 
     double getDouble();
 
