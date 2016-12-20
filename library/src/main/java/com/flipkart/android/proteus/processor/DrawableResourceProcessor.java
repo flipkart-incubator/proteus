@@ -42,9 +42,6 @@ import com.flipkart.android.proteus.toolbox.NetworkDrawableHelper;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -61,6 +58,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     private static final String DRAWABLE_SHAPE = "shape";
     private static final String DRAWABLE_LAYER_LIST = "layer-list";
     private static final String DRAWABLE_LEVEL_LIST = "level-list";
+    private static final String DRAWABLE_RIPPLE = "ripple";
     private static final String TYPE = "type";
     private static final String CHILDREN = "children";
     private static final String TYPE_CORNERS = "corners";
@@ -76,13 +74,10 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     private static final String LINEAR_GRADIENT = "linear";
     private static final String RADIAL_GRADIENT = "radial";
     private static final String SWEEP_GRADIENT = "sweep";
-    private static Gson sGson = new Gson();
 
     @Nullable
     public static GradientDrawable loadGradientDrawable(Context context, LayoutParser parser) {
-        //ShapeDrawableJson shapeDrawable = sGson.fromJson(parser, ShapeDrawableJson.class);
-        //return shapeDrawable.init(context);
-        return null;
+        return ShapeDrawableParser.parse(parser, context);
     }
 
     @Override
@@ -96,6 +91,57 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 Log.e(TAG, "Resource for key: " + key + " must be a primitive or an object. value -> " + parser.toString());
             }
         }
+    }
+
+
+    /**
+     * Any string based drawables are handled here. Color, local resource and remote image urls.
+     *
+     * @param view
+     * @param attributeKey
+     * @param attributeValue
+     */
+    protected void handleString(final V view, String attributeKey, final String attributeValue) {
+        ProteusViewManager viewManager = ((ProteusView) view).getViewManager();
+        boolean synchronousRendering = viewManager.getProteusLayoutInflater().isSynchronousRendering();
+
+        if (ParseHelper.isLocalResourceAttribute(attributeValue)) {
+            int attributeId = ParseHelper.getAttributeId(view.getContext(), attributeValue);
+            if (0 != attributeId) {
+                TypedArray ta = view.getContext().obtainStyledAttributes(new int[]{attributeId});
+                Drawable drawable = ta.getDrawable(0 /* index */);
+                ta.recycle();
+                setDrawable(view, drawable);
+            }
+        } else if (ParseHelper.isColor(attributeValue)) {
+            setDrawable(view, new ColorDrawable(ParseHelper.parseColor(attributeValue)));
+        } else if (ParseHelper.isLocalDrawableResource(attributeValue)) {
+            try {
+                Resources r = view.getContext().getResources();
+                int drawableId = r.getIdentifier(attributeValue, "drawable", view.getContext().getPackageName());
+                Drawable drawable = r.getDrawable(drawableId);
+                setDrawable(view, drawable);
+            } catch (Exception ex) {
+                System.out.println("Could not load local resource " + attributeValue);
+            }
+        } else if (URLUtil.isValidUrl(attributeValue)) {
+            NetworkDrawableHelper.DrawableCallback callback = new NetworkDrawableHelper.DrawableCallback() {
+                @Override
+                public void onDrawableLoad(String url, final Drawable drawable) {
+                    setDrawable(view, drawable);
+                }
+
+                @Override
+                public void onDrawableError(String url, String reason, Drawable errorDrawable) {
+                    System.out.println("Could not load " + url + " : " + reason);
+                    if (errorDrawable != null) {
+                        setDrawable(view, errorDrawable);
+                    }
+                }
+            };
+            new NetworkDrawableHelper((ProteusView) view, attributeValue, viewManager.getProteusLayoutInflater().getNetworkDrawableHelper(), callback, null, synchronousRendering);
+        }
+
     }
 
     /**
@@ -164,10 +210,14 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                     children = parser.peek(CHILDREN);
                     while (children.hasNext()) {
                         children.next();
-                        //LayerListDrawableItem layerListDrawableItem = sGson.fromJson(parser, LayerListDrawableItem.class);
-                        //layerListDrawableItem.addItem(view.getContext(), levelListDrawable);
+                        LayerListDrawableItem layerListDrawableItem = LayerListDrawableItem.parse(children);
+                        layerListDrawableItem.addItem(view, attributeKey, levelListDrawable);
                     }
+                    setDrawable(view, levelListDrawable);
                 }
+                break;
+            case DRAWABLE_RIPPLE:
+                // TODO: do ripple drawbles
                 break;
         }
     }
@@ -191,56 +241,6 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         }
 
         setDrawable(view, layerDrawable);
-    }
-
-    /**
-     * Any string based drawables are handled here. Color, local resource and remote image urls.
-     *
-     * @param view
-     * @param attributeKey
-     * @param attributeValue
-     */
-    protected void handleString(final V view, String attributeKey, final String attributeValue) {
-        ProteusViewManager viewManager = ((ProteusView) view).getViewManager();
-        boolean synchronousRendering = viewManager.getProteusLayoutInflater().isSynchronousRendering();
-
-        if (ParseHelper.isLocalResourceAttribute(attributeValue)) {
-            int attributeId = ParseHelper.getAttributeId(view.getContext(), attributeValue);
-            if (0 != attributeId) {
-                TypedArray ta = view.getContext().obtainStyledAttributes(new int[]{attributeId});
-                Drawable drawable = ta.getDrawable(0 /* index */);
-                ta.recycle();
-                setDrawable(view, drawable);
-            }
-        } else if (ParseHelper.isColor(attributeValue)) {
-            setDrawable(view, new ColorDrawable(ParseHelper.parseColor(attributeValue)));
-        } else if (ParseHelper.isLocalDrawableResource(attributeValue)) {
-            try {
-                Resources r = view.getContext().getResources();
-                int drawableId = r.getIdentifier(attributeValue, "drawable", view.getContext().getPackageName());
-                Drawable drawable = r.getDrawable(drawableId);
-                setDrawable(view, drawable);
-            } catch (Exception ex) {
-                System.out.println("Could not load local resource " + attributeValue);
-            }
-        } else if (URLUtil.isValidUrl(attributeValue)) {
-            NetworkDrawableHelper.DrawableCallback callback = new NetworkDrawableHelper.DrawableCallback() {
-                @Override
-                public void onDrawableLoad(String url, final Drawable drawable) {
-                    setDrawable(view, drawable);
-                }
-
-                @Override
-                public void onDrawableError(String url, String reason, Drawable errorDrawable) {
-                    System.out.println("Could not load " + url + " : " + reason);
-                    if (errorDrawable != null) {
-                        setDrawable(view, errorDrawable);
-                    }
-                }
-            };
-            new NetworkDrawableHelper((ProteusView) view, attributeValue, viewManager.getProteusLayoutInflater().getNetworkDrawableHelper(), callback, null, synchronousRendering);
-        }
-
     }
 
     public abstract void setDrawable(V view, Drawable drawable);
@@ -271,6 +271,12 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
     private static class Corners extends GradientDrawableElement {
 
+        public static final String RADIUS = "radius";
+        public static final String TOP_LEFT_RADIUS = "topLeftRadius";
+        public static final String TOP_RIGHT_RADIUS = "topRightRadius";
+        public static final String BOTTOM_LEFT_RADIUS = "bottomLeftRadius";
+        public static final String BOTTOM_RIGHT_RADIUS = "bottomRightRadius";
+
         @SerializedName("radius")
         public String radius;
         @SerializedName("topLeftRadius")
@@ -281,6 +287,16 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         public String bottomLeftRadius;
         @SerializedName("bottomRightRadius")
         public String bottomRightRadius;
+
+        public static Corners parse(LayoutParser parser) {
+            Corners corners = new Corners();
+            corners.radius = parser.getString(RADIUS);
+            corners.topLeftRadius = parser.getString(TOP_LEFT_RADIUS);
+            corners.topRightRadius = parser.getString(TOP_RIGHT_RADIUS);
+            corners.bottomLeftRadius = parser.getString(BOTTOM_LEFT_RADIUS);
+            corners.bottomRightRadius = parser.getString(BOTTOM_RIGHT_RADIUS);
+            return corners;
+        }
 
         @Override
         public void apply(Context context, GradientDrawable gradientDrawable) {
@@ -307,38 +323,56 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
     private static class Solid extends GradientDrawableElement {
 
+        public static final String COLOR = "color";
+
         @SerializedName("color")
-        public JsonElement color;
+        public LayoutParser color;
+
+        public static Solid parse(LayoutParser parser) {
+            Solid solid = new Solid();
+            solid.color = parser.peek(COLOR);
+            return solid;
+        }
 
         @Override
         public void apply(Context context, final GradientDrawable gradientDrawable) {
-            /*ColorUtils.loadColor(context, color, new ValueCallback<Integer>() {
-                *//**
+            ColorUtils.loadColor(context, color, new ValueCallback<Integer>() {
+                /**
                  * Invoked when the value is available.
                  *
                  * @param value The value.
-                 *//*
+                 */
                 @Override
                 public void onReceiveValue(Integer value) {
                     gradientDrawable.setColor(value);
                 }
             }, new ValueCallback<ColorStateList>() {
-                *//**
+                /**
                  * Invoked when the value is available.
                  *
                  * @param value The value.
-                 *//*
+                 */
                 @Override
                 public void onReceiveValue(ColorStateList value) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                         gradientDrawable.setColor(value);
                     }
                 }
-            });*/
+            });
         }
     }
 
     private static class Gradient extends GradientDrawableElement {
+
+        public static final String ANGLE = "angle";
+        public static final String CENTER_X = "centerX";
+        public static final String CENTER_Y = "centerY";
+        public static final String CENTER_COLOR = "centerColor";
+        public static final String END_COLOR = "endColor";
+        public static final String GRADIENT_RADIUS = "gradientRadius";
+        public static final String START_COLOR = "startColor";
+        public static final String GRADIENT_TYPE = "gradientType";
+        public static final String USE_LEVEL = "useLevel";
 
         @SerializedName("angle")
         public Integer angle;
@@ -347,17 +381,31 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         @SerializedName("centerY")
         public Float centerY;
         @SerializedName("centerColor")
-        public JsonElement centerColor;
+        public LayoutParser centerColor;
         @SerializedName("endColor")
-        public JsonElement endColor;
+        public LayoutParser endColor;
         @SerializedName("gradientRadius")
         public Float gradientRadius;
         @SerializedName("startColor")
-        public JsonElement startColor;
+        public LayoutParser startColor;
         @SerializedName("gradientType")
         public String gradientType;
         @SerializedName("useLevel")
         public Boolean useLevel;
+
+        public static Gradient parse(LayoutParser parser) {
+            Gradient gradient = new Gradient();
+            gradient.angle = parser.getInt(ANGLE);
+            gradient.centerX = parser.getFloat(CENTER_X);
+            gradient.centerY = parser.getFloat(CENTER_Y);
+            gradient.centerColor = parser.peek(CENTER_COLOR);
+            gradient.endColor = parser.peek(END_COLOR);
+            gradient.gradientRadius = parser.getFloat(GRADIENT_RADIUS);
+            gradient.startColor = parser.peek(START_COLOR);
+            gradient.gradientType = parser.getString(GRADIENT_TYPE);
+            gradient.useLevel = parser.getBoolean(USE_LEVEL);
+            return gradient;
+        }
 
         public static GradientDrawable.Orientation getOrientation(Integer angle) {
             GradientDrawable.Orientation orientation = GradientDrawable.Orientation.LEFT_RIGHT;
@@ -427,16 +475,16 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         }
 
         public GradientDrawable init(Context context) {
-            int[] colors = null;
+            int[] colors;
             if (centerColor != null) {
                 colors = new int[3];
-                /*colors[0] = loadColor(context, startColor);
+                colors[0] = loadColor(context, startColor);
                 colors[1] = loadColor(context, centerColor);
-                colors[2] = loadColor(context, endColor);*/
+                colors[2] = loadColor(context, endColor);
             } else {
                 colors = new int[2];
-                /*colors[0] = loadColor(context, startColor);
-                colors[1] = loadColor(context, endColor);*/
+                colors[0] = loadColor(context, startColor);
+                colors[1] = loadColor(context, endColor);
             }
 
             return init(colors, angle);
@@ -445,10 +493,20 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
     private static class Size extends GradientDrawableElement {
 
+        public static final String WIDTH = "width";
+        public static final String HEIGHT = "height";
+
         @SerializedName("width")
         public String width;
         @SerializedName("height")
         public String height;
+
+        public static Size parse(LayoutParser parser) {
+            Size size = new Size();
+            size.width = parser.getString(WIDTH);
+            size.height = parser.getString(HEIGHT);
+            return size;
+        }
 
         @Override
         public void apply(Context context, GradientDrawable gradientDrawable) {
@@ -458,86 +516,114 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
     private static class Stroke extends GradientDrawableElement {
 
+        public static final String WIDTH = "width";
+        public static final String COLOR = "color";
+        public static final String DASH_WIDTH = "dashWidth";
+        public static final String DASH_GAP = "dashGap";
+
         @SerializedName("width")
         public String width;
         @SerializedName("color")
-        public JsonElement color;
+        public LayoutParser color;
         @SerializedName("dashWidth")
         public String dashWidth;
         @SerializedName("dashGap")
         public String dashGap;
 
+        public static Stroke parse(LayoutParser parser) {
+            Stroke stroke = new Stroke();
+            stroke.width = parser.getString(WIDTH);
+            stroke.color = parser.peek(COLOR);
+            stroke.dashWidth = parser.getString(DASH_WIDTH);
+            stroke.dashGap = parser.getString(DASH_GAP);
+            return stroke;
+        }
+
         @Override
         public void apply(Context context, GradientDrawable gradientDrawable) {
             if (null == dashWidth) {
-                //gradientDrawable.setStroke((int) ParseHelper.parseDimension(width, context), loadColor(context, color));
-            } else if (null != dashWidth) {
-                //gradientDrawable.setStroke((int) ParseHelper.parseDimension(width, context), loadColor(context, color), ParseHelper.parseDimension(dashWidth, context), ParseHelper.parseDimension(dashGap, context));
+                gradientDrawable.setStroke((int) ParseHelper.parseDimension(width, context), loadColor(context, color));
+            } else if (null != dashGap) {
+                gradientDrawable.setStroke((int) ParseHelper.parseDimension(width, context), loadColor(context, color), ParseHelper.parseDimension(dashWidth, context), ParseHelper.parseDimension(dashGap, context));
             }
         }
     }
 
     private static class LayerListDrawableItem {
 
+        public static final String MIN_LEVEL = "minLevel";
+        public static final String MAX_LEVEL = "maxLevel";
+        public static final String DRAWABLE = "drawable";
+
         @SerializedName("minLevel")
         public Integer minLevel;
         @SerializedName("maxLevel")
         public Integer maxLevel;
         @SerializedName("drawable")
-        public JsonElement drawable;
+        public LayoutParser drawable;
 
-        public void addItem(Context context, final LevelListDrawable levelListDrawable) {
-            DrawableResourceProcessor<View> processor = new DrawableResourceProcessor<View>() {
+        public static LayerListDrawableItem parse(LayoutParser parser) {
+            LayerListDrawableItem drawableItem = new LayerListDrawableItem();
+            drawableItem.minLevel = parser.getInt(MIN_LEVEL);
+            drawableItem.maxLevel = parser.getInt(MAX_LEVEL);
+            drawableItem.drawable = parser.peek(DRAWABLE);
+            return drawableItem;
+        }
+
+        public void addItem(View view, String attributeKey, final LevelListDrawable levelListDrawable) {
+            AttributeProcessor<View> processor = new DrawableResourceProcessor<View>() {
                 @Override
                 public void setDrawable(View view, Drawable drawable) {
                     levelListDrawable.addLevel(minLevel, maxLevel, drawable);
                 }
             };
+            processor.handle(view, attributeKey, drawable);
         }
     }
 
-    private static class ShapeDrawableJson {
+    private static class ShapeDrawableParser {
 
-        @SerializedName("shape")
-        public String shape;
-        @SerializedName("innerRadius")
-        public String innerRadius;
-        @SerializedName("innerRadiusRatio")
-        public Float innerRadiusRatio;
-        @SerializedName("thickness")
-        public String thickness;
-        @SerializedName("thicknessRatio")
-        public Float thicknessRatio;
-        @SerializedName("children")
-        public JsonArray children;
+        public static final String SHAPE = "shape";
+        public static final String INNER_RADIUS = "innerRadius";
+        public static final String INNER_RADIUS_RATIO = "innerRadiusRatio";
+        public static final String THICKNESS = "thickness";
+        public static final String THICKNESS_RATIO = "thicknessRatio";
 
-        public GradientDrawable init(Context context) {
+        public static GradientDrawable parse(LayoutParser parser, Context context) {
+            String shape = parser.getString(SHAPE);
+            String innerRadius = parser.getString(INNER_RADIUS);
+            Float innerRadiusRatio = parser.getFloat(INNER_RADIUS_RATIO);
+            String thickness = parser.getString(THICKNESS);
+            Float thicknessRatio = parser.getFloat(THICKNESS_RATIO);
+            LayoutParser children = parser.peek(CHILDREN);
+
             ArrayList<GradientDrawableElement> elements = null;
             Gradient gradient = null;
 
             if (children != null && children.size() > 0) {
                 elements = new ArrayList<>(children.size());
-                for (JsonElement jsonElement : children) {
-                    if (jsonElement.isJsonObject()) {
-                        String typeKey = jsonElement.getAsJsonObject().getAsJsonPrimitive(TYPE).getAsString();
+                while (children.hasNext()) {
+                    children.next();
+                    if (children.isObject()) {
+                        String typeKey = children.peek().getString(TYPE);
                         GradientDrawableElement element = null;
                         switch (typeKey) {
                             case TYPE_CORNERS:
-                                element = sGson.fromJson(jsonElement, Corners.class);
+                                element = Corners.parse(children);
                                 break;
                             case TYPE_PADDING:
                                 break;
                             case TYPE_SIZE:
-                                element = sGson.fromJson(jsonElement, Size.class);
+                                element = Size.parse(children);
                                 break;
                             case TYPE_SOLID:
-                                element = sGson.fromJson(jsonElement, Solid.class);
+                                element = Solid.parse(children);
                                 break;
                             case TYPE_STROKE:
-                                element = sGson.fromJson(jsonElement, Stroke.class);
+                                element = Stroke.parse(children);
                                 break;
                             case TYPE_GRADIENT:
-                                gradient = sGson.fromJson(jsonElement, Gradient.class);
+                                gradient = Gradient.parse(children);
                                 element = gradient;
                                 break;
                         }

@@ -160,6 +160,11 @@ public class JsonLayoutParser implements LayoutParser {
     }
 
     @Override
+    public boolean hasProperty(String property) {
+        return ((JsonObject) current).has(property);
+    }
+
+    @Override
     public boolean isBoolean(String property) {
         JsonElement value = ((JsonObject) current).get(property);
         return value != null && value.isJsonPrimitive() && value.getAsJsonPrimitive().isBoolean();
@@ -202,13 +207,18 @@ public class JsonLayoutParser implements LayoutParser {
     }
 
     @Override
+    public boolean getBoolean(String property) {
+        return ((JsonObject) current).has(property) && ((JsonObject) current).get(property).getAsBoolean();
+    }
+
+    @Override
     public int getInt(String property) {
         return ((JsonObject) current).has(property) ? ((JsonObject) current).get(property).getAsInt() : 0;
     }
 
     @Override
     public float getFloat(String property) {
-        return ((JsonObject) current).has(property) ? ((JsonObject) current).get(property).getAsFloat(): 0;
+        return ((JsonObject) current).has(property) ? ((JsonObject) current).get(property).getAsFloat() : 0;
     }
 
     @Override
@@ -227,8 +237,12 @@ public class JsonLayoutParser implements LayoutParser {
     }
 
     @Override
+    @Nullable
     public LayoutParser peek(String property) {
-        return new JsonLayoutParser(((JsonObject) current).get(property));
+        if (((JsonObject) current).has(property)) {
+            return new JsonLayoutParser(((JsonObject) current).get(property));
+        }
+        return null;
     }
 
     @Override

@@ -30,6 +30,18 @@
                   "type": "TextView",
                   "text": "TextView",
                   "textColor": "#000000",
+                  "background": {
+                    "type": "shape",
+                    "shape": "oval",
+                    "children": [
+                      {
+                        "type": "gradient",
+                        "startColor": "#44f85032",
+                        "endColor": "#44e73827",
+                        "angle": "90"
+                      }
+                    ]
+                  },
                   "textSize": "12sp"
                 },
                 {
