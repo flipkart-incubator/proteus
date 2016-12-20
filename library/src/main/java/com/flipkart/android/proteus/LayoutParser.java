@@ -53,6 +53,8 @@ public interface LayoutParser extends Cloneable {
 
     Map<String, String> getScope();
 
+    boolean hasProperty(String property);
+
     boolean isBoolean(String property);
 
     boolean isNumber(String property);
@@ -68,6 +70,8 @@ public interface LayoutParser extends Cloneable {
     boolean isLayout(String property);
 
 
+    boolean getBoolean(String property);
+
     int getInt(String property);
 
     float getFloat(String property);
@@ -78,7 +82,7 @@ public interface LayoutParser extends Cloneable {
 
     String getString(String property);
 
-
+    @Nullable
     LayoutParser peek(String property);
 
     void addAttribute(String name, Object value);
