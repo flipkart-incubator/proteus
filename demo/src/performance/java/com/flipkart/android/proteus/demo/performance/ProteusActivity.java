@@ -22,19 +22,20 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
 
-import com.flipkart.android.proteus.EventType;
-import com.flipkart.android.proteus.ImageLoaderCallback;
-import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutBuilder;
-import com.flipkart.android.proteus.builder.LayoutBuilderCallback;
+import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
 import com.flipkart.android.proteus.demo.R;
+import com.flipkart.android.proteus.json.JsonLayoutParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
+import com.flipkart.android.proteus.toolbox.EventType;
+import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
+import com.flipkart.android.proteus.toolbox.LayoutBuilderCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.Gson;
@@ -57,7 +58,7 @@ public class ProteusActivity extends BaseActivity {
 
     private ProteusView proteusView;
     private Gson gson;
-    private DataAndViewParsingLayoutBuilder builder;
+    private DataAndViewParsingLayoutInflater builder;
     private FrameLayout container;
     private JsonObject pageLayout;
     private JsonObject data;
@@ -65,12 +66,12 @@ public class ProteusActivity extends BaseActivity {
     private Styles styles;
     private BitmapLoader bitmapLoader = new BitmapLoader() {
         @Override
-        public Future<Bitmap> getBitmap(String imageUrl, View view) {
+        public Future<Bitmap> getBitmap(String imageUrl, ProteusView view) {
             return null;
         }
 
         @Override
-        public void getBitmap(String imageUrl, final ImageLoaderCallback callback, View view, JsonObject layout) {
+        public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback imageLoaderCallback, LayoutParser parser) {
             URL url;
             try {
                 url = new URL(imageUrl);
@@ -91,7 +92,7 @@ public class ProteusActivity extends BaseActivity {
                 }
 
                 protected void onPostExecute(Bitmap result) {
-                    callback.onResponse(result);
+                    imageLoaderCallback.onResponse(result);
                 }
             }.execute(url);
         }
@@ -99,18 +100,18 @@ public class ProteusActivity extends BaseActivity {
     private LayoutBuilderCallback callback = new LayoutBuilderCallback() {
 
         @Override
-        public void onUnknownAttribute(String attribute, JsonElement value, ProteusView view) {
-            Log.i("unknown-attribute", attribute + " in " + view.getViewManager().getLayout().toString());
+        public void onUnknownAttribute(ProteusView view, String attribute, LayoutParser parser) {
+
         }
 
         @Nullable
         @Override
-        public ProteusView onUnknownViewType(String type, View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
+        public ProteusView onUnknownViewType(String type, View parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
             return null;
         }
 
         @Override
-        public JsonObject onLayoutRequired(String type, ProteusView parent) {
+        public JsonObject onLayoutRequired(String type, LayoutParser parent) {
             return null;
         }
 
@@ -120,18 +121,17 @@ public class ProteusActivity extends BaseActivity {
         }
 
         @Override
-        public View onEvent(ProteusView view, JsonElement value, EventType eventType) {
-            Log.d("event", value.toString());
-            return (View) view;
-        }
-
-        @Override
-        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, JsonObject layout) {
+        public View onEvent(ProteusView view, EventType eventType, LayoutParser value) {
             return null;
         }
 
         @Override
-        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, JsonObject layout) {
+        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, LayoutParser layout) {
+            return null;
+        }
+
+        @Override
+        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, LayoutParser layout) {
             return null;
         }
     };
@@ -140,7 +140,7 @@ public class ProteusActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         gson = new Gson();
         styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
-        Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
+        Map<String, Object> layoutProvider = getProviderFromFile(R.raw.layout_provider);
         pageLayout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
 
         data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
@@ -159,7 +159,7 @@ public class ProteusActivity extends BaseActivity {
 
     @Override
     View createAndBindView() {
-        proteusView = builder.build(container, pageLayout, data, 0, styles);
+        proteusView = builder.build(container, new JsonLayoutParser(pageLayout), data, styles, -1);
         return (View) proteusView;
     }
 
@@ -180,7 +180,7 @@ public class ProteusActivity extends BaseActivity {
         return gson.fromJson(reader, JsonElement.class);
     }
 
-    private Map<String, JsonObject> getProviderFromFile(int resId) {
+    private Map<String, Object> getProviderFromFile(int resId) {
         InputStream inputStream = getResources().openRawResource(resId);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         return gson.fromJson(reader, (new TypeToken<Map<String, JsonObject>>() {
