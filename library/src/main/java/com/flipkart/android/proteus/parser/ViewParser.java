@@ -43,9 +43,11 @@ import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusAndroidView;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author kiran.kumar
@@ -386,19 +388,14 @@ public class ViewParser<V extends View> extends Parser<V> {
                 String[] styleSet = attributeValue.split(ProteusConstants.STYLE_DELIMITER);
                 for (String styleName : styleSet) {
                     if (styles.contains(styleName)) {
-                        process(parser.getValueParser(styles.getStyle(styleName)), parser, (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater());
+                        process(styles.getStyle(styleName), parser, (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater());
                     }
                 }
             }
 
-            private void process(LayoutParser style, LayoutParser layout, ProteusView proteusView, TypeHandler handler, ProteusLayoutInflater builder) {
-                while (style.hasNext()) {
-                    style.next();
-                    String key = style.getName();
-                    if (!layout.isNull(key)) {
-                        continue;
-                    }
-                    builder.handleAttribute(handler, proteusView, key, style.peek());
+            private void process(Map<String, JsonElement> style, LayoutParser parser, ProteusView proteusView, TypeHandler handler, ProteusLayoutInflater builder) {
+                for (Map.Entry<String, JsonElement> entry : style.entrySet()) {
+                    builder.handleAttribute(handler, proteusView, entry.getKey(), parser.getValueParser(entry.getValue()));
                 }
             }
         });
