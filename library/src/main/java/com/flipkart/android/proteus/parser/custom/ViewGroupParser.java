@@ -117,14 +117,14 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
                     addView(view, child);
                 }
             } else if (children.isJsonObject()) {
-                handleDataDrivenChildren(builder, view, viewManager, children.getAsJsonObject(), data, dataIndex);
+                handleDataDrivenChildren(builder, view, viewManager, children.getAsJsonObject(), data, styles, dataIndex);
             }
         }
 
         return true;
     }
 
-    private void handleDataDrivenChildren(LayoutBuilder builder, ProteusView parent, ProteusViewManager viewManager, JsonObject children, JsonObject data, int dataIndex) {
+    private void handleDataDrivenChildren(LayoutBuilder builder, ProteusView parent, ProteusViewManager viewManager, JsonObject children, JsonObject data, Styles styles, int dataIndex) {
 
         String dataPath = children.get(ProteusConstants.DATA).getAsString().substring(1);
         viewManager.setDataPathForChildren(dataPath);
@@ -144,7 +144,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
 
         ProteusView child;
         for (int index = 0; index < length; index++) {
-            child = builder.build((ViewGroup) parent, childLayout, viewManager.getDataContext().getData(), index, viewManager.getStyles());
+            child = builder.build((ViewGroup) parent, childLayout, data, index, styles);
             if (child != null) {
                 this.addView(parent, child);
             }
