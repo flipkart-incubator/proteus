@@ -18,7 +18,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.0'
+    buildToolsVersion '24.0.3'
 
     defaultConfig {
         applicationId "com.flipkart.android.proteus.demo"
@@ -62,8 +62,8 @@ android {
     }
 
     dependencies {
-        compile 'com.android.support:appcompat-v7:24.1.0'
-        compile 'com.android.support:recyclerview-v7:24.1.0'
+        compile 'com.android.support:appcompat-v7:24.2.1'
+        compile 'com.android.support:recyclerview-v7:24.2.1'
         compile('com.github.tony19:logback-android-core:1.1.1-3')
         compile('com.github.tony19:logback-android-classic:1.1.1-3')
         compile fileTree(include: ['*.jar'], dir: 'libs')
