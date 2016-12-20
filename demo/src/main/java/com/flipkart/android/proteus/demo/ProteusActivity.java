@@ -150,13 +150,13 @@ public class ProteusActivity extends AppCompatActivity {
         // Deserialize json data to objects. We will need this data for inflating proteus view.
         // This data should come from remote server if we wish to change layouts without app updates.
         Styles styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
-        Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
+        Map<String, Object> layoutProvider = getProviderFromFile(R.raw.layout_provider);
         JsonObject pageLayout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
         JsonObject data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
 
         // Init dataAndViewParsingLayoutBuilder and set layoutProvider,
         // layoutBuilderCallback and bitmapLoader we initialised before.
-        DataAndViewParsingLayoutInflater builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(null);
+        DataAndViewParsingLayoutInflater builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(layoutProvider);
         builder.setListener(callback);
         builder.setBitmapLoader(bitmapLoader);
 
@@ -183,7 +183,7 @@ public class ProteusActivity extends AppCompatActivity {
         return gson.fromJson(reader, JsonElement.class);
     }
 
-    private Map<String, JsonObject> getProviderFromFile(int resId) {
+    private Map<String, Object> getProviderFromFile(int resId) {
         InputStream inputStream = getResources().openRawResource(resId);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         return gson.fromJson(reader, (new TypeToken<Map<String, JsonObject>>() {
