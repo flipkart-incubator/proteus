@@ -57,52 +57,6 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     }
 
     @Override
-    protected void handleChildren(TypeHandler handler, LayoutParser parser, ProteusView view) {
-
-        ProteusViewManager viewManager = view.getViewManager();
-
-        if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(parser));
-        }
-
-        String children = hasDataDrivenChildren(viewManager);
-
-        if (children != null) {
-
-            int length = 0;
-            String dataPath = children.substring(1);
-            viewManager.setDataPathForChildren(dataPath);
-
-            Result result = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
-            JsonElement data = result.isSuccess() ? result.element : null;
-
-            if (null != data) {
-                length = ParseHelper.parseInt(data.getAsString());
-            }
-
-            // get the child layout parser
-            LayoutParser childLayoutParser = getChildLayoutParser(parser);
-            childLayoutParser.addAttribute(ProteusConstants.CHILDREN, length);
-            viewManager.setChildLayoutParser(childLayoutParser);
-        }
-
-        super.handleChildren(handler, parser, view);
-    }
-
-    @Nullable
-    protected String hasDataDrivenChildren(ProteusViewManager viewManager) {
-        if (viewManager.getDataContext() == null || viewManager.getDataContext().getData() == null) {
-            return null;
-        }
-
-        LayoutParser parser = viewManager.getLayoutParser();
-        if (parser.isString(ProteusConstants.CHILDREN)) {
-            return parser.getString(ProteusConstants.CHILDREN);
-        }
-        return null;
-    }
-
-    @Override
     protected ProteusViewManager createViewManager(TypeHandler handler, View parent, LayoutParser parser, JsonObject data, Styles styles, int index) {
         ProteusViewManagerImpl viewManager = new ProteusViewManagerImpl();
         DataContext dataContext, parentDataContext = null;
@@ -256,14 +210,6 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
             formatter = Formatter.NOOP;
         }
         return formatter.format(toFormat);
-    }
-
-    public LayoutParser getChildLayoutParser(LayoutParser parent) {
-        if (parent.isLayout(ProteusConstants.CHILD_TYPE)) {
-            return parent.peek(ProteusConstants.CHILD_TYPE).clone();
-        } else {
-            throw new IllegalStateException("child type is not a layout : " + parent.toString());
-        }
     }
 
     public void registerFormatter(Formatter formatter) {

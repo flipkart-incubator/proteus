@@ -153,14 +153,6 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return viewManager;
     }
 
-    protected void handleChildren(TypeHandler handler, LayoutParser parser, ProteusView view) {
-        if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "Parsing children for view with " + Utils.getLayoutIdentifier(parser));
-        }
-
-        handler.handleChildren(view);
-    }
-
     public boolean handleAttribute(TypeHandler handler, ProteusView view, String attribute, LayoutParser parser) {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "Handle '" + attribute + "' : " + parser.toString() + " for view with " + Utils.getLayoutIdentifier(parser));

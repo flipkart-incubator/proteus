@@ -28,14 +28,12 @@ public class ProteusConstants {
     public static final String TAG = "tag";
 
     public static final String CHILDREN = "children";
-    public static final String CHILD_TYPE = "childType";
+    public static final String LAYOUT = "layout";
 
     public static final String STYLE_DELIMITER = "\\.";
 
+    public static final String DATA = "data";
     public static final String DATA_CONTEXT = "dataContext";
-    public static final String CHILD_DATA_CONTEXT = "childDataContext";
-
-    public static final String DATA_VISIBILITY = "data";
     public static final String DATA_NULL = "null";
 
     public static final char DATA_PREFIX = '$';

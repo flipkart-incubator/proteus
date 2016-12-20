@@ -21,7 +21,6 @@ import android.support.annotation.Nullable;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,9 +55,11 @@ public class DataContext {
         this.isClone = true;
     }
 
-    public static DataContext updateDataContext(DataContext dataContext, JsonObject data, Map<String, String> scope) {
+    public static DataContext updateDataContext(DataContext dataContext, JsonObject data, Map<String, String> scope, int dataIndex) {
         Map<String, String> reverseScope = new HashMap<>();
         JsonObject newData = new JsonObject();
+
+        dataContext.setIndex(dataIndex);
 
         if (data == null) {
             data = new JsonObject();
@@ -155,11 +156,11 @@ public class DataContext {
         this.index = index;
     }
 
-    public DataContext createChildDataContext(Map<String, String> scope, int childIndex) {
-        return updateDataContext(new DataContext(), data, scope);
+    public DataContext createChildDataContext(Map<String, String> scope, int dataIndex) {
+        return updateDataContext(new DataContext(), data, scope, dataIndex);
     }
 
     public void updateDataContext(JsonObject data) {
-        updateDataContext(this, data, scope);
+        updateDataContext(this, data, scope, index);
     }
 }
