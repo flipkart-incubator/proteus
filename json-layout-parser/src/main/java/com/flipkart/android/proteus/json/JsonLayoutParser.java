@@ -252,7 +252,7 @@ public class JsonLayoutParser implements LayoutParser {
 
     @Override
     public LayoutParser merge(@Nullable Object layout) {
-        return new JsonLayoutParser(Utils.mergeLayouts((JsonObject) current, (JsonObject) layout));
+        return new JsonLayoutParser(Utils.mergeLayouts((JsonObject) layout, (JsonObject) current));
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone")

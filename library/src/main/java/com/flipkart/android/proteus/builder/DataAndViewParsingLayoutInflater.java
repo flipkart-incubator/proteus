@@ -42,18 +42,17 @@ public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater 
     }
 
     @Override
-    protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, LayoutParser source, JsonObject data, int index, Styles styles) {
+    protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, LayoutParser include, JsonObject data, int index, Styles styles) {
         Object layout = null;
         if (layouts != null) {
             layout = layouts.get(type);
         }
         if (layout != null) {
-            source.merge(layout);
-            ProteusView view = build(parent, source, data, styles, index);
+            ProteusView view = build(parent, include.merge(layout), data, styles, index);
             onViewBuiltFromViewProvider(view, type, parent, index);
             return view;
         }
-        return super.onUnknownViewEncountered(type, parent, source, data, index, styles);
+        return super.onUnknownViewEncountered(type, parent, include, data, index, styles);
     }
 
     private void onViewBuiltFromViewProvider(ProteusView view, String type, View parent, int childIndex) {

@@ -217,17 +217,13 @@ public class Utils {
         return sb.toString();
     }
 
-    public static JsonObject mergeLayouts(JsonObject destination, JsonObject source) {
+    public static JsonObject mergeLayouts(JsonObject destination, JsonObject include) {
         JsonObject layout = new JsonObject();
         for (Map.Entry<String, JsonElement> entry : destination.entrySet()) {
             layout.add(entry.getKey(), entry.getValue());
         }
-        boolean hasType = layout.has(ProteusConstants.TYPE);
-        for (Map.Entry<String, JsonElement> entry : source.entrySet()) {
-            if (ProteusConstants.TYPE.equals(entry.getKey()) && hasType) {
-                continue;
-            }
-            if (ProteusConstants.DATA_CONTEXT.equals(entry.getKey())) {
+        for (Map.Entry<String, JsonElement> entry : include.entrySet()) {
+            if (ProteusConstants.TYPE.equals(entry.getKey()) || ProteusConstants.LAYOUT.equals(entry.getKey())) {
                 continue;
             }
             layout.add(entry.getKey(), entry.getValue());
