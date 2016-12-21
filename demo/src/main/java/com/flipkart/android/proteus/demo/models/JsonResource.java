@@ -16,22 +16,28 @@
 
 package com.flipkart.android.proteus.demo.models;
 
+import com.flipkart.android.proteus.toolbox.Styles;
+import com.google.gson.JsonObject;
+
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+
 /**
- * User
+ * JsonResource
  *
  * @author aditya.sharat
  */
-public class User {
-    public String name;
-    public int level;
-    public int achievements;
-    public int experience;
-    public Location location;
-    public int credits;
 
-    public static class Location {
-        public String country;
-        public String city;
-        public String pincode;
-    }
+public interface JsonResource {
+    @GET("{path}")
+    Call<JsonObject> get(@Path("path") String path);
+
+    @GET("styles.json")
+    Call<Styles> getStyles();
+
+    @GET("layouts.json")
+    Call<Map<String, JsonObject>> getLayouts();
 }

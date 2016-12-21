@@ -43,7 +43,6 @@ import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.IdGeneratorImpl;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -54,7 +53,7 @@ import java.util.Map;
 /**
  * Factory class for creating Layout builders with different predefined behaviours. This is the
  * only way to create layout builder objects. To create a simple layout builder use
- * {@link LayoutBuilderFactory#getSimpleLayoutBuilder(IdGenerator)}
+ * {@link LayoutBuilderFactory#getSimpleLayoutInflater(IdGenerator)}
  */
 public class LayoutBuilderFactory {
 
@@ -68,7 +67,7 @@ public class LayoutBuilderFactory {
      *
      * @return A new {@link DataAndViewParsingLayoutInflater}
      */
-    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutBuilder(Map<String, Object> layouts, @NonNull IdGenerator idGenerator) {
+    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutInflater(Map<String, Object> layouts, @NonNull IdGenerator idGenerator) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
             dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutInflater(layouts, idGenerator);
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
@@ -77,7 +76,7 @@ public class LayoutBuilderFactory {
         return dataAndViewParsingLayoutBuilderInstance;
     }
 
-    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutBuilder(Map<String, Object> layouts) {
+    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutInflater(Map<String, Object> layouts) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
             dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutInflater(layouts, new IdGeneratorImpl());
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
@@ -91,7 +90,7 @@ public class LayoutBuilderFactory {
      *
      * @return A new {@link DataParsingLayoutInflater}
      */
-    public DataParsingLayoutInflater getDataParsingLayoutBuilder(@NonNull IdGenerator idGenerator) {
+    public DataParsingLayoutInflater getDataParsingLayoutInflater(@NonNull IdGenerator idGenerator) {
         if (dataParsingLayoutBuilderInstance == null) {
             dataParsingLayoutBuilderInstance = new DataParsingLayoutInflater(idGenerator);
             registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
@@ -100,7 +99,7 @@ public class LayoutBuilderFactory {
         return dataParsingLayoutBuilderInstance;
     }
 
-    public DataParsingLayoutInflater getDataParsingLayoutBuilder() {
+    public DataParsingLayoutInflater getDataParsingLayoutInflater() {
         if (dataParsingLayoutBuilderInstance == null) {
             dataParsingLayoutBuilderInstance = new DataParsingLayoutInflater(new IdGeneratorImpl());
             registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
@@ -114,7 +113,7 @@ public class LayoutBuilderFactory {
      *
      * @return A new {@link SimpleLayoutInflater}
      */
-    public SimpleLayoutInflater getSimpleLayoutBuilder(@NonNull IdGenerator idGenerator) {
+    public SimpleLayoutInflater getSimpleLayoutInflater(@NonNull IdGenerator idGenerator) {
         if (simpleLayoutBuilderInstance == null) {
             simpleLayoutBuilderInstance = new SimpleLayoutInflater(idGenerator);
             registerBuiltInHandlers(simpleLayoutBuilderInstance);
@@ -122,7 +121,7 @@ public class LayoutBuilderFactory {
         return simpleLayoutBuilderInstance;
     }
 
-    public SimpleLayoutInflater getSimpleLayoutBuilder() {
+    public SimpleLayoutInflater getSimpleLayoutInflater() {
         if (simpleLayoutBuilderInstance == null) {
             simpleLayoutBuilderInstance = new SimpleLayoutInflater(new IdGeneratorImpl());
             registerBuiltInHandlers(simpleLayoutBuilderInstance);

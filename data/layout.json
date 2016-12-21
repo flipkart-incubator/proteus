@@ -98,6 +98,28 @@
                       }
                     }
                   ]
+                },
+                {
+                  "type": "Button",
+                  "layout_height": "50dp",
+                  "layout_width": "150dp",
+                  "gravity": "center",
+                  "layout_marginTop" : "10dp",
+                  "text" : "ADD TO CART",
+                  "background" : {
+                    "type" : "ripple",
+                    "content": {
+                      "type": "shape",
+                      "shape": "rectangle",
+                      "children": [
+                        {
+                          "type": "solid",
+                          "color": "#F2575B"
+                        }
+                      ]
+                    },
+                    "color": "#f0f0f0"
+                  }
                 }
               ]
             }
@@ -112,6 +134,20 @@
           "type": "SimpleDataBindingExample",
           "padding": "16dp",
           "paddingBottom": "0dp"
+        },
+        {
+          "type": "DataDrivenExample",
+          "padding": "16dp",
+          "paddingBottom": "0dp"
+        },
+        {
+          "type": "CircleView",
+          "layout_width": "150dp",
+          "layout_height": "150dp",
+          "layout_marginTop": "16dp",
+          "layout_marginBottom": "16dp",
+          "layout_gravity": "center",
+          "color": "#aaef99"
         }
       ]
     }

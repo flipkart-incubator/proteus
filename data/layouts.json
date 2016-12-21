@@ -1,0 +1,204 @@
+{
+  "RelativeLayoutExample": {
+    "type": "FrameLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "children": [
+      {
+        "type": "RelativeLayout",
+        "layout_width": "match_parent",
+        "layout_height": "100dp",
+        "background": "#ffffff",
+        "children": [
+          {
+            "type": "TextView",
+            "id": "center",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "text": "Center",
+            "textColor": "#323232",
+            "textSize": "14sp",
+            "layout_centerVertical": "true",
+            "layout_centerHorizontal": "true"
+          },
+          {
+            "type": "ImageView",
+            "src": "@drawable/star_filled",
+            "layout_marginBottom": "4dp",
+            "layout_above": "center",
+            "layout_centerHorizontal": "true"
+          },
+          {
+            "type": "ImageView",
+            "src": "@drawable/star_filled",
+            "layout_marginTop": "4dp",
+            "layout_below": "center",
+            "layout_centerHorizontal": "true"
+          },
+          {
+            "type": "ImageView",
+            "src": "@drawable/star_filled",
+            "layout_marginLeft": "4dp",
+            "layout_toRightOf": "center",
+            "layout_centerVertical": "true"
+          },
+          {
+            "type": "ImageView",
+            "src": "@drawable/star_filled",
+            "layout_marginRight": "4dp",
+            "layout_toLeftOf": "center",
+            "layout_centerVertical": "true"
+          },
+          {
+            "type": "ImageView",
+            "src": "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
+            "layout_height": "50dp",
+            "layout_width": "100dp",
+            "padding": "8dp",
+            "background": "#027cd5",
+            "scaleType": "fitCenter",
+            "layout_alignParentTop": "true",
+            "layout_alignParentRight": "true"
+          }
+        ]
+      }
+    ]
+  },
+  "SimpleDataBindingExample": {
+    "type": "FrameLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "children": [
+      {
+        "type": "LinearLayout",
+        "orientation": "vertical",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "background": "#ffffff",
+        "children": [
+          {
+            "type": "TextView",
+            "text": "Profile",
+            "style": "mini.blue",
+            "layout_marginBottom": "0dp"
+          },
+          {
+            "type": "RelativeLayout",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "paddingLeft": "16dp",
+            "paddingRight": "16dp",
+            "paddingTop": "8dp",
+            "children": [
+              {
+                "type": "TextView",
+                "id": "name",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_marginRight": "4dp",
+                "textSize": "18dp",
+                "text": "$user.name"
+              },
+              {
+                "type": "TextView",
+                "text": "~({{user.level}})",
+                "textColor": "#c48866",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_toRightOf": "name"
+              }
+            ]
+          },
+          {
+            "type": "LinearLayout",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "orientation": "vertical",
+            "paddingLeft": "16dp",
+            "paddingRight": "16dp",
+            "children": [
+              {
+                "type": "HorizontalProgressBar",
+                "layout_width": "match_parent",
+                "layout_height": "wrap_content",
+                "layout_marginTop": "8dp",
+                "max": "$user.experience.max",
+                "progress": "$user.experience.current"
+              },
+              {
+                "type": "TextView",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_marginTop": "8dp",
+                "layout_marginBottom": "32dp",
+                "padding": "8dp",
+                "paddingTop": "16dp",
+                "paddingBottom": "16dp",
+                "text": "~Credits : {{user.credits}}$(number)",
+                "style": "money.center",
+                "background": {
+                  "type": "shape",
+                  "shape":"oval",
+                  "children": [
+                    {
+                      "type": "gradient",
+                      "startColor": "#44f85032",
+                      "endColor": "#44e73827",
+                      "angle": "90"
+                    }
+                  ]
+                },
+                "animation": {
+                  "interpolator": {
+                    "type":"anticipateOvershootInterpolator"
+                  },
+                  "type": "rotate",
+                  "fromDegrees": "-720",
+                  "toDegrees": "0",
+                  "pivotX": "50%",
+                  "pivotY": "50%",
+                  "duration": "1500"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "DataDrivenExample": {
+    "type": "FrameLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "children": [
+      {
+        "type": "LinearLayout",
+        "orientation": "horizontal",
+        "layout_width": "match_parent",
+        "background": "#ffffff",
+        "padding": "16dp",
+        "children": {
+          "data": "$user.tags",
+          "layout":{
+            "type": "TextView",
+            "dataContext": {
+              "tag": "user.tags[$index]"
+            },
+            "layout_marginRight": "8dp",
+            "layout_height": "32dp",
+            "textSize": "12sp",
+            "textColor": "#2cdb81",
+            "text": "$tag",
+            "padding": "8dp",
+            "gravity": "center",
+            "border": {
+              "width": "2dp",
+              "color": "#cccccc",
+              "bgColor": "#efefef"
+            }
+          }
+        }
+      }
+    ]
+  }
+}

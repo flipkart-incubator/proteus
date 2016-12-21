@@ -60,4 +60,8 @@ public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater 
             listener.onViewBuiltFromViewProvider(view, parent, type, childIndex);
         }
     }
+
+    public void setLayouts(Map<String, Object> layouts) {
+        this.layouts = layouts;
+    }
 }
