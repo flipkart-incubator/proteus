@@ -37,7 +37,7 @@ import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.json.JsonLayoutParser;
-import com.flipkart.android.proteus.parser.Parser;
+import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
@@ -183,8 +183,8 @@ public class ProteusActivity extends AppCompatActivity {
     }
 
     private void registerCustomViews(ProteusLayoutInflater layoutInflater) {
-        Parser parser = (Parser) layoutInflater.getHandler("View");
-        layoutInflater.registerHandler("CircleView", new CircleViewParser(parser));
+        BaseTypeParser parser = (BaseTypeParser) layoutInflater.getParser("View");
+        layoutInflater.registerParser("CircleView", new CircleViewParser(parser));
     }
 
     @Override

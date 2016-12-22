@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
-import com.flipkart.android.proteus.parser.TypeHandler;
+import com.flipkart.android.proteus.parser.TypeParser;
 import com.flipkart.android.proteus.toolbox.Binding;
 import com.flipkart.android.proteus.toolbox.DataContext;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -51,7 +51,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     private Styles styles;
     private DataContext dataContext;
     private ProteusLayoutInflater proteusLayoutInflater;
-    private TypeHandler typeHandler;
+    private TypeParser typeParser;
     private OnUpdateDataListener onUpdateDataListener;
     private String dataPathForChildren;
     private LayoutParser childLayoutParser;
@@ -155,7 +155,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                 }
             } else if (childLayoutParser != null) {
                 childView = proteusLayoutInflater.build(parent, getLayoutParser(), data, styles, dataContext.getIndex());
-                typeHandler.addView((ProteusView) view, childView);
+                typeParser.addView((ProteusView) view, childView);
             }
         }
     }
@@ -190,11 +190,11 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     private void handleBinding(Binding binding) {
         if (binding.hasRegEx()) {
-            proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), getLayoutParser().getValueParser(binding.getAttributeValue()));
+            proteusLayoutInflater.handleAttribute(typeParser, (ProteusView) view, binding.getAttributeKey(), getLayoutParser().getValueParser(binding.getAttributeValue()));
         } else {
             Result result = Utils.readJson(binding.getBindingName(), dataContext.getData(), dataContext.getIndex());
             JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
-            proteusLayoutInflater.handleAttribute(typeHandler, (ProteusView) view, binding.getAttributeKey(), getLayoutParser().getValueParser(dataValue));
+            proteusLayoutInflater.handleAttribute(typeParser, (ProteusView) view, binding.getAttributeKey(), getLayoutParser().getValueParser(dataValue));
         }
     }
 
@@ -206,12 +206,12 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         this.proteusLayoutInflater = proteusLayoutInflater;
     }
 
-    public TypeHandler getTypeHandler() {
-        return typeHandler;
+    public TypeParser getTypeParser() {
+        return typeParser;
     }
 
-    public void setTypeHandler(TypeHandler typeHandler) {
-        this.typeHandler = typeHandler;
+    public void setTypeParser(TypeParser typeParser) {
+        this.typeParser = typeParser;
     }
 
     @Override
@@ -351,7 +351,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         childLayoutParser = null;
         styles = null;
         proteusLayoutInflater = null;
-        typeHandler = null;
+        typeParser = null;
         onUpdateDataListener = null;
         dataPathForChildren = null;
         bindings = null;

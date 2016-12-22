@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.flipkart.android.proteus.LayoutParser;
-import com.flipkart.android.proteus.parser.Parser;
+import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusButton;
@@ -33,7 +33,7 @@ import com.google.gson.JsonObject;
  */
 public class ButtonParser<T extends Button> extends WrappableParser<T> {
 
-    public ButtonParser(Parser<T> wrappedParser) {
+    public ButtonParser(BaseTypeParser<T> wrappedParser) {
         super(wrappedParser);
     }
 
@@ -43,7 +43,7 @@ public class ButtonParser<T extends Button> extends WrappableParser<T> {
     }
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
+    protected void registerAttributeProcessors() {
+        super.registerAttributeProcessors();
     }
 }

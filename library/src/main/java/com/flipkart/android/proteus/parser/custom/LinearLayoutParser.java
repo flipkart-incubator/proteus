@@ -24,8 +24,8 @@ import android.widget.LinearLayout;
 
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.Attributes;
+import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
@@ -40,7 +40,7 @@ import com.google.gson.JsonObject;
  */
 public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<T> {
 
-    public LinearLayoutParser(Parser<T> wrappedParser) {
+    public LinearLayoutParser(BaseTypeParser<T> wrappedParser) {
         super(wrappedParser);
     }
 
@@ -50,9 +50,9 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
     }
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
-        addHandler(Attributes.LinearLayout.Orientation, new StringAttributeProcessor<T>() {
+    protected void registerAttributeProcessors() {
+        super.registerAttributeProcessors();
+        addAttributeProcessor(Attributes.LinearLayout.Orientation, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 if ("horizontal".equals(attributeValue)) {
@@ -63,7 +63,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             }
         });
 
-        addHandler(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
 
@@ -72,7 +72,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             }
         });
 
-        addHandler(Attributes.LinearLayout.Divider, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.LinearLayout.Divider, new DrawableResourceProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
             public void setDrawable(T view, Drawable drawable) {
@@ -83,7 +83,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             }
         });
 
-        addHandler(Attributes.LinearLayout.DividerPadding, new DimensionAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.LinearLayout.DividerPadding, new DimensionAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
             public void setDimension(T view, String key, float dimension, LayoutParser parser) {
@@ -93,7 +93,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             }
         });
 
-        addHandler(Attributes.LinearLayout.ShowDividers, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.LinearLayout.ShowDividers, new StringAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
@@ -106,7 +106,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
             }
         });
 
-        addHandler(Attributes.LinearLayout.WeightSum, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.LinearLayout.WeightSum, new StringAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {

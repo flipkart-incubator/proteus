@@ -72,6 +72,13 @@ public class JsonLayoutParser implements LayoutParser {
     }
 
     @Override
+    public void setName(String name) {
+        element.getAsJsonObject().add(name, current);
+        element.getAsJsonObject().remove(this.name);
+        this.name = name;
+    }
+
+    @Override
     public int size() {
         return ((JsonArray) current).size();
     }

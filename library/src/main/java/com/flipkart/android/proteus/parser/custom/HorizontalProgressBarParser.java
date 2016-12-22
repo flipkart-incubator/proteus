@@ -27,8 +27,8 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.Attributes;
+import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -44,7 +44,7 @@ import com.google.gson.JsonObject;
  */
 public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extends WrappableParser<T> {
 
-    public HorizontalProgressBarParser(Parser<T> wrappedParser) {
+    public HorizontalProgressBarParser(BaseTypeParser<T> wrappedParser) {
         super(wrappedParser);
     }
 
@@ -54,10 +54,10 @@ public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extend
     }
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
+    protected void registerAttributeProcessors() {
+        super.registerAttributeProcessors();
 
-        addHandler(Attributes.ProgressBar.ProgressTint, new AttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.ProgressBar.ProgressTint, new AttributeProcessor<T>() {
             @Override
             public void handle(T view, String key, LayoutParser parser) {
                 if (!parser.isObject()) {

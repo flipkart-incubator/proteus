@@ -29,7 +29,7 @@ import android.widget.TextView;
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.parser.Parser;
+import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
@@ -45,7 +45,7 @@ import com.google.gson.JsonObject;
  */
 public class TextViewParser<T extends TextView> extends WrappableParser<T> {
 
-    public TextViewParser(Parser<T> wrappedParser) {
+    public TextViewParser(BaseTypeParser<T> wrappedParser) {
         super(wrappedParser);
     }
 
@@ -55,42 +55,42 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
     }
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
-        addHandler(Attributes.TextView.HTML, new StringAttributeProcessor<T>() {
+    protected void registerAttributeProcessors() {
+        super.registerAttributeProcessors();
+        addAttributeProcessor(Attributes.TextView.HTML, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setText(Html.fromHtml(attributeValue));
             }
         });
-        addHandler(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setText(attributeValue);
             }
         });
 
-        addHandler(Attributes.TextView.DrawablePadding, new DimensionAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawablePadding, new DimensionAttributeProcessor<T>() {
             @Override
             public void setDimension(T view, String key, float dimension, LayoutParser parser) {
                 view.setCompoundDrawablePadding((int) dimension);
             }
         });
 
-        addHandler(Attributes.TextView.TextSize, new DimensionAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextSize, new DimensionAttributeProcessor<T>() {
             @Override
             public void setDimension(T view, String key, float dimension, LayoutParser parser) {
                 view.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
             }
         });
-        addHandler(Attributes.TextView.Gravity, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Gravity, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setGravity(ParseHelper.parseGravity(attributeValue));
             }
         });
 
-        addHandler(Attributes.TextView.TextColor, new ColorResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextColor, new ColorResourceProcessor<T>() {
 
             @Override
             public void setColor(T view, int color) {
@@ -103,7 +103,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.TextColorHint, new ColorResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextColorHint, new ColorResourceProcessor<T>() {
 
             @Override
             public void setColor(T view, int color) {
@@ -116,7 +116,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.TextColorLink, new ColorResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextColorLink, new ColorResourceProcessor<T>() {
 
             @Override
             public void setColor(T view, int color) {
@@ -129,7 +129,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.TextColorHighLight, new ColorResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextColorHighLight, new ColorResourceProcessor<T>() {
 
             @Override
             public void setColor(T view, int color) {
@@ -142,28 +142,28 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.DrawableLeft, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawableLeft, new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(drawable, compoundDrawables[1], compoundDrawables[2], compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableTop, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawableTop, new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(compoundDrawables[0], drawable, compoundDrawables[2], compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableRight, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawableRight, new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(drawable, compoundDrawables[1], drawable, compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableBottom, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawableBottom, new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
@@ -171,14 +171,14 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.MaxLines, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.MaxLines, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setMaxLines(ParseHelper.parseInt(attributeValue));
             }
         });
 
-        addHandler(Attributes.TextView.Ellipsize, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Ellipsize, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 Enum ellipsize = ParseHelper.parseEllipsize(attributeValue);
@@ -186,7 +186,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.PaintFlags, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.PaintFlags, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 if (attributeValue.equals("strike"))
@@ -194,21 +194,21 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.Prefix, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Prefix, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setText(attributeValue + view.getText());
             }
         });
 
-        addHandler(Attributes.TextView.Suffix, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Suffix, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setText(view.getText() + attributeValue);
             }
         });
 
-        addHandler(Attributes.TextView.TextStyle, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextStyle, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 int typeface = ParseHelper.parseTextStyle(attributeValue);
@@ -216,14 +216,14 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.SingleLine, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.SingleLine, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setSingleLine(ParseHelper.parseBoolean(attributeValue));
             }
         });
 
-        addHandler(Attributes.TextView.TextAllCaps, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextAllCaps, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
@@ -231,7 +231,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
                 }
             }
         });
-        addHandler(Attributes.TextView.Hint, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Hint, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setHint(attributeValue);

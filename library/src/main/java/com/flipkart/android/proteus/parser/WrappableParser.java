@@ -24,19 +24,21 @@ import com.flipkart.android.proteus.view.ProteusView;
 /**
  * @author kirankumar
  */
-public abstract class WrappableParser<V extends View> extends Parser<V> {
+public abstract class WrappableParser<V extends View> extends BaseTypeParser<V> {
 
-    private final Parser<V> wrappedParser;
+    private final BaseTypeParser<V> wrappedParser;
 
-    public WrappableParser(Parser<V> wrappedParser) {
+    public WrappableParser(BaseTypeParser<V> wrappedParser) {
         this.wrappedParser = wrappedParser;
     }
 
     @Override
-    protected void prepareHandlers() {
+    public void prepare() {
         if (wrappedParser != null) {
-            wrappedParser.prepareHandlers();
+            wrappedParser.prepare();
+            offset = wrappedParser.getOffset() - wrappedParser.getAttributeProcessorCount();
         }
+        super.prepare();
     }
 
     @Override

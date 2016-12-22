@@ -33,23 +33,31 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * This class will help parsing by introducing handlers. Any subclass can use addHandler()
+ * This class will help parsing by introducing processorNameMap. Any subclass can use addAttributeProcessor()
  * method  to specify a callback for an attribute.
  * This class also creates an instance of the view with the first constructor.
  *
  * @author kiran.kumar
  * @author aditya.sharat
  */
-public abstract class Parser<V extends View> implements TypeHandler<V> {
+public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
 
-    private static final String TAG = "Parser";
+    private static final String TAG = "BaseTypeParser";
 
     private static XmlResourceParser sParser = null;
-    private Map<String, AttributeProcessor> handlers = new HashMap<>();
+
+    private boolean prepared;
+
+    private Map<String, AttributeProcessor> processorNameMap = new HashMap<>();
+    private Map<String, Integer> nameToIdMap = new HashMap<>();
+
+    protected AttributeProcessor[] processors = new AttributeProcessor[0];
+    protected int offset = 0;
 
     @Override
     public void onBeforeCreateView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
@@ -68,17 +76,24 @@ public abstract class Parser<V extends View> implements TypeHandler<V> {
         }
     }
 
-    protected abstract void prepareHandlers();
+    protected void registerAttributeProcessors() {
+
+    }
 
     @Override
     public boolean handleAttribute(V view, String attribute, LayoutParser parser) {
-        AttributeProcessor attributeProcessor = handlers.get(attribute);
+        AttributeProcessor attributeProcessor = processorNameMap.get(attribute);
         if (attributeProcessor != null) {
             //noinspection unchecked
             attributeProcessor.handle(view, attribute, parser);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void minify(String attribute, LayoutParser parser) {
+        parser.setName(String.valueOf(nameToIdMap.get(attribute)));
     }
 
     @Override
@@ -92,15 +107,36 @@ public abstract class Parser<V extends View> implements TypeHandler<V> {
     }
 
     @Override
-    public void prepareAttributeHandlers() {
-        if (handlers.size() == 0) {
-            prepareHandlers();
+    public void prepare() {
+        if (!isPrepared()) {
+            registerAttributeProcessors();
+            prepared = true;
         }
     }
 
     @Override
-    public void addHandler(Attributes.Attribute key, AttributeProcessor<V> handler) {
-        handlers.put(key.getName(), handler);
+    public boolean isPrepared() {
+        return prepared;
+    }
+
+    @Override
+    public void addAttributeProcessor(Attributes.Attribute key, AttributeProcessor<V> handler) {
+        processorNameMap.put(key.getName(), handler);
+        addAttributeProcessor(handler);
+        nameToIdMap.put(key.getName(), processors.length - 1);
+    }
+
+    private void addAttributeProcessor(AttributeProcessor<V> handler) {
+        processors = Arrays.copyOf(processors, processors.length + 1);
+        processors[processors.length - 1] = handler;
+    }
+
+    protected int getOffset() {
+        return offset;
+    }
+
+    protected int getAttributeProcessorCount() {
+        return processors.length;
     }
 
     protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent) throws IOException, XmlPullParserException {
@@ -110,7 +146,7 @@ public abstract class Parser<V extends View> implements TypeHandler<V> {
          * Refer : http://stackoverflow.com/questions/7018267/generating-a-layoutparams-based-on-the-type-of-parent
          */
         if (null == sParser) {
-            synchronized (Parser.class) {
+            synchronized (BaseTypeParser.class) {
                 if (null == sParser) {
                     sParser = parent.getResources().getLayout(R.layout.layout_params_hack);
                     //noinspection StatementWithEmptyBody

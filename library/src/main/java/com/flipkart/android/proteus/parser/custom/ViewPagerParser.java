@@ -21,7 +21,7 @@ import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.LayoutParser;
-import com.flipkart.android.proteus.parser.Parser;
+import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
@@ -33,7 +33,7 @@ import com.google.gson.JsonObject;
  */
 public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
 
-    public ViewPagerParser(Parser<T> wrappedParser) {
+    public ViewPagerParser(BaseTypeParser<T> wrappedParser) {
         super(wrappedParser);
     }
 

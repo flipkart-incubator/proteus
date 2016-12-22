@@ -156,24 +156,24 @@ public class LayoutBuilderFactory {
         ProgressBarParser progressBarParser = new ProgressBarParser(viewParser);
         HorizontalProgressBarParser horizontalProgressBarParser = new HorizontalProgressBarParser(progressBarParser);
 
-        proteusLayoutInflater.registerHandler("View", viewParser);
-        proteusLayoutInflater.registerHandler("ViewGroup", viewGroupParser);
-        proteusLayoutInflater.registerHandler("RelativeLayout", relativeLayoutParser);
-        proteusLayoutInflater.registerHandler("LinearLayout", linearLayoutParser);
-        proteusLayoutInflater.registerHandler("FrameLayout", frameLayoutParser);
-        proteusLayoutInflater.registerHandler("ScrollView", scrollViewParser);
-        proteusLayoutInflater.registerHandler("HorizontalScrollView", horizontalScrollViewParser);
-        proteusLayoutInflater.registerHandler("ImageView", imageViewParser);
-        proteusLayoutInflater.registerHandler("TextView", textViewParser);
-        proteusLayoutInflater.registerHandler("EditText", editTextParser);
-        proteusLayoutInflater.registerHandler("Button", buttonParser);
-        proteusLayoutInflater.registerHandler("ImageButton", imageButtonParser);
-        proteusLayoutInflater.registerHandler("ViewPager", viewPagerParser);
-        proteusLayoutInflater.registerHandler("WebView", webViewParser);
-        proteusLayoutInflater.registerHandler("RatingBar", ratingBarParser);
-        proteusLayoutInflater.registerHandler("CheckBox", checkBoxParser);
-        proteusLayoutInflater.registerHandler("ProgressBar", progressBarParser);
-        proteusLayoutInflater.registerHandler("HorizontalProgressBar", horizontalProgressBarParser);
+        proteusLayoutInflater.registerParser("View", viewParser);
+        proteusLayoutInflater.registerParser("ViewGroup", viewGroupParser);
+        proteusLayoutInflater.registerParser("RelativeLayout", relativeLayoutParser);
+        proteusLayoutInflater.registerParser("LinearLayout", linearLayoutParser);
+        proteusLayoutInflater.registerParser("FrameLayout", frameLayoutParser);
+        proteusLayoutInflater.registerParser("ScrollView", scrollViewParser);
+        proteusLayoutInflater.registerParser("HorizontalScrollView", horizontalScrollViewParser);
+        proteusLayoutInflater.registerParser("ImageView", imageViewParser);
+        proteusLayoutInflater.registerParser("TextView", textViewParser);
+        proteusLayoutInflater.registerParser("EditText", editTextParser);
+        proteusLayoutInflater.registerParser("Button", buttonParser);
+        proteusLayoutInflater.registerParser("ImageButton", imageButtonParser);
+        proteusLayoutInflater.registerParser("ViewPager", viewPagerParser);
+        proteusLayoutInflater.registerParser("WebView", webViewParser);
+        proteusLayoutInflater.registerParser("RatingBar", ratingBarParser);
+        proteusLayoutInflater.registerParser("CheckBox", checkBoxParser);
+        proteusLayoutInflater.registerParser("ProgressBar", progressBarParser);
+        proteusLayoutInflater.registerParser("HorizontalProgressBar", horizontalProgressBarParser);
     }
 
     protected void registerFormatter(DataParsingLayoutInflater layoutBuilder) {

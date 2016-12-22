@@ -52,7 +52,7 @@ import java.util.Map;
 /**
  * @author kiran.kumar
  */
-public class ViewParser<V extends View> extends Parser<V> {
+public class ViewParser<V extends View> extends BaseTypeParser<V> {
 
     private static final String TAG = "ViewParser";
 
@@ -65,9 +65,9 @@ public class ViewParser<V extends View> extends Parser<V> {
         return new ProteusAndroidView(parent.getContext());
     }
 
-    protected void prepareHandlers() {
+    protected void registerAttributeProcessors() {
 
-        addHandler(Attributes.View.OnClick, new EventProcessor<V>() {
+        addAttributeProcessor(Attributes.View.OnClick, new EventProcessor<V>() {
             @Override
             public void setOnEventListener(final V view, final LayoutParser parser) {
                 view.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +78,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 });
             }
         });
-        addHandler(Attributes.View.Background, new DrawableResourceProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Background, new DrawableResourceProcessor<V>() {
             @Override
             public void setDrawable(V view, Drawable drawable) {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
@@ -89,7 +89,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.Height, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Height, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
@@ -99,7 +99,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.Width, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Width, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
@@ -109,7 +109,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.Weight, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Weight, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {
                 LinearLayout.LayoutParams layoutParams;
@@ -124,7 +124,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.LayoutGravity, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.LayoutGravity, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
@@ -145,37 +145,37 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.Padding, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Padding, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setPadding((int) dimension, (int) dimension, (int) dimension, (int) dimension);
             }
         });
-        addHandler(Attributes.View.PaddingLeft, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.PaddingLeft, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setPadding((int) dimension, view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
             }
         });
-        addHandler(Attributes.View.PaddingTop, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.PaddingTop, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setPadding(view.getPaddingLeft(), (int) dimension, view.getPaddingRight(), view.getPaddingBottom());
             }
         });
-        addHandler(Attributes.View.PaddingRight, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.PaddingRight, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), (int) dimension, view.getPaddingBottom());
             }
         });
-        addHandler(Attributes.View.PaddingBottom, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.PaddingBottom, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), (int) dimension);
             }
         });
-        addHandler(Attributes.View.Margin, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Margin, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
@@ -190,7 +190,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.MarginLeft, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.MarginLeft, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
@@ -205,7 +205,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.MarginTop, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.MarginTop, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
@@ -220,7 +220,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.MarginRight, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.MarginRight, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
@@ -235,7 +235,7 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.MarginBottom, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.MarginBottom, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
@@ -251,21 +251,21 @@ public class ViewParser<V extends View> extends Parser<V> {
             }
         });
 
-        addHandler(Attributes.View.MinHeight, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.MinHeight, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setMinimumHeight((int) dimension);
             }
         });
 
-        addHandler(Attributes.View.MinWidth, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.MinWidth, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 view.setMinimumWidth((int) dimension);
             }
         });
 
-        addHandler(Attributes.View.Elevation, new DimensionAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Elevation, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, String key, float dimension, LayoutParser parser) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -273,27 +273,27 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.Alpha, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Alpha, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {
                 view.setAlpha(ParseHelper.parseFloat(attributeValue));
             }
         });
-        addHandler(Attributes.View.Visibility, new AttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Visibility, new AttributeProcessor<V>() {
             @Override
             public void handle(V view, String key, LayoutParser parser) {
                 // noinspection ResourceType
                 view.setVisibility(ParseHelper.parseVisibility(parser));
             }
         });
-        addHandler(Attributes.View.Invisibility, new AttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Invisibility, new AttributeProcessor<V>() {
             @Override
             public void handle(V view, String key, LayoutParser parser) {
                 // noinspection ResourceType
                 view.setVisibility(ParseHelper.parseInvisibility(parser));
             }
         });
-        addHandler(Attributes.View.Id, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Id, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, final V view) {
                 if (view instanceof ProteusView) {
@@ -329,26 +329,26 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
         });
-        addHandler(Attributes.View.ContentDescription, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.ContentDescription, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {
                 view.setContentDescription(attributeValue);
             }
         });
-        addHandler(Attributes.View.Clickable, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Clickable, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {
                 boolean clickable = ParseHelper.parseBoolean(attributeValue);
                 view.setClickable(clickable);
             }
         });
-        addHandler(Attributes.View.Tag, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Tag, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {
                 view.setTag(attributeValue);
             }
         });
-        addHandler(Attributes.View.Border, new AttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Border, new AttributeProcessor<V>() {
             @Override
             public void handle(V view, String key, LayoutParser parser) {
                 Drawable border = Utils.getBorderDrawable(parser, view.getContext());
@@ -365,7 +365,7 @@ public class ViewParser<V extends View> extends Parser<V> {
             }
         });
 
-        addHandler(Attributes.View.Enabled, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Enabled, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {
                 boolean enabled = ParseHelper.parseBoolean(attributeValue);
@@ -373,14 +373,14 @@ public class ViewParser<V extends View> extends Parser<V> {
             }
         });
 
-        addHandler(Attributes.View.Style, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Style, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {
                 ProteusViewManager viewManager = ((ProteusView) view).getViewManager();
                 LayoutParser parser = viewManager.getLayoutParser();
                 Styles styles = viewManager.getStyles();
 
-                TypeHandler handler = viewManager.getProteusLayoutInflater().getHandler(parser.getType());
+                TypeParser handler = viewManager.getProteusLayoutInflater().getParser(parser.getType());
                 if (styles == null) {
                     return;
                 }
@@ -393,14 +393,14 @@ public class ViewParser<V extends View> extends Parser<V> {
                 }
             }
 
-            private void process(Map<String, JsonElement> style, LayoutParser parser, ProteusView proteusView, TypeHandler handler, ProteusLayoutInflater builder) {
+            private void process(Map<String, JsonElement> style, LayoutParser parser, ProteusView proteusView, TypeParser handler, ProteusLayoutInflater builder) {
                 for (Map.Entry<String, JsonElement> entry : style.entrySet()) {
                     builder.handleAttribute(handler, proteusView, entry.getKey(), parser.getValueParser(entry.getValue()));
                 }
             }
         });
 
-        addHandler(Attributes.View.TransitionName, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.TransitionName, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -409,7 +409,7 @@ public class ViewParser<V extends View> extends Parser<V> {
             }
         });
 
-        addHandler(Attributes.View.RequiresFadingEdge, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.RequiresFadingEdge, new StringAttributeProcessor<V>() {
 
             private final String NONE = "none";
             private final String BOTH = "both";
@@ -445,7 +445,7 @@ public class ViewParser<V extends View> extends Parser<V> {
             }
         });
 
-        addHandler(Attributes.View.FadingEdgeLength, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.FadingEdgeLength, new StringAttributeProcessor<V>() {
             @Override
             public void handle(String attributeKey, String attributeValue,
                                V view) {
@@ -516,33 +516,33 @@ public class ViewParser<V extends View> extends Parser<V> {
             }
         };
 
-        addHandler(Attributes.View.Above, relativeLayoutProcessor);
-        addHandler(Attributes.View.AlignBaseline, relativeLayoutProcessor);
-        addHandler(Attributes.View.AlignBottom, relativeLayoutProcessor);
-        addHandler(Attributes.View.AlignEnd, relativeLayoutProcessor);
-        addHandler(Attributes.View.AlignLeft, relativeLayoutProcessor);
-        addHandler(Attributes.View.AlignRight, relativeLayoutProcessor);
-        addHandler(Attributes.View.AlignStart, relativeLayoutProcessor);
-        addHandler(Attributes.View.AlignTop, relativeLayoutProcessor);
-        addHandler(Attributes.View.Below, relativeLayoutProcessor);
-        addHandler(Attributes.View.ToEndOf, relativeLayoutProcessor);
-        addHandler(Attributes.View.ToLeftOf, relativeLayoutProcessor);
-        addHandler(Attributes.View.ToRightOf, relativeLayoutProcessor);
-        addHandler(Attributes.View.ToStartOf, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.Above, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.AlignBaseline, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.AlignBottom, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.AlignEnd, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.AlignLeft, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.AlignRight, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.AlignStart, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.AlignTop, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.Below, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.ToEndOf, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.ToLeftOf, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.ToRightOf, relativeLayoutProcessor);
+        addAttributeProcessor(Attributes.View.ToStartOf, relativeLayoutProcessor);
 
 
-        addHandler(Attributes.View.AlignParentBottom, relativeLayoutBooleanProcessor);
-        addHandler(Attributes.View.AlignParentEnd, relativeLayoutBooleanProcessor);
-        addHandler(Attributes.View.AlignParentLeft, relativeLayoutBooleanProcessor);
-        addHandler(Attributes.View.AlignParentRight, relativeLayoutBooleanProcessor);
-        addHandler(Attributes.View.AlignParentStart, relativeLayoutBooleanProcessor);
-        addHandler(Attributes.View.AlignParentTop, relativeLayoutBooleanProcessor);
-        addHandler(Attributes.View.CenterHorizontal, relativeLayoutBooleanProcessor);
-        addHandler(Attributes.View.CenterInParent, relativeLayoutBooleanProcessor);
-        addHandler(Attributes.View.CenterVertical, relativeLayoutBooleanProcessor);
+        addAttributeProcessor(Attributes.View.AlignParentBottom, relativeLayoutBooleanProcessor);
+        addAttributeProcessor(Attributes.View.AlignParentEnd, relativeLayoutBooleanProcessor);
+        addAttributeProcessor(Attributes.View.AlignParentLeft, relativeLayoutBooleanProcessor);
+        addAttributeProcessor(Attributes.View.AlignParentRight, relativeLayoutBooleanProcessor);
+        addAttributeProcessor(Attributes.View.AlignParentStart, relativeLayoutBooleanProcessor);
+        addAttributeProcessor(Attributes.View.AlignParentTop, relativeLayoutBooleanProcessor);
+        addAttributeProcessor(Attributes.View.CenterHorizontal, relativeLayoutBooleanProcessor);
+        addAttributeProcessor(Attributes.View.CenterInParent, relativeLayoutBooleanProcessor);
+        addAttributeProcessor(Attributes.View.CenterVertical, relativeLayoutBooleanProcessor);
 
 
-        addHandler(Attributes.View.Animation, new TweenAnimationResourceProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Animation, new TweenAnimationResourceProcessor<V>() {
 
             @Override
             public void setAnimation(V view, Animation animation) {
@@ -550,7 +550,7 @@ public class ViewParser<V extends View> extends Parser<V> {
             }
         });
 
-        addHandler(Attributes.View.TextAlignment, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.TextAlignment, new StringAttributeProcessor<V>() {
 
             @Override
             public void handle(String attributeKey, String attributeValue, V view) {

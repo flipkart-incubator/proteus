@@ -23,8 +23,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.flipkart.android.proteus.LayoutParser;
-import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.parser.TypeHandler;
+import com.flipkart.android.proteus.parser.TypeParser;
 import com.flipkart.android.proteus.toolbox.Binding;
 import com.flipkart.android.proteus.toolbox.DataContext;
 import com.flipkart.android.proteus.toolbox.Formatter;
@@ -57,7 +56,7 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     }
 
     @Override
-    protected ProteusViewManager createViewManager(TypeHandler handler, View parent, LayoutParser parser, JsonObject data, Styles styles, int index) {
+    protected ProteusViewManager createViewManager(TypeParser handler, View parent, LayoutParser parser, JsonObject data, Styles styles, int index) {
         ProteusViewManagerImpl viewManager = new ProteusViewManagerImpl();
         DataContext dataContext, parentDataContext = null;
         Map<String, String> scope = parser.getScope();
@@ -88,13 +87,13 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
         viewManager.setDataContext(dataContext);
         viewManager.setStyles(styles);
         viewManager.setProteusLayoutInflater(this);
-        viewManager.setTypeHandler(handler);
+        viewManager.setTypeParser(handler);
 
         return viewManager;
     }
 
     @Override
-    public boolean handleAttribute(TypeHandler handler, ProteusView view, String attribute, LayoutParser parser) {
+    public boolean handleAttribute(TypeParser handler, ProteusView view, String attribute, LayoutParser parser) {
 
         if (ProteusConstants.DATA_CONTEXT.equals(attribute)) {
             return true;
@@ -106,7 +105,7 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
         return super.handleAttribute(handler, view, attribute, parser);
     }
 
-    private LayoutParser findAndReturnValue(ProteusView view, TypeHandler handler, LayoutParser parser, String key, String value) {
+    private LayoutParser findAndReturnValue(ProteusView view, TypeParser handler, LayoutParser parser, String key, String value) {
 
         ProteusViewManager viewManager = view.getViewManager();
 

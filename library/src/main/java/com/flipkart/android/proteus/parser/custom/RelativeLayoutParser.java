@@ -22,8 +22,8 @@ import android.widget.RelativeLayout;
 
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.Attributes;
+import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -36,7 +36,7 @@ import com.google.gson.JsonObject;
  */
 public class RelativeLayoutParser<T extends RelativeLayout> extends WrappableParser<T> {
 
-    public RelativeLayoutParser(Parser<T> parentParser) {
+    public RelativeLayoutParser(BaseTypeParser<T> parentParser) {
         super(parentParser);
     }
 
@@ -46,9 +46,9 @@ public class RelativeLayoutParser<T extends RelativeLayout> extends WrappablePar
     }
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
-        addHandler(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
+    protected void registerAttributeProcessors() {
+        super.registerAttributeProcessors();
+        addAttributeProcessor(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
 
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {

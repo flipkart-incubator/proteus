@@ -20,8 +20,8 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.Attributes;
+import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -36,7 +36,7 @@ import com.google.gson.JsonObject;
  */
 public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends WrappableParser<T> {
 
-    public FrameLayoutParser(Parser<T> parentParser) {
+    public FrameLayoutParser(BaseTypeParser<T> parentParser) {
         super(parentParser);
     }
 
@@ -46,16 +46,16 @@ public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends Wrappab
     }
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
-        addHandler(Attributes.FrameLayout.HeightRatio, new StringAttributeProcessor<T>() {
+    protected void registerAttributeProcessors() {
+        super.registerAttributeProcessors();
+        addAttributeProcessor(Attributes.FrameLayout.HeightRatio, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setAspectRatioHeight(ParseHelper.parseInt(attributeValue));
 
             }
         });
-        addHandler(Attributes.FrameLayout.WidthRatio, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.FrameLayout.WidthRatio, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setAspectRatioWidth(ParseHelper.parseInt(attributeValue));

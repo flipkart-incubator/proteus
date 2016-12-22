@@ -22,7 +22,7 @@ import android.widget.ScrollView;
 
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.Attributes;
-import com.flipkart.android.proteus.parser.Parser;
+import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -35,7 +35,7 @@ import com.google.gson.JsonObject;
  */
 public class ScrollViewParser<T extends ScrollView> extends WrappableParser<T> {
 
-    public ScrollViewParser(Parser<T> wrappedParser) {
+    public ScrollViewParser(BaseTypeParser<T> wrappedParser) {
         super( wrappedParser);
     }
 
@@ -45,9 +45,9 @@ public class ScrollViewParser<T extends ScrollView> extends WrappableParser<T> {
     }
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
-        addHandler(Attributes.ScrollView.Scrollbars, new StringAttributeProcessor<T>() {
+    protected void registerAttributeProcessors() {
+        super.registerAttributeProcessors();
+        addAttributeProcessor(Attributes.ScrollView.Scrollbars, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 if ("none".equals(attributeValue)) {

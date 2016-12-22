@@ -22,7 +22,7 @@ import android.widget.CheckBox;
 
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.parser.Attributes;
-import com.flipkart.android.proteus.parser.Parser;
+import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
@@ -36,7 +36,7 @@ import com.google.gson.JsonObject;
  */
 public class CheckBoxParser<T extends CheckBox> extends WrappableParser<T> {
 
-    public CheckBoxParser(Parser<T> wrappedParser) {
+    public CheckBoxParser(BaseTypeParser<T> wrappedParser) {
         super(wrappedParser);
     }
 
@@ -46,17 +46,17 @@ public class CheckBoxParser<T extends CheckBox> extends WrappableParser<T> {
     }
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
+    protected void registerAttributeProcessors() {
+        super.registerAttributeProcessors();
 
-        addHandler(Attributes.CheckBox.Button, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.CheckBox.Button, new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 view.setButtonDrawable(drawable);
             }
         });
 
-        addHandler(Attributes.CheckBox.Checked, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.CheckBox.Checked, new StringAttributeProcessor<T>() {
             @Override
             public void handle(String attributeKey, String attributeValue, T view) {
                 view.setChecked(Boolean.parseBoolean(attributeValue));

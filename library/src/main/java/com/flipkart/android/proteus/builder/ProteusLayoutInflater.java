@@ -20,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.LayoutParser;
-import com.flipkart.android.proteus.parser.TypeHandler;
+import com.flipkart.android.proteus.parser.TypeParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.LayoutBuilderCallback;
@@ -35,27 +35,27 @@ import com.google.gson.JsonObject;
 public interface ProteusLayoutInflater {
 
     /**
-     * Register {@link TypeHandler}s for custom view types.
+     * Register {@link TypeParser}s for custom view types.
      *
-     * @param type    The name of the view type.
-     * @param handler The {@link TypeHandler} to use while building this view type.
+     * @param type   The name of the view type.
+     * @param parser The {@link TypeParser} to use while building this view type.
      */
-    void registerHandler(String type, TypeHandler handler);
+    void registerParser(String type, TypeParser parser);
 
     /**
-     * Un-Register the {@link TypeHandler} registered using {@link ProteusLayoutInflater#registerHandler}.
+     * Un-Register the {@link TypeParser} registered using {@link ProteusLayoutInflater#registerParser}.
      *
-     * @param type remove {@link TypeHandler} for the specified view type.
+     * @param type remove {@link TypeParser} for the specified view type.
      */
-    void unregisterHandler(String type);
+    void unregisterParser(String type);
 
     /**
-     * Returns the {@link TypeHandler} for the specified view type.
+     * Returns the {@link TypeParser} for the specified view type.
      *
      * @param type The name of the view type.
-     * @return The {@link TypeHandler} associated to the specified view type
+     * @return The {@link TypeParser} associated to the specified view type
      */
-    TypeHandler getHandler(String type);
+    TypeParser getParser(String type);
 
     /**
      * This method is used to process the attributes from the layout and set them on the {@link View}
@@ -66,7 +66,15 @@ public interface ProteusLayoutInflater {
      * @param parser
      * @return true if the attribute is processed false otherwise.
      */
-    boolean handleAttribute(TypeHandler handler, ProteusView view, String attribute, LayoutParser parser);
+    boolean handleAttribute(TypeParser handler, ProteusView view, String attribute, LayoutParser parser);
+
+    /**
+     * @param handler
+     * @param attribute
+     * @param parser
+     * @return
+     */
+    void minifyAttribute(TypeParser handler, String attribute, LayoutParser parser);
 
     /**
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
@@ -79,6 +87,8 @@ public interface ProteusLayoutInflater {
      * @return A {@link ProteusView} with the built view, an array of its children and optionally its bindings.
      */
     ProteusView build(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index);
+
+    void minify(LayoutParser parser);
 
     /**
      * Give the View ID for this string. This will generally be given by the instance of ID Generator

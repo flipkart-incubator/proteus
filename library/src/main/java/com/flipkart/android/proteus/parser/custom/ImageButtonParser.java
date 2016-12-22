@@ -20,7 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.flipkart.android.proteus.LayoutParser;
-import com.flipkart.android.proteus.parser.Parser;
+import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusImageButton;
@@ -32,7 +32,7 @@ import com.google.gson.JsonObject;
  */
 public class ImageButtonParser<T extends ImageButton> extends WrappableParser<T> {
 
-    public ImageButtonParser(Parser<T> parentParser) {
+    public ImageButtonParser(BaseTypeParser<T> parentParser) {
         super( parentParser);
     }
 

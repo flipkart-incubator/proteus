@@ -20,6 +20,8 @@ public interface LayoutParser extends Cloneable {
 
     String getName();
 
+    void setName(String name);
+
     int size();
 
     boolean isBoolean();
