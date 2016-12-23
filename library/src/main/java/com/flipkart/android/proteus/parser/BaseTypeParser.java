@@ -109,8 +109,17 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
     }
 
     @Override
-    public void minify(String attribute, LayoutParser parser) {
-        parser.setName(String.valueOf(nameToIdMap.get(attribute)));
+    public boolean minify(LayoutParser out, String attribute, LayoutParser value) {
+        if (nameToIdMap.containsKey(attribute)) {
+            int position = getPosition(nameToIdMap.get(attribute));
+            if (position < 0) {
+                return false;
+            }
+            String attributeId = String.valueOf(position);
+            out.addAttribute(attributeId, value);
+            return true;
+        }
+        return false;
     }
 
     @Override

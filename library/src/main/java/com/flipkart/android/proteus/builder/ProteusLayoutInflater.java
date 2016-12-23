@@ -70,11 +70,10 @@ public interface ProteusLayoutInflater {
 
     /**
      * @param handler
+     * @param out
      * @param attribute
-     * @param parser
-     * @return
-     */
-    void minifyAttribute(TypeParser handler, String attribute, LayoutParser parser);
+     * @param value   @return   */
+    boolean minifyAttribute(TypeParser handler, LayoutParser out, String attribute, LayoutParser value);
 
     /**
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
@@ -88,7 +87,7 @@ public interface ProteusLayoutInflater {
      */
     ProteusView build(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index);
 
-    void minify(LayoutParser parser);
+    LayoutParser minify(LayoutParser parser);
 
     /**
      * Give the View ID for this string. This will generally be given by the instance of ID Generator

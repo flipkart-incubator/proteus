@@ -44,8 +44,17 @@ public abstract class WrappableParser<V extends View> extends BaseTypeParser<V> 
     @Override
     public boolean handleAttribute(V view, String attribute, LayoutParser parser) {
         boolean handled = super.handleAttribute(view, attribute, parser);
-        if (wrappedParser != null && !handled) {
+        if (!handled && wrappedParser != null) {
             handled = wrappedParser.handleAttribute(view, attribute, parser);
+        }
+        return handled;
+    }
+
+    @Override
+    public boolean minify(LayoutParser out, String attribute, LayoutParser value) {
+        boolean handled = super.minify(out, attribute, value);
+        if (!handled && null != wrappedParser) {
+            handled = wrappedParser.minify(out, attribute, value);
         }
         return handled;
     }

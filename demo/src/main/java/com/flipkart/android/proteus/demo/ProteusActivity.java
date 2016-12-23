@@ -215,8 +215,10 @@ public class ProteusActivity extends AppCompatActivity {
 
         layoutBuilder.setLayouts(layouts);
 
+        LayoutParser parser = new JsonLayoutParser(layout);
+
         // Inflate a new view using proteus
-        ProteusView view = layoutBuilder.build(container, new JsonLayoutParser(layout), data, styles, 0);
+        ProteusView view = layoutBuilder.build(container, layoutBuilder.minify(parser), data, styles, 0);
 
         container.addView((View) view);
     }

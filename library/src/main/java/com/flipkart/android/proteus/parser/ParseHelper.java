@@ -219,8 +219,7 @@ public class ParseHelper {
         if (d0 < 0 || d0 > 9) {
             throw new NumberFormatException("Malformed:  " + s);
         }
-        num = -d0;
-
+        num = d0;
 
         // Build the number.
         final int max = Integer.MIN_VALUE;

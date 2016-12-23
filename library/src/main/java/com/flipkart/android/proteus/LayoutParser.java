@@ -20,7 +20,9 @@ public interface LayoutParser extends Cloneable {
 
     String getName();
 
-    void setName(String name);
+    LayoutParser getAttribute(String name);
+
+    void addAttribute(String name, LayoutParser value);
 
     int size();
 
@@ -52,6 +54,8 @@ public interface LayoutParser extends Cloneable {
     String getString();
 
     String getType();
+
+    void setType(String type);
 
     Map<String, String> getScope();
 
@@ -87,13 +91,16 @@ public interface LayoutParser extends Cloneable {
     @Nullable
     LayoutParser peek(String property);
 
-    void addAttribute(String name, Object value);
 
     String toString();
 
-    LayoutParser merge(@Nullable Object layout);
+    LayoutParser create();
 
     LayoutParser clone();
+
+    LayoutParser merge(@Nullable Object layout);
+
+    void reset();
 
     Value getValueParser(Object value);
 

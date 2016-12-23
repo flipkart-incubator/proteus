@@ -121,18 +121,31 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     }
 
     @Override
-    public void minify(LayoutParser parser) {
-        if (!parser.isLayout()) {
-            throw new IllegalArgumentException("parser did not return a layout: " + parser.toString());
+    public LayoutParser minify(LayoutParser in) {
+        if (!in.isLayout()) {
+            throw new IllegalArgumentException("parser did not return a layout: " + in.toString());
         }
-        String type = parser.getType();
+        String type = in.getType();
         TypeParser handler = layoutHandlers.get(type);
+        LayoutParser out = in.create();
+
+        out.setType(type);
+
+        String name;
+        boolean handled;
         if (null != handler) {
-            while (parser.hasNext()) {
-                parser.next();
-                minifyAttribute(handler, parser.getName(), parser);
+            while (in.hasNext()) {
+                in.next();
+                name = in.getName();
+                handled = minifyAttribute(handler, out, name, in.getAttribute(name));
+                if (!handled) {
+                    out.addAttribute(name, in.getAttribute(name));
+                }
             }
         }
+
+        out.reset();
+        return out;
     }
 
     protected void onBeforeCreateView(TypeParser handler, ViewGroup parent, LayoutParser parser, JsonObject data, int index, Styles styles) {
@@ -177,8 +190,8 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     }
 
     @Override
-    public void minifyAttribute(TypeParser handler, String attribute, LayoutParser parser) {
-        handler.minify(attribute, parser);
+    public boolean minifyAttribute(TypeParser handler, LayoutParser out, String attribute, LayoutParser value) {
+        return handler.minify(out, attribute, value);
     }
 
     protected void onUnknownAttributeEncountered(ProteusView view, String attribute, LayoutParser parser) {

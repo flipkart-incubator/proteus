@@ -31,6 +31,10 @@ public class JsonLayoutParser implements LayoutParser {
     public JsonLayoutParser(JsonElement element) {
         this.element = element;
         this.current = element;
+        init();
+    }
+
+    private void init() {
         if (element.isJsonArray()) {
             arrayIterator = element.getAsJsonArray().iterator();
             entriesIterator = null;
@@ -38,6 +42,10 @@ public class JsonLayoutParser implements LayoutParser {
             entriesIterator = element.getAsJsonObject().entrySet().iterator();
             arrayIterator = null;
         }
+    }
+
+    public JsonElement src() {
+        return element;
     }
 
     @Override
@@ -72,10 +80,13 @@ public class JsonLayoutParser implements LayoutParser {
     }
 
     @Override
-    public void setName(String name) {
-        element.getAsJsonObject().add(name, current);
-        element.getAsJsonObject().remove(this.name);
-        this.name = name;
+    public LayoutParser getAttribute(String name) {
+        return new JsonLayoutParser(element.getAsJsonObject().get(name));
+    }
+
+    @Override
+    public void addAttribute(String name, LayoutParser value) {
+        ((JsonObject) element).add(name, ((JsonLayoutParser) value).src());
     }
 
     @Override
@@ -150,7 +161,12 @@ public class JsonLayoutParser implements LayoutParser {
 
     @Override
     public String getType() {
-        return current.getAsJsonObject().getAsJsonPrimitive(ProteusConstants.TYPE).getAsString();
+        return element.getAsJsonObject().getAsJsonPrimitive(ProteusConstants.TYPE).getAsString();
+    }
+
+    @Override
+    public void setType(String type) {
+        element.getAsJsonObject().addProperty(ProteusConstants.TYPE, type);
     }
 
     @Override
@@ -253,13 +269,8 @@ public class JsonLayoutParser implements LayoutParser {
     }
 
     @Override
-    public void addAttribute(String name, Object value) {
-        ((JsonObject) element).add(name, (JsonElement) value);
-    }
-
-    @Override
-    public LayoutParser merge(@Nullable Object layout) {
-        return new JsonLayoutParser(Utils.mergeLayouts((JsonObject) layout, (JsonObject) current));
+    public LayoutParser create() {
+        return new JsonLayoutParser(new JsonObject());
     }
 
     @SuppressWarnings("CloneDoesntCallSuperClone")
@@ -269,11 +280,23 @@ public class JsonLayoutParser implements LayoutParser {
     }
 
     @Override
+    public LayoutParser merge(@Nullable Object layout) {
+        return new JsonLayoutParser(Utils.mergeLayouts((JsonObject) layout, (JsonObject) current));
+    }
+
+    @Override
+    public void reset() {
+        current = element;
+        init();
+    }
+
+    @Override
     public Value getValueParser(Object value) {
         return new JsonValue((JsonElement) value);
     }
 
-    public class JsonValue extends JsonLayoutParser implements LayoutParser.Value {
+    public static class JsonValue extends JsonLayoutParser implements LayoutParser.Value {
+
         public JsonValue(JsonElement element) {
             super(element);
         }
