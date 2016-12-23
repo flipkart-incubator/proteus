@@ -82,13 +82,30 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
 
     @Override
     public boolean handleAttribute(V view, String attribute, LayoutParser parser) {
-        AttributeProcessor attributeProcessor = processorNameMap.get(attribute);
-        if (attributeProcessor != null) {
-            //noinspection unchecked
-            attributeProcessor.handle(view, attribute, parser);
-            return true;
+        try {
+            int attributeId = ParseHelper.parseIntUnsafe(attribute);
+            return handleAttribute(view, attributeId, parser);
+        } catch (NumberFormatException e) {
+            AttributeProcessor attributeProcessor = processorNameMap.get(attribute);
+            if (attributeProcessor != null) {
+                //noinspection unchecked
+                attributeProcessor.handle(view, attribute, parser);
+                return true;
+            }
         }
         return false;
+    }
+
+    @Override
+    public boolean handleAttribute(V view, int attributeId, LayoutParser parser) {
+        int position = getPosition(attributeId);
+        if (position < 0) {
+            return false;
+        }
+        AttributeProcessor attributeProcessor = processors[position];
+        //noinspection unchecked
+        attributeProcessor.handle(view, null, parser);
+        return true;
     }
 
     @Override
@@ -137,6 +154,10 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
 
     protected int getAttributeProcessorCount() {
         return processors.length;
+    }
+
+    protected int getPosition(int attributeId) {
+        return attributeId + getOffset();
     }
 
     protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent) throws IOException, XmlPullParserException {

@@ -25,8 +25,6 @@ import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.JsonObject;
 
-import java.util.Map;
-
 /**
  * @author kiran.kumar
  */
@@ -45,6 +43,8 @@ public interface TypeParser<V extends View> {
     void addAttributeProcessor(Attributes.Attribute key, AttributeProcessor<V> handler);
 
     boolean handleAttribute(V view, String attribute, LayoutParser parser);
+
+    boolean handleAttribute(V view, int attribute, LayoutParser parser);
 
     void minify(String attribute, LayoutParser parser);
 

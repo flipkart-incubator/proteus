@@ -205,6 +205,42 @@ public class ParseHelper {
         return number;
     }
 
+    public static int parseIntUnsafe(String s) {
+        if (s == null) {
+            throw new NumberFormatException("Null string");
+        }
+
+        // Check for a sign.
+        int num;
+        //int sign = -1;
+        final int len = s.length();
+        final char ch = s.charAt(0);
+        final int d0 = ch - '0';
+        if (d0 < 0 || d0 > 9) {
+            throw new NumberFormatException("Malformed:  " + s);
+        }
+        num = -d0;
+
+
+        // Build the number.
+        final int max = Integer.MIN_VALUE;
+        final int multmax = max / 10;
+        int i = 1;
+        while (i < len) {
+            int d = s.charAt(i++) - '0';
+            if (d < 0 || d > 9)
+                throw new NumberFormatException("Malformed:  " + s);
+            if (num < multmax)
+                throw new NumberFormatException("Over/underflow:  " + s);
+            num *= 10;
+            if (num < (max + d))
+                throw new NumberFormatException("Over/underflow:  " + s);
+            num -= d;
+        }
+
+        return num;
+    }
+
     public static float parseFloat(String attributeValue) {
         float number;
         if (ProteusConstants.DATA_NULL.equals(attributeValue)) {
