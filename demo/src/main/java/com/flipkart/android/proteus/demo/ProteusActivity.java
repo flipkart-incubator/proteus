@@ -221,7 +221,9 @@ public class ProteusActivity extends AppCompatActivity {
     private void render() {
         // Inflate a new view using proteus
         parser.reset();
+        long start = System.currentTimeMillis();
         ProteusView view = layoutBuilder.build(container, parser, data, styles, 0);
+        System.out.println(System.currentTimeMillis() - start);
         container.addView((View) view);
     }
 
