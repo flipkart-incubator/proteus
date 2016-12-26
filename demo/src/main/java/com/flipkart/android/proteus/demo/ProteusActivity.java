@@ -43,7 +43,6 @@ import com.flipkart.android.proteus.parser.Parser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -215,7 +214,9 @@ public class ProteusActivity extends AppCompatActivity {
         layoutBuilder.setLayouts(layouts);
 
         // Inflate a new view using proteus
+        long start = System.currentTimeMillis();
         ProteusView view = layoutBuilder.build(container, layout, data, 0, styles);
+        System.out.println(System.currentTimeMillis() - start);
 
         container.addView((View) view);
     }
