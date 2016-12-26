@@ -95,34 +95,43 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
         addAttributeProcessor(Attributes.ViewGroup.Children, new AttributeProcessor<T>() {
             @Override
             public void handle(T view, String key, LayoutParser parser) {
-                handleChildren((ProteusView) view);
+                handleChildren((ProteusView) view, parser.peek());
+            }
+
+            @Override
+            public LayoutParser minify(ProteusLayoutInflater layoutInflater, String attribute, LayoutParser children) {
+                if (children.isArray()) {
+                    LayoutParser child;
+                    int i = 0;
+                    while (children.hasNext()) {
+                        children.next();
+                        child = layoutInflater.minify(children.clone());
+                        children.set(i, child);
+                        i++;
+                    }
+                }
+                return children;
             }
         });
     }
 
     @Override
-    public boolean handleChildren(ProteusView view) {
+    public boolean handleChildren(ProteusView view, LayoutParser children) {
         ProteusViewManager viewManager = view.getViewManager();
         ProteusLayoutInflater layoutInflater = viewManager.getProteusLayoutInflater();
-        LayoutParser parser = viewManager.getLayoutParser();
         JsonObject data = viewManager.getDataContext().getData();
         int dataIndex = viewManager.getDataContext().getIndex();
         Styles styles = view.getViewManager().getStyles();
 
-        if (!parser.isLayout()) {
-            throw new IllegalStateException("parser is not at a Layout : " + parser.toString());
-        }
-
-        if (parser.isArray(ProteusConstants.CHILDREN)) {
-            LayoutParser children = parser.peek(ProteusConstants.CHILDREN);
+        if (children.isArray()) {
             ProteusView child;
             while (children.hasNext()) {
                 children.next();
                 child = layoutInflater.build((ViewGroup) view, children.clone(), data, styles, dataIndex);
                 addView(view, child);
             }
-        } else if (parser.isObject(ProteusConstants.CHILDREN)) {
-            handleDataDrivenChildren(layoutInflater, view, viewManager, parser.peek(ProteusConstants.CHILDREN), data, styles, dataIndex);
+        } else if (children.isObject()) {
+            handleDataDrivenChildren(layoutInflater, view, viewManager, children, data, styles, dataIndex);
         }
 
         return true;

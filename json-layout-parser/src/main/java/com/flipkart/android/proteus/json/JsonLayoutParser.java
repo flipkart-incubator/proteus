@@ -90,6 +90,16 @@ public class JsonLayoutParser implements LayoutParser {
     }
 
     @Override
+    public void add(LayoutParser parser) {
+        element.getAsJsonArray().add(((JsonLayoutParser) parser).src());
+    }
+
+    @Override
+    public void set(int position, LayoutParser parser) {
+        element.getAsJsonArray().set(position, ((JsonLayoutParser) parser).src());
+    }
+
+    @Override
     public int size() {
         return ((JsonArray) current).size();
     }
@@ -287,7 +297,13 @@ public class JsonLayoutParser implements LayoutParser {
     @Override
     public void reset() {
         current = element;
+        name = null;
         init();
+    }
+
+    @Override
+    public String toString() {
+        return current.toString();
     }
 
     @Override

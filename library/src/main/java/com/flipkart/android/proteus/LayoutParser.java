@@ -24,6 +24,10 @@ public interface LayoutParser extends Cloneable {
 
     void addAttribute(String name, LayoutParser value);
 
+    void add(LayoutParser parser);
+
+    void set(int position, LayoutParser parser);
+
     int size();
 
     boolean isBoolean();

@@ -566,7 +566,7 @@ public class ViewParser<V extends View> extends BaseTypeParser<V> {
     }
 
     @Override
-    public boolean handleChildren(ProteusView view) {
+    public boolean handleChildren(ProteusView view, LayoutParser children) {
         return false;
     }
 

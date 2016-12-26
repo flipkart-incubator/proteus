@@ -207,34 +207,26 @@ public class ParseHelper {
 
     public static int parseIntUnsafe(String s) {
         if (s == null) {
-            throw new NumberFormatException("Null string");
+            throw new NumberFormatException("null string");
         }
 
-        // Check for a sign.
         int num;
-        //int sign = -1;
         final int len = s.length();
         final char ch = s.charAt(0);
-        final int d0 = ch - '0';
-        if (d0 < 0 || d0 > 9) {
+        int d = ch - '0';
+        if (d < 0 || d > 9) {
             throw new NumberFormatException("Malformed:  " + s);
         }
-        num = d0;
+        num = d;
 
-        // Build the number.
-        final int max = Integer.MIN_VALUE;
-        final int multmax = max / 10;
         int i = 1;
         while (i < len) {
-            int d = s.charAt(i++) - '0';
-            if (d < 0 || d > 9)
+            d = s.charAt(i++) - '0';
+            if (d < 0 || d > 9) {
                 throw new NumberFormatException("Malformed:  " + s);
-            if (num < multmax)
-                throw new NumberFormatException("Over/underflow:  " + s);
+            }
             num *= 10;
-            if (num < (max + d))
-                throw new NumberFormatException("Over/underflow:  " + s);
-            num -= d;
+            num += d;
         }
 
         return num;

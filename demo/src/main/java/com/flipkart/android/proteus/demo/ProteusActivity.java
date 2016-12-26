@@ -44,6 +44,7 @@ import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
 import com.flipkart.android.proteus.toolbox.LayoutBuilderCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -74,6 +75,8 @@ public class ProteusActivity extends AppCompatActivity {
 
     private Styles styles;
     private Map<String, Object> layouts;
+
+    private LayoutParser parser;
 
     /**
      * Simple implementation of BitmapLoader for loading images from url in background.
@@ -202,24 +205,23 @@ public class ProteusActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fetch();
+                render();
             }
         });
 
         container = (ViewGroup) findViewById(R.id.content_main);
     }
 
-    private void render() {
-
+    private void setup() {
         container.removeAllViews();
-
         layoutBuilder.setLayouts(layouts);
+        parser = layoutBuilder.minify(new JsonLayoutParser(new Gson().toJsonTree(layout)));
+    }
 
-        LayoutParser parser = new JsonLayoutParser(layout);
-
+    private void render() {
         // Inflate a new view using proteus
-        ProteusView view = layoutBuilder.build(container, layoutBuilder.minify(parser), data, styles, 0);
-
+        parser.reset();
+        ProteusView view = layoutBuilder.build(container, parser, data, styles, 0);
         container.addView((View) view);
     }
 
@@ -260,7 +262,7 @@ public class ProteusActivity extends AppCompatActivity {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 try {
-                    render();
+                    setup();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -283,7 +285,8 @@ public class ProteusActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.settings) {
+        if (id == R.id.fetch) {
+            fetch();
             return true;
         }
 

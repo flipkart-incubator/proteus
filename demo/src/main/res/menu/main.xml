@@ -19,9 +19,9 @@
       xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/settings"
+        android:id="@+id/fetch"
         android:orderInCategory="100"
-        android:title="Settings"
+        android:title="Load"
         app:showAsAction="always"
         tools:ignore="HardcodedText"/>
 

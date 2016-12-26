@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.R;
+import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -109,12 +110,12 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
     }
 
     @Override
-    public boolean minify(LayoutParser out, String attribute, LayoutParser value) {
+    public boolean minify(ProteusLayoutInflater layoutInflater, LayoutParser out, String attribute, LayoutParser value) {
+        if (processorNameMap.containsKey(attribute)) {
+            value = processorNameMap.get(attribute).minify(layoutInflater, attribute, value);
+        }
         if (nameToIdMap.containsKey(attribute)) {
-            int position = getPosition(nameToIdMap.get(attribute));
-            if (position < 0) {
-                return false;
-            }
+            int position = getAttributeId(nameToIdMap.get(attribute));
             String attributeId = String.valueOf(position);
             out.addAttribute(attributeId, value);
             return true;
@@ -123,7 +124,7 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
     }
 
     @Override
-    public boolean handleChildren(ProteusView view) {
+    public boolean handleChildren(ProteusView view, LayoutParser children) {
         return false;
     }
 
@@ -167,6 +168,10 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
 
     protected int getPosition(int attributeId) {
         return attributeId + getOffset();
+    }
+
+    protected int getAttributeId(int position) {
+        return position - getOffset();
     }
 
     protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent) throws IOException, XmlPullParserException {

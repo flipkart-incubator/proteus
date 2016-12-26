@@ -125,22 +125,25 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         if (!in.isLayout()) {
             throw new IllegalArgumentException("parser did not return a layout: " + in.toString());
         }
+
         String type = in.getType();
         TypeParser handler = layoutHandlers.get(type);
+
+        if (null == handler) {
+            return in;
+        }
+
         LayoutParser out = in.create();
-
         out.setType(type);
-
         String name;
         boolean handled;
-        if (null != handler) {
-            while (in.hasNext()) {
-                in.next();
-                name = in.getName();
-                handled = minifyAttribute(handler, out, name, in.getAttribute(name));
-                if (!handled) {
-                    out.addAttribute(name, in.getAttribute(name));
-                }
+
+        while (in.hasNext()) {
+            in.next();
+            name = in.getName();
+            handled = minifyAttribute(handler, out, name, in.getAttribute(name));
+            if (!handled) {
+                out.addAttribute(name, in.getAttribute(name));
             }
         }
 
@@ -191,7 +194,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     @Override
     public boolean minifyAttribute(TypeParser handler, LayoutParser out, String attribute, LayoutParser value) {
-        return handler.minify(out, attribute, value);
+        return handler.minify(this, out, attribute, value);
     }
 
     protected void onUnknownAttributeEncountered(ProteusView view, String attribute, LayoutParser parser) {

@@ -16,10 +16,12 @@
 
 package com.flipkart.android.proteus.parser;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
@@ -46,9 +48,9 @@ public interface TypeParser<V extends View> {
 
     boolean handleAttribute(V view, int attribute, LayoutParser parser);
 
-    boolean minify(LayoutParser out, String attribute, LayoutParser value);
+    boolean minify(ProteusLayoutInflater layoutInflater, LayoutParser out, String attribute, LayoutParser value);
 
-    boolean handleChildren(ProteusView view);
+    boolean handleChildren(ProteusView view, LayoutParser children);
 
     boolean addView(ProteusView parent, ProteusView view);
 }
