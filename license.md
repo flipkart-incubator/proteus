@@ -1,3 +1,6 @@
+Apache License v2.0
+===
+
 Copyright 2016 Flipkart Internet Pvt. Ltd.
  
 Licensed under the Apache License, Version 2.0 (the "License");
