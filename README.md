@@ -140,4 +140,4 @@ container.addView((View) view);
 
 ### One click XML to JSON conversion plugin
 
-Download [this plugin](https://github.com/flipkart-incubator/android-studio-proteus-plugin/blob/master/Plugin/Plugin.jar) for android studio and enable it. Once enabled, you can select any android XML layout file and go to **Tools > Convert XML to JSON**
+Download [this plugin](https://github.com/flipkart-incubator/android-studio-proteus-plugin) for Android Studio. Once enabled, you can select any android XML resource file and go to **Tools > Proteus > Convert XML to JSON**
