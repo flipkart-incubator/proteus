@@ -22,6 +22,7 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -205,9 +206,9 @@ public class ParseHelper {
         return number;
     }
 
-    public static int parseIntUnsafe(String s) {
+    public static IntResult parseIntUnsafe(String s) {
         if (s == null) {
-            throw new NumberFormatException("null string");
+            return new IntResult("null string");
         }
 
         int num;
@@ -215,7 +216,7 @@ public class ParseHelper {
         final char ch = s.charAt(0);
         int d = ch - '0';
         if (d < 0 || d > 9) {
-            throw new NumberFormatException("Malformed:  " + s);
+            return new IntResult("Malformed:  " + s);
         }
         num = d;
 
@@ -223,13 +224,29 @@ public class ParseHelper {
         while (i < len) {
             d = s.charAt(i++) - '0';
             if (d < 0 || d > 9) {
-                throw new NumberFormatException("Malformed:  " + s);
+                return new IntResult("Malformed:  " + s);
             }
             num *= 10;
             num += d;
         }
 
-        return num;
+        return new IntResult(null, num);
+    }
+
+    public static class IntResult {
+        @Nullable
+        public final String error;
+        public final int result;
+
+        public IntResult(@Nullable String error, int result) {
+            this.error = error;
+            this.result = result;
+        }
+
+        public IntResult(@Nullable String error) {
+            this.error = error;
+            this.result = -1;
+        }
     }
 
     public static float parseFloat(String attributeValue) {

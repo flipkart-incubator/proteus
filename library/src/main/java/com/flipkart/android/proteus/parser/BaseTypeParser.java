@@ -83,10 +83,10 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
 
     @Override
     public boolean handleAttribute(V view, String attribute, LayoutParser parser) {
-        try {
-            int attributeId = ParseHelper.parseIntUnsafe(attribute);
-            return handleAttribute(view, attributeId, parser);
-        } catch (NumberFormatException e) {
+        ParseHelper.IntResult result = ParseHelper.parseIntUnsafe(attribute);
+        if (null == result.error) {
+            return handleAttribute(view, result.result, parser);
+        } else {
             AttributeProcessor attributeProcessor = processorNameMap.get(attribute);
             if (attributeProcessor != null) {
                 //noinspection unchecked
