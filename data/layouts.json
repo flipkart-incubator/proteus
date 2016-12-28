@@ -165,5 +165,40 @@
         ]
       }
     ]
+  },
+  "DataDrivenExample": {
+    "type": "FrameLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "children": [
+      {
+        "type": "LinearLayout",
+        "orientation": "horizontal",
+        "layout_width": "match_parent",
+        "background": "#ffffff",
+        "padding": "16dp",
+        "children": {
+          "data": "$user.tags",
+          "layout":{
+            "type": "TextView",
+            "dataContext": {
+              "tag": "user.tags[$index]"
+            },
+            "layout_marginRight": "8dp",
+            "layout_height": "32dp",
+            "textSize": "12sp",
+            "textColor": "#2cdb81",
+            "text": "$tag",
+            "padding": "8dp",
+            "gravity": "center",
+            "border": {
+              "width": "2dp",
+              "color": "#cccccc",
+              "bgColor": "#efefef"
+            }
+          }
+        }
+      }
+    ]
   }
 }

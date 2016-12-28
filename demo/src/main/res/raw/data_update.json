@@ -13,6 +13,10 @@
   },
   "data": {
     "totalAchievements": 114,
-    "tags": ["Alpha", "Bravo", "Charlie"]
+    "tags": [
+      "Alpha",
+      "Bravo",
+      "Charlie"
+    ]
   }
 }
