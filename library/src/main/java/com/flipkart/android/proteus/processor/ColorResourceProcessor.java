@@ -20,7 +20,7 @@ import android.content.res.ColorStateList;
 import android.view.View;
 import android.webkit.ValueCallback;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.ColorUtils;
 
 public abstract class ColorResourceProcessor<V extends View> extends AttributeProcessor<V> {
@@ -30,26 +30,26 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
     }
 
     @Override
-    public void handle(final V view, String key, LayoutParser parser) {
-        ColorUtils.loadColor(view.getContext(), parser, new ValueCallback<Integer>() {
+    public void handle(final V view, Value value) {
+        ColorUtils.loadColor(view.getContext(), value, new ValueCallback<Integer>() {
             /**
              * Invoked when the value is available.
              *
-             * @param value The value.
+             * @param color The value.
              */
             @Override
-            public void onReceiveValue(Integer value) {
-                setColor(view, value);
+            public void onReceiveValue(Integer color) {
+                setColor(view, color);
             }
         }, new ValueCallback<ColorStateList>() {
             /**
              * Invoked when the value is available.
              *
-             * @param value The value.
+             * @param color The value.
              */
             @Override
-            public void onReceiveValue(ColorStateList value) {
-                setColor(view, value);
+            public void onReceiveValue(ColorStateList color) {
+                setColor(view, color);
             }
         });
     }

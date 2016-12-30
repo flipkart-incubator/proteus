@@ -19,7 +19,7 @@ package com.flipkart.android.proteus.parser.custom;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.WrappableParser;
@@ -38,7 +38,7 @@ public class WebViewParser<T extends WebView> extends WrappableParser<T> {
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusWebView(parent.getContext());
     }
 
@@ -47,14 +47,14 @@ public class WebViewParser<T extends WebView> extends WrappableParser<T> {
         super.registerAttributeProcessors();
         addAttributeProcessor(Attributes.WebView.Url, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.loadUrl(attributeValue);
+            public void handle(T view, String value) {
+                view.loadUrl(value);
             }
         });
         addAttributeProcessor(Attributes.WebView.HTML, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.loadData(attributeValue, "text/html", "UTF-8");
+            public void handle(T view, String value) {
+                view.loadData(value, "text/html", "UTF-8");
             }
         });
     }

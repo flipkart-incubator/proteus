@@ -16,14 +16,6 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.NonNull;
-
-import com.flipkart.android.proteus.LayoutParser;
-import com.flipkart.android.proteus.parser.ParseHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -246,71 +238,6 @@ public class Utils {
             string = element.toString();
         }
         return string;
-    }
-
-    @NonNull
-    public static String getLayoutIdentifier(LayoutParser layout) {
-        String noLayoutId = "no ID or TAG.";
-        if (layout == null) {
-            return noLayoutId;
-        }
-        String value = layout.getString(ProteusConstants.ID);
-        if (value != null) {
-            return "ID: " + value + ".";
-        }
-        value = layout.getString(ProteusConstants.TAG);
-        if (value != null) {
-            return "TAG: " + value + ".";
-        }
-        return noLayoutId;
-    }
-
-    public static Drawable getBorderDrawable(LayoutParser parser, Context context) {
-
-        if (!parser.isObject() || parser.isNull()) {
-            return null;
-        }
-
-        float cornerRadius = 0;
-        int borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
-        parser = parser.peek();
-
-        String value;
-        if (parser.isString(ATTRIBUTE_BG_COLOR)) {
-            value = parser.getString(ATTRIBUTE_BG_COLOR);
-            if (value != null && !value.equals("-1")) {
-                bgColor = ParseHelper.parseColor(value);
-            }
-        }
-
-        if (parser.isString(ATTRIBUTE_BORDER_COLOR)) {
-            value = parser.getString(ATTRIBUTE_BORDER_COLOR);
-            if (value != null) {
-                borderColor = ParseHelper.parseColor(value);
-            }
-        }
-
-        if (parser.isString(ATTRIBUTE_BORDER_RADIUS)) {
-            value = parser.getString(ATTRIBUTE_BORDER_RADIUS);
-            if (value != null) {
-                cornerRadius = ParseHelper.parseDimension(value, context);
-            }
-        }
-
-        if (parser.isString(ATTRIBUTE_BORDER_WIDTH)) {
-            value = parser.getString(ATTRIBUTE_BORDER_WIDTH);
-            if (value != null) {
-                borderWidth = (int) ParseHelper.parseDimension(value, context);
-            }
-        }
-
-        GradientDrawable border = new GradientDrawable();
-        border.setCornerRadius(cornerRadius);
-        border.setShape(GradientDrawable.RECTANGLE);
-        border.setStroke(borderWidth, borderColor);
-        border.setColor(bgColor);
-
-        return border;
     }
 
     public static String getTagPrefix() {

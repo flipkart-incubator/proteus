@@ -21,7 +21,7 @@ import android.content.res.TypedArray;
 import android.util.Log;
 import android.view.View;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
@@ -34,15 +34,16 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     private static final String TAG = "StringProcessor";
 
     /**
-     * @param view View
+     * @param view  View
+     * @param value
      */
     @Override
-    public void handle(V view, String key, LayoutParser parser) {
-        if (parser.isString()) {
-            handle(key, getStringFromAttribute(view, parser.getString()), view);
+    public void handle(V view, Value value) {
+        if (value.isPrimitive()) {
+            handle(view, getStringFromAttribute(view, value.getAsPrimitive().getAsString()));
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Could not resolve string for : " + parser.toString());
+                Log.e(TAG, "Could not resolve string for : " + value.toString());
             }
         }
     }
@@ -74,10 +75,9 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     }
 
     /**
-     * @param attributeKey   Attribute Key
-     * @param attributeValue Attribute Value
      * @param view           View
+     *
      */
-    public abstract void handle(String attributeKey, String attributeValue, V view);
+    public abstract void handle(V view, String value);
 
 }

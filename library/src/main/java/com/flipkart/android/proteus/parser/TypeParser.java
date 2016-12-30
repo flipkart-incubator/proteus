@@ -16,11 +16,12 @@
 
 package com.flipkart.android.proteus.parser;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -32,11 +33,11 @@ import com.google.gson.JsonObject;
  */
 public interface TypeParser<V extends View> {
 
-    void onBeforeCreateView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index);
+    void onBeforeCreateView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index);
 
-    ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index);
+    ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index);
 
-    void onAfterCreateView(ViewGroup parent, V view, LayoutParser layout, JsonObject data, Styles styles, int index);
+    void onAfterCreateView(ViewGroup parent, V view, Layout layout, JsonObject data, Styles styles, int index);
 
     void prepare();
 
@@ -44,13 +45,11 @@ public interface TypeParser<V extends View> {
 
     void addAttributeProcessor(Attributes.Attribute key, AttributeProcessor<V> handler);
 
-    boolean handleAttribute(V view, String attribute, LayoutParser parser);
-
-    boolean handleAttribute(V view, int attribute, LayoutParser parser);
+    boolean handleAttribute(V view, int attribute, Value value);
 
     boolean minify(ProteusLayoutInflater layoutInflater, LayoutParser out, String attribute, LayoutParser value);
 
-    boolean handleChildren(ProteusView view, LayoutParser children);
+    boolean handleChildren(ProteusView view, Value children);
 
     boolean addView(ProteusView parent, ProteusView view);
 }

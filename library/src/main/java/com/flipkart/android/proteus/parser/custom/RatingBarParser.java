@@ -19,7 +19,7 @@ package com.flipkart.android.proteus.parser.custom;
 import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
@@ -43,7 +43,7 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusFixedRatingBar(parent.getContext());
     }
 
@@ -52,31 +52,31 @@ public class RatingBarParser<T extends FixedRatingBar> extends WrappableParser<T
         super.registerAttributeProcessors();
         addAttributeProcessor(Attributes.RatingBar.NumStars, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setNumStars(ParseHelper.parseInt(attributeValue));
+            public void handle(T view, String value) {
+                view.setNumStars(ParseHelper.parseInt(value));
             }
         });
         addAttributeProcessor(Attributes.RatingBar.Rating, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setRating(ParseHelper.parseFloat(attributeValue));
+            public void handle(T view, String value) {
+                view.setRating(ParseHelper.parseFloat(value));
             }
         });
         addAttributeProcessor(Attributes.RatingBar.IsIndicator, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setIsIndicator(ParseHelper.parseBoolean(attributeValue));
+            public void handle(T view, String value) {
+                view.setIsIndicator(ParseHelper.parseBoolean(value));
             }
         });
         addAttributeProcessor(Attributes.RatingBar.StepSize, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setStepSize(ParseHelper.parseFloat(attributeValue));
+            public void handle(T view, String value) {
+                view.setStepSize(ParseHelper.parseFloat(value));
             }
         });
         addAttributeProcessor(Attributes.RatingBar.MinHeight, new DimensionAttributeProcessor<T>() {
             @Override
-            public void setDimension(T view, String key, float dimension, LayoutParser parser) {
+            public void setDimension(T view, float dimension) {
                 view.setMinimumHeight((int) dimension);
             }
         });

@@ -22,10 +22,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.TypeParser;
 import com.flipkart.android.proteus.toolbox.Binding;
-import com.flipkart.android.proteus.toolbox.DataContext;
+import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -56,35 +57,35 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     }
 
     @Override
-    protected ProteusViewManager createViewManager(TypeParser handler, View parent, LayoutParser parser, JsonObject data, Styles styles, int index) {
+    protected ProteusViewManager createViewManager(TypeParser handler, View parent, Layout layout, JsonObject data, Styles styles, int index) {
         ProteusViewManagerImpl viewManager = new ProteusViewManagerImpl();
-        DataContext dataContext, parentDataContext = null;
-        Map<String, String> scope = parser.getScope();
+        Scope dataContext, parentScope = null;
+        Map<String, String> scope = layout.scope;
 
         if (parent instanceof ProteusView) {
-            parentDataContext = ((ProteusView) parent).getViewManager().getDataContext();
+            parentScope = ((ProteusView) parent).getViewManager().getScope();
         }
 
         if (scope == null) {
-            if (parentDataContext != null) {
-                dataContext = new DataContext(parentDataContext);
+            if (parentScope != null) {
+                dataContext = new Scope(parentScope);
             } else {
-                dataContext = new DataContext();
+                dataContext = new Scope();
                 dataContext.setData(data);
                 dataContext.setIndex(index);
             }
         } else {
-            if (parentDataContext != null) {
-                dataContext = parentDataContext.createChildDataContext(scope, index);
+            if (parentScope != null) {
+                dataContext = parentScope.createChildDataContext(scope, index);
             } else {
-                dataContext = new DataContext();
+                dataContext = new Scope();
                 dataContext.setData(data);
                 dataContext = dataContext.createChildDataContext(scope, index);
             }
         }
 
-        viewManager.setLayoutParser(parser.clone());
-        viewManager.setDataContext(dataContext);
+        viewManager.setLayout(layout);
+        viewManager.setScope(dataContext);
         viewManager.setStyles(styles);
         viewManager.setProteusLayoutInflater(this);
         viewManager.setTypeParser(handler);
@@ -93,34 +94,29 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     }
 
     @Override
-    public boolean handleAttribute(TypeParser handler, ProteusView view, String attribute, LayoutParser parser) {
-
-        if (ProteusConstants.DATA_CONTEXT.equals(attribute)) {
-            return true;
-        }
-        String dataPath = isDataPath(parser);
+    public boolean handleAttribute(TypeParser handler, ProteusView view, int attribute, Value value) {
+        String dataPath = isDataPath(value);
         if (dataPath != null) {
-            parser = this.findAndReturnValue(view, handler, parser, attribute, dataPath);
+            value = this.findAndReturnValue(view, handler, value, dataPath, attribute);
         }
-        return super.handleAttribute(handler, view, attribute, parser);
+        return super.handleAttribute(handler, view, attribute, value);
     }
 
-    private LayoutParser findAndReturnValue(ProteusView view, TypeParser handler, LayoutParser parser, String key, String value) {
+    private Value findAndReturnValue(ProteusView view, TypeParser handler, Value value, String dataPath, int attribute) {
 
         ProteusViewManager viewManager = view.getViewManager();
 
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "Find '" + value + "' for " + key + " for view with " + Utils.getLayoutIdentifier(viewManager.getLayoutParser()));
+            Log.d(TAG, "Find '" + dataPath + "' for " + attribute + " for view with " + viewManager.getLayout());
         }
 
-        char firstChar = TextUtils.isEmpty(value) ? 0 : value.charAt(0);
-        String dataPath;
+        char firstChar = TextUtils.isEmpty(dataPath) ? 0 : dataPath.charAt(0);
         Result result;
         switch (firstChar) {
             case ProteusConstants.DATA_PREFIX:
                 JsonElement elementFromData;
-                dataPath = value.substring(1);
-                result = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
+                dataPath = dataPath.substring(1);
+                result = Utils.readJson(dataPath, viewManager.getScope().getData(), viewManager.getScope().getIndex());
 
                 if (result.isSuccess()) {
                     elementFromData = result.element;
@@ -129,13 +125,13 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
                 }
 
                 if (elementFromData != null) {
-                    parser = parser.getValueParser(elementFromData);
+                    value = value.create(elementFromData);
                 }
-                addBinding(viewManager, dataPath, key, value, false);
+                addBinding(viewManager, dataPath, attribute, dataPath, false);
                 break;
             case ProteusConstants.REGEX_PREFIX:
-                Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(value);
-                String finalValue = value;
+                Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(dataPath);
+                String finalValue = dataPath;
                 while (regexMatcher.find()) {
                     String matchedString = regexMatcher.group(0);
                     String bindingName;
@@ -143,7 +139,7 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
 
                         // has NO formatter
                         dataPath = regexMatcher.group(3);
-                        result = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
+                        result = Utils.readJson(dataPath, viewManager.getScope().getData(), viewManager.getScope().getIndex());
                         if (result.isSuccess() && null != result.element) {
                             finalValue = finalValue.replace(matchedString, result.element.getAsString());
                         } else {
@@ -157,7 +153,7 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
                         String formatterName = regexMatcher.group(2);
 
                         String formattedValue;
-                        result = Utils.readJson(dataPath, viewManager.getDataContext().getData(), viewManager.getDataContext().getIndex());
+                        result = Utils.readJson(dataPath, viewManager.getScope().getData(), viewManager.getScope().getIndex());
                         if (result.isSuccess() && null != result.element) {
                             formattedValue = format(result.element, formatterName);
                         } else {
@@ -167,38 +163,38 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
                         finalValue = finalValue.replace(matchedString, formattedValue != null ? formattedValue : "");
                         bindingName = dataPath;
                     }
-                    addBinding(viewManager, bindingName, key, value, true);
+                    addBinding(viewManager, bindingName, attribute, dataPath, true);
                 }
 
                 // remove the REGEX_PREFIX
                 finalValue = finalValue.substring(1);
 
-                // return as a JsonPrimitive
-                parser = parser.getValueParser(new JsonPrimitive(finalValue));
+                // return as a Value
+                value = value.create(finalValue);
 
                 break;
         }
 
-        return parser;
+        return value;
     }
 
     @Nullable
-    public String isDataPath(LayoutParser parser) {
-        if (!parser.isString()) {
+    public String isDataPath(Value value) {
+        if (!value.isPrimitive()) {
             return null;
         }
-        String attributeValue = parser.getString();
+        String attributeValue = value.getAsString();
         if (attributeValue != null && !"".equals(attributeValue) && (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX || attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX)) {
             return attributeValue;
         }
         return null;
     }
 
-    private void addBinding(ProteusViewManager viewManager, String bindingName, String attributeName, String attributeValue, boolean hasRegEx) {
+    private void addBinding(ProteusViewManager viewManager, String bindingName, int attributeId, String attributeValue, boolean hasRegEx) {
         // check if the view is in update mode if not that means that the update flow
         // is running and we must not add more bindings for they will be duplicates
         if (!viewManager.isViewUpdating()) {
-            Binding binding = new Binding(bindingName, attributeName, attributeValue, hasRegEx);
+            Binding binding = new Binding(bindingName, attributeId, attributeValue, hasRegEx);
             viewManager.addBinding(binding);
         }
     }

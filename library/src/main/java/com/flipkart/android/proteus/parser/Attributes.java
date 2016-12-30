@@ -115,7 +115,6 @@ public class Attributes {
         public static Attribute ContentDescription = new Attribute("contentDescription");
         public static Attribute Clickable = new Attribute("clickable");
         public static Attribute OnClick = new Attribute("onClick");
-        public static Attribute Border = new Attribute("border");
         public static Attribute TransitionName = new Attribute("transitionName");
         public static Attribute Animation = new Attribute("animation");
         public static Attribute RequiresFadingEdge = new Attribute("requiresFadingEdge");

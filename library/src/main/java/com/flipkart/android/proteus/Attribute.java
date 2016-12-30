@@ -7,15 +7,15 @@ package com.flipkart.android.proteus;
  */
 
 public class Attribute {
-    public final int attribute;
+    public final int id;
     public final Value value;
 
-    public Attribute(int attribute, Value value) {
-        this.attribute = attribute;
+    public Attribute(int id, Value value) {
+        this.id = id;
         this.value = value;
     }
 
-    protected Layout.Attribute copy() {
-        return new Layout.Attribute(attribute, value.copy());
+    protected Attribute copy() {
+        return new Attribute(id, value.copy());
     }
 }

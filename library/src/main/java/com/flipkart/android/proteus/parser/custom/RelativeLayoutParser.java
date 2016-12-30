@@ -20,7 +20,7 @@ package com.flipkart.android.proteus.parser.custom;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -41,7 +41,7 @@ public class RelativeLayoutParser<T extends RelativeLayout> extends WrappablePar
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusRelativeLayout(parent.getContext());
     }
 
@@ -51,8 +51,8 @@ public class RelativeLayoutParser<T extends RelativeLayout> extends WrappablePar
         addAttributeProcessor(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
 
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setGravity(ParseHelper.parseGravity(attributeValue));
+            public void handle(T view, String value) {
+                view.setGravity(ParseHelper.parseGravity(value));
             }
         });
     }

@@ -21,7 +21,9 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.widget.Adapter;
 
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.JsonObject;
 
@@ -30,21 +32,21 @@ import java.util.List;
 /**
  * @author kiran.kumar
  */
-public interface LayoutBuilderCallback {
+public interface LayoutInflaterCallback {
 
     /**
      * called when the builder encounters an attribute key which is unhandled by its parser.
-     *
-     * @param view      corresponding view for current attribute that is being parsed
+     *  @param view      corresponding view for current attribute that is being parsed
      * @param attribute attribute that is being parsed
+     * @param value
      */
-    void onUnknownAttribute(ProteusView view, String attribute, LayoutParser parser);
+    void onUnknownAttribute(ProteusView view, int attribute, Value value);
 
     /**
      * called when the builder encounters a view type which it cannot understand.
      */
     @Nullable
-    ProteusView onUnknownViewType(String type, View parent, LayoutParser layout, JsonObject data, Styles styles, int index);
+    ProteusView onUnknownViewType(String type, View parent, Layout layout, JsonObject data, Styles styles, int index);
 
     JsonObject onLayoutRequired(String type, LayoutParser parent);
 
@@ -54,8 +56,9 @@ public interface LayoutBuilderCallback {
      * called when any click occurs on views
      *
      * @param view The view that triggered the event
+     * @param value
      */
-    View onEvent(ProteusView view, EventType eventType, LayoutParser value);
+    View onEvent(ProteusView view, EventType eventType, Value value);
 
     PagerAdapter onPagerAdapterRequired(ProteusView parent, final List<ProteusView> children, LayoutParser layout);
 

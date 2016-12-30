@@ -31,26 +31,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.demo.models.JsonResource;
-import com.flipkart.android.proteus.json.JsonLayoutParser;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
-import com.flipkart.android.proteus.toolbox.LayoutBuilderCallback;
+import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
@@ -71,10 +70,10 @@ public class ProteusActivity extends AppCompatActivity {
     private DataAndViewParsingLayoutInflater layoutBuilder;
 
     private JsonObject data;
-    private JsonObject layout;
+    private Layout layout;
 
     private Styles styles;
-    private Map<String, Object> layouts;
+    private Map<String, Layout> layouts;
 
     private LayoutParser parser;
 
@@ -118,19 +117,19 @@ public class ProteusActivity extends AppCompatActivity {
     };
 
     /**
-     * Implementation of LayoutBuilderCallback. This is where we get callbacks from proteus regarding
+     * Implementation of LayoutInflaterCallback. This is where we get callbacks from proteus regarding
      * errors and events.
      */
-    private LayoutBuilderCallback callback = new LayoutBuilderCallback() {
+    private LayoutInflaterCallback callback = new LayoutInflaterCallback() {
 
         @Override
-        public void onUnknownAttribute(ProteusView view, String attribute, LayoutParser parser) {
+        public void onUnknownAttribute(ProteusView view, int attribute, Value value) {
 
         }
 
         @Nullable
         @Override
-        public ProteusView onUnknownViewType(String type, View parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+        public ProteusView onUnknownViewType(String type, View parent, Layout layout, JsonObject data, Styles styles, int index) {
             return null;
         }
 
@@ -145,7 +144,7 @@ public class ProteusActivity extends AppCompatActivity {
         }
 
         @Override
-        public View onEvent(ProteusView view, EventType eventType, LayoutParser value) {
+        public View onEvent(ProteusView view, EventType eventType, Value value) {
             return null;
         }
 
@@ -215,14 +214,13 @@ public class ProteusActivity extends AppCompatActivity {
     private void setup() {
         container.removeAllViews();
         layoutBuilder.setLayouts(layouts);
-        parser = layoutBuilder.minify(new JsonLayoutParser(new Gson().toJsonTree(layout)));
     }
 
     private void render() {
         // Inflate a new view using proteus
         parser.reset();
         long start = System.currentTimeMillis();
-        ProteusView view = layoutBuilder.build(container, parser, data, styles, 0);
+        ProteusView view = layoutBuilder.build(container, layout, data, styles, 0);
         System.out.println(System.currentTimeMillis() - start);
         container.addView((View) view);
     }
@@ -234,14 +232,14 @@ public class ProteusActivity extends AppCompatActivity {
             protected Void doInBackground(Void... params) {
                 try {
 
-                    Call<JsonObject> call = resources.get("user.json");
-                    data = call.execute().body();
+                    Call<JsonObject> callData = resources.get("user.json");
+                    data = callData.execute().body();
 
-                    call = resources.get("layout.json");
-                    layout = call.execute().body();
+                    Call<Layout> callLayout = resources.getLayout();
+                    layout = callLayout.execute().body();
 
-                    Call<Map<String, JsonObject>> layoutsCall = resources.getLayouts();
-                    layouts = cast(layoutsCall.execute().body());
+                    Call<Map<String, Layout>> layoutsCall = resources.getLayouts();
+                    layouts = layoutsCall.execute().body();
 
                     Call<Styles> stylesCall = resources.getStyles();
                     styles = stylesCall.execute().body();
@@ -250,14 +248,6 @@ public class ProteusActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 return null;
-            }
-
-            private Map<String, Object> cast(Map<String, JsonObject> body) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                for (Map.Entry<String, JsonObject> entry : body.entrySet()) {
-                    map.put(entry.getKey(), entry.getValue());
-                }
-                return map;
             }
 
             @Override

@@ -21,8 +21,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.R;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -51,22 +53,19 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
     private static final String TAG = "BaseTypeParser";
 
     private static XmlResourceParser sParser = null;
-
+    protected AttributeProcessor[] processors = new AttributeProcessor[0];
+    protected int offset = 0;
     private boolean prepared;
-
     private Map<String, AttributeProcessor> processorNameMap = new HashMap<>();
     private Map<String, Integer> nameToIdMap = new HashMap<>();
 
-    protected AttributeProcessor[] processors = new AttributeProcessor[0];
-    protected int offset = 0;
-
     @Override
-    public void onBeforeCreateView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+    public void onBeforeCreateView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         // nothing to do here
     }
 
     @Override
-    public void onAfterCreateView(ViewGroup parent, V view, LayoutParser layout, JsonObject data, Styles styles, int index) {
+    public void onAfterCreateView(ViewGroup parent, V view, Layout layout, JsonObject data, Styles styles, int index) {
         try {
             ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent);
             view.setLayoutParams(layoutParams);
@@ -82,30 +81,14 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
     }
 
     @Override
-    public boolean handleAttribute(V view, String attribute, LayoutParser parser) {
-        ParseHelper.IntResult result = ParseHelper.parseIntUnsafe(attribute);
-        if (null == result.error) {
-            return handleAttribute(view, result.result, parser);
-        } else {
-            AttributeProcessor attributeProcessor = processorNameMap.get(attribute);
-            if (attributeProcessor != null) {
-                //noinspection unchecked
-                attributeProcessor.handle(view, attribute, parser);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public boolean handleAttribute(V view, int attributeId, LayoutParser parser) {
+    public boolean handleAttribute(V view, int attributeId, Value value) {
         int position = getPosition(attributeId);
         if (position < 0) {
             return false;
         }
         AttributeProcessor attributeProcessor = processors[position];
         //noinspection unchecked
-        attributeProcessor.handle(view, null, parser);
+        attributeProcessor.handle(view, value);
         return true;
     }
 
@@ -124,7 +107,7 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
     }
 
     @Override
-    public boolean handleChildren(ProteusView view, LayoutParser children) {
+    public boolean handleChildren(ProteusView view, Value children) {
         return false;
     }
 

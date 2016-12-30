@@ -17,6 +17,7 @@
 package com.flipkart.android.proteus.processor;
 
 import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 
 /**
@@ -25,7 +26,7 @@ import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
  */
 public abstract class AttributeProcessor<V> {
 
-    public abstract void handle(V view, String key, LayoutParser parser);
+    public abstract void handle(V view, Value value);
 
     public LayoutParser minify(ProteusLayoutInflater layoutInflater, String attribute, LayoutParser value) {
         return value;

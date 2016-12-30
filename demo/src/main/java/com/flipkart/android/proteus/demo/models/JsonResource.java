@@ -16,6 +16,7 @@
 
 package com.flipkart.android.proteus.demo.models;
 
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.google.gson.JsonObject;
 
@@ -38,6 +39,9 @@ public interface JsonResource {
     @GET("styles.json")
     Call<Styles> getStyles();
 
+    @GET("layout.json")
+    Call<Layout> getLayout();
+
     @GET("layouts.json")
-    Call<Map<String, JsonObject>> getLayouts();
+    Call<Map<String, Layout>> getLayouts();
 }

@@ -20,7 +20,7 @@ import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
@@ -43,7 +43,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusImageView(parent.getContext());
     }
 
@@ -60,9 +60,9 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
 
         addAttributeProcessor(Attributes.ImageView.ScaleType, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
+            public void handle(T view, String value) {
                 ProteusImageView.ScaleType scaleType = null;
-                scaleType = ParseHelper.parseScaleType(attributeValue);
+                scaleType = ParseHelper.parseScaleType(value);
                 if (scaleType != null)
                     view.setScaleType(scaleType);
             }
@@ -70,8 +70,8 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
 
         addAttributeProcessor(Attributes.ImageView.AdjustViewBounds, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                if ("true".equals(attributeValue)) {
+            public void handle(T view, String value) {
+                if ("true".equals(value)) {
                     view.setAdjustViewBounds(true);
                 } else {
                     view.setAdjustViewBounds(false);

@@ -35,8 +35,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Object;
 import com.flipkart.android.proteus.R;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
 import java.lang.reflect.Field;
@@ -233,22 +234,6 @@ public class ParseHelper {
         return new IntResult(null, num);
     }
 
-    public static class IntResult {
-        @Nullable
-        public final String error;
-        public final int result;
-
-        public IntResult(@Nullable String error, int result) {
-            this.error = error;
-            this.result = result;
-        }
-
-        public IntResult(@Nullable String error) {
-            this.error = error;
-            this.result = -1;
-        }
-    }
-
     public static float parseFloat(String attributeValue) {
         float number;
         if (ProteusConstants.DATA_NULL.equals(attributeValue)) {
@@ -281,7 +266,6 @@ public class ParseHelper {
         return number;
     }
 
-
     public static int parseGravity(String attributeValue) {
         String[] gravities = attributeValue.split("\\|");
         int returnGravity = Gravity.NO_GRAVITY;
@@ -304,33 +288,33 @@ public class ParseHelper {
         return returnValue == null ? TextUtils.TruncateAt.END : returnValue;
     }
 
-    public static int parseVisibility(LayoutParser parser) {
+    public static int parseVisibility(Value value) {
         Integer returnValue = null;
-        if (parser.isString()) {
-            String attributeValue = parser.getString();
+        if (value.isPrimitive()) {
+            String attributeValue = value.getAsString();
             returnValue = sVisibilityMode.get(attributeValue);
             if (null == returnValue && (attributeValue.isEmpty() ||
                     FALSE.equals(attributeValue) ||
                     ProteusConstants.DATA_NULL.equals(attributeValue))) {
                 returnValue = View.GONE;
             }
-        } else if (parser.isNull()) {
+        } else if (value.isNull()) {
             returnValue = View.GONE;
         }
         return returnValue == null ? View.VISIBLE : returnValue;
     }
 
-    public static int parseInvisibility(LayoutParser parser) {
+    public static int parseInvisibility(Value value) {
         Integer returnValue = null;
-        if (parser.isString()) {
-            String attributeValue = parser.getString();
+        if (value.isPrimitive()) {
+            String attributeValue = value.getAsString();
             returnValue = sVisibilityMode.get(attributeValue);
             if (null == returnValue && (attributeValue.isEmpty() ||
                     FALSE.equals(attributeValue) ||
                     ProteusConstants.DATA_NULL.equals(attributeValue))) {
                 returnValue = View.VISIBLE;
             }
-        } else if (parser.isNull()) {
+        } else if (value.isNull()) {
             returnValue = View.VISIBLE;
         }
 
@@ -544,7 +528,6 @@ public class ParseHelper {
         return attributeValue.startsWith(STRING_LOCAL_RESOURCE_STR);
     }
 
-
     public static boolean isLocalDrawableResource(String attributeValue) {
         return attributeValue.startsWith(DRAWABLE_LOCAL_RESOURCE_STR);
     }
@@ -557,17 +540,14 @@ public class ParseHelper {
         return attributeValue.startsWith(COLOR_LOCAL_RESOURCE_STR);
     }
 
+    public static Pair<int[], Value> parseState(Object value) {
 
-    public static Pair<int[], LayoutParser> parseState(LayoutParser parser) {
-
-        if (parser.isObject(DRAWABLE_STR)) {
-            parser.peek(DRAWABLE_STR);
+        if (value.isObject(DRAWABLE_STR)) {
             List<Integer> statesToReturn = new ArrayList<>();
-            while (parser.hasNext()) {
-                parser.next();
-                Integer stateInteger = sStateMap.get(parser.getName());
+            for (Map.Entry<String, Value> entry : value.getAsObject().entrySet()) {
+                Integer stateInteger = sStateMap.get(entry.getKey());
                 if (stateInteger != null) {
-                    String stateValue = parser.getString();
+                    String stateValue = entry.getValue().getAsString();
                     //e.g state_pressed = true state_pressed = false
                     statesToReturn.add(ParseHelper.parseBoolean(stateValue) ? stateInteger : -stateInteger);
                 }
@@ -578,7 +558,7 @@ public class ParseHelper {
                 statesToReturnInteger[i] = statesToReturn.get(i);
             }
 
-            return new Pair<>(statesToReturnInteger, parser.peek(DRAWABLE_STR));
+            return new Pair<>(statesToReturnInteger, value.get(DRAWABLE_STR));
         }
         return null;
     }
@@ -628,18 +608,18 @@ public class ParseHelper {
      * Parses a single layer item (represented by {@param child}) inside a layer list and gives
      * a pair of android:id and a string for the drawable path.
      *
-     * @param parser
+     * @param value
      * @return The layer info as a {@link Pair}
      */
-    public static Pair<Integer, LayoutParser> parseLayer(LayoutParser parser) {
+    public static Pair<Integer, Value> parseLayer(Object value) {
 
-        String idAsString = parser.getString(ID_STR);
+        String idAsString = value.getAsString(ID_STR);
         int androidResIdByXmlResId = View.NO_ID;
         if (idAsString != null) {
             androidResIdByXmlResId = getAndroidResIdByXmlResId(idAsString);
         }
-        if (!parser.isNull(DRAWABLE_STR)) {
-            return new Pair<>(androidResIdByXmlResId, parser);
+        if (!value.isNull(DRAWABLE_STR)) {
+            return new Pair<Integer, Value>(androidResIdByXmlResId, value);
         }
         return null;
     }
@@ -662,5 +642,21 @@ public class ParseHelper {
      */
     public static Integer parseTextAlignment(String attributeValue) {
         return !TextUtils.isEmpty(attributeValue) ? sTextAlignment.get(attributeValue) : null;
+    }
+
+    public static class IntResult {
+        @Nullable
+        public final String error;
+        public final int result;
+
+        public IntResult(@Nullable String error, int result) {
+            this.error = error;
+            this.result = result;
+        }
+
+        public IntResult(@Nullable String error) {
+            this.error = error;
+            this.result = -1;
+        }
     }
 }

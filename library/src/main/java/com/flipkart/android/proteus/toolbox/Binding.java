@@ -23,23 +23,23 @@ package com.flipkart.android.proteus.toolbox;
 public class Binding {
 
     private String bindingName;
-    private String attributeKey;
+    private int attributeId;
     private String attributeValue;
     private boolean hasRegEx;
 
-    public Binding(String bindingName, String attributeKey, String attributeValue, boolean hasRegEx) {
+    public Binding(String bindingName, int attributeId, String attributeValue, boolean hasRegEx) {
         this.bindingName = bindingName;
-        this.attributeKey = attributeKey;
+        this.attributeId = attributeId;
         this.attributeValue = attributeValue;
         this.hasRegEx = hasRegEx;
     }
 
-    public String getAttributeKey() {
-        return attributeKey;
+    public int getAttributeId() {
+        return attributeId;
     }
 
-    public void setAttributeKey(String attributeKey) {
-        this.attributeKey = attributeKey;
+    public void setAttributeId(int attributeId) {
+        this.attributeId = attributeId;
     }
 
     public String getAttributeValue() {

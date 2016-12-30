@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 import android.support.annotation.NonNull;
 
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.parser.ViewParser;
 import com.flipkart.android.proteus.parser.custom.ButtonParser;
 import com.flipkart.android.proteus.parser.custom.CheckBoxParser;
@@ -67,7 +68,7 @@ public class LayoutBuilderFactory {
      *
      * @return A new {@link DataAndViewParsingLayoutInflater}
      */
-    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutInflater(Map<String, Object> layouts, @NonNull IdGenerator idGenerator) {
+    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutInflater(Map<String, Layout> layouts, @NonNull IdGenerator idGenerator) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
             dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutInflater(layouts, idGenerator);
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
@@ -76,7 +77,7 @@ public class LayoutBuilderFactory {
         return dataAndViewParsingLayoutBuilderInstance;
     }
 
-    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutInflater(Map<String, Object> layouts) {
+    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutInflater(Map<String, Layout> layouts) {
         if (dataAndViewParsingLayoutBuilderInstance == null) {
             dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutInflater(layouts, new IdGeneratorImpl());
             registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);

@@ -19,11 +19,13 @@ package com.flipkart.android.proteus.builder;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.TypeParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
-import com.flipkart.android.proteus.toolbox.LayoutBuilderCallback;
+import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.JsonObject;
@@ -62,31 +64,37 @@ public interface ProteusLayoutInflater {
      * that is being built.
      *
      * @param handler
-     * @param view    The view to handle the attribute on.
-     * @param parser
-     * @return true if the attribute is processed false otherwise.
+     * @param view      The view to handle the attribute on.
+     * @param attribute
+     * @param value     @return true if the attribute is processed false otherwise.
      */
-    boolean handleAttribute(TypeParser handler, ProteusView view, String attribute, LayoutParser parser);
+    boolean handleAttribute(TypeParser handler, ProteusView view, int attribute, Value value);
 
     /**
      * @param handler
      * @param out
      * @param attribute
-     * @param value   @return   */
+     * @param value
+     * @return
+     */
     boolean minifyAttribute(TypeParser handler, LayoutParser out, String attribute, LayoutParser value);
 
     /**
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
      *
      * @param parent The intended parent view for the {@link View} that will be built.
-     * @param layout The {@link JsonObject} which defines the layout for the {@link View} to be built.
+     * @param layout The {@link Layout} which defines the layout for the {@link View} to be built.
      * @param data   The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
      * @param styles The styles to be applied to the view.
      * @param index  The index of this view in its parent. Pass 0 if it has no parent.
      * @return A {@link ProteusView} with the built view, an array of its children and optionally its bindings.
      */
-    ProteusView build(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index);
+    ProteusView build(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index);
 
+    /**
+     * @param parser
+     * @return
+     */
     LayoutParser minify(LayoutParser parser);
 
     /**
@@ -109,7 +117,7 @@ public interface ProteusLayoutInflater {
     /**
      * @return The callback object used by this {@link ProteusLayoutInflater}
      */
-    LayoutBuilderCallback getListener();
+    LayoutInflaterCallback getListener();
 
     /**
      * Used to set a callback object to handle unknown view types and unknown attributes and other
@@ -118,7 +126,7 @@ public interface ProteusLayoutInflater {
      *
      * @param listener The callback object.
      */
-    void setListener(LayoutBuilderCallback listener);
+    void setListener(LayoutInflaterCallback listener);
 
     /**
      * @return The helper object that is being used to handle drawables that need to fetched from a

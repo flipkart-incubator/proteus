@@ -27,10 +27,14 @@ import android.util.Log;
 import android.util.StateSet;
 import android.webkit.ValueCallback;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Array;
+import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class ColorUtils {
     private static final String TAG = "ColorUtils";
@@ -38,19 +42,19 @@ public class ColorUtils {
 
     /**
      * @param context                Application context used to access resources
-     * @param parser                 JSON representation of the Color
+     * @param value                  JSON representation of the Color
      * @param colorCallback          Callback for return Value if it is a Color Resource
      * @param colorStateListCallback Callback for return Value if it is a ColorStateList
      * @throws android.content.res.Resources.NotFoundException when the animation cannot be loaded
      */
-    public static void loadColor(Context context, LayoutParser parser, ValueCallback<Integer> colorCallback, ValueCallback<ColorStateList> colorStateListCallback) throws Resources.NotFoundException {
-        if (parser.isString()) {
-            handleString(context, parser.getString(), colorCallback, colorStateListCallback);
-        } else if (parser.isObject()) {
-            handleElement(context, parser.peek(), colorCallback, colorStateListCallback);
+    public static void loadColor(Context context, Value value, ValueCallback<Integer> colorCallback, ValueCallback<ColorStateList> colorStateListCallback) throws Resources.NotFoundException {
+        if (value.isPrimitive()) {
+            handleString(context, value.getAsString(), colorCallback, colorStateListCallback);
+        } else if (value.isObject()) {
+            handleElement(context, value.getAsObject(), colorCallback, colorStateListCallback);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Could not resolve color for : " + parser.toString());
+                Log.e(TAG, "Could not resolve color for : " + value.toString());
             }
         }
     }
@@ -83,8 +87,8 @@ public class ColorUtils {
         }
     }
 
-    private static void handleElement(Context context, LayoutParser parser, ValueCallback<Integer> colorCallback, ValueCallback<ColorStateList> colorStateListCallback) {
-        ColorStateList colorStateList = inflateFromParser(context, parser);
+    private static void handleElement(Context context, Object value, ValueCallback<Integer> colorCallback, ValueCallback<ColorStateList> colorStateListCallback) {
+        ColorStateList colorStateList = inflateFromParser(context, value);
 
         if (null != colorStateList) {
             colorStateListCallback.onReceiveValue(colorStateList);
@@ -159,74 +163,65 @@ public class ColorUtils {
     }
 
     @Nullable
-    private static ColorStateList inflateFromParser(Context context, LayoutParser parser) {
+    private static ColorStateList inflateFromParser(Context context, Object value) {
         ColorStateList result = null;
 
-        if (parser.isString("type")) {
-            String colorType = parser.getString("type");
+        if (value.isPrimitive("type")) {
+            String colorType = value.getAsString("type");
             if (TextUtils.equals(colorType, "selector")) {
 
-                if (parser.isArray("children")) {
+                if (value.isArray("children")) {
 
-                    LayoutParser children = parser.peek("children");
-                    LayoutParser child;
+                    Array children = value.get("children").getAsArray();
+                    Iterator<Value> iterator = children.iterator();
+                    Object child;
 
                     int listAllocated = 20;
                     int listSize = 0;
                     int[] colorList = new int[listAllocated];
                     int[][] stateSpecList = new int[listAllocated][];
 
-                    while (children.hasNext()) {
-                        children.next();
-                        if (!children.isObject()) {
-                            continue;
-                        }
-
-                        child = children.peek();
-
+                    while (iterator.hasNext()) {
+                        child = iterator.next().getAsObject();
                         if (child.size() == 0) {
                             continue;
                         }
-
                         int j = 0;
                         Integer baseColor = null;
                         float alphaMod = 1.0f;
                         int[] stateSpec = new int[child.size() - 1];
                         boolean ignoreItem = false;
 
-                        while (child.hasNext()) {
-                            child.next();
-
+                        for (Map.Entry<String, Value> entry : child.entrySet()) {
                             if (ignoreItem) {
                                 break;
                             }
-
-                            if (!child.isString()) {
+                            if (!entry.getValue().isPrimitive()) {
                                 continue;
                             }
 
-                            Integer attributeId = getAttribute(child.getName());
+                            Integer attributeId = getAttribute(entry.getKey());
                             if (null != attributeId) {
                                 switch (attributeId) {
                                     case android.R.attr.type:
-                                        if (!TextUtils.equals("item", child.getString())) {
+                                        if (!TextUtils.equals("item", entry.getValue().getAsString())) {
                                             ignoreItem = true;
                                         }
                                         break;
                                     case android.R.attr.color:
-                                        String colorRes = child.getString();
+                                        String colorRes = entry.getValue().getAsString();
                                         if (!TextUtils.isEmpty(colorRes)) {
                                             baseColor = getColorFromAttributeValue(context, colorRes);
                                         }
                                         break;
                                     case android.R.attr.alpha:
-                                        String alphaStr = child.getString();
+                                        String alphaStr = entry.getValue().getAsString();
                                         if (!TextUtils.isEmpty(alphaStr)) {
                                             alphaMod = Float.parseFloat(alphaStr);
                                         }
                                         break;
                                     default:
-                                        stateSpec[j++] = child.getBoolean() ? attributeId : -attributeId;
+                                        stateSpec[j++] = entry.getValue().getAsBoolean() ? attributeId : -attributeId;
                                         break;
                                 }
                             }

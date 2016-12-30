@@ -19,26 +19,25 @@ package com.flipkart.android.proteus.processor;
 
 import android.view.View;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
 public abstract class DimensionAttributeProcessor<T extends View> extends AttributeProcessor<T> {
 
     /**
-     * @param view View
+     * @param view  View
+     * @param value
      */
     @Override
-    public final void handle(T view, String key, LayoutParser parser) {
-        if (parser != null && parser.isString()) {
-            float dimension = ParseHelper.parseDimension(parser.getString(), view.getContext());
-            setDimension(view, key, dimension, parser);
+    public final void handle(T view, Value value) {
+        if (value != null && value.isPrimitive()) {
+            float dimension = ParseHelper.parseDimension(value.getAsString(), view.getContext());
+            setDimension(view, dimension);
         }
     }
 
     /**
-     * @param view   View
-     * @param key    Attribute Key
-     * @param parser Attribute Value
+     * @param view View
      */
-    public abstract void setDimension(T view, String key, float dimension, LayoutParser parser);
+    public abstract void setDimension(T view, float dimension);
 }

@@ -26,7 +26,7 @@ import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
@@ -50,7 +50,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusTextView(parent.getContext());
     }
 
@@ -59,34 +59,34 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
         super.registerAttributeProcessors();
         addAttributeProcessor(Attributes.TextView.HTML, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setText(Html.fromHtml(attributeValue));
+            public void handle(T view, String value) {
+                view.setText(Html.fromHtml(value));
             }
         });
         addAttributeProcessor(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setText(attributeValue);
+            public void handle(T view, String value) {
+                view.setText(value);
             }
         });
 
         addAttributeProcessor(Attributes.TextView.DrawablePadding, new DimensionAttributeProcessor<T>() {
             @Override
-            public void setDimension(T view, String key, float dimension, LayoutParser parser) {
+            public void setDimension(T view, float dimension) {
                 view.setCompoundDrawablePadding((int) dimension);
             }
         });
 
         addAttributeProcessor(Attributes.TextView.TextSize, new DimensionAttributeProcessor<T>() {
             @Override
-            public void setDimension(T view, String key, float dimension, LayoutParser parser) {
+            public void setDimension(T view, float dimension) {
                 view.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
             }
         });
         addAttributeProcessor(Attributes.TextView.Gravity, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setGravity(ParseHelper.parseGravity(attributeValue));
+            public void handle(T view, String value) {
+                view.setGravity(ParseHelper.parseGravity(value));
             }
         });
 
@@ -173,68 +173,68 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
 
         addAttributeProcessor(Attributes.TextView.MaxLines, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setMaxLines(ParseHelper.parseInt(attributeValue));
+            public void handle(T view, String value) {
+                view.setMaxLines(ParseHelper.parseInt(value));
             }
         });
 
         addAttributeProcessor(Attributes.TextView.Ellipsize, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                Enum ellipsize = ParseHelper.parseEllipsize(attributeValue);
+            public void handle(T view, String value) {
+                Enum ellipsize = ParseHelper.parseEllipsize(value);
                 view.setEllipsize((android.text.TextUtils.TruncateAt) ellipsize);
             }
         });
 
         addAttributeProcessor(Attributes.TextView.PaintFlags, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                if (attributeValue.equals("strike"))
+            public void handle(T view, String value) {
+                if (value.equals("strike"))
                     view.setPaintFlags(view.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
         });
 
         addAttributeProcessor(Attributes.TextView.Prefix, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setText(attributeValue + view.getText());
+            public void handle(T view, String value) {
+                view.setText(value + view.getText());
             }
         });
 
         addAttributeProcessor(Attributes.TextView.Suffix, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setText(view.getText() + attributeValue);
+            public void handle(T view, String value) {
+                view.setText(view.getText() + value);
             }
         });
 
         addAttributeProcessor(Attributes.TextView.TextStyle, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                int typeface = ParseHelper.parseTextStyle(attributeValue);
+            public void handle(T view, String value) {
+                int typeface = ParseHelper.parseTextStyle(value);
                 view.setTypeface(Typeface.defaultFromStyle(typeface));
             }
         });
 
         addAttributeProcessor(Attributes.TextView.SingleLine, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setSingleLine(ParseHelper.parseBoolean(attributeValue));
+            public void handle(T view, String value) {
+                view.setSingleLine(ParseHelper.parseBoolean(value));
             }
         });
 
         addAttributeProcessor(Attributes.TextView.TextAllCaps, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
+            public void handle(T view, String value) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                    view.setAllCaps(ParseHelper.parseBoolean(attributeValue));
+                    view.setAllCaps(ParseHelper.parseBoolean(value));
                 }
             }
         });
         addAttributeProcessor(Attributes.TextView.Hint, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setHint(attributeValue);
+            public void handle(T view, String value) {
+                view.setHint(value);
             }
         });
     }

@@ -20,7 +20,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
@@ -34,25 +34,25 @@ import java.util.Map;
  */
 public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater {
 
-    private Map<String, Object> layouts;
+    private Map<String, Layout> layouts;
 
-    protected DataAndViewParsingLayoutInflater(Map<String, Object> layouts, @NonNull IdGenerator idGenerator) {
+    protected DataAndViewParsingLayoutInflater(Map<String, Layout> layouts, @NonNull IdGenerator idGenerator) {
         super(idGenerator);
         this.layouts = layouts;
     }
 
     @Override
-    protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, LayoutParser include, JsonObject data, int index, Styles styles) {
-        Object layout = null;
+    protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, Layout include, JsonObject data, Styles styles, int index) {
+        Layout layout = null;
         if (layouts != null) {
             layout = layouts.get(type);
         }
         if (layout != null) {
-            ProteusView view = build(parent, include.merge(layout), data, styles, index);
+            ProteusView view = build(parent, layout, data, styles, index);
             onViewBuiltFromViewProvider(view, type, parent, index);
             return view;
         }
-        return super.onUnknownViewEncountered(type, parent, include, data, index, styles);
+        return super.onUnknownViewEncountered(type, parent, include, data, styles, index);
     }
 
     private void onViewBuiltFromViewProvider(ProteusView view, String type, View parent, int childIndex) {
@@ -61,7 +61,7 @@ public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater 
         }
     }
 
-    public void setLayouts(Map<String, Object> layouts) {
+    public void setLayouts(Map<String, Layout> layouts) {
         this.layouts = layouts;
     }
 }

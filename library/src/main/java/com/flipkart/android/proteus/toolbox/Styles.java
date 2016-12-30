@@ -16,7 +16,7 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import com.google.gson.JsonElement;
+import com.flipkart.android.proteus.Value;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,9 +26,9 @@ import java.util.Map;
  *
  * @author Aditya Sharat
  */
-public class Styles extends HashMap<String, Map<String, JsonElement>> {
+public class Styles extends HashMap<String, Map<Integer, Value>> {
 
-    public Map<String, JsonElement> getStyle(String name) {
+    public Map<Integer, Value> getStyle(String name) {
         return this.get(name);
     }
 

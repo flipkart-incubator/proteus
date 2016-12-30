@@ -17,9 +17,9 @@
 package com.flipkart.android.proteus.processor;
 
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.EventType;
-import com.flipkart.android.proteus.toolbox.LayoutBuilderCallback;
+import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.view.ProteusView;
 
 /**
@@ -30,17 +30,19 @@ import com.flipkart.android.proteus.view.ProteusView;
 public abstract class EventProcessor<T> extends AttributeProcessor<T> {
 
     @Override
-    public void handle(T view, String key, LayoutParser parser) {
-        setOnEventListener(view, parser);
+    public void handle(T view, Value value) {
+        setOnEventListener(view, value);
     }
 
-    public abstract void setOnEventListener(T view, LayoutParser parser);
+    public abstract void setOnEventListener(T view, Value value);
 
     /**
      * This delegates Event with required attributes to client
      */
-    public void fireEvent(ProteusView view, EventType eventType, LayoutParser parser) {
-        LayoutBuilderCallback layoutBuilderCallback = view.getViewManager().getProteusLayoutInflater().getListener();
-        layoutBuilderCallback.onEvent(view, eventType, parser);
+    public void fireEvent(ProteusView view, EventType eventType, Value parser) {
+        LayoutInflaterCallback callback = view.getViewManager().getProteusLayoutInflater().getListener();
+        if (null != callback) {
+            callback.onEvent(view, eventType, parser);
+        }
     }
 }

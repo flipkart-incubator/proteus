@@ -39,9 +39,12 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Iterator;
 
 /**
  * Defines common utilities for working with animations.
@@ -76,19 +79,19 @@ public class AnimationUtils {
      * Loads an {@link Animation} object from a resource
      *
      * @param context Application context used to access resources
-     * @param parser  JSON representation of the Animation
+     * @param value   JSON representation of the Animation
      * @return The animation object reference by the specified id
      * @throws android.content.res.Resources.NotFoundException when the animation cannot be loaded
      */
-    public static Animation loadAnimation(Context context, LayoutParser parser) throws Resources.NotFoundException {
+    public static Animation loadAnimation(Context context, Value value) throws Resources.NotFoundException {
         Animation anim = null;
-        if (parser.isString()) {
-            anim = handleString(context, parser.getString());
-        } else if (parser.isObject()) {
-            anim = handleElement(context, parser.peek());
+        if (value.isPrimitive()) {
+            anim = handleString(context, value.getAsPrimitive().getAsString());
+        } else if (value.isObject()) {
+            anim = handleElement(context, value.getAsObject());
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Could not load animation for : " + parser.toString());
+                Log.e(TAG, "Could not load animation for : " + value.toString());
             }
         }
         return anim;
@@ -108,24 +111,24 @@ public class AnimationUtils {
         return anim;
     }
 
-    private static Animation handleElement(Context c, LayoutParser parser) {
+    private static Animation handleElement(Context context, Object value) {
         Animation anim = null;
-        String type = parser.getString(TYPE);
+        String type = value.getAsString(TYPE);
         AnimationProperties animationProperties = null;
         if (SET.equalsIgnoreCase(type)) {
-            animationProperties = new AnimationSetProperties(parser);
+            animationProperties = new AnimationSetProperties(value);
         } else if (ALPHA.equalsIgnoreCase(type)) {
-            animationProperties = new AlphaAnimProperties(parser);
+            animationProperties = new AlphaAnimProperties(value);
         } else if (SCALE.equalsIgnoreCase(type)) {
-            animationProperties = new ScaleAnimProperties(parser);
+            animationProperties = new ScaleAnimProperties(value);
         } else if (ROTATE.equalsIgnoreCase(type)) {
-            animationProperties = new RotateAnimProperties(parser);
+            animationProperties = new RotateAnimProperties(value);
         } else if (TRANSLATE.equalsIgnoreCase(type)) {
-            animationProperties = new TranslateAnimProperties(parser);
+            animationProperties = new TranslateAnimProperties(value);
         }
 
         if (null != animationProperties) {
-            anim = animationProperties.instantiate(c);
+            anim = animationProperties.instantiate(context);
         }
 
         return anim;
@@ -139,13 +142,13 @@ public class AnimationUtils {
      * @return The animation object reference by the specified id
      * @throws android.content.res.Resources.NotFoundException
      */
-    public static Interpolator loadInterpolator(Context context, LayoutParser value)
+    public static Interpolator loadInterpolator(Context context, Value value)
             throws Resources.NotFoundException {
         Interpolator interpolator = null;
-        if (value.isString()) {
-            interpolator = handleStringInterpolator(context, value.getString());
+        if (value.isPrimitive()) {
+            interpolator = handleStringInterpolator(context, value.getAsString());
         } else if (value.isObject()) {
-            interpolator = handleElementInterpolator(context, value.peek());
+            interpolator = handleElementInterpolator(context, value.getAsObject());
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
                 Log.e(TAG, "Could not load interpolator for : " + value.toString());
@@ -168,10 +171,10 @@ public class AnimationUtils {
         return interpolator;
     }
 
-    private static Interpolator handleElementInterpolator(Context c, LayoutParser value) {
+    private static Interpolator handleElementInterpolator(Context c, Object value) {
 
         Interpolator interpolator = null;
-        String type = value.getString("type");
+        String type = value.getAsString("type");
         InterpolatorProperties interpolatorProperties = null;
         if (LINEAR_INTERPOLATOR.equalsIgnoreCase(type)) {
             interpolator = new LinearInterpolator();
@@ -235,16 +238,16 @@ public class AnimationUtils {
          * @param value The Json value to parse
          * @return The parsed version of the description
          */
-        static Description parseValue(LayoutParser value) {
+        static Description parseValue(Value value) {
             Description d = new Description();
             d.type = Animation.ABSOLUTE;
             d.value = 0;
-            if (value != null && (value.isNumber() || value.isString())) {
-                if (value.isNumber()) {
+            if (value != null && value.isPrimitive()) {
+                if (value.getAsPrimitive().isNumber()) {
                     d.type = Animation.ABSOLUTE;
-                    d.value = value.getFloat();
+                    d.value = value.getAsPrimitive().getAsFloat();
                 } else {
-                    String stringValue = value.getString();
+                    String stringValue = value.getAsPrimitive().getAsString();
                     if (stringValue.endsWith(PERCENT_SELF)) {
                         stringValue = stringValue.substring(0, stringValue.length() - PERCENT_SELF.length());
                         d.value = Float.parseFloat(stringValue) / 100;
@@ -255,7 +258,7 @@ public class AnimationUtils {
                         d.type = Animation.RELATIVE_TO_PARENT;
                     } else {
                         d.type = Animation.ABSOLUTE;
-                        d.value = value.getFloat();
+                        d.value = value.getAsPrimitive().getAsFloat();
                     }
                 }
             }
@@ -288,7 +291,7 @@ public class AnimationUtils {
         @SerializedName("fillEnabled")
         Boolean fillEnabled;
         @SerializedName("interpolator")
-        LayoutParser interpolator;
+        Value interpolator;
         @SerializedName("repeatCount")
         Integer repeatCount;
         @SerializedName("repeatMode")
@@ -298,17 +301,17 @@ public class AnimationUtils {
         @SerializedName("zAdjustment")
         Integer zAdjustment;
 
-        public AnimationProperties(LayoutParser parser) {
-            detachWallpaper = parser.getBoolean(DETACH_WALLPAPER);
-            duration = parser.getLong(DURATION);
-            fillAfter = parser.getBoolean(FILL_AFTER);
-            fillBefore = parser.getBoolean(FILL_BEFORE);
-            fillEnabled = parser.getBoolean(FILL_ENABLED);
-            interpolator = parser.peek(INTERPOLATOR);
-            repeatCount = parser.getInt(REPEAT_COUNT);
-            repeatMode = parser.getInt(REPEAT_MODE);
-            startOffset = parser.getLong(START_OFFSET);
-            zAdjustment = parser.getInt(Z_ADJUSTMENT);
+        public AnimationProperties(Object value) {
+            detachWallpaper = value.getAsBoolean(DETACH_WALLPAPER);
+            duration = value.getAsLong(DURATION);
+            fillAfter = value.getAsBoolean(FILL_AFTER);
+            fillBefore = value.getAsBoolean(FILL_BEFORE);
+            fillEnabled = value.getAsBoolean(FILL_ENABLED);
+            interpolator = value.get(INTERPOLATOR);
+            repeatCount = value.getAsInteger(REPEAT_COUNT);
+            repeatMode = value.getAsInteger(REPEAT_MODE);
+            startOffset = value.getAsLong(START_OFFSET);
+            zAdjustment = value.getAsInteger(Z_ADJUSTMENT);
         }
 
         public Animation instantiate(Context c) {
@@ -371,29 +374,28 @@ public class AnimationUtils {
         @SerializedName("shareInterpolator")
         Boolean shareInterpolator;
         @SerializedName("children")
-        LayoutParser children;
+        Value children;
 
-        public AnimationSetProperties(LayoutParser parser) {
-            super(parser);
-            shareInterpolator = parser.getBoolean(SHARE_INTERPOLATOR);
-            children = parser.peek(CHILDREN);
+        public AnimationSetProperties(Object value) {
+            super(value);
+            shareInterpolator = value.getAsBoolean(SHARE_INTERPOLATOR);
+            children = value.get(CHILDREN);
         }
 
         @Override
         Animation createAnimation(Context c) {
             AnimationSet animationSet = new AnimationSet(shareInterpolator == null ? true : shareInterpolator);
 
-
             if (null != children) {
                 if (children.isArray()) {
-                    while (children.hasNext()) {
-                        children.next();
-                        Animation animation = loadAnimation(c, children);
+                    Iterator<Value> iterator = children.getAsArray().iterator();
+                    while (iterator.hasNext()) {
+                        Animation animation = loadAnimation(c, iterator.next());
                         if (null != animation) {
                             animationSet.addAnimation(animation);
                         }
                     }
-                } else if (children.isObject() || children.isString()) {
+                } else if (children.isObject() || children.isPrimitive()) {
                     Animation animation = loadAnimation(c, children);
                     if (null != animation) {
                         animationSet.addAnimation(animation);
@@ -414,10 +416,10 @@ public class AnimationUtils {
         @SerializedName("toAlpha")
         public Float toAlpha;
 
-        public AlphaAnimProperties(LayoutParser parser) {
-            super(parser);
-            fromAlpha = parser.getFloat(FROM_ALPHA);
-            toAlpha = parser.getFloat(TO_ALPHA);
+        public AlphaAnimProperties(Object value) {
+            super(value);
+            fromAlpha = value.getAsFloat(FROM_ALPHA);
+            toAlpha = value.getAsFloat(TO_ALPHA);
         }
 
         @Override
@@ -444,18 +446,18 @@ public class AnimationUtils {
         @SerializedName("toYScale")
         public Float toYScale;
         @SerializedName("pivotX")
-        public LayoutParser pivotX;
+        public Value pivotX;
         @SerializedName("pivotY")
-        public LayoutParser pivotY;
+        public Value pivotY;
 
-        public ScaleAnimProperties(LayoutParser parser) {
-            super(parser);
-            fromXScale = parser.getFloat(FROM_X_SCALE);
-            toXScale = parser.getFloat(FROM_X_SCALE);
-            fromYScale = parser.getFloat(FROM_X_SCALE);
-            toYScale = parser.getFloat(FROM_X_SCALE);
-            pivotX = parser.peek(FROM_X_SCALE);
-            pivotY = parser.peek(FROM_X_SCALE);
+        public ScaleAnimProperties(Object value) {
+            super(value);
+            fromXScale = value.getAsFloat(FROM_X_SCALE);
+            toXScale = value.getAsFloat(FROM_X_SCALE);
+            fromYScale = value.getAsFloat(FROM_X_SCALE);
+            toYScale = value.getAsFloat(FROM_X_SCALE);
+            pivotX = value.get(FROM_X_SCALE);
+            pivotY = value.get(FROM_X_SCALE);
         }
 
         @Override
@@ -478,20 +480,20 @@ public class AnimationUtils {
         public static final String TO_Y_DELTA = "toYDelta";
 
         @SerializedName("fromXDelta")
-        public LayoutParser fromXDelta;
+        public Value fromXDelta;
         @SerializedName("toXDelta")
-        public LayoutParser toXDelta;
+        public Value toXDelta;
         @SerializedName("fromYDelta")
-        public LayoutParser fromYDelta;
+        public Value fromYDelta;
         @SerializedName("toYDelta")
-        public LayoutParser toYDelta;
+        public Value toYDelta;
 
-        public TranslateAnimProperties(LayoutParser parser) {
-            super(parser);
-            fromXDelta = parser.peek(FROM_X_DELTA);
-            toXDelta = parser.peek(TO_X_DELTA);
-            fromXDelta = parser.peek(FROM_Y_DELTA);
-            toYDelta = parser.peek(TO_Y_DELTA);
+        public TranslateAnimProperties(Object value) {
+            super(value);
+            fromXDelta = value.get(FROM_X_DELTA);
+            toXDelta = value.get(TO_X_DELTA);
+            fromXDelta = value.get(FROM_Y_DELTA);
+            toYDelta = value.get(TO_Y_DELTA);
         }
 
         @Override
@@ -517,16 +519,16 @@ public class AnimationUtils {
         @SerializedName("toDegrees")
         public Float toDegrees;
         @SerializedName("pivotX")
-        public LayoutParser pivotX;
+        public Value pivotX;
         @SerializedName("pivotY")
-        public LayoutParser pivotY;
+        public Value pivotY;
 
-        public RotateAnimProperties(LayoutParser parser) {
-            super(parser);
-            fromDegrees = parser.getFloat(FROM_DEGREES);
-            toDegrees = parser.getFloat(TO_DEGREES);
-            pivotX = parser.peek(PIVOT_X);
-            pivotY = parser.peek(PIVOT_Y);
+        public RotateAnimProperties(Object value) {
+            super(value);
+            fromDegrees = value.getAsFloat(FROM_DEGREES);
+            toDegrees = value.getAsFloat(TO_DEGREES);
+            pivotX = value.get(PIVOT_X);
+            pivotY = value.get(PIVOT_Y);
         }
 
         @Override
@@ -543,7 +545,7 @@ public class AnimationUtils {
 
     private abstract static class InterpolatorProperties {
 
-        public InterpolatorProperties(LayoutParser parser) {
+        public InterpolatorProperties(Value value) {
         }
 
         abstract Interpolator createInterpolator(Context c);
@@ -566,12 +568,12 @@ public class AnimationUtils {
         @SerializedName("controlY2")
         public Float controlY2;
 
-        public PathInterpolatorProperties(LayoutParser parser) {
+        public PathInterpolatorProperties(Object parser) {
             super(parser);
-            controlX1 = parser.getFloat(CONTROL_X1);
-            controlY1 = parser.getFloat(CONTROL_Y1);
-            controlX2 = parser.getFloat(CONTROL_X2);
-            controlY2 = parser.getFloat(CONTROL_Y2);
+            controlX1 = parser.getAsFloat(CONTROL_X1);
+            controlY1 = parser.getAsFloat(CONTROL_Y1);
+            controlX2 = parser.getAsFloat(CONTROL_X2);
+            controlY2 = parser.getAsFloat(CONTROL_Y2);
         }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
@@ -591,9 +593,9 @@ public class AnimationUtils {
         @SerializedName("tension")
         public Float tension;
 
-        public AnticipateInterpolatorProperties(LayoutParser parser) {
+        public AnticipateInterpolatorProperties(Object parser) {
             super(parser);
-            tension = parser.getFloat(TENSION);
+            tension = parser.getAsFloat(TENSION);
         }
 
         Interpolator createInterpolator(Context c) {
@@ -608,9 +610,9 @@ public class AnimationUtils {
         @SerializedName("tension")
         public Float tension;
 
-        public OvershootInterpolatorProperties(LayoutParser parser) {
+        public OvershootInterpolatorProperties(Object parser) {
             super(parser);
-            tension = parser.getFloat(TENSION);
+            tension = parser.getAsFloat(TENSION);
         }
 
         Interpolator createInterpolator(Context c) {
@@ -628,10 +630,10 @@ public class AnimationUtils {
         @SerializedName("extraTension")
         public Float extraTension;
 
-        public AnticipateOvershootInterpolatorProperties(LayoutParser parser) {
+        public AnticipateOvershootInterpolatorProperties(Object parser) {
             super(parser);
-            tension = parser.getFloat(TENSION);
-            extraTension = parser.getFloat(EXTRA_TENSION);
+            tension = parser.getAsFloat(TENSION);
+            extraTension = parser.getAsFloat(EXTRA_TENSION);
         }
 
         Interpolator createInterpolator(Context c) {
@@ -646,9 +648,9 @@ public class AnimationUtils {
         @SerializedName("cycles")
         public Float cycles;
 
-        public CycleInterpolatorProperties(LayoutParser parser) {
+        public CycleInterpolatorProperties(Object parser) {
             super(parser);
-            cycles = parser.getFloat(CYCLES);
+            cycles = parser.getAsFloat(CYCLES);
         }
 
         Interpolator createInterpolator(Context c) {

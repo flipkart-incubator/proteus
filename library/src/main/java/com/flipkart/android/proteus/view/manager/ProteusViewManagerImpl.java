@@ -21,13 +21,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.TypeParser;
 import com.flipkart.android.proteus.toolbox.Binding;
-import com.flipkart.android.proteus.toolbox.DataContext;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
+import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusView;
@@ -49,20 +49,20 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     private static final String TAG = "ProteusViewManagerImpl";
     private View view;
     private Styles styles;
-    private DataContext dataContext;
+    private Scope scope;
     private ProteusLayoutInflater proteusLayoutInflater;
     private TypeParser typeParser;
     private OnUpdateDataListener onUpdateDataListener;
     private String dataPathForChildren;
-    private LayoutParser childLayoutParser;
+    private Layout childLayout;
     private boolean isViewUpdating;
     private ArrayList<Binding> bindings;
-    private LayoutParser parser;
+    private Layout layout;
 
     @Override
     public void update(@Nullable JsonObject data) {
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "START: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(getLayoutParser()));
+            Log.d(TAG, "START: update data " + (data != null ? "(top-level)" : "") + "for view with " + getLayout());
         }
         this.isViewUpdating = true;
 
@@ -73,7 +73,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
             updateDataContext(data);
         }
 
-        data = onAfterDataContext(dataContext.getData());
+        data = onAfterDataContext(scope.getData());
 
         // update the bindings of this view
         if (this.bindings != null) {
@@ -94,7 +94,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                 for (int index = 0; index < childCount; index++) {
                     child = parent.getChildAt(index);
                     if (child instanceof ProteusView) {
-                        ((ProteusView) child).getViewManager().update(dataContext.getData());
+                        ((ProteusView) child).getViewManager().update(scope.getData());
                     }
                 }
             }
@@ -102,10 +102,10 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
         this.isViewUpdating = false;
         if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + Utils.getLayoutIdentifier(getLayoutParser()));
+            Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + getLayout());
         }
 
-        onUpdateDataComplete(dataContext.getData());
+        onUpdateDataComplete(scope.getData());
     }
 
     @Override
@@ -114,17 +114,17 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     }
 
     private void updateDataContext(JsonObject data) {
-        if (dataContext.isClone()) {
-            dataContext.setData(data);
+        if (scope.isClone()) {
+            scope.setData(data);
         } else {
-            dataContext.updateDataContext(data);
+            scope.updateDataContext(data);
         }
     }
 
     private void updateChildrenFromData() {
         JsonArray dataList = new JsonArray();
         ViewGroup parent = ((ViewGroup) view);
-        Result result = Utils.readJson(dataPathForChildren, dataContext.getData(), dataContext.getIndex());
+        Result result = Utils.readJson(dataPathForChildren, scope.getData(), scope.getIndex());
         if (result.isSuccess() && null != result.element && result.element.isJsonArray()) {
             dataList = result.element.getAsJsonArray();
         }
@@ -143,7 +143,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
             }
         }
 
-        JsonObject data = dataContext.getData();
+        JsonObject data = scope.getData();
         ProteusView childView;
         childCount = parent.getChildCount();
 
@@ -153,8 +153,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                 if (child instanceof ProteusView) {
                     ((ProteusView) child).getViewManager().update(data);
                 }
-            } else if (childLayoutParser != null) {
-                childView = proteusLayoutInflater.build(parent, getLayoutParser(), data, styles, dataContext.getIndex());
+            } else if (childLayout != null) {
+                childView = proteusLayoutInflater.build(parent, getLayout(), data, styles, scope.getIndex());
                 typeParser.addView((ProteusView) view, childView);
             }
         }
@@ -190,11 +190,11 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     private void handleBinding(Binding binding) {
         if (binding.hasRegEx()) {
-            proteusLayoutInflater.handleAttribute(typeParser, (ProteusView) view, binding.getAttributeKey(), getLayoutParser().getValueParser(binding.getAttributeValue()));
+            proteusLayoutInflater.handleAttribute(typeParser, (ProteusView) view, binding.getAttributeId(), getLayout().create(binding.getAttributeValue()));
         } else {
-            Result result = Utils.readJson(binding.getBindingName(), dataContext.getData(), dataContext.getIndex());
+            Result result = Utils.readJson(binding.getBindingName(), scope.getData(), scope.getIndex());
             JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
-            proteusLayoutInflater.handleAttribute(typeParser, (ProteusView) view, binding.getAttributeKey(), getLayoutParser().getValueParser(dataValue));
+            proteusLayoutInflater.handleAttribute(typeParser, (ProteusView) view, binding.getAttributeId(), getLayout().create(dataValue));
         }
     }
 
@@ -215,13 +215,13 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     }
 
     @Override
-    public void setLayoutParser(LayoutParser parser) {
-        this.parser = parser;
+    public Layout getLayout() {
+        return this.layout;
     }
 
     @Override
-    public LayoutParser getLayoutParser() {
-        return this.parser;
+    public void setLayout(Layout layout) {
+        this.layout = layout;
     }
 
     @Nullable
@@ -241,7 +241,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     }
 
     public JsonElement get(String dataPath, int index) {
-        return dataContext.get(dataPath);
+        return scope.get(dataPath);
     }
 
     public void set(String dataPath, JsonElement newValue) {
@@ -249,8 +249,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
             return;
         }
 
-        String aliasedDataPath = DataContext.getAliasedDataPath(dataPath, dataContext.getReverseScope(), true);
-        Result result = Utils.readJson(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")), dataContext.getData(), dataContext.getIndex());
+        String aliasedDataPath = Scope.getAliasedDataPath(dataPath, scope.getReverseScope(), true);
+        Result result = Utils.readJson(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")), scope.getData(), scope.getIndex());
         JsonElement parent = result.isSuccess() ? result.element : null;
         if (parent == null || !parent.isJsonObject()) {
             return;
@@ -294,7 +294,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
             for (int index = 0; index < childCount; index++) {
                 child = parent.getChildAt(index);
                 if (child instanceof ProteusView) {
-                    aliasedDataPath = DataContext.getAliasedDataPath(dataPath, dataContext.getReverseScope(), false);
+                    aliasedDataPath = Scope.getAliasedDataPath(dataPath, scope.getReverseScope(), false);
                     ((ProteusViewManagerImpl) ((ProteusView) child).getViewManager()).update(aliasedDataPath);
                 }
             }
@@ -305,22 +305,20 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     @Nullable
     @Override
-    public LayoutParser getChildLayoutParser() {
-        return childLayoutParser;
+    public Layout getChildLayout() {
+        return childLayout;
     }
 
-    public void setChildLayoutParser(@Nullable LayoutParser childLayoutParser) {
-        this.childLayoutParser = childLayoutParser;
+    public void setChildLayout(@Nullable Layout layout) {
+        this.childLayout = layout;
     }
 
-    @Override
-    public DataContext getDataContext() {
-        return dataContext;
+    public Scope getScope() {
+        return scope;
     }
 
-    @Override
-    public void setDataContext(DataContext dataContext) {
-        this.dataContext = dataContext;
+    public void setScope(Scope scope) {
+        this.scope = scope;
     }
 
     @Nullable
@@ -348,7 +346,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     @Override
     public void destroy() {
         view = null;
-        childLayoutParser = null;
+        childLayout = null;
         styles = null;
         proteusLayoutInflater = null;
         typeParser = null;

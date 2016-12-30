@@ -20,7 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.AnimationUtils;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
@@ -32,13 +32,13 @@ public abstract class TweenAnimationResourceProcessor<V extends View> extends At
     private static final String TAG = "TweenAnimationResource";
 
     @Override
-    public void handle(V view, String key, LayoutParser parser) {
-        Animation animation = AnimationUtils.loadAnimation(view.getContext(), parser);
+    public void handle(V view, Value value) {
+        Animation animation = AnimationUtils.loadAnimation(view.getContext(), value);
         if (null != animation) {
             setAnimation(view, animation);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Resource for key: " + key + " must be a primitive or an object. value -> " + parser.toString());
+                Log.e(TAG, "Animation Resource must be a primitive or an object. value -> " + value.toString());
             }
         }
     }

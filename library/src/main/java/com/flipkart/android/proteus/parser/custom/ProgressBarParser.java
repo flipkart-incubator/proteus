@@ -29,7 +29,9 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -52,7 +54,7 @@ public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T>
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusProgressBar(parent.getContext());
     }
 
@@ -61,34 +63,34 @@ public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T>
         super.registerAttributeProcessors();
         addAttributeProcessor(Attributes.ProgressBar.Max, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setMax((int) ParseHelper.parseDouble(attributeValue));
+            public void handle(T view, String value) {
+                view.setMax((int) ParseHelper.parseDouble(value));
             }
         });
         addAttributeProcessor(Attributes.ProgressBar.Progress, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setProgress((int) ParseHelper.parseDouble(attributeValue));
+            public void handle(T view, String value) {
+                view.setProgress((int) ParseHelper.parseDouble(value));
             }
         });
 
         addAttributeProcessor(Attributes.ProgressBar.ProgressTint, new AttributeProcessor<T>() {
             @Override
-            public void handle(T view, String key, LayoutParser parser) {
-                if (!parser.isObject()) {
+            public void handle(T view, Value value) {
+                if (!value.isObject()) {
                     return;
                 }
-                parser = parser.peek();
+                Object object = value.getAsObject();
                 int background = Color.TRANSPARENT;
                 int progress = Color.TRANSPARENT;
 
-                String value = parser.getString("background");
-                if (value != null) {
-                    background = ParseHelper.parseColor(value);
+                String string = object.getAsString("background");
+                if (string != null) {
+                    background = ParseHelper.parseColor(string);
                 }
-                value = parser.getString("progress");
-                if (value != null) {
-                    progress = ParseHelper.parseColor(value);
+                string = object.getAsString("progress");
+                if (string != null) {
+                    progress = ParseHelper.parseColor(string);
                 }
 
                 view.setProgressDrawable(getLayerDrawable(progress, background));

@@ -25,7 +25,9 @@ import android.graphics.drawable.ShapeDrawable;
 import android.view.Gravity;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -49,7 +51,7 @@ public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extend
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusHorizontalProgressBar(parent.getContext());
     }
 
@@ -59,21 +61,20 @@ public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extend
 
         addAttributeProcessor(Attributes.ProgressBar.ProgressTint, new AttributeProcessor<T>() {
             @Override
-            public void handle(T view, String key, LayoutParser parser) {
-                if (!parser.isObject()) {
+            public void handle(T view, Value value) {
+                if (!value.isObject()) {
                     return;
                 }
-                parser = parser.peek();
                 int background = Color.TRANSPARENT;
                 int progress = Color.TRANSPARENT;
-
-                String value = parser.getString("background");
-                if (value != null) {
-                    background = ParseHelper.parseColor(value);
+                Object object = value.getAsObject();
+                String string = object.getAsString("background");
+                if (string != null) {
+                    background = ParseHelper.parseColor(string);
                 }
-                value = parser.getString("progress");
-                if (value != null) {
-                    progress = ParseHelper.parseColor(value);
+                string = object.getAsString("progress");
+                if (string != null) {
+                    progress = ParseHelper.parseColor(string);
                 }
 
                 view.setProgressDrawable(getLayerDrawable(progress, background));

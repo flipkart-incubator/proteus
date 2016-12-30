@@ -22,7 +22,7 @@ import android.os.Build;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -45,7 +45,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusLinearLayout(parent.getContext());
     }
 
@@ -54,8 +54,8 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
         super.registerAttributeProcessors();
         addAttributeProcessor(Attributes.LinearLayout.Orientation, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                if ("horizontal".equals(attributeValue)) {
+            public void handle(T view, String value) {
+                if ("horizontal".equals(value)) {
                     view.setOrientation(ProteusLinearLayout.HORIZONTAL);
                 } else {
                     view.setOrientation(ProteusLinearLayout.VERTICAL);
@@ -65,9 +65,9 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
 
         addAttributeProcessor(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
+            public void handle(T view, String value) {
 
-                view.setGravity(ParseHelper.parseGravity(attributeValue));
+                view.setGravity(ParseHelper.parseGravity(value));
 
             }
         });
@@ -86,7 +86,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
         addAttributeProcessor(Attributes.LinearLayout.DividerPadding, new DimensionAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
-            public void setDimension(T view, String key, float dimension, LayoutParser parser) {
+            public void setDimension(T view, float dimension) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
                     view.setDividerPadding((int) dimension);
                 }
@@ -96,10 +96,10 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
         addAttributeProcessor(Attributes.LinearLayout.ShowDividers, new StringAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
+            public void handle(T view, String value) {
 
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-                    int dividerMode = ParseHelper.parseDividerMode(attributeValue);
+                    int dividerMode = ParseHelper.parseDividerMode(value);
                     // noinspection ResourceType
                     view.setShowDividers(dividerMode);
                 }
@@ -109,8 +109,8 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
         addAttributeProcessor(Attributes.LinearLayout.WeightSum, new StringAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setWeightSum(ParseHelper.parseFloat(attributeValue));
+            public void handle(T view, String value) {
+                view.setWeightSum(ParseHelper.parseFloat(value));
             }
         });
     }

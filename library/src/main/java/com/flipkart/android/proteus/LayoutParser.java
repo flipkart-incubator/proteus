@@ -102,11 +102,11 @@ public interface LayoutParser extends Cloneable {
 
     LayoutParser clone();
 
-    LayoutParser merge(@Nullable Object layout);
+    LayoutParser merge(@Nullable java.lang.Object layout);
 
     void reset();
 
-    Value getValueParser(Object value);
+    Value getValueParser(java.lang.Object value);
 
     interface Value extends LayoutParser {
 

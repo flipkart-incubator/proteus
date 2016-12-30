@@ -52,6 +52,13 @@ public abstract class Value {
     }
 
     /**
+     * @return
+     */
+    public boolean isLayout() {
+        return this instanceof Layout;
+    }
+
+    /**
      * convenience method to get this value as a {@link Object}. If the value is of some
      * other type, a {@link IllegalStateException} will result. Hence it is best to use this method
      * after ensuring that this value is of the desired type by calling {@link #isObject()}
@@ -114,6 +121,13 @@ public abstract class Value {
             return (Null) this;
         }
         throw new IllegalStateException("This is not a Null.");
+    }
+
+    public Layout getAsLayout() {
+        if (isLayout()) {
+            return (Layout) this;
+        }
+        throw new IllegalStateException("Not a Layout: " + this);
     }
 
     /**
@@ -193,4 +207,7 @@ public abstract class Value {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
+    public Value create(java.lang.Object object) {
+        return null;
+    }
 }

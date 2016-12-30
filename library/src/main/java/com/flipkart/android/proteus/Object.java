@@ -1,5 +1,7 @@
 package com.flipkart.android.proteus;
 
+import android.support.annotation.Nullable;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -132,6 +134,40 @@ public class Object extends Value {
         return members.containsKey(memberName);
     }
 
+    public boolean isPrimitive(String memberName) {
+        return has(memberName) && get(memberName).isPrimitive();
+    }
+
+    public boolean isBoolean(String memberName) {
+        if (has(memberName) && get(memberName).isPrimitive()) {
+            return getAsPrimitive(memberName).isBoolean();
+        }
+        return false;
+    }
+
+    public boolean isNumber(String memberName) {
+        if (has(memberName) && get(memberName).isPrimitive()) {
+            return getAsPrimitive(memberName).isNumber();
+        }
+        return false;
+    }
+
+    public boolean isObject(String memberName) {
+        return has(memberName) && get(memberName).isObject();
+    }
+
+    public boolean isArray(String memberName) {
+        return has(memberName) && get(memberName).isArray();
+    }
+
+    public boolean isNull(String memberName) {
+        return has(memberName) && get(memberName).isNull();
+    }
+
+    public boolean isLayout(String memberName) {
+        return has(memberName) && get(memberName).isLayout();
+    }
+
     /**
      * Returns the member with the specified name.
      *
@@ -146,10 +182,58 @@ public class Object extends Value {
      * Convenience method to get the specified member as a Value.
      *
      * @param memberName name of the member being requested.
-     * @return the Value corresponding to the specified member.
+     * @return the Primitive corresponding to the specified member.
      */
-    public Primitive getAsValue(String memberName) {
+    public Primitive getAsPrimitive(String memberName) {
         return (Primitive) members.get(memberName);
+    }
+
+    @Nullable
+    public Boolean getAsBoolean(String memberName) {
+        if (isBoolean(memberName)) {
+            return getAsPrimitive(memberName).getAsBoolean();
+        }
+        return null;
+    }
+
+    @Nullable
+    public Integer getAsInteger(String memberName) {
+        if (isNumber(memberName)) {
+            return getAsPrimitive(memberName).getAsInt();
+        }
+        return null;
+    }
+
+    @Nullable
+    public Float getAsFloat(String memberName) {
+        if (isNumber(memberName)) {
+            return getAsPrimitive(memberName).getAsFloat();
+        }
+        return null;
+    }
+
+    @Nullable
+    public Double getAsDouble(String memberName) {
+        if (isNumber(memberName)) {
+            return getAsPrimitive(memberName).getAsDouble();
+        }
+        return null;
+    }
+
+    @Nullable
+    public Long getAsLong(String memberName) {
+        if (isNumber(memberName)) {
+            return getAsPrimitive(memberName).getAsLong();
+        }
+        return null;
+    }
+
+    @Nullable
+    public String getAsString(String memberName) {
+        if (isPrimitive(memberName)) {
+            return getAsPrimitive(memberName).getAsString();
+        }
+        return null;
     }
 
     /**
@@ -170,6 +254,14 @@ public class Object extends Value {
      */
     public Object getAsObject(String memberName) {
         return (Object) members.get(memberName);
+    }
+
+    @Nullable
+    public Layout getAsLayout(String memberName) {
+        if (isLayout(memberName)) {
+            return (Layout) members.get(memberName);
+        }
+        return null;
     }
 
     @Override

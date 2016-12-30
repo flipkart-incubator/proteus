@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 /**
  * @author Aditya Sharat
  */
-public class DataContext {
+public class Scope {
 
     private final boolean isClone;
     private JsonObject data;
@@ -39,7 +39,7 @@ public class DataContext {
     private Map<String, String> scope;
     private int index;
 
-    public DataContext() {
+    public Scope() {
         this.data = new JsonObject();
         this.scope = new HashMap<>();
         this.reverseScope = new HashMap<>();
@@ -47,15 +47,15 @@ public class DataContext {
         this.isClone = false;
     }
 
-    public DataContext(DataContext dataContext) {
-        this.data = dataContext.getData();
-        this.scope = dataContext.getScope();
-        this.reverseScope = dataContext.getReverseScope();
-        this.index = dataContext.getIndex();
+    public Scope(Scope scope) {
+        this.data = scope.getData();
+        this.scope = scope.getScope();
+        this.reverseScope = scope.getReverseScope();
+        this.index = scope.getIndex();
         this.isClone = true;
     }
 
-    public static DataContext updateDataContext(DataContext dataContext, JsonObject data, Map<String, String> scope, int dataIndex) {
+    public static Scope updateDataContext(Scope dataContext, JsonObject data, Map<String, String> scope, int dataIndex) {
         Map<String, String> reverseScope = new HashMap<>();
         JsonObject newData = new JsonObject();
 
@@ -156,8 +156,8 @@ public class DataContext {
         this.index = index;
     }
 
-    public DataContext createChildDataContext(Map<String, String> scope, int dataIndex) {
-        return updateDataContext(new DataContext(), data, scope, dataIndex);
+    public Scope createChildDataContext(Map<String, String> scope, int dataIndex) {
+        return updateDataContext(new Scope(), data, scope, dataIndex);
     }
 
     public void updateDataContext(JsonObject data) {

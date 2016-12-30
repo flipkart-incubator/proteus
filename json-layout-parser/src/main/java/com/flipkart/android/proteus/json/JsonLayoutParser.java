@@ -181,7 +181,7 @@ public class JsonLayoutParser implements LayoutParser {
 
     @Override
     public Map<String, String> getScope() {
-        JsonObject jScope = current.getAsJsonObject().getAsJsonObject(ProteusConstants.DATA_CONTEXT);
+        JsonObject jScope = current.getAsJsonObject().getAsJsonObject(ProteusConstants.SCOPE);
         if (null == jScope) {
             return null;
         }
