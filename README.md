@@ -31,7 +31,7 @@ allprojects {
 
 // Add the dependency
 dependencies {
-        compile 'com.github.flipkart-incubator:proteus:4.1.0'
+        compile 'com.github.flipkart-incubator:proteus:4.2.0'
 }
 ```
 
