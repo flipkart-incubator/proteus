@@ -27,15 +27,16 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
 
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
 import com.flipkart.android.proteus.demo.R;
-import com.flipkart.android.proteus.json.JsonLayoutParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
-import com.flipkart.android.proteus.toolbox.LayoutBuilderCallback;
+import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.Gson;
@@ -60,7 +61,7 @@ public class ProteusActivity extends BaseActivity {
     private Gson gson;
     private DataAndViewParsingLayoutInflater builder;
     private FrameLayout container;
-    private JsonObject pageLayout;
+    private Layout pageLayout;
     private JsonObject data;
     private ViewGroup.LayoutParams layoutParams;
     private Styles styles;
@@ -98,17 +99,16 @@ public class ProteusActivity extends BaseActivity {
             }.execute(url);
         }
     };
-    private LayoutBuilderCallback callback = new LayoutBuilderCallback() {
-
+    private LayoutInflaterCallback callback = new LayoutInflaterCallback() {
 
         @Override
-        public void onUnknownAttribute(ProteusView view, String attribute, LayoutParser parser) {
+        public void onUnknownAttribute(ProteusView view, int attribute, Value value) {
 
         }
 
         @Nullable
         @Override
-        public ProteusView onUnknownViewType(String type, View parent, LayoutParser layout, JsonObject data, Styles styles, int index) {
+        public ProteusView onUnknownViewType(String type, View parent, Layout layout, JsonObject data, Styles styles, int index) {
             return null;
         }
 
@@ -123,7 +123,7 @@ public class ProteusActivity extends BaseActivity {
         }
 
         @Override
-        public View onEvent(ProteusView view, EventType eventType, LayoutParser value) {
+        public View onEvent(ProteusView view, EventType eventType, Value value) {
             return null;
         }
 
@@ -142,8 +142,8 @@ public class ProteusActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         gson = new Gson();
         styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
-        Map<String, Object> layoutProvider = getProviderFromFile(R.raw.layout_provider);
-        pageLayout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
+        Map<String, Layout> layoutProvider = getProviderFromFile(R.raw.layout_provider);
+        pageLayout = getPageLayout(R.raw.page_layout);
 
         data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
 
@@ -161,7 +161,7 @@ public class ProteusActivity extends BaseActivity {
 
     @Override
     View createAndBindView() {
-        proteusView = builder.build(container, new JsonLayoutParser(pageLayout), data, styles, 0);
+        proteusView = builder.build(container, pageLayout, data, styles, 0);
         return (View) proteusView;
     }
 
@@ -182,7 +182,13 @@ public class ProteusActivity extends BaseActivity {
         return gson.fromJson(reader, JsonElement.class);
     }
 
-    private Map<String, Object> getProviderFromFile(int resId) {
+    private Layout getPageLayout(int resId) {
+        InputStream inputStream = getResources().openRawResource(resId);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        return gson.fromJson(reader, Layout.class);
+    }
+
+    private Map<String, Layout> getProviderFromFile(int resId) {
         InputStream inputStream = getResources().openRawResource(resId);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         return gson.fromJson(reader, (new TypeToken<Map<String, JsonObject>>() {
