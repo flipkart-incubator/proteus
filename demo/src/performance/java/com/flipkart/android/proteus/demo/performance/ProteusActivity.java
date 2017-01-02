@@ -72,7 +72,7 @@ public class ProteusActivity extends BaseActivity {
         }
 
         @Override
-        public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback callback, LayoutParser parser) {
+        public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback callback, Layout layout) {
             URL url;
             try {
                 url = new URL(imageUrl);
@@ -112,7 +112,7 @@ public class ProteusActivity extends BaseActivity {
         }
 
         @Override
-        public JsonObject onLayoutRequired(String type, LayoutParser parent) {
+        public Layout onLayoutRequired(String type, Layout include) {
             return null;
         }
 
@@ -127,12 +127,12 @@ public class ProteusActivity extends BaseActivity {
         }
 
         @Override
-        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, LayoutParser layout) {
+        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
             return null;
         }
 
         @Override
-        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, LayoutParser layout) {
+        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
             return null;
         }
     };
