@@ -24,14 +24,13 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Attribute;
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.TypeParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
-import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
+import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.flipkart.android.proteus.view.manager.ProteusViewManager;
@@ -43,7 +42,7 @@ import java.util.Iterator;
 
 /**
  * A layout builder which can parse json to construct an android view out of it. It uses the
- * registered handlers to convert the json string to a view and then assign attributes.
+ * registered parsers to convert the json string to a view and then assign attributes.
  */
 public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
@@ -51,7 +50,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     @Nullable
     protected LayoutInflaterCallback listener;
-    private HashMap<String, TypeParser> layoutHandlers = new HashMap<>();
+    private HashMap<String, TypeParser> parsers = new HashMap<>();
     @Nullable
     private BitmapLoader bitmapLoader;
 
@@ -66,26 +65,26 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     @Override
     public void registerParser(String type, TypeParser parser) {
         parser.prepare();
-        layoutHandlers.put(type, parser);
+        parsers.put(type, parser);
     }
 
     @Override
     public void unregisterParser(String type) {
-        layoutHandlers.remove(type);
+        parsers.remove(type);
     }
 
     @Override
     @Nullable
     public TypeParser getParser(String type) {
-        return layoutHandlers.get(type);
+        return parsers.get(type);
     }
 
     @Override
     @Nullable
     public ProteusView build(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
 
-        TypeParser handler = layoutHandlers.get(layout.type);
-        if (handler == null) {
+        TypeParser parser = parsers.get(layout.type);
+        if (parser == null) {
             return onUnknownViewEncountered(layout.type, parent, layout, data, styles, index);
         }
 
@@ -94,11 +93,11 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
          */
         final ProteusView view;
 
-        onBeforeCreateView(handler, parent, layout, data, styles, index);
-        view = createView(handler, parent, layout, data, styles, index);
-        onAfterCreateView(handler, view, parent, layout, data, styles, index);
+        onBeforeCreateView(parser, parent, layout, data, styles, index);
+        view = createView(parser, parent, layout, data, styles, index);
+        onAfterCreateView(parser, view, parent, layout, data, styles, index);
 
-        ProteusViewManager viewManager = createViewManager(handler, parent, layout, data, styles, index);
+        ProteusViewManager viewManager = createViewManager(parser, parent, layout, data, styles, index);
         viewManager.setView((View) view);
         view.setViewManager(viewManager);
 
@@ -110,7 +109,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
             Attribute attribute;
             while (iterator.hasNext()) {
                 attribute = iterator.next();
-                boolean handled = handleAttribute(handler, view, attribute.id, attribute.value);
+                boolean handled = handleAttribute(parser, view, attribute.id, attribute.value);
                 if (!handled) {
                     onUnknownAttributeEncountered(view, attribute.id, attribute.value);
                 }
@@ -120,51 +119,20 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return view;
     }
 
-    @Override
-    public LayoutParser minify(LayoutParser in) {
-        if (!in.isLayout()) {
-            throw new IllegalArgumentException("parser did not return a layout: " + in.toString());
-        }
-
-        String type = in.getType();
-        TypeParser handler = layoutHandlers.get(type);
-
-        if (null == handler) {
-            return in;
-        }
-
-        LayoutParser out = in.create();
-        out.setType(type);
-        String name;
-        boolean handled;
-
-        while (in.hasNext()) {
-            in.next();
-            name = in.getName();
-            handled = minifyAttribute(handler, out, name, in.getAttribute(name));
-            if (!handled) {
-                out.addAttribute(name, in.getAttribute(name));
-            }
-        }
-
-        out.reset();
-        return out;
+    protected void onBeforeCreateView(TypeParser parser, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+        parser.onBeforeCreateView(parent, layout, data, styles, index);
     }
 
-    protected void onBeforeCreateView(TypeParser handler, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
-        handler.onBeforeCreateView(parent, layout, data, styles, index);
+    protected ProteusView createView(TypeParser parser, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+        return parser.createView(parent, layout, data, styles, index);
     }
 
-    protected ProteusView createView(TypeParser handler, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
-        return handler.createView(parent, layout, data, styles, index);
-    }
-
-    protected void onAfterCreateView(TypeParser handler, ProteusView view, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+    protected void onAfterCreateView(TypeParser parser, ProteusView view, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         //noinspection unchecked
-        handler.onAfterCreateView(parent, (View) view, layout, data, styles, index);
+        parser.onAfterCreateView(parent, (View) view, layout, data, styles, index);
     }
 
-    protected ProteusViewManager createViewManager(TypeParser handler, View parent, Layout layout, JsonObject data, Styles styles, int index) {
+    protected ProteusViewManager createViewManager(TypeParser parser, View parent, Layout layout, JsonObject data, Styles styles, int index) {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "ProteusView created with " + layout);
         }
@@ -179,22 +147,17 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         viewManager.setLayout(layout);
         viewManager.setStyles(styles);
         viewManager.setProteusLayoutInflater(this);
-        viewManager.setTypeParser(handler);
+        viewManager.setTypeParser(parser);
 
         return viewManager;
     }
 
-    public boolean handleAttribute(TypeParser handler, ProteusView view, int attribute, Value value) {
+    public boolean handleAttribute(TypeParser parser, ProteusView view, int attribute, Value value) {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "Handle '" + attribute + "' : " + value);
         }
         //noinspection unchecked
-        return handler.handleAttribute((View) view, attribute, value);
-    }
-
-    @Override
-    public boolean minifyAttribute(TypeParser handler, LayoutParser out, String attribute, LayoutParser value) {
-        return handler.minify(this, out, attribute, value);
+        return parser.handleAttribute((View) view, attribute, value);
     }
 
     protected void onUnknownAttributeEncountered(ProteusView view, int attribute, Value value) {
@@ -217,6 +180,15 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     @Override
     public int getUniqueViewId(String id) {
         return idGenerator.getUnique(id);
+    }
+
+    @Override
+    public int getAttributeId(String attribute, String type) {
+        TypeParser parser = parsers.get(type);
+        if (null == parser) {
+            return -1;
+        }
+        return parser.getAttributeId(attribute);
     }
 
     @Nullable

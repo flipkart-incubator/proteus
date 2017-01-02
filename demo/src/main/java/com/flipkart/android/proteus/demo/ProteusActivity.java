@@ -32,7 +32,6 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
@@ -75,8 +74,6 @@ public class ProteusActivity extends AppCompatActivity {
     private Styles styles;
     private Map<String, Layout> layouts;
 
-    private LayoutParser parser;
-
     /**
      * Simple implementation of BitmapLoader for loading images from url in background.
      */
@@ -88,7 +85,7 @@ public class ProteusActivity extends AppCompatActivity {
         }
 
         @Override
-        public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback callback, LayoutParser parser) {
+        public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback callback, Layout layout) {
             URL url;
 
             try {
@@ -134,7 +131,7 @@ public class ProteusActivity extends AppCompatActivity {
         }
 
         @Override
-        public JsonObject onLayoutRequired(String type, LayoutParser parent) {
+        public Layout onLayoutRequired(String type, Layout include) {
             return null;
         }
 
@@ -149,12 +146,12 @@ public class ProteusActivity extends AppCompatActivity {
         }
 
         @Override
-        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, LayoutParser layout) {
+        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
             return null;
         }
 
         @Override
-        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, LayoutParser layout) {
+        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
             return null;
         }
     };
@@ -218,7 +215,6 @@ public class ProteusActivity extends AppCompatActivity {
 
     private void render() {
         // Inflate a new view using proteus
-        parser.reset();
         long start = System.currentTimeMillis();
         ProteusView view = layoutBuilder.build(container, layout, data, styles, 0);
         System.out.println(System.currentTimeMillis() - start);

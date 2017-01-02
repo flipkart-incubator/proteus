@@ -18,9 +18,7 @@ package com.flipkart.android.proteus.parser;
 
 import android.view.View;
 
-import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.view.ProteusView;
 
 /**
@@ -53,15 +51,6 @@ public abstract class WrappableParser<V extends View> extends BaseTypeParser<V> 
     }
 
     @Override
-    public boolean minify(ProteusLayoutInflater layoutInflater, LayoutParser out, String attribute, LayoutParser value) {
-        boolean handled = super.minify(layoutInflater, out, attribute, value);
-        if (!handled && null != wrappedParser) {
-            handled = wrappedParser.minify(layoutInflater, out, attribute, value);
-        }
-        return handled;
-    }
-
-    @Override
     public boolean handleChildren(ProteusView view, Value children) {
         boolean handled = super.handleChildren(view, children);
         if (wrappedParser != null && !handled) {
@@ -77,5 +66,14 @@ public abstract class WrappableParser<V extends View> extends BaseTypeParser<V> 
             handled = wrappedParser.addView(parent, view);
         }
         return handled;
+    }
+
+    @Override
+    public int getAttributeId(String attribute) {
+        int id = super.getAttributeId(attribute);
+        if (-1 == id && null != wrappedParser) {
+            return wrappedParser.getAttributeId(attribute);
+        }
+        return id;
     }
 }

@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.Object;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
@@ -101,21 +100,6 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
             @Override
             public void handle(T view, Value value) {
                 handleChildren((ProteusView) view, value);
-            }
-
-            @Override
-            public LayoutParser minify(ProteusLayoutInflater layoutInflater, String attribute, LayoutParser children) {
-                if (children.isArray()) {
-                    LayoutParser child;
-                    int i = 0;
-                    while (children.hasNext()) {
-                        children.next();
-                        child = layoutInflater.minify(children.clone());
-                        children.set(i, child);
-                        i++;
-                    }
-                }
-                return children;
             }
         });
     }

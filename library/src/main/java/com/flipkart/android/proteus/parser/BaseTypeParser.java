@@ -22,10 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.R;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -93,20 +91,6 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
     }
 
     @Override
-    public boolean minify(ProteusLayoutInflater layoutInflater, LayoutParser out, String attribute, LayoutParser value) {
-        if (processorNameMap.containsKey(attribute)) {
-            value = processorNameMap.get(attribute).minify(layoutInflater, attribute, value);
-        }
-        if (nameToIdMap.containsKey(attribute)) {
-            int position = getAttributeId(nameToIdMap.get(attribute));
-            String attributeId = String.valueOf(position);
-            out.addAttribute(attributeId, value);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public boolean handleChildren(ProteusView view, Value children) {
         return false;
     }
@@ -130,10 +114,10 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
     }
 
     @Override
-    public void addAttributeProcessor(Attributes.Attribute key, AttributeProcessor<V> handler) {
-        processorNameMap.put(key.getName(), handler);
+    public void addAttributeProcessor(Attributes.Attribute attribute, AttributeProcessor<V> handler) {
+        processorNameMap.put(attribute.getName(), handler);
         addAttributeProcessor(handler);
-        nameToIdMap.put(key.getName(), processors.length - 1);
+        nameToIdMap.put(attribute.getName(), processors.length - 1);
     }
 
     private void addAttributeProcessor(AttributeProcessor<V> handler) {
@@ -155,6 +139,15 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
 
     protected int getAttributeId(int position) {
         return position - getOffset();
+    }
+
+    @Override
+    public int getAttributeId(String attribute) {
+        Integer position = nameToIdMap.get(attribute);
+        if (null == position) {
+            return -1;
+        }
+        return getAttributeId(position);
     }
 
     protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent) throws IOException, XmlPullParserException {

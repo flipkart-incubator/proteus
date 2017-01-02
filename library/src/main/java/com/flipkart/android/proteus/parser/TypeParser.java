@@ -20,9 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
@@ -43,13 +41,13 @@ public interface TypeParser<V extends View> {
 
     boolean isPrepared();
 
-    void addAttributeProcessor(Attributes.Attribute key, AttributeProcessor<V> handler);
+    void addAttributeProcessor(Attributes.Attribute attribute, AttributeProcessor<V> handler);
 
     boolean handleAttribute(V view, int attribute, Value value);
-
-    boolean minify(ProteusLayoutInflater layoutInflater, LayoutParser out, String attribute, LayoutParser value);
 
     boolean handleChildren(ProteusView view, Value children);
 
     boolean addView(ProteusView parent, ProteusView view);
+
+    int getAttributeId(String attribute);
 }

@@ -25,7 +25,7 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import com.flipkart.android.proteus.LayoutParser;
+import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.view.ProteusView;
 
 import java.util.concurrent.CountDownLatch;
@@ -48,9 +48,10 @@ public class NetworkDrawableHelper {
      * @param view            The view which is going to show the drawable. This view will be used to start and stop image loading when view is added and removed from window. Only used when <code>loadImmediately</code> is set to false. Will also work if view is set to null.
      * @param url             The url to load
      * @param callback        Implement this to get a hold of the loaded bitmap or the error reason.
+     * @param layout
      * @param loadImmediately Set this to true to load the image on the calling thread (synchronous). If false, volley's thread will be used.
      */
-    public NetworkDrawableHelper(final ProteusView view, final String url, BitmapLoader bitmapLoader, DrawableCallback callback, LayoutParser parser, boolean loadImmediately) {
+    public NetworkDrawableHelper(final ProteusView view, final String url, BitmapLoader bitmapLoader, DrawableCallback callback, Layout layout, boolean loadImmediately) {
         this.view = view;
         this.callback = callback;
         this.bitmapLoader = bitmapLoader;

@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.LayoutParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.TypeParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
@@ -71,15 +70,6 @@ public interface ProteusLayoutInflater {
     boolean handleAttribute(TypeParser handler, ProteusView view, int attribute, Value value);
 
     /**
-     * @param handler
-     * @param out
-     * @param attribute
-     * @param value
-     * @return
-     */
-    boolean minifyAttribute(TypeParser handler, LayoutParser out, String attribute, LayoutParser value);
-
-    /**
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
      *
      * @param parent The intended parent view for the {@link View} that will be built.
@@ -92,12 +82,6 @@ public interface ProteusLayoutInflater {
     ProteusView build(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index);
 
     /**
-     * @param parser
-     * @return
-     */
-    LayoutParser minify(LayoutParser parser);
-
-    /**
      * Give the View ID for this string. This will generally be given by the instance of ID Generator
      * which will be available with the Layout Builder.
      * This is similar to R.id auto generated
@@ -105,6 +89,8 @@ public interface ProteusLayoutInflater {
      * @return int value for this id. This will never be -1.
      */
     int getUniqueViewId(String id);
+
+    int getAttributeId(String attribute, String type);
 
     /**
      * All consumers of this should ensure that they save the instance state of the ID generator along with the activity/
