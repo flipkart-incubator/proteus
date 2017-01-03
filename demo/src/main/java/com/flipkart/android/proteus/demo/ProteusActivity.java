@@ -36,9 +36,9 @@ import android.widget.Adapter;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutInflater;
-import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
-import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
+import com.flipkart.android.proteus.inflater.DataAndViewParsingLayoutInflater;
+import com.flipkart.android.proteus.inflater.LayoutInflaterFactory;
+import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
 import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
@@ -72,7 +72,7 @@ public class ProteusActivity extends AppCompatActivity {
 
     private ViewGroup container;
 
-    private DataAndViewParsingLayoutInflater layoutBuilder;
+    private DataAndViewParsingLayoutInflater layoutInflater;
 
     private JsonObject data;
     private Layout layout;
@@ -180,15 +180,15 @@ public class ProteusActivity extends AppCompatActivity {
             resources = retrofit.create(JsonResource.class);
         }
 
-        // create a new DataAndViewParsingLayoutBuilder
+        // create a new DataAndViewParsingLayoutInflater
         // and set layouts, callback and image loader.
-        layoutBuilder = new LayoutBuilderFactory().getDataAndViewParsingLayoutInflater(layouts);
-        layoutBuilder.setListener(callback);
-        layoutBuilder.setBitmapLoader(bitmapLoader);
+        layoutInflater = new LayoutInflaterFactory().getDataAndViewParsingLayoutInflater(layouts);
+        layoutInflater.setListener(callback);
+        layoutInflater.setBitmapLoader(bitmapLoader);
 
-        registerCustomViews(layoutBuilder);
+        registerCustomViews(layoutInflater);
 
-        ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setInflater(layoutBuilder);
+        ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setInflater(layoutInflater);
 
         fetch();
     }
@@ -222,13 +222,13 @@ public class ProteusActivity extends AppCompatActivity {
 
     private void setup() {
         container.removeAllViews();
-        layoutBuilder.setLayouts(layouts);
+        layoutInflater.setLayouts(layouts);
     }
 
     private void render() {
         // Inflate a new view using proteus
         long start = System.currentTimeMillis();
-        ProteusView view = layoutBuilder.build(container, layout, data, styles, 0);
+        ProteusView view = layoutInflater.build(container, layout, data, styles, 0);
         System.out.println(System.currentTimeMillis() - start);
         container.addView((View) view);
     }

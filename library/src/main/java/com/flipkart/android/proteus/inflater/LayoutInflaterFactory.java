@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.builder;
+package com.flipkart.android.proteus.inflater;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
@@ -56,89 +56,89 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Factory class for creating Layout builders with different predefined behaviours. This is the
- * only way to create layout builder objects. To create a simple layout builder use
- * {@link LayoutBuilderFactory#getSimpleLayoutInflater(IdGenerator)}
+ * Factory class for creating Layout inflaters with different predefined behaviours. This is the
+ * only way to create layout inflater objects. To create a simple layout inflater use
+ * {@link LayoutInflaterFactory#getSimpleLayoutInflater(IdGenerator)}
  */
-public class LayoutBuilderFactory {
+public class LayoutInflaterFactory {
 
-    private SimpleLayoutInflater simpleLayoutBuilderInstance;
-    private DataParsingLayoutInflater dataParsingLayoutBuilderInstance;
-    private DataAndViewParsingLayoutInflater dataAndViewParsingLayoutBuilderInstance;
+    private SimpleLayoutInflater simpleLayoutInflaterInstance;
+    private DataParsingLayoutInflater dataParsingLayoutInflaterInstance;
+    private DataAndViewParsingLayoutInflater dataAndViewParsingLayoutInflaterInstance;
 
     /**
-     * Returns a layout builder which can parse @data blocks as well as custom view blocks.
+     * Returns a layout inflater which can parse @data blocks as well as custom view blocks.
      * See {@link DataParsingLayoutInflater}
      *
      * @return A new {@link DataAndViewParsingLayoutInflater}
      */
     public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutInflater(Map<String, Layout> layouts, @NonNull IdGenerator idGenerator) {
-        if (dataAndViewParsingLayoutBuilderInstance == null) {
-            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutInflater(layouts, idGenerator);
-            registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
-            registerFormatter(dataAndViewParsingLayoutBuilderInstance);
+        if (dataAndViewParsingLayoutInflaterInstance == null) {
+            dataAndViewParsingLayoutInflaterInstance = new DataAndViewParsingLayoutInflater(layouts, idGenerator);
+            registerBuiltInHandlers(dataAndViewParsingLayoutInflaterInstance);
+            registerFormatter(dataAndViewParsingLayoutInflaterInstance);
         }
-        return dataAndViewParsingLayoutBuilderInstance;
+        return dataAndViewParsingLayoutInflaterInstance;
     }
 
     public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutInflater(Map<String, Layout> layouts) {
-        if (dataAndViewParsingLayoutBuilderInstance == null) {
-            dataAndViewParsingLayoutBuilderInstance = new DataAndViewParsingLayoutInflater(layouts, new IdGeneratorImpl());
-            registerBuiltInHandlers(dataAndViewParsingLayoutBuilderInstance);
-            registerFormatter(dataAndViewParsingLayoutBuilderInstance);
+        if (dataAndViewParsingLayoutInflaterInstance == null) {
+            dataAndViewParsingLayoutInflaterInstance = new DataAndViewParsingLayoutInflater(layouts, new IdGeneratorImpl());
+            registerBuiltInHandlers(dataAndViewParsingLayoutInflaterInstance);
+            registerFormatter(dataAndViewParsingLayoutInflaterInstance);
         }
-        return dataAndViewParsingLayoutBuilderInstance;
+        return dataAndViewParsingLayoutInflaterInstance;
     }
 
     /**
-     * Returns a layout builder which can parse @data blocks. See {@link DataParsingLayoutInflater}
+     * Returns a layout inflater which can parse @data blocks. See {@link DataParsingLayoutInflater}
      *
      * @return A new {@link DataParsingLayoutInflater}
      */
     public DataParsingLayoutInflater getDataParsingLayoutInflater(@NonNull IdGenerator idGenerator) {
-        if (dataParsingLayoutBuilderInstance == null) {
-            dataParsingLayoutBuilderInstance = new DataParsingLayoutInflater(idGenerator);
-            registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
-            registerFormatter(dataParsingLayoutBuilderInstance);
+        if (dataParsingLayoutInflaterInstance == null) {
+            dataParsingLayoutInflaterInstance = new DataParsingLayoutInflater(idGenerator);
+            registerBuiltInHandlers(dataParsingLayoutInflaterInstance);
+            registerFormatter(dataParsingLayoutInflaterInstance);
         }
-        return dataParsingLayoutBuilderInstance;
+        return dataParsingLayoutInflaterInstance;
     }
 
     public DataParsingLayoutInflater getDataParsingLayoutInflater() {
-        if (dataParsingLayoutBuilderInstance == null) {
-            dataParsingLayoutBuilderInstance = new DataParsingLayoutInflater(new IdGeneratorImpl());
-            registerBuiltInHandlers(dataParsingLayoutBuilderInstance);
-            registerFormatter(dataParsingLayoutBuilderInstance);
+        if (dataParsingLayoutInflaterInstance == null) {
+            dataParsingLayoutInflaterInstance = new DataParsingLayoutInflater(new IdGeneratorImpl());
+            registerBuiltInHandlers(dataParsingLayoutInflaterInstance);
+            registerFormatter(dataParsingLayoutInflaterInstance);
         }
-        return dataParsingLayoutBuilderInstance;
+        return dataParsingLayoutInflaterInstance;
     }
 
     /**
-     * Returns a simple layout builder. See {@link SimpleLayoutInflater}
+     * Returns a simple layout inflater. See {@link SimpleLayoutInflater}
      *
      * @return A new {@link SimpleLayoutInflater}
      */
     public SimpleLayoutInflater getSimpleLayoutInflater(@NonNull IdGenerator idGenerator) {
-        if (simpleLayoutBuilderInstance == null) {
-            simpleLayoutBuilderInstance = new SimpleLayoutInflater(idGenerator);
-            registerBuiltInHandlers(simpleLayoutBuilderInstance);
+        if (simpleLayoutInflaterInstance == null) {
+            simpleLayoutInflaterInstance = new SimpleLayoutInflater(idGenerator);
+            registerBuiltInHandlers(simpleLayoutInflaterInstance);
         }
-        return simpleLayoutBuilderInstance;
+        return simpleLayoutInflaterInstance;
     }
 
     public SimpleLayoutInflater getSimpleLayoutInflater() {
-        if (simpleLayoutBuilderInstance == null) {
-            simpleLayoutBuilderInstance = new SimpleLayoutInflater(new IdGeneratorImpl());
-            registerBuiltInHandlers(simpleLayoutBuilderInstance);
+        if (simpleLayoutInflaterInstance == null) {
+            simpleLayoutInflaterInstance = new SimpleLayoutInflater(new IdGeneratorImpl());
+            registerBuiltInHandlers(simpleLayoutInflaterInstance);
         }
-        return simpleLayoutBuilderInstance;
+        return simpleLayoutInflaterInstance;
     }
 
 
     /**
-     * This method will register all the internal layout handlers to the builder specified.
+     * This method will register all the internal layout handlers to the inflater specified.
      *
-     * @param proteusLayoutInflater The layout builder which will have handlers registered to it.
+     * @param proteusLayoutInflater The layout inflater which will have handlers registered to it.
      */
     @SuppressWarnings("unchecked")
     protected void registerBuiltInHandlers(ProteusLayoutInflater proteusLayoutInflater) {
@@ -182,7 +182,7 @@ public class LayoutBuilderFactory {
         proteusLayoutInflater.registerParser("HorizontalProgressBar", horizontalProgressBarParser);
     }
 
-    protected void registerFormatter(DataParsingLayoutInflater layoutBuilder) {
+    protected void registerFormatter(DataParsingLayoutInflater layoutInflater) {
 
         Formatter NumberFormatter = new Formatter() {
 
@@ -269,9 +269,9 @@ public class LayoutBuilderFactory {
             }
         };
 
-        layoutBuilder.registerFormatter(NumberFormatter);
-        layoutBuilder.registerFormatter(DateFormatter);
-        layoutBuilder.registerFormatter(IndexFormatter);
-        layoutBuilder.registerFormatter(joinFormatter);
+        layoutInflater.registerFormatter(NumberFormatter);
+        layoutInflater.registerFormatter(DateFormatter);
+        layoutInflater.registerFormatter(IndexFormatter);
+        layoutInflater.registerFormatter(joinFormatter);
     }
 }

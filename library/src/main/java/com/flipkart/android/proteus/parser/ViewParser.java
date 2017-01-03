@@ -34,7 +34,7 @@ import android.widget.RelativeLayout;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
+import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;

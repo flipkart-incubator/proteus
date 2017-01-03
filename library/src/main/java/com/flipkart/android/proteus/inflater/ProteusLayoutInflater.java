@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.builder;
+package com.flipkart.android.proteus.inflater;
 
 import android.view.View;
 import android.view.ViewGroup;
