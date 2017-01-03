@@ -126,17 +126,20 @@
           ]
         },
         {
-          "type": "RelativeLayoutExample",
+          "type": "include",
+          "layout": "RelativeLayoutExample",
           "padding": "16dp",
           "paddingBottom": "0dp"
         },
         {
-          "type": "SimpleDataBindingExample",
+          "type": "include",
+          "layout": "SimpleDataBindingExample",
           "padding": "16dp",
           "paddingBottom": "0dp"
         },
         {
-          "type": "DataDrivenExample",
+          "type": "include",
+          "layout": "DataDrivenExample",
           "padding": "16dp",
           "paddingBottom": "0dp"
         },

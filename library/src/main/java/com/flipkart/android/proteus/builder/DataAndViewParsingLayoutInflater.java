@@ -17,14 +17,12 @@
 package com.flipkart.android.proteus.builder;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
-import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
-import com.google.gson.JsonObject;
 
 import java.util.Map;
 
@@ -42,17 +40,12 @@ public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater 
     }
 
     @Override
-    protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, Layout include, JsonObject data, Styles styles, int index) {
+    protected Layout onIncludeLayout(String type, Layout include) {
         Layout layout = null;
         if (layouts != null) {
             layout = layouts.get(type);
         }
-        if (layout != null) {
-            ProteusView view = build(parent, layout, data, styles, index);
-            onViewBuiltFromViewProvider(view, type, parent, index);
-            return view;
-        }
-        return super.onUnknownViewEncountered(type, parent, include, data, styles, index);
+        return null != layout ? layout : super.onIncludeLayout(type, include);
     }
 
     private void onViewBuiltFromViewProvider(ProteusView view, String type, View parent, int childIndex) {

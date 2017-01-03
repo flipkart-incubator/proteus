@@ -24,10 +24,8 @@ import java.util.regex.Pattern;
 public class ProteusConstants {
 
     public static final String TYPE = "type";
-    public static final String ID = "id";
-    public static final String TAG = "tag";
 
-    public static final String CHILDREN = "children";
+    public static final String INCLUDE = "include";
     public static final String LAYOUT = "layout";
 
     public static final String STYLE_DELIMITER = "\\.";

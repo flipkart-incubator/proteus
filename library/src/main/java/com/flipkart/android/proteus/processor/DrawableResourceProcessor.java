@@ -99,8 +99,8 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
     /**
      * Any string based drawables are handled here. Color, local resource and remote image urls.
-     *  @param view
      *
+     * @param view
      */
     protected void handleString(final V view, final String value) {
         ProteusViewManager viewManager = ((ProteusView) view).getViewManager();
@@ -149,8 +149,9 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
      * This block handles different drawables.
      * Selector and LayerListDrawable are handled here.
      * Override this to handle more types of drawables
-     *  @param view
-     * */
+     *
+     * @param view
+     */
     protected void handleElement(V view, Object value) {
 
         String type = value.getAsString(TYPE);
@@ -601,34 +602,32 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             if (children.size() > 0) {
                 elements = new ArrayList<>(children.size());
                 while (iterator.hasNext()) {
-                    if (children.isObject()) {
-                        Object child = iterator.next().getAsObject();
-                        String typeKey = child.getAsString(TYPE);
-                        GradientDrawableElement element = null;
-                        switch (typeKey) {
-                            case TYPE_CORNERS:
-                                element = Corners.parse(child);
-                                break;
-                            case TYPE_PADDING:
-                                break;
-                            case TYPE_SIZE:
-                                element = Size.parse(child);
-                                break;
-                            case TYPE_SOLID:
-                                element = Solid.parse(child);
-                                break;
-                            case TYPE_STROKE:
-                                element = Stroke.parse(child);
-                                break;
-                            case TYPE_GRADIENT:
-                                gradient = Gradient.parse(child);
-                                element = gradient;
-                                break;
-                        }
+                    Object child = iterator.next().getAsObject();
+                    String typeKey = child.getAsString(TYPE);
+                    GradientDrawableElement element = null;
+                    switch (typeKey) {
+                        case TYPE_CORNERS:
+                            element = Corners.parse(child);
+                            break;
+                        case TYPE_PADDING:
+                            break;
+                        case TYPE_SIZE:
+                            element = Size.parse(child);
+                            break;
+                        case TYPE_SOLID:
+                            element = Solid.parse(child);
+                            break;
+                        case TYPE_STROKE:
+                            element = Stroke.parse(child);
+                            break;
+                        case TYPE_GRADIENT:
+                            gradient = Gradient.parse(child);
+                            element = gradient;
+                            break;
+                    }
 
-                        if (null != element) {
-                            elements.add(element);
-                        }
+                    if (null != element) {
+                        elements.add(element);
                     }
                 }
             }

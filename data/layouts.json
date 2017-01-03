@@ -3,6 +3,8 @@
     "type": "FrameLayout",
     "layout_width": "match_parent",
     "layout_height": "wrap_content",
+    "padding": "16dp",
+    "paddingBottom": "0dp",
     "children": [
       {
         "type": "RelativeLayout",
@@ -68,6 +70,8 @@
     "type": "FrameLayout",
     "layout_width": "match_parent",
     "layout_height": "wrap_content",
+    "padding": "16dp",
+    "paddingBottom": "0dp",
     "children": [
       {
         "type": "LinearLayout",
@@ -144,7 +148,7 @@
                       "type": "gradient",
                       "startColor": "#44f85032",
                       "endColor": "#44e73827",
-                      "angle": "90"
+                      "angle": 90
                     }
                   ]
                 },
@@ -153,11 +157,11 @@
                     "type":"anticipateOvershootInterpolator"
                   },
                   "type": "rotate",
-                  "fromDegrees": "-720",
-                  "toDegrees": "0",
+                  "fromDegrees": -720,
+                  "toDegrees": 0,
                   "pivotX": "50%",
                   "pivotY": "50%",
-                  "duration": "1500"
+                  "duration": 1500
                 }
               }
             ]
@@ -170,6 +174,8 @@
     "type": "FrameLayout",
     "layout_width": "match_parent",
     "layout_height": "wrap_content",
+    "padding": "16dp",
+    "paddingBottom": "0dp",
     "children": [
       {
         "type": "LinearLayout",
@@ -181,7 +187,7 @@
           "data": "$user.tags",
           "layout":{
             "type": "TextView",
-            "dataContext": {
+            "scope": {
               "tag": "user.tags[$index]"
             },
             "layout_marginRight": "8dp",

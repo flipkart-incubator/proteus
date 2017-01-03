@@ -42,6 +42,7 @@ import com.flipkart.android.proteus.parser.custom.WebViewParser;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.IdGeneratorImpl;
+import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.google.gson.JsonElement;
 
@@ -158,6 +159,7 @@ public class LayoutBuilderFactory {
         HorizontalProgressBarParser horizontalProgressBarParser = new HorizontalProgressBarParser(progressBarParser);
 
         proteusLayoutInflater.registerParser("View", viewParser);
+        proteusLayoutInflater.registerParser(ProteusConstants.INCLUDE, viewParser);
         proteusLayoutInflater.registerParser("ViewGroup", viewGroupParser);
         proteusLayoutInflater.registerParser("RelativeLayout", relativeLayoutParser);
         proteusLayoutInflater.registerParser("LinearLayout", linearLayoutParser);

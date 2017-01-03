@@ -83,6 +83,10 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     @Nullable
     public ProteusView build(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
 
+        if (ProteusConstants.INCLUDE.equals(layout.type)) {
+            layout = onIncludeLayout(layout.extras.getAsString(ProteusConstants.LAYOUT), layout);
+        }
+
         TypeParser parser = parsers.get(layout.type);
         if (parser == null) {
             return onUnknownViewEncountered(layout.type, parent, layout, data, styles, index);
@@ -173,6 +177,16 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         }
         if (listener != null) {
             return listener.onUnknownViewType(type, parent, layout, data, styles, index);
+        }
+        return null;
+    }
+
+    protected Layout onIncludeLayout(String type, Layout include) {
+        if (ProteusConstants.isLoggingEnabled()) {
+            Log.d(TAG, "No TypeParser for: " + type);
+        }
+        if (listener != null) {
+            return listener.onLayoutRequired(type, include);
         }
         return null;
     }

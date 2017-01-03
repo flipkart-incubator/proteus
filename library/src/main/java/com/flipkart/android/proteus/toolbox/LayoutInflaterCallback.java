@@ -48,6 +48,12 @@ public interface LayoutInflaterCallback {
     @Nullable
     ProteusView onUnknownViewType(String type, View parent, Layout layout, JsonObject data, Styles styles, int index);
 
+    /**
+     *
+     * @param type
+     * @param include
+     * @return
+     */
     Layout onLayoutRequired(String type, Layout include);
 
     void onViewBuiltFromViewProvider(ProteusView view, View parent, String type, int index);
