@@ -24,6 +24,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.parser.IncludeParser;
 import com.flipkart.android.proteus.parser.ViewParser;
 import com.flipkart.android.proteus.parser.custom.ButtonParser;
 import com.flipkart.android.proteus.parser.custom.CheckBoxParser;
@@ -45,7 +46,6 @@ import com.flipkart.android.proteus.parser.custom.WebViewParser;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.IdGeneratorImpl;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.google.gson.JsonElement;
 
@@ -162,7 +162,7 @@ public class LayoutInflaterFactory {
         HorizontalProgressBarParser horizontalProgressBarParser = new HorizontalProgressBarParser(progressBarParser);
 
         proteusLayoutInflater.registerParser("View", viewParser);
-        proteusLayoutInflater.registerParser(ProteusConstants.INCLUDE, viewParser);
+        proteusLayoutInflater.registerParser("include", new IncludeParser());
         proteusLayoutInflater.registerParser("ViewGroup", viewGroupParser);
         proteusLayoutInflater.registerParser("RelativeLayout", relativeLayoutParser);
         proteusLayoutInflater.registerParser("LinearLayout", linearLayoutParser);

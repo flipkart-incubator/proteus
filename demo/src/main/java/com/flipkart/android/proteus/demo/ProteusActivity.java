@@ -249,7 +249,7 @@ public class ProteusActivity extends AppCompatActivity {
                     Call<Map<String, Layout>> layoutsCall = resources.getLayouts();
                     layouts = layoutsCall.execute().body();
 
-                    Call<Styles> stylesCall = resources.getStyles();
+                    //Call<Styles> stylesCall = resources.getStyles();
                     //styles = stylesCall.execute().body();
 
                 } catch (Exception e) {

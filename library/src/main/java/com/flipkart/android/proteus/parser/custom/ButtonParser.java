@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -41,7 +42,7 @@ public class ButtonParser<T extends Button> extends WrappableParser<T> {
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusButton(parent.getContext());
     }
 

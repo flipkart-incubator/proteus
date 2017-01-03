@@ -20,15 +20,14 @@
 package com.flipkart.android.proteus.parser;
 
 import android.content.res.XmlResourceParser;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.R;
 import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.JsonObject;
@@ -61,19 +60,15 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
     private Map<String, Integer> nameToIdMap = new HashMap<>();
 
     @Override
-    public void onBeforeCreateView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+    public void onBeforeCreateView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         // nothing to do here
     }
 
     @Override
-    public void onAfterCreateView(ViewGroup parent, V view, Layout layout, JsonObject data, Styles styles, int index) {
-        try {
+    public void onAfterCreateView(ProteusLayoutInflater inflater, ViewGroup parent, V view, Layout layout, JsonObject data, Styles styles, int index) {
+        if (null == view.getLayoutParams()) {
             ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent);
             view.setLayoutParams(layoutParams);
-        } catch (Exception e) {
-            if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "#createView() : " + e.getMessage());
-            }
         }
     }
 
@@ -153,7 +148,7 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
         return getAttributeId(position);
     }
 
-    protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent) throws IOException, XmlPullParserException {
+    protected ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent) {
 
         /**
          * This whole method is a hack! To generate layout params, since no other way exists.
@@ -162,16 +157,25 @@ public abstract class BaseTypeParser<V extends View> implements TypeParser<V> {
         if (null == sParser) {
             synchronized (BaseTypeParser.class) {
                 if (null == sParser) {
-                    sParser = parent.getResources().getLayout(R.layout.layout_params_hack);
-                    //noinspection StatementWithEmptyBody
-                    while (sParser.nextToken() != XmlPullParser.START_TAG) {
-                        // Skip everything until the view tag.
-                    }
+                    initializeAttributeSet(parent);
                 }
             }
         }
 
         return parent.generateLayoutParams(sParser);
+    }
+
+    private void initializeAttributeSet(ViewGroup parent) {
+        sParser = parent.getResources().getLayout(R.layout.layout_params_hack);
+        //noinspection StatementWithEmptyBody
+        try {
+            //noinspection StatementWithEmptyBody
+            while (sParser.nextToken() != XmlPullParser.START_TAG) {
+                // Skip everything until the view tag.
+            }
+        } catch (XmlPullParserException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

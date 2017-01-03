@@ -60,12 +60,7 @@
                       "textColor": "#2cdb81",
                       "text": "1",
                       "layout_weight": "1",
-                      "gravity": "center",
-                      "border": {
-                        "width": "2dp",
-                        "color": "#cccccc",
-                        "bgColor": "#efefef"
-                      }
+                      "gravity": "center"
                     },
                     {
                       "type": "TextView",
@@ -75,12 +70,7 @@
                       "textColor": "#2cdb81",
                       "text": "2",
                       "layout_weight": "2",
-                      "gravity": "center",
-                      "border": {
-                        "width": "2dp",
-                        "color": "#cccccc",
-                        "bgColor": "#efefef"
-                      }
+                      "gravity": "center"
                     },
                     {
                       "type": "TextView",
@@ -90,12 +80,7 @@
                       "textColor": "#2cdb81",
                       "text": "3",
                       "layout_weight": "3",
-                      "gravity": "center",
-                      "border": {
-                        "width": "2dp",
-                        "color": "#cccccc",
-                        "bgColor": "#efefef"
-                      }
+                      "gravity": "center"
                     }
                   ]
                 },

@@ -29,11 +29,11 @@ import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.TypeParser;
 import com.flipkart.android.proteus.toolbox.Binding;
-import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
+import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusView;
@@ -62,33 +62,33 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     @Override
     protected ProteusViewManager createViewManager(TypeParser parser, View parent, Layout layout, JsonObject data, Styles styles, int index) {
         ProteusViewManagerImpl viewManager = new ProteusViewManagerImpl();
-        Scope dataContext, parentScope = null;
-        Map<String, String> scope = layout.scope;
+        Scope scope, parentScope = null;
+        Map<String, String> map = layout.scope;
 
         if (parent instanceof ProteusView) {
             parentScope = ((ProteusView) parent).getViewManager().getScope();
         }
 
-        if (scope == null) {
+        if (map == null) {
             if (parentScope != null) {
-                dataContext = new Scope(parentScope);
+                scope = new Scope(parentScope);
             } else {
-                dataContext = new Scope();
-                dataContext.setData(data);
-                dataContext.setIndex(index);
+                scope = new Scope();
+                scope.setData(data);
+                scope.setIndex(index);
             }
         } else {
             if (parentScope != null) {
-                dataContext = parentScope.createChildDataContext(scope, index);
+                scope = parentScope.createChildScope(map, index);
             } else {
-                dataContext = new Scope();
-                dataContext.setData(data);
-                dataContext = dataContext.createChildDataContext(scope, index);
+                scope = new Scope();
+                scope.setData(data);
+                scope = scope.createChildScope(map, index);
             }
         }
 
         viewManager.setLayout(layout);
-        viewManager.setScope(dataContext);
+        viewManager.setScope(scope);
         viewManager.setStyles(styles);
         viewManager.setProteusLayoutInflater(this);
         viewManager.setTypeParser(parser);

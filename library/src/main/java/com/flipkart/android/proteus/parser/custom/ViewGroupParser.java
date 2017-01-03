@@ -55,7 +55,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusAspectRatioFrameLayout(parent.getContext());
     }
 

@@ -42,7 +42,7 @@ public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater 
     }
 
     @Override
-    protected Layout onIncludeLayout(String type, Layout include) {
+    public Layout onIncludeLayout(String type, Layout include) {
         Layout layout = null;
         if (layouts != null) {
             layout = layouts.get(type);

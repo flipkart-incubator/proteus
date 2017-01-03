@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.demo.customviews.CircleView;
+import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.WrappableParser;
@@ -44,7 +45,7 @@ public class CircleViewParser extends WrappableParser<CircleView> {
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new CircleView(parent.getContext());
     }
 

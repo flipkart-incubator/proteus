@@ -31,6 +31,7 @@ import android.view.ViewGroup;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Object;
 import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -54,7 +55,7 @@ public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extend
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusHorizontalProgressBar(parent.getContext());
     }
 

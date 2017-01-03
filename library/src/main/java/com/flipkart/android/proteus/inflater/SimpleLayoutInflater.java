@@ -85,11 +85,6 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     @Override
     @Nullable
     public ProteusView build(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
-
-        if (ProteusConstants.INCLUDE.equals(layout.type)) {
-            layout = onIncludeLayout(layout.extras.getAsString(ProteusConstants.LAYOUT), layout);
-        }
-
         TypeParser parser = parsers.get(layout.type);
         if (parser == null) {
             return onUnknownViewEncountered(layout.type, parent, layout, data, styles, index);
@@ -127,16 +122,16 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     }
 
     protected void onBeforeCreateView(TypeParser parser, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
-        parser.onBeforeCreateView(parent, layout, data, styles, index);
+        parser.onBeforeCreateView(this, parent, layout, data, styles, index);
     }
 
     protected ProteusView createView(TypeParser parser, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
-        return parser.createView(parent, layout, data, styles, index);
+        return parser.createView(this, parent, layout, data, styles, index);
     }
 
     protected void onAfterCreateView(TypeParser parser, ProteusView view, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         //noinspection unchecked
-        parser.onAfterCreateView(parent, (View) view, layout, data, styles, index);
+        parser.onAfterCreateView(this, parent, (View) view, layout, data, styles, index);
     }
 
     protected ProteusViewManager createViewManager(TypeParser parser, View parent, Layout layout, JsonObject data, Styles styles, int index) {
@@ -184,7 +179,9 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return null;
     }
 
-    protected Layout onIncludeLayout(String type, Layout include) {
+    @Override
+    @Nullable
+    public Layout onIncludeLayout(String type, Layout include) {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "No TypeParser for: " + type);
         }

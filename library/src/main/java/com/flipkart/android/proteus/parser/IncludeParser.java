@@ -23,35 +23,25 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
-import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.JsonObject;
 
 /**
- * @author kiran.kumar
+ * IncludeParser
+ *
+ * @author aditya.sharat
  */
-public interface TypeParser<V extends View> {
 
-    void onBeforeCreateView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index);
+public class IncludeParser<V extends View> extends BaseTypeParser<V> {
 
-    ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index);
+    @Override
+    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout include, JsonObject data, Styles styles, int index) {
+        String type = include.extras.getAsString(ProteusConstants.LAYOUT);
+        Layout layout = inflater.onIncludeLayout(type, include);
+        return inflater.build(parent, layout, data, styles, index);
+    }
 
-    void onAfterCreateView(ProteusLayoutInflater inflater, ViewGroup parent, V view, Layout layout, JsonObject data, Styles styles, int index);
-
-    void prepare();
-
-    boolean isPrepared();
-
-    void addAttributeProcessor(Attributes.Attribute attribute, AttributeProcessor<V> handler);
-
-    boolean handleAttribute(V view, int attribute, Value value);
-
-    boolean handleChildren(ProteusView view, Value children);
-
-    boolean addView(ProteusView parent, ProteusView view);
-
-    int getAttributeId(String attribute);
 }

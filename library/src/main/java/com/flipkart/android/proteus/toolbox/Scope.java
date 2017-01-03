@@ -159,7 +159,7 @@ public class Scope {
         this.index = index;
     }
 
-    public Scope createChildDataContext(Map<String, String> scope, int dataIndex) {
+    public Scope createChildScope(Map<String, String> scope, int dataIndex) {
         return updateDataContext(new Scope(), data, scope, dataIndex);
     }
 

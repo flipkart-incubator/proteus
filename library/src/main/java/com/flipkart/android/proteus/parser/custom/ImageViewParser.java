@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
@@ -46,7 +47,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
     }
 
     @Override
-    public ProteusView createView(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusImageView(parent.getContext());
     }
 

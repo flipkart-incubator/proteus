@@ -75,16 +75,18 @@
     "children": [
       {
         "type": "LinearLayout",
-        "orientation": "vertical",
         "layout_width": "match_parent",
         "layout_height": "wrap_content",
+        "orientation": "vertical",
         "background": "#ffffff",
         "children": [
           {
             "type": "TextView",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_marginBottom": "0dp",
             "text": "Profile",
-            "style": "mini.blue",
-            "layout_marginBottom": "0dp"
+            "style": "mini.blue"
           },
           {
             "type": "RelativeLayout",
@@ -196,12 +198,7 @@
             "textColor": "#2cdb81",
             "text": "$tag",
             "padding": "8dp",
-            "gravity": "center",
-            "border": {
-              "width": "2dp",
-              "color": "#cccccc",
-              "bgColor": "#efefef"
-            }
+            "gravity": "center"
           }
         }
       }

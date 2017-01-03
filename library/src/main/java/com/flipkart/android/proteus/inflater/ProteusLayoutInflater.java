@@ -19,6 +19,7 @@
 
 package com.flipkart.android.proteus.inflater;
 
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -93,7 +94,20 @@ public interface ProteusLayoutInflater {
      */
     int getUniqueViewId(String id);
 
+    /**
+     * @param attribute
+     * @param type
+     * @return
+     */
     int getAttributeId(String attribute, String type);
+
+    /**
+     * @param type
+     * @param include
+     * @return
+     */
+    @Nullable
+    Layout onIncludeLayout(String type, Layout include);
 
     /**
      * All consumers of this should ensure that they save the instance state of the ID generator along with the activity/
