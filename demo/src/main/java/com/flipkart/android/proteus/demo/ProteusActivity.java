@@ -36,7 +36,9 @@ import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
 import com.flipkart.android.proteus.builder.ProteusLayoutInflater;
+import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
+import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.EventType;
@@ -44,6 +46,8 @@ import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
 import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
@@ -55,7 +59,6 @@ import java.util.concurrent.Future;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class ProteusActivity extends AppCompatActivity {
@@ -160,9 +163,13 @@ public class ProteusActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (null == retrofit) {
+            ProteusTypeAdapterFactory factory =  new ProteusTypeAdapterFactory();
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapterFactory(factory)
+                    .create();
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
 
@@ -177,6 +184,8 @@ public class ProteusActivity extends AppCompatActivity {
         layoutBuilder.setBitmapLoader(bitmapLoader);
 
         registerCustomViews(layoutBuilder);
+
+        ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setInflater(layoutBuilder);
 
         fetch();
     }
@@ -201,7 +210,7 @@ public class ProteusActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                render();
+                fetch();
             }
         });
 
@@ -238,9 +247,9 @@ public class ProteusActivity extends AppCompatActivity {
                     layouts = layoutsCall.execute().body();
 
                     Call<Styles> stylesCall = resources.getStyles();
-                    styles = stylesCall.execute().body();
+                    //styles = stylesCall.execute().body();
 
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return null;
@@ -251,6 +260,7 @@ public class ProteusActivity extends AppCompatActivity {
                 super.onPostExecute(aVoid);
                 try {
                     setup();
+                    render();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
