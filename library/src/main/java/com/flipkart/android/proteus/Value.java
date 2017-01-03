@@ -1,5 +1,7 @@
 package com.flipkart.android.proteus;
 
+import com.google.gson.JsonElement;
+
 /**
  * Value
  *
@@ -208,6 +210,31 @@ public abstract class Value {
     }
 
     public Value create(java.lang.Object object) {
-        return null;
+        Value value;
+        if (Primitive.isPrimitiveOrString(object)) {
+            value = new Primitive(object);
+        } else if (object instanceof JsonElement) {
+            return fromJson((JsonElement) object);
+        } else {
+            throw new IllegalArgumentException("object must be primitive, string or Json");
+        }
+        return value;
+    }
+
+    public static Value fromJson(JsonElement element) {
+        Value value;
+        if (element.isJsonPrimitive()) {
+            value = Primitive.fromJson(element.getAsJsonPrimitive());
+        } else if (element.isJsonObject()) {
+            value = Object.fromJson(element.getAsJsonObject());
+        } else if (element.isJsonArray()) {
+            value = Array.fromJson(element.getAsJsonArray());
+        } else if (element.isJsonNull()) {
+            value = Null.INSTANCE;
+        } else {
+            value = new Primitive(element.toString());
+        }
+
+        return value;
     }
 }

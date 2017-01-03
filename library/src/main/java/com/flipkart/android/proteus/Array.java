@@ -1,5 +1,8 @@
 package com.flipkart.android.proteus;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -168,20 +171,13 @@ public class Array extends Value {
         return values.get(i);
     }
 
-    /**
-     * convenience method to get this array as a {@link String} if it contains a single value.
-     *
-     * @return get this value as a String if it is single value array.
-     * @throws ClassCastException    if the value in the array is of not a {@link Primitive} and
-     *                               is not a valid String.
-     * @throws IllegalStateException if the array has more than one value.
-     */
-    @Override
-    public String getAsString() {
-        if (values.size() == 1) {
-            return values.get(0).getAsString();
+    static Array fromJson(JsonArray json) {
+        Array array = new Array();
+        Iterator<JsonElement> iterator = json.iterator();
+        while (iterator.hasNext()) {
+            array.add(Value.fromJson(iterator.next()));
         }
-        throw new IllegalStateException();
+        return array;
     }
 
     @Override

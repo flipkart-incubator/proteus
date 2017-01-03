@@ -242,6 +242,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         public Layout read(String type, ProteusLayoutInflater inflater, JsonReader in) throws IOException {
             List<Attribute> attributes = new ArrayList<>();
             Map<String, String> scope = null;
+            Object extras = new Object();
             String name;
             while (in.hasNext()) {
                 name = in.nextName();
@@ -252,14 +253,14 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     if (-1 != id) {
                         attributes.add(new Attribute(id, VALUE_TYPE_ADAPTER.read(in)));
                     } else {
-                        in.skipValue();
+                        extras.add(name, VALUE_TYPE_ADAPTER.read(in));
                     }
                 }
             }
 
             in.endObject();
 
-            return new Layout(type, attributes.size() > 0 ? attributes : null, scope);
+            return new Layout(type, attributes.size() > 0 ? attributes : null, scope, extras);
         }
 
         @Nullable

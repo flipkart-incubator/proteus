@@ -1,5 +1,6 @@
 package com.flipkart.android.proteus;
 
+import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.$Gson$Preconditions;
 import com.google.gson.internal.LazilyParsedNumber;
 
@@ -65,7 +66,7 @@ public class Primitive extends Value {
         setValue(primitive);
     }
 
-    private static boolean isPrimitiveOrString(java.lang.Object target) {
+    static boolean isPrimitiveOrString(java.lang.Object target) {
         if (target instanceof String) {
             return true;
         }
@@ -273,6 +274,19 @@ public class Primitive extends Value {
             return a == b || (Double.isNaN(a) && Double.isNaN(b));
         }
         return value.equals(other.value);
+    }
+
+    static Primitive fromJson(JsonPrimitive json) {
+        Primitive value;
+        if (json.isBoolean()) {
+            value = new Primitive(json.getAsBoolean());
+        } else if (json.isNumber()) {
+            value = new Primitive(json.getAsNumber());
+        } else {
+            value = new Primitive(json.getAsString());
+        }
+
+        return value;
     }
 
 }

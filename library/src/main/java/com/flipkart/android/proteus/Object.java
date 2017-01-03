@@ -2,6 +2,9 @@ package com.flipkart.android.proteus;
 
 import android.support.annotation.Nullable;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -262,6 +265,19 @@ public class Object extends Value {
             return (Layout) members.get(memberName);
         }
         return null;
+    }
+
+    static Object fromJson(JsonObject json) {
+        Object object = new Object();
+        String name;
+        JsonElement element;
+        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
+            name = entry.getKey();
+            element = entry.getValue();
+            object.add(name, Value.fromJson(element));
+        }
+
+        return object;
     }
 
     @Override

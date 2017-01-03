@@ -24,10 +24,14 @@ public class Layout extends Value {
     @Nullable
     public final Map<String, String> scope;
 
-    public Layout(@NonNull String type, @Nullable List<Attribute> attributes, @Nullable Map<String, String> scope) {
+    @Nullable
+    public final Object extras;
+
+    public Layout(@NonNull String type, @Nullable List<Attribute> attributes, @Nullable Map<String, String> scope, Object extras) {
         this.type = type;
         this.attributes = attributes;
         this.scope = scope;
+        this.extras = extras;
     }
 
     @Override
@@ -39,6 +43,7 @@ public class Layout extends Value {
                 attributes.add(attribute.copy());
             }
         }
-        return new Layout(type, attributes, scope);
+
+        return new Layout(type, attributes, scope, extras);
     }
 }
