@@ -1,7 +1,7 @@
 <h1>
-  <img src="/assets/proteus-logo.png" width="150px">
+  <img src="/assets/proteus-logo.png" width="150px"/>
   : Android Layout Engine
-  <a href="https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master">
+  <a href="https://travis-ci.org/flipkart-incubator/proteus">
     <img src="https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master" alt="Build Status">
   </a>
 </h1>
@@ -31,7 +31,7 @@ allprojects {
 
 // Add the dependency
 dependencies {
-        compile 'com.github.flipkart-incubator:proteus:4.0.0-RC2'
+        compile 'com.github.flipkart-incubator:proteus:4.2.0'
 }
 ```
 
@@ -90,18 +90,37 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
 }
 ```
 
+### Java
+
+```java
+ProteusView view = layoutBuilder.build(container, layout, data, 0, styles);
+container.addView((View) view);
+```
+
 #### Get this
 
-<img src="/assets/example-small.png" width="300px"/>
-
-#### Change the layout and data; and get his
-
 <img src="/assets/example-full.png" width="300px"/>
+
+### Setting up the Demo App
+
+* Install NodeJS [here](https://nodejs.org/en/download/)
+* open a terminal
+* cd into the project directory
+* run `npm start`
+* Start an AVD emulator
+* Install the Demo App
+
+**Ready to tinker**
+
+* Tinker around with the [layout](https://github.com/adityasharat/proteus-demo/blob/master/data/layout.json) and [data](https://github.com/adityasharat/proteus-demo/blob/master/data/user.json)
+* Hit the FAB to refresh the app.
 
 ## Resources
 
 * [Detailed Guide](https://github.com/flipkart-incubator/proteus/wiki)
-* [API References]()
+* [API References]() *under construction*
+* [Demo App](https://github.com/adityasharat/proteus-demo)
+* [Videos - silent :|](https://www.youtube.com/playlist?list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp)
 
 ## Contributing
 
@@ -121,4 +140,4 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
 
 ### One click XML to JSON conversion plugin
 
-Download [this plugin](https://github.com/flipkart-incubator/android-studio-proteus-plugin/blob/master/Plugin/Plugin.jar) for android studio and enable it. Once enabled, you can select any android XML layout file and go to **Tools > Convert XML to JSON**
+Download [this plugin](https://github.com/flipkart-incubator/android-studio-proteus-plugin) for Android Studio. Once enabled, you can select any android XML resource file and go to **Tools > Proteus > Convert XML to JSON**
