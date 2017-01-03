@@ -102,11 +102,13 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                         String name = in.nextName();
                         if (ProteusConstants.TYPE.equals(name) && JsonToken.STRING.equals(in.peek())) {
                             String type = in.nextString();
-                            if (!PROTEUS_INSTANCE_HOLDER.isLayout(type)) {
+                            if (PROTEUS_INSTANCE_HOLDER.isLayout(type)) {
                                 return LAYOUT_TYPE_ADAPTER.read(type, PROTEUS_INSTANCE_HOLDER.getInflater(), in);
                             } else {
                                 object.add(name, new Primitive(type));
                             }
+                        } else {
+                            object.add(name, read(in));
                         }
                     }
                     while (in.hasNext()) {
@@ -203,9 +205,12 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
     }
 
 
-    private static class ProteusInstanceHolder {
+    public static class ProteusInstanceHolder {
 
         private ProteusLayoutInflater inflater;
+
+        private ProteusInstanceHolder() {
+        }
 
         @Nullable
         public ProteusLayoutInflater getInflater() {
@@ -247,7 +252,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     if (-1 != id) {
                         attributes.add(new Attribute(id, VALUE_TYPE_ADAPTER.read(in)));
                     } else {
-                        // add to extras
+                        in.skipValue();
                     }
                 }
             }
