@@ -260,7 +260,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
             in.endObject();
 
-            return new Layout(type, attributes.size() > 0 ? attributes : null, scope, extras);
+            return new Layout(type, attributes.size() > 0 ? attributes : null, scope, extras.entrySet().size() > 0 ? extras : null);
         }
 
         @Nullable
