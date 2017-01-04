@@ -83,7 +83,7 @@ public interface ProteusLayoutInflater {
      * @param index  The index of this view in its parent. Pass 0 if it has no parent.
      * @return A {@link ProteusView} with the built view, an array of its children and optionally its bindings.
      */
-    ProteusView build(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index);
+    ProteusView inflate(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index);
 
     /**
      * Give the View ID for this string. This will generally be given by the instance of ID Generator
@@ -120,7 +120,7 @@ public interface ProteusLayoutInflater {
     /**
      * @return The callback object used by this {@link ProteusLayoutInflater}
      */
-    LayoutInflaterCallback getListener();
+    LayoutInflaterCallback getCallback();
 
     /**
      * Used to set a callback object to handle unknown view types and unknown attributes and other
@@ -129,13 +129,13 @@ public interface ProteusLayoutInflater {
      *
      * @param listener The callback object.
      */
-    void setListener(LayoutInflaterCallback listener);
+    void setCallback(LayoutInflaterCallback listener);
 
     /**
      * @return The helper object that is being used to handle drawables that need to fetched from a
      * network.
      */
-    BitmapLoader getNetworkDrawableHelper();
+    BitmapLoader getBitmapLoader();
 
     /**
      * All network bitmap calls will be handed over to this loader. This method is used to

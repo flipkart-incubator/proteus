@@ -49,7 +49,7 @@ public class ObjectValue extends Value {
 
     /**
      * Adds a member, which is a name-value pair, to self. The name must be a String, but the value
-     * can be an arbitrary Value, thereby allowing you to build a full tree of Value
+     * can be an arbitrary Value, thereby allowing you to inflate a full tree of Value
      * rooted at this node.
      *
      * @param property name of the member.

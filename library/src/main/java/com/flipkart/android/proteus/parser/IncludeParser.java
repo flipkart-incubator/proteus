@@ -41,7 +41,7 @@ public class IncludeParser<V extends View> extends BaseTypeParser<V> {
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout include, JsonObject data, Styles styles, int index) {
         String type = include.extras.getAsString(ProteusConstants.LAYOUT);
         Layout layout = inflater.onIncludeLayout(type, include);
-        return inflater.build(parent, layout, data, styles, index);
+        return inflater.inflate(parent, layout, data, styles, index);
     }
 
 }

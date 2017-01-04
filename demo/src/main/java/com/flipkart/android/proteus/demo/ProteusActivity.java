@@ -183,7 +183,7 @@ public class ProteusActivity extends AppCompatActivity {
         // create a new DataAndViewParsingLayoutInflater
         // and set layouts, callback and image loader.
         layoutInflater = new LayoutInflaterFactory().getDataAndViewParsingLayoutInflater(layouts);
-        layoutInflater.setListener(callback);
+        layoutInflater.setCallback(callback);
         layoutInflater.setBitmapLoader(bitmapLoader);
 
         registerCustomViews(layoutInflater);
@@ -228,7 +228,7 @@ public class ProteusActivity extends AppCompatActivity {
     private void render() {
         // Inflate a new view using proteus
         long start = System.currentTimeMillis();
-        ProteusView view = layoutInflater.build(container, layout, data, styles, 0);
+        ProteusView view = layoutInflater.inflate(container, layout, data, styles, 0);
         System.out.println(System.currentTimeMillis() - start);
         container.addView((View) view);
     }

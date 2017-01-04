@@ -119,7 +119,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
             ProteusView child;
             Iterator<Value> iterator = children.getAsArray().iterator();
             while (iterator.hasNext()) {
-                child = layoutInflater.build((ViewGroup) view, iterator.next().getAsLayout(), data, styles, dataIndex);
+                child = layoutInflater.inflate((ViewGroup) view, iterator.next().getAsLayout(), data, styles, dataIndex);
                 addView(view, child);
             }
         } else if (children.isObject()) {
@@ -151,7 +151,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
 
         ProteusView child;
         for (int index = 0; index < length; index++) {
-            child = layoutInflater.build((ViewGroup) parent, childLayout, data, styles, index);
+            child = layoutInflater.inflate((ViewGroup) parent, childLayout, data, styles, index);
             if (child != null) {
                 this.addView(parent, child);
             }

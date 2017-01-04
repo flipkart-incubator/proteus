@@ -157,7 +157,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                     ((ProteusView) child).getViewManager().update(data);
                 }
             } else if (childLayout != null) {
-                childView = proteusLayoutInflater.build(parent, getLayout(), data, styles, scope.getIndex());
+                childView = proteusLayoutInflater.inflate(parent, getLayout(), data, styles, scope.getIndex());
                 typeParser.addView((ProteusView) view, childView);
             }
         }

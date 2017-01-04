@@ -51,8 +51,8 @@ public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater 
     }
 
     private void onViewBuiltFromViewProvider(ProteusView view, String type, View parent, int childIndex) {
-        if (listener != null) {
-            listener.onViewBuiltFromViewProvider(view, parent, type, childIndex);
+        if (callback != null) {
+            callback.onViewBuiltFromViewProvider(view, parent, type, childIndex);
         }
     }
 

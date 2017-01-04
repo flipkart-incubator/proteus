@@ -52,7 +52,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     private static final String TAG = "SimpleLayoutInflater";
 
     @Nullable
-    protected LayoutInflaterCallback listener;
+    protected LayoutInflaterCallback callback;
     private HashMap<String, TypeParser> parsers = new HashMap<>();
     @Nullable
     private BitmapLoader bitmapLoader;
@@ -84,7 +84,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     @Override
     @Nullable
-    public ProteusView build(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+    public ProteusView inflate(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         TypeParser parser = parsers.get(layout.type);
         if (parser == null) {
             return onUnknownViewEncountered(layout.type, parent, layout, data, styles, index);
@@ -163,8 +163,8 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     }
 
     protected void onUnknownAttributeEncountered(ProteusView view, int attribute, Value value) {
-        if (listener != null) {
-            listener.onUnknownAttribute(view, attribute, value);
+        if (callback != null) {
+            callback.onUnknownAttribute(view, attribute, value);
         }
     }
 
@@ -173,8 +173,8 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "No TypeParser for: " + type);
         }
-        if (listener != null) {
-            return listener.onUnknownViewType(type, parent, layout, data, styles, index);
+        if (callback != null) {
+            return callback.onUnknownViewType(type, parent, layout, data, styles, index);
         }
         return null;
     }
@@ -185,8 +185,8 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "No TypeParser for: " + type);
         }
-        if (listener != null) {
-            return listener.onLayoutRequired(type, include);
+        if (callback != null) {
+            return callback.onLayoutRequired(type, include);
         }
         return null;
     }
@@ -213,17 +213,17 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     @Nullable
     @Override
-    public LayoutInflaterCallback getListener() {
-        return listener;
+    public LayoutInflaterCallback getCallback() {
+        return callback;
     }
 
     @Override
-    public void setListener(@Nullable LayoutInflaterCallback listener) {
-        this.listener = listener;
+    public void setCallback(@Nullable LayoutInflaterCallback listener) {
+        this.callback = listener;
     }
 
     @Override
-    public BitmapLoader getNetworkDrawableHelper() {
+    public BitmapLoader getBitmapLoader() {
         return bitmapLoader;
     }
 

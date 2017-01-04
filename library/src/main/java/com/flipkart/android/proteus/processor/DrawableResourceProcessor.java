@@ -143,7 +143,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                     }
                 }
             };
-            new NetworkDrawableHelper((ProteusView) view, value, viewManager.getProteusLayoutInflater().getNetworkDrawableHelper(), callback, null, synchronousRendering);
+            new NetworkDrawableHelper((ProteusView) view, value, viewManager.getProteusLayoutInflater().getBitmapLoader(), callback, null, synchronousRendering);
         }
 
     }
