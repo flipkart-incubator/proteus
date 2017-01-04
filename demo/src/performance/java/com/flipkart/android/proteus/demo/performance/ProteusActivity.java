@@ -29,8 +29,8 @@ import android.widget.FrameLayout;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.inflater.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.demo.R;
+import com.flipkart.android.proteus.inflater.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.inflater.LayoutInflaterFactory;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.EventType;
@@ -51,7 +51,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 
 public class ProteusActivity extends BaseActivity {
@@ -65,12 +64,6 @@ public class ProteusActivity extends BaseActivity {
     private ViewGroup.LayoutParams layoutParams;
     private Styles styles;
     private BitmapLoader bitmapLoader = new BitmapLoader() {
-
-        @Override
-        public Future<Bitmap> getBitmap(String imageUrl, ProteusView view) {
-            return null;
-        }
-
         @Override
         public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback callback, Layout layout) {
             URL url;
@@ -147,7 +140,7 @@ public class ProteusActivity extends BaseActivity {
         data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
 
         builder = new LayoutInflaterFactory().getDataAndViewParsingLayoutInflater(layoutProvider);
-        builder.setListener(callback);
+        builder.setCallback(callback);
         builder.setBitmapLoader(bitmapLoader);
 
         container = new FrameLayout(ProteusActivity.this);
@@ -160,7 +153,7 @@ public class ProteusActivity extends BaseActivity {
 
     @Override
     View createAndBindView() {
-        proteusView = builder.build(container, pageLayout, data, styles, 0);
+        proteusView = builder.inflate(container, pageLayout, data, styles, 0);
         return (View) proteusView;
     }
 
