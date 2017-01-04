@@ -147,15 +147,4 @@ public interface ProteusLayoutInflater {
      */
     void setBitmapLoader(BitmapLoader bitmapLoader);
 
-    /**
-     * @return true when rendering preview immediately by this {@link ProteusLayoutInflater} synchronously
-     * otherwise false.
-     */
-    boolean isSynchronousRendering();
-
-    /**
-     * Set this to true for rendering preview immediately. This is to be used to decide whether
-     * remote resources like remote images are to be downloaded synchronously or not
-     */
-    void setSynchronousRendering(boolean isSynchronousRendering);
 }

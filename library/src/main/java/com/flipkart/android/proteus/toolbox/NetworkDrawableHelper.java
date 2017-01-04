@@ -19,21 +19,15 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import android.annotation.TargetApi;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.view.ProteusView;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Useful for asynchronous/synchronous loading of network images.
@@ -43,58 +37,31 @@ import java.util.concurrent.TimeUnit;
  */
 public class NetworkDrawableHelper {
 
-    private final ProteusView view;
-    private final DrawableCallback callback;
-    private final BitmapLoader bitmapLoader;
-
     /**
-     * @param view            The view which is going to show the drawable. This view will be used to start and stop image loading when view is added and removed from window. Only used when <code>loadImmediately</code> is set to false. Will also work if view is set to null.
-     * @param url             The url to load
-     * @param callback        Implement this to get a hold of the loaded bitmap or the error reason.
+     * @param view     The view which is going to show the drawable. This view will be used to start and stop image loading when view is added and removed from window. Only used when <code>loadImmediately</code> is set to false. Will also work if view is set to null.
+     * @param url      The url to load
+     * @param callback Implement this to get a hold of the loaded bitmap or the error reason.
      * @param layout
-     * @param loadImmediately Set this to true to load the image on the calling thread (synchronous). If false, volley's thread will be used.
      */
-    public NetworkDrawableHelper(final ProteusView view, final String url, BitmapLoader bitmapLoader, DrawableCallback callback, Layout layout, boolean loadImmediately) {
-        this.view = view;
-        this.callback = callback;
-        this.bitmapLoader = bitmapLoader;
-        init(url, loadImmediately);
-    }
+    public NetworkDrawableHelper(final ProteusView view, final String url, final BitmapLoader bitmapLoader, final DrawableCallback callback, Layout layout) {
+        bitmapLoader.getBitmap(view, url, new ImageLoaderCallback() {
+            @Override
+            public void onResponse(Bitmap bitmap) {
+                if (bitmap == null) {
+                    return;
+                }
+                if (callback != null) {
+                    callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap, (View) view));
+                }
+            }
 
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR1)
-    private void init(final String url, boolean loadImmediately) {
-
-        // CountDownLatch is used to support loadImmediately param.
-        // Since ImageLoader doesnt support synchronous loading, we use CountDownLatch to simulate it.
-        final CountDownLatch lock;
-
-        if (view == null) {
-            loadImmediately = true;
-        }
-
-        if (loadImmediately) {
-            startSyncLoad(url, view);
-        } else {
-            lock = null;
-            startAsyncLoad(url, view);
-        }
-    }
-
-    /**
-     * Warning : This method will only work if called from non main thread.
-     *
-     * @param url
-     * @param view
-     */
-    private void startSyncLoad(String url, ProteusView view) {
-        Future<Bitmap> future = bitmapLoader.getBitmap(url, view);
-        try {
-            Bitmap bitmap = future.get(10, TimeUnit.SECONDS);
-            callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap, (View) view));
-        } catch (Exception e) {
-            e.printStackTrace();
-            callback.onDrawableError(url, e.getLocalizedMessage(), null);
-        }
+            @Override
+            public void onErrorReceived(String errorMessage, Drawable errorDrawable) {
+                if (callback != null) {
+                    callback.onDrawableError(url, errorMessage, errorDrawable);
+                }
+            }
+        }, null);
     }
 
     private Drawable convertBitmapToDrawable(Bitmap bitmapOriginal, View view) {
@@ -113,30 +80,11 @@ public class NetworkDrawableHelper {
         return new BitmapDrawable(view.getContext().getResources(), resizedBitmap);
     }
 
-    private void startAsyncLoad(final String url, final ProteusView view) {
-
-        bitmapLoader.getBitmap(view, url, new ImageLoaderCallback() {
-            @Override
-            public void onResponse(Bitmap bitmap) {
-                if (bitmap == null) return;
-                if (callback != null) {
-                    callback.onDrawableLoad(url, convertBitmapToDrawable(bitmap, (View) view));
-                }
-            }
-
-            @Override
-            public void onErrorReceived(String errorMessage, Drawable errorDrawable) {
-                if (callback != null) {
-                    callback.onDrawableError(url, errorMessage, errorDrawable);
-                }
-
-            }
-        }, null);
-    }
-
     public interface DrawableCallback {
+
         void onDrawableLoad(String url, Drawable drawable);
 
         void onDrawableError(String url, String reason, Drawable errorDrawable);
+
     }
 }

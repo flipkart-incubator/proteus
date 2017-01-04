@@ -84,12 +84,6 @@ public class ProteusActivity extends AppCompatActivity {
      * Simple implementation of BitmapLoader for loading images from url in background.
      */
     private BitmapLoader bitmapLoader = new BitmapLoader() {
-
-        @Override
-        public Future<Bitmap> getBitmap(String imageUrl, ProteusView view) {
-            return null;
-        }
-
         @Override
         public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback callback, Layout layout) {
             URL url;

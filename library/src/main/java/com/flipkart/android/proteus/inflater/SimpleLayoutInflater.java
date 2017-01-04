@@ -51,13 +51,13 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     private static final String TAG = "SimpleLayoutInflater";
 
+    private HashMap<String, TypeParser> parsers = new HashMap<>();
+
     @Nullable
     protected LayoutInflaterCallback callback;
-    private HashMap<String, TypeParser> parsers = new HashMap<>();
+
     @Nullable
     private BitmapLoader bitmapLoader;
-
-    private boolean isSynchronousRendering = false;
 
     private IdGenerator idGenerator;
 
@@ -232,13 +232,4 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         this.bitmapLoader = bitmapLoader;
     }
 
-    @Override
-    public boolean isSynchronousRendering() {
-        return isSynchronousRendering;
-    }
-
-    @Override
-    public void setSynchronousRendering(boolean isSynchronousRendering) {
-        this.isSynchronousRendering = isSynchronousRendering;
-    }
 }

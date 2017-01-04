@@ -107,7 +107,6 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
      */
     protected void handleString(final V view, final String value) {
         ProteusViewManager viewManager = ((ProteusView) view).getViewManager();
-        boolean synchronousRendering = viewManager.getProteusLayoutInflater().isSynchronousRendering();
 
         if (ParseHelper.isLocalResourceAttribute(value)) {
             int attributeId = ParseHelper.getAttributeId(view.getContext(), value);
@@ -143,7 +142,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                     }
                 }
             };
-            new NetworkDrawableHelper((ProteusView) view, value, viewManager.getProteusLayoutInflater().getBitmapLoader(), callback, null, synchronousRendering);
+            new NetworkDrawableHelper((ProteusView) view, value, viewManager.getProteusLayoutInflater().getBitmapLoader(), callback, null);
         }
 
     }
