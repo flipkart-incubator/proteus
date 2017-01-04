@@ -28,8 +28,10 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.LevelListDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -217,7 +219,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 }
                 break;
             case DRAWABLE_RIPPLE:
-                // TODO: do ripple drawbles
+                setDrawable(view, RippleDrawableParser.parse(view, value));
                 break;
         }
     }
@@ -664,6 +666,99 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             }
 
             return gradientDrawable;
+        }
+    }
+
+    private static class RippleDrawableParser {
+
+        public static final String COLOR = "color";
+        public static final String MASK = "mask";
+        public static final String CONTENT = "content";
+        public static final String DEFAULT_BACKGROUND = "defaultBackground";
+
+        @Nullable
+        public static Drawable parse(@NonNull View view, ObjectValue object) {
+
+            Context context = view.getContext();
+
+            final Value color = object.get(COLOR);
+            final Value mask = object.get(MASK);
+            final Value content = object.get(CONTENT);
+            final Value defaultBackground = object.get(DEFAULT_BACKGROUND);
+
+            final ColorStateList[] colorStateList = new ColorStateList[1];
+            final Drawable[] contentDrawable = new Drawable[1];
+            final Drawable[] maskDrawable = new Drawable[1];
+            final Drawable[] defaultBackgroundDrawable = new Drawable[1];
+
+            Drawable resultDrawable = null;
+
+            ColorUtils.loadColor(context, color, new ValueCallback<Integer>() {
+                @Override
+                public void onReceiveValue(Integer value) {
+                    int[][] states = new int[][]{
+                            new int[]{}
+                    };
+
+                    int[] colors = new int[]{
+                            value
+                    };
+
+                    colorStateList[0] = new ColorStateList(states, colors);
+                }
+            }, new ValueCallback<ColorStateList>() {
+                @Override
+                public void onReceiveValue(ColorStateList value) {
+                    colorStateList[0] = value;
+                }
+            });
+
+            if (null != content) {
+                DrawableResourceProcessor contentDrawableProcessor = new DrawableResourceProcessor() {
+                    @Override
+                    public void setDrawable(View view, Drawable drawable) {
+                        contentDrawable[0] = drawable;
+                    }
+                };
+                contentDrawableProcessor.handle(view, content);
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && null != colorStateList[0]) {
+                if (null != mask) {
+                    DrawableResourceProcessor maskDrawableProcessor = new DrawableResourceProcessor() {
+                        @Override
+                        public void setDrawable(View view, Drawable drawable) {
+                            maskDrawable[0] = drawable;
+                        }
+                    };
+                    maskDrawableProcessor.handle(view, mask);
+                }
+
+                resultDrawable = new RippleDrawable(colorStateList[0], contentDrawable[0], maskDrawable[0]);
+
+            } else if (null != defaultBackground) {
+                DrawableResourceProcessor defaultDrawableProcessor = new DrawableResourceProcessor() {
+                    @Override
+                    public void setDrawable(View view, Drawable drawable) {
+                        defaultBackgroundDrawable[0] = drawable;
+                    }
+                };
+                defaultDrawableProcessor.handle(view, defaultBackground);
+
+                resultDrawable = defaultBackgroundDrawable[0];
+
+            } else if (null != colorStateList[0] && contentDrawable[0] != null) {
+                int pressedColor = colorStateList[0].getColorForState(new int[]{android.R.attr.state_pressed}, colorStateList[0].getDefaultColor());
+                int focussedColor = colorStateList[0].getColorForState(new int[]{android.R.attr.state_focused}, pressedColor);
+                ColorDrawable pressedColorDrawable = new ColorDrawable(pressedColor);
+                ColorDrawable focussedColorDrawable = new ColorDrawable(focussedColor);
+                StateListDrawable stateListDrawable = new StateListDrawable();
+                stateListDrawable.addState(new int[]{android.R.attr.state_enabled, android.R.attr.state_pressed}, pressedColorDrawable);
+                stateListDrawable.addState(new int[]{android.R.attr.state_enabled, android.R.attr.state_focused}, focussedColorDrawable);
+                stateListDrawable.addState(new int[]{android.R.attr.state_enabled}, contentDrawable[0]);
+                resultDrawable = stateListDrawable;
+            }
+            return resultDrawable;
         }
     }
 
