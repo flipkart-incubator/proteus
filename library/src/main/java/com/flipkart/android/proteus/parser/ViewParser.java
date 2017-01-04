@@ -373,14 +373,14 @@ public class ViewParser<V extends View> extends BaseTypeParser<V> {
                 String[] styleSet = value.split(ProteusConstants.STYLE_DELIMITER);
                 for (String styleName : styleSet) {
                     if (styles.contains(styleName)) {
-                        process(styles.getStyle(styleName), layout, (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater());
+                        process(styles.getStyle(styleName), (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater(), layout.type);
                     }
                 }
             }
 
-            private void process(Map<Integer, Value> style, Layout layout, ProteusView proteusView, TypeParser handler, ProteusLayoutInflater builder) {
-                for (Map.Entry<Integer, Value> entry : style.entrySet()) {
-                    builder.handleAttribute(handler, proteusView, entry.getKey(), entry.getValue());
+            private void process(Map<String, Value> style, ProteusView proteusView, TypeParser handler, ProteusLayoutInflater inflater, String type) {
+                for (Map.Entry<String, Value> entry : style.entrySet()) {
+                    inflater.handleAttribute(handler, proteusView, inflater.getAttributeId(entry.getKey(), type), entry.getValue());
                 }
             }
         });

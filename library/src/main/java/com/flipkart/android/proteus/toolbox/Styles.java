@@ -29,9 +29,9 @@ import java.util.Map;
  *
  * @author Aditya Sharat
  */
-public class Styles extends HashMap<String, Map<Integer, Value>> {
+public class Styles extends HashMap<String, Map<String, Value>> {
 
-    public Map<Integer, Value> getStyle(String name) {
+    public Map<String, Value> getStyle(String name) {
         return this.get(name);
     }
 
