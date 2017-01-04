@@ -25,7 +25,7 @@ import com.flipkart.android.proteus.Array;
 import com.flipkart.android.proteus.Attribute;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Null;
-import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Primitive;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
@@ -115,7 +115,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     in.endArray();
                     return array;
                 case BEGIN_OBJECT:
-                    Object object = new Object();
+                    ObjectValue object = new ObjectValue();
                     in.beginObject();
                     if (in.hasNext()) {
                         String name = in.nextName();
@@ -157,14 +157,14 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return value != null && value.isPrimitive() ? value.getAsPrimitive() : null;
         }
     }.nullSafe();
-    public static final TypeAdapter<Object> OBJECT_TYPE_ADAPTER = new TypeAdapter<Object>() {
+    public static final TypeAdapter<ObjectValue> OBJECT_TYPE_ADAPTER = new TypeAdapter<ObjectValue>() {
         @Override
-        public void write(JsonWriter out, Object value) throws IOException {
+        public void write(JsonWriter out, ObjectValue value) throws IOException {
             VALUE_TYPE_ADAPTER.write(out, value);
         }
 
         @Override
-        public Object read(JsonReader in) throws IOException {
+        public ObjectValue read(JsonReader in) throws IOException {
             Value value = VALUE_TYPE_ADAPTER.read(in);
             return value != null && value.isObject() ? value.getAsObject() : null;
         }
@@ -203,7 +203,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         if (clazz == Primitive.class) {
             //noinspection unchecked
             return (TypeAdapter<T>) PRIMITIVE_TYPE_ADAPTER;
-        } else if (clazz == Object.class) {
+        } else if (clazz == ObjectValue.class) {
             //noinspection unchecked
             return (TypeAdapter<T>) OBJECT_TYPE_ADAPTER;
         } else if (clazz == Array.class) {
@@ -261,7 +261,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         public Layout read(String type, ProteusLayoutInflater inflater, JsonReader in) throws IOException {
             List<Attribute> attributes = new ArrayList<>();
             Map<String, String> scope = null;
-            Object extras = new Object();
+            ObjectValue extras = new ObjectValue();
             String name;
             while (in.hasNext()) {
                 name = in.nextName();

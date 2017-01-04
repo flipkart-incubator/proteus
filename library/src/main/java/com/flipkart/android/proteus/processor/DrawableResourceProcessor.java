@@ -39,7 +39,7 @@ import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 
 import com.flipkart.android.proteus.Array;
-import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.ColorUtils;
@@ -82,7 +82,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     private static final String SWEEP_GRADIENT = "sweep";
 
     @Nullable
-    public static GradientDrawable loadGradientDrawable(Context context, Object value) {
+    public static GradientDrawable loadGradientDrawable(Context context, ObjectValue value) {
         return ShapeDrawableParser.parse(value, context);
     }
 
@@ -155,7 +155,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
      *
      * @param view
      */
-    protected void handleElement(V view, Object value) {
+    protected void handleElement(V view, ObjectValue value) {
 
         String type = value.getAsString(TYPE);
         Value children = value.get(CHILDREN);
@@ -289,7 +289,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         @SerializedName("bottomRightRadius")
         public String bottomRightRadius;
 
-        public static Corners parse(Object parser) {
+        public static Corners parse(ObjectValue parser) {
             Corners corners = new Corners();
             corners.radius = parser.getAsString(RADIUS);
             corners.topLeftRadius = parser.getAsString(TOP_LEFT_RADIUS);
@@ -329,7 +329,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         @SerializedName("color")
         public Value color;
 
-        public static Solid parse(Object value) {
+        public static Solid parse(ObjectValue value) {
             Solid solid = new Solid();
             solid.color = value.get(COLOR);
             return solid;
@@ -394,7 +394,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         @SerializedName("useLevel")
         public Boolean useLevel;
 
-        public static Gradient parse(Object value) {
+        public static Gradient parse(ObjectValue value) {
             Gradient gradient = new Gradient();
             gradient.angle = value.getAsInteger(ANGLE);
             gradient.centerX = value.getAsFloat(CENTER_X);
@@ -502,7 +502,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         @SerializedName("height")
         public String height;
 
-        public static Size parse(Object parser) {
+        public static Size parse(ObjectValue parser) {
             Size size = new Size();
             size.width = parser.getAsString(WIDTH);
             size.height = parser.getAsString(HEIGHT);
@@ -531,7 +531,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         @SerializedName("dashGap")
         public String dashGap;
 
-        public static Stroke parse(Object parser) {
+        public static Stroke parse(ObjectValue parser) {
             Stroke stroke = new Stroke();
             stroke.width = parser.getAsString(WIDTH);
             stroke.color = parser.get(COLOR);
@@ -563,7 +563,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         @SerializedName("drawable")
         public Value drawable;
 
-        public static LayerListDrawableItem parse(Object value) {
+        public static LayerListDrawableItem parse(ObjectValue value) {
             LayerListDrawableItem drawableItem = new LayerListDrawableItem();
             drawableItem.minLevel = value.getAsInteger(MIN_LEVEL);
             drawableItem.maxLevel = value.getAsInteger(MAX_LEVEL);
@@ -590,7 +590,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         public static final String THICKNESS = "thickness";
         public static final String THICKNESS_RATIO = "thicknessRatio";
 
-        public static GradientDrawable parse(Object value, Context context) {
+        public static GradientDrawable parse(ObjectValue value, Context context) {
             String shape = value.getAsString(SHAPE);
             String innerRadius = value.getAsString(INNER_RADIUS);
             Float innerRadiusRatio = value.getAsFloat(INNER_RADIUS_RATIO);
@@ -605,7 +605,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             if (children.size() > 0) {
                 elements = new ArrayList<>(children.size());
                 while (iterator.hasNext()) {
-                    Object child = iterator.next().getAsObject();
+                    ObjectValue child = iterator.next().getAsObject();
                     String typeKey = child.getAsString(TYPE);
                     GradientDrawableElement element = null;
                     switch (typeKey) {

@@ -47,10 +47,10 @@ public abstract class Value {
     /**
      * provides check for verifying if this value is a object or not.
      *
-     * @return true if this value is of type {@link Object}, false otherwise.
+     * @return true if this value is of type {@link ObjectValue}, false otherwise.
      */
     public boolean isObject() {
-        return this instanceof Object;
+        return this instanceof ObjectValue;
     }
 
     /**
@@ -80,19 +80,19 @@ public abstract class Value {
     }
 
     /**
-     * convenience method to get this value as a {@link Object}. If the value is of some
+     * convenience method to get this value as a {@link ObjectValue}. If the value is of some
      * other type, a {@link IllegalStateException} will result. Hence it is best to use this method
      * after ensuring that this value is of the desired type by calling {@link #isObject()}
      * first.
      *
-     * @return get this value as a {@link Object}.
+     * @return get this value as a {@link ObjectValue}.
      * @throws IllegalStateException if the value is of another type.
      */
-    public Object getAsObject() {
+    public ObjectValue getAsObject() {
         if (isObject()) {
-            return (Object) this;
+            return (ObjectValue) this;
         }
-        throw new IllegalStateException("Not an Object: " + this);
+        throw new IllegalStateException("Not an ObjectValue: " + this);
     }
 
     /**
@@ -245,7 +245,7 @@ public abstract class Value {
         if (element.isJsonPrimitive()) {
             value = Primitive.fromJson(element.getAsJsonPrimitive());
         } else if (element.isJsonObject()) {
-            value = Object.fromJson(element.getAsJsonObject());
+            value = ObjectValue.fromJson(element.getAsJsonObject());
         } else if (element.isJsonArray()) {
             value = Array.fromJson(element.getAsJsonArray());
         } else if (element.isJsonNull()) {

@@ -24,7 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.Attributes;
@@ -130,7 +130,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
     }
 
     private void handleDataDrivenChildren(ProteusLayoutInflater layoutInflater, ProteusView parent, ProteusViewManager viewManager,
-                                          Object children, JsonObject data, Styles styles, int dataIndex) {
+                                          ObjectValue children, JsonObject data, Styles styles, int dataIndex) {
 
         //noinspection ConstantConditions : We want to throw an exception (for now)
         String dataPath = children.getAsString(ProteusConstants.DATA).substring(1);

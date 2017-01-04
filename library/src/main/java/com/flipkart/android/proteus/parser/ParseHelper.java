@@ -38,7 +38,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.R;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -543,7 +543,7 @@ public class ParseHelper {
         return attributeValue.startsWith(COLOR_LOCAL_RESOURCE_STR);
     }
 
-    public static Pair<int[], Value> parseState(Object value) {
+    public static Pair<int[], Value> parseState(ObjectValue value) {
 
         if (value.isObject(DRAWABLE_STR)) {
             List<Integer> statesToReturn = new ArrayList<>();
@@ -614,7 +614,7 @@ public class ParseHelper {
      * @param value
      * @return The layer info as a {@link Pair}
      */
-    public static Pair<Integer, Value> parseLayer(Object value) {
+    public static Pair<Integer, Value> parseLayer(ObjectValue value) {
 
         String idAsString = value.getAsString(ID_STR);
         int androidResIdByXmlResId = View.NO_ID;

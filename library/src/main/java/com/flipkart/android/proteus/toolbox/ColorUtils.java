@@ -31,7 +31,7 @@ import android.util.StateSet;
 import android.webkit.ValueCallback;
 
 import com.flipkart.android.proteus.Array;
-import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
@@ -90,7 +90,7 @@ public class ColorUtils {
         }
     }
 
-    private static void handleElement(Context context, Object value, ValueCallback<Integer> colorCallback, ValueCallback<ColorStateList> colorStateListCallback) {
+    private static void handleElement(Context context, ObjectValue value, ValueCallback<Integer> colorCallback, ValueCallback<ColorStateList> colorStateListCallback) {
         ColorStateList colorStateList = inflateFromParser(context, value);
 
         if (null != colorStateList) {
@@ -166,7 +166,7 @@ public class ColorUtils {
     }
 
     @Nullable
-    private static ColorStateList inflateFromParser(Context context, Object value) {
+    private static ColorStateList inflateFromParser(Context context, ObjectValue value) {
         ColorStateList result = null;
 
         if (value.isPrimitive("type")) {
@@ -177,7 +177,7 @@ public class ColorUtils {
 
                     Array children = value.get("children").getAsArray();
                     Iterator<Value> iterator = children.iterator();
-                    Object child;
+                    ObjectValue child;
 
                     int listAllocated = 20;
                     int listSize = 0;

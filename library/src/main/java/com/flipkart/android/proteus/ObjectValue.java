@@ -29,18 +29,18 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Object
+ * ObjectValue
  *
  * @author aditya.sharat
  */
 
-public class Object extends Value {
+public class ObjectValue extends Value {
 
     private final HashMap<String, Value> members = new HashMap<>();
 
     @Override
-    Object copy() {
-        Object result = new Object();
+    ObjectValue copy() {
+        ObjectValue result = new ObjectValue();
         for (Map.Entry<String, Value> entry : members.entrySet()) {
             result.add(entry.getKey(), entry.getValue().copy());
         }
@@ -63,7 +63,7 @@ public class Object extends Value {
     }
 
     /**
-     * Removes the {@code property} from this {@link Object}.
+     * Removes the {@code property} from this {@link ObjectValue}.
      *
      * @param property name of the member that should be removed.
      * @return the {@link Value} object that is being removed.
@@ -269,13 +269,13 @@ public class Object extends Value {
     }
 
     /**
-     * Convenience method to get the specified member as a Object.
+     * Convenience method to get the specified member as a ObjectValue.
      *
      * @param memberName name of the member being requested.
-     * @return the Object corresponding to the specified member.
+     * @return the ObjectValue corresponding to the specified member.
      */
-    public Object getAsObject(String memberName) {
-        return (Object) members.get(memberName);
+    public ObjectValue getAsObject(String memberName) {
+        return (ObjectValue) members.get(memberName);
     }
 
     @Nullable
@@ -286,8 +286,8 @@ public class Object extends Value {
         return null;
     }
 
-    static Object fromJson(JsonObject json) {
-        Object object = new Object();
+    static ObjectValue fromJson(JsonObject json) {
+        ObjectValue object = new ObjectValue();
         String name;
         JsonElement element;
         for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
@@ -301,7 +301,7 @@ public class Object extends Value {
 
     @Override
     public boolean equals(java.lang.Object o) {
-        return (o == this) || (o instanceof Object && ((Object) o).members.equals(members));
+        return (o == this) || (o instanceof ObjectValue && ((ObjectValue) o).members.equals(members));
     }
 
     @Override

@@ -76,7 +76,7 @@ public class Primitive extends Value {
     }
 
     /**
-     * Create a primitive using the specified Object. It must be an instance of {@link Number}, a
+     * Create a primitive using the specified ObjectValue. It must be an instance of {@link Number}, a
      * Java primitive type, or a String.
      *
      * @param primitive the value to create the primitive with.

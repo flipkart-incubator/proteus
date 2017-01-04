@@ -29,7 +29,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.Attributes;
@@ -71,7 +71,7 @@ public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extend
                 }
                 int background = Color.TRANSPARENT;
                 int progress = Color.TRANSPARENT;
-                Object object = value.getAsObject();
+                ObjectValue object = value.getAsObject();
                 String string = object.getAsString("background");
                 if (string != null) {
                     background = ParseHelper.parseColor(string);

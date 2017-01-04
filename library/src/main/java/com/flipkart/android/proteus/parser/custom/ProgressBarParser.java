@@ -33,7 +33,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.Attributes;
@@ -84,7 +84,7 @@ public class ProgressBarParser<T extends ProgressBar> extends WrappableParser<T>
                 if (!value.isObject()) {
                     return;
                 }
-                Object object = value.getAsObject();
+                ObjectValue object = value.getAsObject();
                 int background = Color.TRANSPARENT;
                 int progress = Color.TRANSPARENT;
 

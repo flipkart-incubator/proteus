@@ -42,7 +42,7 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
-import com.flipkart.android.proteus.Object;
+import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.google.gson.annotations.SerializedName;
@@ -114,7 +114,7 @@ public class AnimationUtils {
         return anim;
     }
 
-    private static Animation handleElement(Context context, Object value) {
+    private static Animation handleElement(Context context, ObjectValue value) {
         Animation anim = null;
         String type = value.getAsString(TYPE);
         AnimationProperties animationProperties = null;
@@ -174,7 +174,7 @@ public class AnimationUtils {
         return interpolator;
     }
 
-    private static Interpolator handleElementInterpolator(Context c, Object value) {
+    private static Interpolator handleElementInterpolator(Context c, ObjectValue value) {
 
         Interpolator interpolator = null;
         String type = value.getAsString("type");
@@ -304,7 +304,7 @@ public class AnimationUtils {
         @SerializedName("zAdjustment")
         Integer zAdjustment;
 
-        public AnimationProperties(Object value) {
+        public AnimationProperties(ObjectValue value) {
             detachWallpaper = value.getAsBoolean(DETACH_WALLPAPER);
             duration = value.getAsLong(DURATION);
             fillAfter = value.getAsBoolean(FILL_AFTER);
@@ -379,7 +379,7 @@ public class AnimationUtils {
         @SerializedName("children")
         Value children;
 
-        public AnimationSetProperties(Object value) {
+        public AnimationSetProperties(ObjectValue value) {
             super(value);
             shareInterpolator = value.getAsBoolean(SHARE_INTERPOLATOR);
             children = value.get(CHILDREN);
@@ -419,7 +419,7 @@ public class AnimationUtils {
         @SerializedName("toAlpha")
         public Float toAlpha;
 
-        public AlphaAnimProperties(Object value) {
+        public AlphaAnimProperties(ObjectValue value) {
             super(value);
             fromAlpha = value.getAsFloat(FROM_ALPHA);
             toAlpha = value.getAsFloat(TO_ALPHA);
@@ -453,7 +453,7 @@ public class AnimationUtils {
         @SerializedName("pivotY")
         public Value pivotY;
 
-        public ScaleAnimProperties(Object value) {
+        public ScaleAnimProperties(ObjectValue value) {
             super(value);
             fromXScale = value.getAsFloat(FROM_X_SCALE);
             toXScale = value.getAsFloat(FROM_X_SCALE);
@@ -491,7 +491,7 @@ public class AnimationUtils {
         @SerializedName("toYDelta")
         public Value toYDelta;
 
-        public TranslateAnimProperties(Object value) {
+        public TranslateAnimProperties(ObjectValue value) {
             super(value);
             fromXDelta = value.get(FROM_X_DELTA);
             toXDelta = value.get(TO_X_DELTA);
@@ -526,7 +526,7 @@ public class AnimationUtils {
         @SerializedName("pivotY")
         public Value pivotY;
 
-        public RotateAnimProperties(Object value) {
+        public RotateAnimProperties(ObjectValue value) {
             super(value);
             fromDegrees = value.getAsFloat(FROM_DEGREES);
             toDegrees = value.getAsFloat(TO_DEGREES);
@@ -571,7 +571,7 @@ public class AnimationUtils {
         @SerializedName("controlY2")
         public Float controlY2;
 
-        public PathInterpolatorProperties(Object parser) {
+        public PathInterpolatorProperties(ObjectValue parser) {
             super(parser);
             controlX1 = parser.getAsFloat(CONTROL_X1);
             controlY1 = parser.getAsFloat(CONTROL_Y1);
@@ -596,7 +596,7 @@ public class AnimationUtils {
         @SerializedName("tension")
         public Float tension;
 
-        public AnticipateInterpolatorProperties(Object parser) {
+        public AnticipateInterpolatorProperties(ObjectValue parser) {
             super(parser);
             tension = parser.getAsFloat(TENSION);
         }
@@ -613,7 +613,7 @@ public class AnimationUtils {
         @SerializedName("tension")
         public Float tension;
 
-        public OvershootInterpolatorProperties(Object parser) {
+        public OvershootInterpolatorProperties(ObjectValue parser) {
             super(parser);
             tension = parser.getAsFloat(TENSION);
         }
@@ -633,7 +633,7 @@ public class AnimationUtils {
         @SerializedName("extraTension")
         public Float extraTension;
 
-        public AnticipateOvershootInterpolatorProperties(Object parser) {
+        public AnticipateOvershootInterpolatorProperties(ObjectValue parser) {
             super(parser);
             tension = parser.getAsFloat(TENSION);
             extraTension = parser.getAsFloat(EXTRA_TENSION);
@@ -651,7 +651,7 @@ public class AnimationUtils {
         @SerializedName("cycles")
         public Float cycles;
 
-        public CycleInterpolatorProperties(Object parser) {
+        public CycleInterpolatorProperties(ObjectValue parser) {
             super(parser);
             cycles = parser.getAsFloat(CYCLES);
         }

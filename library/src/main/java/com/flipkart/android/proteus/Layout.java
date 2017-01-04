@@ -44,9 +44,9 @@ public class Layout extends Value {
     public final Map<String, String> scope;
 
     @Nullable
-    public final Object extras;
+    public final ObjectValue extras;
 
-    public Layout(@NonNull String type, @Nullable List<Attribute> attributes, @Nullable Map<String, String> scope, Object extras) {
+    public Layout(@NonNull String type, @Nullable List<Attribute> attributes, @Nullable Map<String, String> scope, ObjectValue extras) {
         this.type = type;
         this.attributes = attributes;
         this.scope = scope;
