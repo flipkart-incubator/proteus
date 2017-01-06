@@ -33,9 +33,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
-import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
+import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
@@ -45,8 +46,8 @@ import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusAndroidView;
-import com.flipkart.android.proteus.view.ProteusView;
-import com.flipkart.android.proteus.view.manager.ProteusViewManager;
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.google.gson.JsonObject;
 
 import java.util.Map;

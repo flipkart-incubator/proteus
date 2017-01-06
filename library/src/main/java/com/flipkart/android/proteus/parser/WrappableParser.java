@@ -22,7 +22,7 @@ package com.flipkart.android.proteus.parser;
 import android.view.View;
 
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.ProteusView;
 
 /**
  * @author kirankumar

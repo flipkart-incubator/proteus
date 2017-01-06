@@ -20,10 +20,11 @@
 package com.flipkart.android.proteus.processor;
 
 
+import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
-import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.ProteusView;
 
 /**
  * Use this as the base processor for handling events like OnClick , OnLongClick , OnTouch etc.

@@ -23,10 +23,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.ProteusView;
 import com.google.gson.JsonObject;
 
 /**

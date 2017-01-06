@@ -20,7 +20,7 @@
 package com.flipkart.android.proteus.toolbox;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.ProteusView;
 
 /**
  * Used for loading bitmap from network. This is used by layoutengine whenever resources have to downloaded.

@@ -28,7 +28,7 @@ import com.flipkart.android.proteus.Null;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Primitive;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

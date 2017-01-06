@@ -24,7 +24,7 @@ import android.view.View;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
-import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.ProteusView;
 
 import java.util.Map;
 

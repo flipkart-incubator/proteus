@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.processor;
+package com.flipkart.android.proteus;
 
 import com.flipkart.android.proteus.Value;
 

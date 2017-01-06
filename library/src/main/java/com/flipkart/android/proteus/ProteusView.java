@@ -17,9 +17,9 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.view;
+package com.flipkart.android.proteus;
 
-import com.flipkart.android.proteus.view.manager.ProteusViewManager;
+import com.flipkart.android.proteus.manager.ProteusViewManager;
 
 /**
  *

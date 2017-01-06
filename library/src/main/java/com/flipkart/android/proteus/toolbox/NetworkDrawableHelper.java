@@ -27,7 +27,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.ProteusView;
 
 /**
  * Useful for asynchronous/synchronous loading of network images.

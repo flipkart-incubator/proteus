@@ -24,6 +24,7 @@ import android.content.res.TypedArray;
 import android.util.Log;
 import android.view.View;
 
+import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;

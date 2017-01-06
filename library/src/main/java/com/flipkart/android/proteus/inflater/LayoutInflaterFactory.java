@@ -24,6 +24,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 
 import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.IncludeParser;
 import com.flipkart.android.proteus.parser.ViewParser;
 import com.flipkart.android.proteus.parser.custom.ButtonParser;

@@ -24,7 +24,8 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 
-import com.flipkart.android.proteus.view.manager.ProteusViewManager;
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.manager.ProteusViewManager;
 
 /**
  * View

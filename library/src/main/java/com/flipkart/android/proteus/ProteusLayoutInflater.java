@@ -17,20 +17,16 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.inflater;
+package com.flipkart.android.proteus;
 
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.parser.TypeParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.JsonObject;
 
 /**

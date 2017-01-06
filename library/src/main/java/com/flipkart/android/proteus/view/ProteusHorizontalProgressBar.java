@@ -21,7 +21,8 @@ package com.flipkart.android.proteus.view;
 
 import android.content.Context;
 
-import com.flipkart.android.proteus.view.manager.ProteusViewManager;
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.manager.ProteusViewManager;
 
 /**
  * HorizontalProgressBar

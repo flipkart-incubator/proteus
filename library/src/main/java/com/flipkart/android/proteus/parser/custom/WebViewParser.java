@@ -23,13 +23,13 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.WrappableParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.view.ProteusWebView;
 import com.google.gson.JsonObject;
 

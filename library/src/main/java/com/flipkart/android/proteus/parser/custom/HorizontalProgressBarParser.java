@@ -31,15 +31,15 @@ import android.view.ViewGroup;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.parser.WrappableParser;
-import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusHorizontalProgressBar;
-import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.view.custom.HorizontalProgressBar;
 import com.google.gson.JsonObject;
 

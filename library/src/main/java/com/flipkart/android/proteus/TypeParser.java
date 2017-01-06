@@ -17,17 +17,13 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.parser;
+package com.flipkart.android.proteus;
 
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.inflater.ProteusLayoutInflater;
-import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.parser.Attributes;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.view.ProteusView;
 import com.google.gson.JsonObject;
 
 /**

@@ -26,7 +26,7 @@ import android.widget.Adapter;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.ProteusView;
 import com.google.gson.JsonObject;
 
 import java.util.List;
