@@ -25,26 +25,21 @@ import android.widget.ImageView;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.parser.Attributes;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.parser.BaseTypeParser;
-import com.flipkart.android.proteus.parser.WrappableParser;
+import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusImageView;
-import com.flipkart.android.proteus.ProteusView;
 import com.google.gson.JsonObject;
 
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
-
-    public ImageViewParser(BaseTypeParser<T> parentParser) {
-        super(parentParser);
-    }
+public class ImageViewParser<T extends ImageView> extends TypeParser<T> {
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
@@ -52,8 +47,7 @@ public class ImageViewParser<T extends ImageView> extends WrappableParser<T> {
     }
 
     @Override
-    protected void registerAttributeProcessors() {
-        super.registerAttributeProcessors();
+    protected void addAttributeProcessors() {
 
         addAttributeProcessor(Attributes.ImageView.Src, new DrawableResourceProcessor<T>() {
             @Override

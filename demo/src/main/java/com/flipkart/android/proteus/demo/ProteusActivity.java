@@ -34,21 +34,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 
+import com.flipkart.android.proteus.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.Proteus;
+import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.inflater.DataAndViewParsingLayoutInflater;
-import com.flipkart.android.proteus.inflater.LayoutInflaterFactory;
-import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
-import com.flipkart.android.proteus.parser.BaseTypeParser;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
 import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.ProteusView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -66,6 +65,8 @@ import retrofit2.Retrofit;
 public class ProteusActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "http://10.0.2.2:8080/data/";
+
+    private Proteus proteus;
     private Retrofit retrofit;
     private JsonResource resources;
 
@@ -159,7 +160,7 @@ public class ProteusActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (null == retrofit) {
-            ProteusTypeAdapterFactory factory =  new ProteusTypeAdapterFactory();
+            ProteusTypeAdapterFactory factory = new ProteusTypeAdapterFactory();
             Gson gson = new GsonBuilder()
                     .registerTypeAdapterFactory(factory)
                     .create();
@@ -175,20 +176,17 @@ public class ProteusActivity extends AppCompatActivity {
 
         // create a new DataAndViewParsingLayoutInflater
         // and set layouts, callback and image loader.
-        layoutInflater = new LayoutInflaterFactory().getDataAndViewParsingLayoutInflater(layouts);
+        proteus = new ProteusBuilder()
+                .register("CircleView", new CircleViewParser(), "View")
+                .build();
+
+        layoutInflater = proteus.factory.getDataAndViewParsingLayoutInflater();
         layoutInflater.setCallback(callback);
         layoutInflater.setBitmapLoader(bitmapLoader);
 
-        registerCustomViews(layoutInflater);
-
-        ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setInflater(layoutInflater);
+        ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setProteus(proteus);
 
         fetch();
-    }
-
-    private void registerCustomViews(ProteusLayoutInflater layoutInflater) {
-        BaseTypeParser parser = (BaseTypeParser) layoutInflater.getParser("View");
-        layoutInflater.registerParser("CircleView", new CircleViewParser(parser));
     }
 
     @Override

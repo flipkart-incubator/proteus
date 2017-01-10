@@ -27,17 +27,18 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
 
+import com.flipkart.android.proteus.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.Proteus;
+import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.demo.R;
-import com.flipkart.android.proteus.inflater.DataAndViewParsingLayoutInflater;
-import com.flipkart.android.proteus.inflater.LayoutInflaterFactory;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
 import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.ProteusView;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -139,7 +140,9 @@ public class ProteusActivity extends BaseActivity {
 
         data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
 
-        builder = new LayoutInflaterFactory().getDataAndViewParsingLayoutInflater(layoutProvider);
+        Proteus proteus = new ProteusBuilder().build();
+
+        builder = proteus.factory.getDataAndViewParsingLayoutInflater();
         builder.setCallback(callback);
         builder.setBitmapLoader(bitmapLoader);
 

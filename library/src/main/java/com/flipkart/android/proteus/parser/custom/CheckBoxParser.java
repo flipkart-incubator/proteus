@@ -25,24 +25,19 @@ import android.widget.CheckBox;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.parser.Attributes;
-import com.flipkart.android.proteus.parser.BaseTypeParser;
-import com.flipkart.android.proteus.parser.WrappableParser;
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusCheckBox;
-import com.flipkart.android.proteus.ProteusView;
 import com.google.gson.JsonObject;
 
 /**
  * Created by prateek.dixit on 1/8/15.
  */
-public class CheckBoxParser<T extends CheckBox> extends WrappableParser<T> {
-
-    public CheckBoxParser(BaseTypeParser<T> wrappedParser) {
-        super(wrappedParser);
-    }
+public class CheckBoxParser<T extends CheckBox> extends TypeParser<T> {
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
@@ -50,8 +45,7 @@ public class CheckBoxParser<T extends CheckBox> extends WrappableParser<T> {
     }
 
     @Override
-    protected void registerAttributeProcessors() {
-        super.registerAttributeProcessors();
+    protected void addAttributeProcessors() {
 
         addAttributeProcessor(Attributes.CheckBox.Button, new DrawableResourceProcessor<T>() {
             @Override

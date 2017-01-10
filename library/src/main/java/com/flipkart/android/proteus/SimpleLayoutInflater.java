@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.inflater;
+package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,24 +25,24 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.Attribute;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.manager.ProteusViewManager;
+import com.flipkart.android.proteus.manager.ProteusViewManagerImpl;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
+import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.manager.ProteusViewManager;
-import com.flipkart.android.proteus.manager.ProteusViewManagerImpl;
 import com.google.gson.JsonObject;
 
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * A layout builder which can parse json to construct an android view out of it. It uses the
@@ -52,7 +52,8 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     private static final String TAG = "SimpleLayoutInflater";
 
-    private HashMap<String, TypeParser> parsers = new HashMap<>();
+    protected final Map<String, TypeParser> parsers;
+    protected final Map<String, Formatter> formatter;
 
     @Nullable
     protected LayoutInflaterCallback callback;
@@ -62,19 +63,10 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     private IdGenerator idGenerator;
 
-    protected SimpleLayoutInflater(@NonNull IdGenerator idGenerator) {
+    protected SimpleLayoutInflater(Map<String, TypeParser> parsers, Map<String, Formatter> formatter, @NonNull IdGenerator idGenerator) {
+        this.parsers = parsers;
+        this.formatter = formatter;
         this.idGenerator = idGenerator;
-    }
-
-    @Override
-    public void registerParser(String type, TypeParser parser) {
-        parser.prepare();
-        parsers.put(type, parser);
-    }
-
-    @Override
-    public void unregisterParser(String type) {
-        parsers.remove(type);
     }
 
     @Override
@@ -108,8 +100,8 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
          * Parsing each attribute and setting it on the view.
          */
         if (layout.attributes != null) {
-            Iterator<Attribute> iterator = layout.attributes.iterator();
-            Attribute attribute;
+            Iterator<Layout.Attribute> iterator = layout.attributes.iterator();
+            Layout.Attribute attribute;
             while (iterator.hasNext()) {
                 attribute = iterator.next();
                 boolean handled = handleAttribute(parser, view, attribute.id, attribute.value);
@@ -197,15 +189,6 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return idGenerator.getUnique(id);
     }
 
-    @Override
-    public int getAttributeId(String attribute, String type) {
-        TypeParser parser = parsers.get(type);
-        if (null == parser) {
-            return -1;
-        }
-        return parser.getAttributeId(attribute);
-    }
-
     @Nullable
     @Override
     public IdGenerator getIdGenerator() {
@@ -216,6 +199,10 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     @Override
     public LayoutInflaterCallback getCallback() {
         return callback;
+    }
+
+    public Formatter getFormatter(String name) {
+        return this.formatter.get(name);
     }
 
     @Override

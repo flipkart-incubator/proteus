@@ -30,9 +30,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * IdGeneratorImpl
- *
  * <p>
- *     An built in implementation of {@link IdGenerator} interface
+ * <p>
+ * An built in implementation of {@link IdGenerator} interface
  * </p>
  *
  * @author aditya.sharat

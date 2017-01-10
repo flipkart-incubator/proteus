@@ -19,8 +19,6 @@
 
 package com.flipkart.android.proteus;
 
-import com.flipkart.android.proteus.Value;
-
 /**
  * @author kirankumar
  * @author aditya.sharat

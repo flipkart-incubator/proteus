@@ -27,26 +27,21 @@ import android.widget.LinearLayout;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.parser.Attributes;
-import com.flipkart.android.proteus.parser.BaseTypeParser;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.parser.WrappableParser;
+import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusLinearLayout;
-import com.flipkart.android.proteus.ProteusView;
 import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<T> {
-
-    public LinearLayoutParser(BaseTypeParser<T> wrappedParser) {
-        super(wrappedParser);
-    }
+public class LinearLayoutParser<T extends LinearLayout> extends TypeParser<T> {
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
@@ -54,8 +49,8 @@ public class LinearLayoutParser<T extends LinearLayout> extends WrappableParser<
     }
 
     @Override
-    protected void registerAttributeProcessors() {
-        super.registerAttributeProcessors();
+    protected void addAttributeProcessors() {
+
         addAttributeProcessor(Attributes.LinearLayout.Orientation, new StringAttributeProcessor<T>() {
             @Override
             public void handle(T view, String value) {

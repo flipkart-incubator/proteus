@@ -22,13 +22,12 @@ package com.flipkart.android.proteus.gson;
 import android.support.annotation.Nullable;
 
 import com.flipkart.android.proteus.Array;
-import com.flipkart.android.proteus.Attribute;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Null;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Primitive;
+import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -122,7 +121,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                         if (ProteusConstants.TYPE.equals(name) && JsonToken.STRING.equals(in.peek())) {
                             String type = in.nextString();
                             if (PROTEUS_INSTANCE_HOLDER.isLayout(type)) {
-                                return LAYOUT_TYPE_ADAPTER.read(type, PROTEUS_INSTANCE_HOLDER.getInflater(), in);
+                                return LAYOUT_TYPE_ADAPTER.read(type, PROTEUS_INSTANCE_HOLDER.getProteus(), in);
                             } else {
                                 object.add(name, new Primitive(type));
                             }
@@ -226,22 +225,22 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
     public static class ProteusInstanceHolder {
 
-        private ProteusLayoutInflater inflater;
+        private Proteus proteus;
 
         private ProteusInstanceHolder() {
         }
 
         @Nullable
-        public ProteusLayoutInflater getInflater() {
-            return inflater;
+        public Proteus getProteus() {
+            return proteus;
         }
 
-        public void setInflater(ProteusLayoutInflater inflater) {
-            this.inflater = inflater;
+        public void setProteus(Proteus proteus) {
+            this.proteus = proteus;
         }
 
         public boolean isLayout(String type) {
-            return null != inflater && null != inflater.getParser(type);
+            return null != proteus && proteus.has(type);
         }
     }
 
@@ -258,8 +257,8 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return value != null && value.isLayout() ? value.getAsLayout() : null;
         }
 
-        public Layout read(String type, ProteusLayoutInflater inflater, JsonReader in) throws IOException {
-            List<Attribute> attributes = new ArrayList<>();
+        public Layout read(String type, Proteus proteus, JsonReader in) throws IOException {
+            List<Layout.Attribute> attributes = new ArrayList<>();
             Map<String, String> scope = null;
             ObjectValue extras = new ObjectValue();
             String name;
@@ -268,9 +267,9 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 if (ProteusConstants.SCOPE.equals(name)) {
                     scope = readScope(in);
                 } else {
-                    int id = inflater.getAttributeId(name, type);
+                    int id = proteus.getAttributeId(name, type);
                     if (-1 != id) {
-                        attributes.add(new Attribute(id, VALUE_TYPE_ADAPTER.read(in)));
+                        attributes.add(new Layout.Attribute(id, VALUE_TYPE_ADAPTER.read(in)));
                     } else {
                         extras.add(name, VALUE_TYPE_ADAPTER.read(in));
                     }

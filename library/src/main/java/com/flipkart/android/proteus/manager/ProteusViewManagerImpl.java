@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.toolbox.Binding;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -33,7 +34,6 @@ import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
-import com.flipkart.android.proteus.ProteusView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;

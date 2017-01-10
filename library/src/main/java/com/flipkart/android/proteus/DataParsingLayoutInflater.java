@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.inflater;
+package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,9 +25,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
-import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.manager.ProteusViewManager;
+import com.flipkart.android.proteus.manager.ProteusViewManagerImpl;
 import com.flipkart.android.proteus.toolbox.Binding;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
@@ -36,14 +35,10 @@ import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
-import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.manager.ProteusViewManager;
-import com.flipkart.android.proteus.manager.ProteusViewManagerImpl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 
@@ -53,10 +48,9 @@ import java.util.regex.Matcher;
 public class DataParsingLayoutInflater extends SimpleLayoutInflater {
 
     private static final String TAG = "ProteusLayoutInflater";
-    private Map<String, Formatter> formatter = new HashMap<>();
 
-    protected DataParsingLayoutInflater(@NonNull IdGenerator idGenerator) {
-        super(idGenerator);
+    protected DataParsingLayoutInflater(Map<String, TypeParser> parsers, Map<String, Formatter> formatter, @NonNull IdGenerator idGenerator) {
+        super(parsers, formatter, idGenerator);
     }
 
     @Override
@@ -208,20 +202,5 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
             formatter = Formatter.NOOP;
         }
         return formatter.format(toFormat);
-    }
-
-    public void registerFormatter(Formatter formatter) {
-        this.formatter.put(formatter.getName(), formatter);
-    }
-
-    public void unregisterFormatter(String formatterName) {
-        if (Formatter.NOOP.getName().equals(formatterName)) {
-            return;
-        }
-        this.formatter.remove(formatterName);
-    }
-
-    public Formatter getFormatter(String formatterName) {
-        return this.formatter.get(formatterName);
     }
 }

@@ -79,8 +79,7 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     }
 
     /**
-     * @param view           View
-     *
+     * @param view View
      */
     public abstract void handle(V view, String value);
 

@@ -25,8 +25,8 @@ import android.view.View;
 import android.widget.Adapter;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.Value;
 import com.google.gson.JsonObject;
 
 import java.util.List;
@@ -52,7 +52,6 @@ public interface LayoutInflaterCallback {
     ProteusView onUnknownViewType(String type, View parent, Layout layout, JsonObject data, Styles styles, int index);
 
     /**
-     *
      * @param type
      * @param include
      * @return

@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
+import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -31,24 +32,9 @@ import com.google.gson.JsonObject;
 
 /**
  * @author kirankumar
- * @author aditya.sharat
+ * @author adityasharat
  */
 public interface ProteusLayoutInflater {
-
-    /**
-     * Register {@link TypeParser}s for custom view types.
-     *
-     * @param type   The name of the view type.
-     * @param parser The {@link TypeParser} to use while building this view type.
-     */
-    void registerParser(String type, TypeParser parser);
-
-    /**
-     * Un-Register the {@link TypeParser} registered using {@link ProteusLayoutInflater#registerParser}.
-     *
-     * @param type remove {@link TypeParser} for the specified view type.
-     */
-    void unregisterParser(String type);
 
     /**
      * Returns the {@link TypeParser} for the specified view type.
@@ -91,13 +77,6 @@ public interface ProteusLayoutInflater {
     int getUniqueViewId(String id);
 
     /**
-     * @param attribute
-     * @param type
-     * @return
-     */
-    int getAttributeId(String attribute, String type);
-
-    /**
      * @param type
      * @param include
      * @return
@@ -117,6 +96,13 @@ public interface ProteusLayoutInflater {
      * @return The callback object used by this {@link ProteusLayoutInflater}
      */
     LayoutInflaterCallback getCallback();
+
+    /**
+     *
+     * @param name
+     * @return
+     */
+    Formatter getFormatter(String name);
 
     /**
      * Used to set a callback object to handle unknown view types and unknown attributes and other

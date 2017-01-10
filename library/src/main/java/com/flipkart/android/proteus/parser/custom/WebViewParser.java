@@ -24,22 +24,18 @@ import android.webkit.WebView;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.parser.Attributes;
-import com.flipkart.android.proteus.parser.BaseTypeParser;
-import com.flipkart.android.proteus.parser.WrappableParser;
-import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Attributes;
+import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusWebView;
 import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class WebViewParser<T extends WebView> extends WrappableParser<T> {
-    public WebViewParser(BaseTypeParser<T> wrappedParser) {
-        super(wrappedParser);
-    }
+public class WebViewParser<T extends WebView> extends TypeParser<T> {
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
@@ -47,8 +43,8 @@ public class WebViewParser<T extends WebView> extends WrappableParser<T> {
     }
 
     @Override
-    protected void registerAttributeProcessors() {
-        super.registerAttributeProcessors();
+    protected void addAttributeProcessors() {
+
         addAttributeProcessor(Attributes.WebView.Url, new StringAttributeProcessor<T>() {
             @Override
             public void handle(T view, String value) {

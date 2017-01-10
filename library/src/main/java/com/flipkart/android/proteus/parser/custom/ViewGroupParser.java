@@ -23,36 +23,31 @@ import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ObjectValue;
-import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.parser.Attributes;
-import com.flipkart.android.proteus.parser.BaseTypeParser;
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.parser.WrappableParser;
-import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
-import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.Iterator;
 
-public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
+public class ViewGroupParser<T extends ViewGroup> extends TypeParser<T> {
 
     private static final String LAYOUT_MODE_CLIP_BOUNDS = "clipBounds";
     private static final String LAYOUT_MODE_OPTICAL_BOUNDS = "opticalBounds";
-
-    public ViewGroupParser(BaseTypeParser<T> wrappedParser) {
-        super(wrappedParser);
-    }
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
@@ -60,8 +55,8 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
     }
 
     @Override
-    protected void registerAttributeProcessors() {
-        super.registerAttributeProcessors();
+    protected void addAttributeProcessors() {
+
         addAttributeProcessor(Attributes.ViewGroup.ClipChildren, new StringAttributeProcessor<T>() {
             @Override
             public void handle(T view, String value) {

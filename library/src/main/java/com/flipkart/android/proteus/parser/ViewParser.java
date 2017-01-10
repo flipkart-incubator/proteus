@@ -32,22 +32,23 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.processor.TweenAnimationResourceProcessor;
+import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusAndroidView;
-import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.google.gson.JsonObject;
 
 import java.util.Map;
@@ -55,7 +56,7 @@ import java.util.Map;
 /**
  * @author kiran.kumar
  */
-public class ViewParser<V extends View> extends BaseTypeParser<V> {
+public class ViewParser<V extends View> extends TypeParser<V> {
 
     private static final String TAG = "ViewParser";
 
@@ -68,7 +69,8 @@ public class ViewParser<V extends View> extends BaseTypeParser<V> {
         return new ProteusAndroidView(parent.getContext());
     }
 
-    protected void registerAttributeProcessors() {
+    @Override
+    protected void addAttributeProcessors() {
 
         addAttributeProcessor(Attributes.View.OnClick, new EventProcessor<V>() {
             @Override
@@ -381,7 +383,7 @@ public class ViewParser<V extends View> extends BaseTypeParser<V> {
 
             private void process(Map<String, Value> style, ProteusView proteusView, TypeParser handler, ProteusLayoutInflater inflater, String type) {
                 for (Map.Entry<String, Value> entry : style.entrySet()) {
-                    inflater.handleAttribute(handler, proteusView, inflater.getAttributeId(entry.getKey(), type), entry.getValue());
+                    inflater.handleAttribute(handler, proteusView, handler.getAttributeId(entry.getKey()), entry.getValue());
                 }
             }
         });

@@ -24,24 +24,24 @@ import android.widget.ImageButton;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.parser.BaseTypeParser;
-import com.flipkart.android.proteus.parser.WrappableParser;
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusImageButton;
-import com.flipkart.android.proteus.ProteusView;
 import com.google.gson.JsonObject;
 
 /**
  * Created by kirankumar on 25/11/14.
  */
-public class ImageButtonParser<T extends ImageButton> extends WrappableParser<T> {
-
-    public ImageButtonParser(BaseTypeParser<T> parentParser) {
-        super( parentParser);
-    }
+public class ImageButtonParser<T extends ImageButton> extends TypeParser<T> {
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusImageButton(parent.getContext());
+    }
+
+    @Override
+    protected void addAttributeProcessors() {
+
     }
 }

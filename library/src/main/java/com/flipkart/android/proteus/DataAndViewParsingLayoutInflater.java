@@ -17,14 +17,14 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.inflater;
+package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
-import com.flipkart.android.proteus.ProteusView;
 
 import java.util.Map;
 
@@ -34,11 +34,11 @@ import java.util.Map;
  */
 public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater {
 
+    @Nullable
     private Map<String, Layout> layouts;
 
-    protected DataAndViewParsingLayoutInflater(Map<String, Layout> layouts, @NonNull IdGenerator idGenerator) {
-        super(idGenerator);
-        this.layouts = layouts;
+    protected DataAndViewParsingLayoutInflater(Map<String, TypeParser> parsers, Map<String, Formatter> formatter, @NonNull IdGenerator idGenerator) {
+        super(parsers, formatter, idGenerator);
     }
 
     @Override

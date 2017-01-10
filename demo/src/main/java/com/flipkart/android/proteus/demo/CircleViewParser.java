@@ -22,14 +22,12 @@ package com.flipkart.android.proteus.demo;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
-import com.flipkart.android.proteus.demo.customviews.CircleView;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.parser.Attributes;
-import com.flipkart.android.proteus.parser.BaseTypeParser;
-import com.flipkart.android.proteus.parser.WrappableParser;
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.demo.customviews.CircleView;
+import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.ProteusView;
 import com.google.gson.JsonObject;
 
 /**
@@ -38,11 +36,7 @@ import com.google.gson.JsonObject;
  * @author aditya.sharat
  */
 
-public class CircleViewParser extends WrappableParser<CircleView> {
-
-    public CircleViewParser(BaseTypeParser<CircleView> wrappedParser) {
-        super(wrappedParser);
-    }
+public class CircleViewParser extends TypeParser<CircleView> {
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
@@ -50,9 +44,9 @@ public class CircleViewParser extends WrappableParser<CircleView> {
     }
 
     @Override
-    protected void registerAttributeProcessors() {
-        super.registerAttributeProcessors();
-        addAttributeProcessor(new Attributes.Attribute("color"), new StringAttributeProcessor<CircleView>() {
+    protected void addAttributeProcessors() {
+
+        addAttributeProcessor("color", new StringAttributeProcessor<CircleView>() {
             @Override
             public void handle(CircleView view, String value) {
                 view.setColor(value);

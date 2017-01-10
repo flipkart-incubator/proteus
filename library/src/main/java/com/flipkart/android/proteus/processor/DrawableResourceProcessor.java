@@ -43,13 +43,13 @@ import android.webkit.ValueCallback;
 import com.flipkart.android.proteus.Array;
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.ObjectValue;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.ColorUtils;
 import com.flipkart.android.proteus.toolbox.NetworkDrawableHelper;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
-import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;

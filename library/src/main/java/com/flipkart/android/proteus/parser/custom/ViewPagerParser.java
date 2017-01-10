@@ -25,24 +25,25 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.parser.BaseTypeParser;
-import com.flipkart.android.proteus.parser.WrappableParser;
-import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusViewPager;
 import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 13/05/14.
  */
-public class ViewPagerParser<T extends ViewPager> extends WrappableParser<T> {
+public class ViewPagerParser<T extends ViewPager> extends TypeParser<T> {
 
-    public ViewPagerParser(BaseTypeParser<T> wrappedParser) {
-        super(wrappedParser);
-    }
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return new ProteusViewPager(parent.getContext());
+    }
+
+    @Override
+    protected void addAttributeProcessors() {
+
     }
 }
