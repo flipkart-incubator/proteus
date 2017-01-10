@@ -50,6 +50,14 @@ public class Proteus {
         return types.get(type).getAttributeId(name);
     }
 
+    private Map<String, TypeParser> map(Map<String, Type> types) {
+        Map<String, TypeParser> parsers = new HashMap<>();
+        for (Map.Entry<String, Type> entry : types.entrySet()) {
+            parsers.put(entry.getKey(), entry.getValue().parser);
+        }
+        return parsers;
+    }
+
     static class Type {
 
         public final int id;
@@ -68,13 +76,5 @@ public class Proteus {
         public int getAttributeId(String name) {
             return attributes.getAttributeId(name);
         }
-    }
-
-    private Map<String, TypeParser> map(Map<String, Type> types) {
-        Map<String, TypeParser> parsers = new HashMap<>();
-        for (Map.Entry<String, Type> entry : types.entrySet()) {
-            parsers.put(entry.getKey(), entry.getValue().parser);
-        }
-        return parsers;
     }
 }
