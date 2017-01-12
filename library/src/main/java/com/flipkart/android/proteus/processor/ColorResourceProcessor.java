@@ -32,7 +32,6 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
     public ColorResourceProcessor() {
 
     }
-
     @Override
     public void handle(final V view, Value value) {
         ColorUtils.loadColor(view.getContext(), value, new ValueCallback<Integer>() {
@@ -56,6 +55,11 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
                 setColor(view, color);
             }
         });
+    }
+
+    @Override
+    public int type() {
+        return super.type();
     }
 
     public abstract void setColor(V view, int color);

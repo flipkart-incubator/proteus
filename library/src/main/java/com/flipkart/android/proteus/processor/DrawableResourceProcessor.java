@@ -102,6 +102,10 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         }
     }
 
+    @Override
+    public int type() {
+        return super.type();
+    }
 
     /**
      * Any string based drawables are handled here. Color, local resource and remote image urls.

@@ -80,6 +80,13 @@ public abstract class Value {
     }
 
     /**
+     * @return
+     */
+    public boolean isDimension() {
+        return this instanceof Dimension;
+    }
+
+    /**
      * convenience method to get this value as a {@link ObjectValue}. If the value is of some
      * other type, a {@link IllegalStateException} will result. Hence it is best to use this method
      * after ensuring that this value is of the desired type by calling {@link #isObject()}
@@ -144,11 +151,24 @@ public abstract class Value {
         throw new IllegalStateException("This is not a Null.");
     }
 
+    /**
+     * @return
+     */
     public Layout getAsLayout() {
         if (isLayout()) {
             return (Layout) this;
         }
         throw new IllegalStateException("Not a Layout: " + this);
+    }
+
+    /**
+     * @return
+     */
+    public Dimension getAsDimension() {
+        if (isDimension()) {
+            return (Dimension) this;
+        }
+        throw new IllegalStateException("Not a Dimension: " + this);
     }
 
     /**
@@ -255,5 +275,10 @@ public abstract class Value {
         }
 
         return value;
+    }
+
+    @Override
+    public String toString() {
+        throw new RuntimeException("Not yet implemented");
     }
 }

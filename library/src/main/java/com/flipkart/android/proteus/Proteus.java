@@ -46,7 +46,7 @@ public class Proteus {
         return types.containsKey(type);
     }
 
-    public int getAttributeId(String name, String type) {
+    public TypeParser.AttributeSet.Attribute getAttributeId(String name, String type) {
         return types.get(type).getAttributeId(name);
     }
 
@@ -73,8 +73,8 @@ public class Proteus {
             this.attributes = attributes;
         }
 
-        public int getAttributeId(String name) {
-            return attributes.getAttributeId(name);
+        public TypeParser.AttributeSet.Attribute getAttributeId(String name) {
+            return attributes.getAttribute(name);
         }
     }
 }

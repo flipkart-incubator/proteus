@@ -34,10 +34,16 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
      */
     @Override
     public final void handle(T view, Value value) {
-        if (value != null && value.isPrimitive()) {
-            float dimension = ParseHelper.parseDimension(value.getAsString(), view.getContext());
-            setDimension(view, dimension);
+        if (value.isDimension()) {
+            setDimension(view, value.getAsDimension().apply(view.getContext()));
+        } else if (value.isPrimitive()) {
+            setDimension(view, ParseHelper.parseDimension(value.getAsString(), view.getContext()));
         }
+    }
+
+    @Override
+    public int type() {
+        return TYPE_DIMENSION;
     }
 
     /**

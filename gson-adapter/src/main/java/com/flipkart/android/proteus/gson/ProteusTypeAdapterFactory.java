@@ -19,14 +19,19 @@
 
 package com.flipkart.android.proteus.gson;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.flipkart.android.proteus.Array;
+import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.AttributeProcessor.Type;
+import com.flipkart.android.proteus.Dimension;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Null;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Primitive;
 import com.flipkart.android.proteus.Proteus;
+import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.google.gson.Gson;
@@ -87,6 +92,8 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 }
                 out.endObject();
 
+            } else if (value.isDimension()) {
+                out.value(value.getAsDimension().toString());
             } else {
                 throw new IllegalArgumentException("Couldn't write " + value.getClass());
             }
@@ -193,7 +200,22 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return value != null && value.isNull() ? value.getAsNull() : null;
         }
     }.nullSafe();
+    public static final DimensionTypeAdapter DIMENSION_TYPE_ADAPTER = new DimensionTypeAdapter();
     public static final LayoutTypeAdapter LAYOUT_TYPE_ADAPTER = new LayoutTypeAdapter();
+
+    public static Value read(@Type int type, JsonReader in) throws IOException {
+        switch (type) {
+            case AttributeProcessor.TYPE_DIMENSION:
+                return DIMENSION_TYPE_ADAPTER.read(in, PROTEUS_INSTANCE_HOLDER.getContext());
+            default:
+            case AttributeProcessor.TYPE_ANIMATION:
+            case AttributeProcessor.TYPE_COLOR:
+            case AttributeProcessor.TYPE_DRAWABLE:
+            case AttributeProcessor.TYPE_STRING:
+            case AttributeProcessor.TYPE_VALUE:
+                return VALUE_TYPE_ADAPTER.read(in);
+        }
+    }
 
     @Override
     public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
@@ -222,10 +244,10 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         return null;
     }
 
-
     public static class ProteusInstanceHolder {
 
         private Proteus proteus;
+        private Context context;
 
         private ProteusInstanceHolder() {
         }
@@ -237,6 +259,15 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
         public void setProteus(Proteus proteus) {
             this.proteus = proteus;
+        }
+
+        @Nullable
+        public Context getContext() {
+            return context;
+        }
+
+        public void setContext(Context context) {
+            this.context = context;
         }
 
         public boolean isLayout(String type) {
@@ -267,9 +298,9 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 if (ProteusConstants.SCOPE.equals(name)) {
                     scope = readScope(in);
                 } else {
-                    int id = proteus.getAttributeId(name, type);
-                    if (-1 != id) {
-                        attributes.add(new Layout.Attribute(id, VALUE_TYPE_ADAPTER.read(in)));
+                    TypeParser.AttributeSet.Attribute attribute = proteus.getAttributeId(name, type);
+                    if (null != attribute) {
+                        attributes.add(new Layout.Attribute(attribute.id, ProteusTypeAdapterFactory.read(attribute.type, in)));
                     } else {
                         extras.add(name, VALUE_TYPE_ADAPTER.read(in));
                     }
@@ -308,6 +339,34 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             in.endObject();
 
             return scope;
+        }
+    }
+
+    public static class DimensionTypeAdapter extends TypeAdapter<Dimension> {
+
+        @Override
+        public void write(JsonWriter out, Dimension value) throws IOException {
+            VALUE_TYPE_ADAPTER.write(out, value);
+        }
+
+        @Override
+        public Dimension read(JsonReader in) throws IOException {
+            throw new IOException("Requires context");
+        }
+
+        public Dimension read(JsonReader in, Context context) throws IOException {
+            JsonToken peek = in.peek();
+
+            if (peek == JsonToken.NULL) {
+                in.nextNull();
+                return Dimension.ZERO;
+            }
+
+            if (peek != JsonToken.STRING) {
+                throw new JsonSyntaxException("Dimension type must be a String.");
+            }
+
+            return Dimension.valueOf(in.nextString(), context);
         }
     }
 }

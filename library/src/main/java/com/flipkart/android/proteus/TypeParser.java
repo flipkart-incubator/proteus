@@ -47,7 +47,7 @@ public abstract class TypeParser<V extends View> {
     private TypeParser parent;
     private AttributeProcessor[] processors = new AttributeProcessor[0];
 
-    private Map<String, Integer> attributes = new HashMap<>();
+    private Map<String, AttributeSet.Attribute> attributes = new HashMap<>();
 
     private int offset;
     private AttributeSet attributeSet;
@@ -99,9 +99,9 @@ public abstract class TypeParser<V extends View> {
         return attributeSet;
     }
 
-    public void addAttributeProcessor(String attribute, AttributeProcessor<V> processor) {
+    public void addAttributeProcessor(String name, AttributeProcessor<V> processor) {
         addAttributeProcessor(processor);
-        attributes.put(attribute, getAttributeId(processors.length - 1));
+        attributes.put(name, new AttributeSet.Attribute(processor.type(), getAttributeId(processors.length - 1)));
     }
 
     private void addAttributeProcessor(AttributeProcessor<V> handler) {
@@ -122,7 +122,8 @@ public abstract class TypeParser<V extends View> {
     }
 
     public int getAttributeId(String name) {
-        return attributeSet.getAttributeId(name);
+        AttributeSet.Attribute attribute = attributeSet.getAttribute(name);
+        return null != attribute ? attribute.id : -1;
     }
 
     public AttributeSet getAttributeSet() {
@@ -162,14 +163,14 @@ public abstract class TypeParser<V extends View> {
     public static class AttributeSet {
 
         @Nullable
-        private final Map<String, Integer> attributes;
+        private final Map<String, Attribute> attributes;
 
         @Nullable
         private final AttributeSet parent;
 
         private final int offset;
 
-        private AttributeSet(@Nullable Map<String, Integer> attributes, @Nullable AttributeSet parent) {
+        private AttributeSet(@Nullable Map<String, Attribute> attributes, @Nullable AttributeSet parent) {
             this.attributes = attributes;
             this.parent = parent;
             int parentOffset = null != parent ? parent.getOffset() : 0;
@@ -177,19 +178,31 @@ public abstract class TypeParser<V extends View> {
             this.offset = parentOffset - length;
         }
 
-        public int getAttributeId(String name) {
-            Integer id = null != attributes ? attributes.get(name) : null;
-            if (null != id) {
-                return id;
+        @Nullable
+        public Attribute getAttribute(String name) {
+            Attribute attribute = null != attributes ? attributes.get(name) : null;
+            if (null != attribute) {
+                return attribute;
             } else if (null != parent) {
-                return parent.getAttributeId(name);
+                return parent.getAttribute(name);
             } else {
-                return -1;
+                return null;
             }
         }
 
         int getOffset() {
             return offset;
+        }
+
+        public static class Attribute {
+            @AttributeProcessor.Type
+            public final int type;
+            public final int id;
+
+            public Attribute(@AttributeProcessor.Type int type, int id) {
+                this.type = type;
+                this.id = id;
+            }
         }
     }
 

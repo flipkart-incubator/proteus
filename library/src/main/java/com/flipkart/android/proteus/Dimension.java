@@ -50,7 +50,6 @@ public class Dimension extends Value {
     public static final int DIMENSION_UNIT_IN = TypedValue.COMPLEX_UNIT_IN;
     public static final int DIMENSION_UNIT_MM = TypedValue.COMPLEX_UNIT_MM;
 
-    public static final String NULL = "null";
     public static final String MATCH_PARENT = "match_parent";
     public static final String FILL_PARENT = "fill_parent";
     public static final String WRAP_CONTENT = "wrap_content";
@@ -82,6 +81,8 @@ public class Dimension extends Value {
         sDimensionsUnitsMap.put(SUFFIX_IN, DIMENSION_UNIT_IN);
         sDimensionsUnitsMap.put(SUFFIX_MM, DIMENSION_UNIT_MM);
     }
+
+    public static final Dimension ZERO = new Dimension(0, DIMENSION_UNIT_PX);
 
     public final float value;
     public final int unit;
@@ -161,7 +162,7 @@ public class Dimension extends Value {
 
     public static Dimension valueOf(String dimension, Context context) {
         if (null == dimension) {
-            return DimensionCache.cache.get(NULL);
+            return ZERO;
         }
         Dimension d = DimensionCache.cache.get(dimension);
         if (null == d) {
@@ -171,16 +172,39 @@ public class Dimension extends Value {
         return d;
     }
 
+    public float apply(Context context) {
+        float result;
+
+        switch (unit) {
+            case DIMENSION_UNIT_ENUM:
+            case DIMENSION_UNIT_STYLE_ATTR:
+                result = value;
+                break;
+            case DIMENSION_UNIT_PX:
+            case DIMENSION_UNIT_DP:
+            case DIMENSION_UNIT_SP:
+            case DIMENSION_UNIT_PT:
+            case DIMENSION_UNIT_MM:
+            case DIMENSION_UNIT_IN:
+                result = TypedValue.applyDimension(unit, value, context.getResources().getDisplayMetrics());
+                break;
+            case DIMENSION_UNIT_RESOURCE:
+                result = context.getResources().getDimension((int) value);
+                break;
+            default:
+                result = 0;
+        }
+
+        return result;
+    }
+
     private static class DimensionCache {
         private static final LruCache<String, Dimension> cache = new LruCache<>(64);
-
-        static {
-            cache.put(NULL, new Dimension(0, DIMENSION_UNIT_PX));
-        }
     }
 
     @Override
     Value copy() {
         return this;
     }
+
 }
