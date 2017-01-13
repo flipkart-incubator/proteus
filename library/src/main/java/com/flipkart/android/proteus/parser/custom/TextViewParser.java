@@ -23,7 +23,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -32,12 +31,13 @@ import android.widget.TextView;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
+import com.flipkart.android.proteus.processor.GravityAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -83,10 +83,10 @@ public class TextViewParser<T extends TextView> extends TypeParser<T> {
                 view.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
             }
         });
-        addAttributeProcessor(Attributes.TextView.Gravity, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Gravity, new GravityAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
-                view.setGravity(ParseHelper.parseGravity(value));
+            public void handle(T view, @Gravity int gravity) {
+                view.setGravity(gravity);
             }
         });
 

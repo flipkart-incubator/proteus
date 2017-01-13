@@ -37,6 +37,7 @@ import android.widget.RelativeLayout;
 
 import com.flipkart.android.proteus.Dimension;
 import com.flipkart.android.proteus.ObjectValue;
+import com.flipkart.android.proteus.Primitive;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
@@ -101,7 +102,7 @@ public class ParseHelper {
     private static final Map<String, Class> sHashMap = new HashMap<>();
     private static final Map<String, Integer> sAttributeCache = new HashMap<>();
     private static final Map<String, Integer> sStateMap = new HashMap<>();
-    private static final Map<String, Integer> sGravityMap = new HashMap<>();
+    private static final Map<String, Primitive> sGravityMap = new HashMap<>();
     private static final Map<String, Integer> sDividerMode = new HashMap<>();
     private static final Map<String, Enum> sEllipsizeMode = new HashMap<>();
     private static final Map<String, Integer> sVisibilityMode = new HashMap<>();
@@ -119,15 +120,15 @@ public class ParseHelper {
         sStateMap.put("state_activated", android.R.attr.state_activated);
         sStateMap.put("state_window_focused", android.R.attr.state_window_focused);
 
-        sGravityMap.put(CENTER, Gravity.CENTER);
-        sGravityMap.put(CENTER_HORIZONTAL, Gravity.CENTER_HORIZONTAL);
-        sGravityMap.put(CENTER_VERTICAL, Gravity.CENTER_VERTICAL);
-        sGravityMap.put(LEFT, Gravity.LEFT);
-        sGravityMap.put(RIGHT, Gravity.RIGHT);
-        sGravityMap.put(TOP, Gravity.TOP);
-        sGravityMap.put(BOTTOM, Gravity.BOTTOM);
-        sGravityMap.put(START, Gravity.START);
-        sGravityMap.put(END, Gravity.END);
+        sGravityMap.put(CENTER, new Primitive(Gravity.CENTER));
+        sGravityMap.put(CENTER_HORIZONTAL, new Primitive(Gravity.CENTER_HORIZONTAL));
+        sGravityMap.put(CENTER_VERTICAL, new Primitive(Gravity.CENTER_VERTICAL));
+        sGravityMap.put(LEFT, new Primitive(Gravity.LEFT));
+        sGravityMap.put(RIGHT, new Primitive(Gravity.RIGHT));
+        sGravityMap.put(TOP, new Primitive(Gravity.TOP));
+        sGravityMap.put(BOTTOM, new Primitive(Gravity.BOTTOM));
+        sGravityMap.put(START, new Primitive(Gravity.START));
+        sGravityMap.put(END, new Primitive(Gravity.END));
 
         sDividerMode.put(END, LinearLayout.SHOW_DIVIDER_END);
         sDividerMode.put(MIDDLE, LinearLayout.SHOW_DIVIDER_MIDDLE);
@@ -237,16 +238,20 @@ public class ParseHelper {
         return number;
     }
 
-    public static int parseGravity(String attributeValue) {
-        String[] gravities = attributeValue.split("\\|");
+    public static int parseGravity(String value) {
+        String[] gravities = value.split("\\|");
         int returnGravity = Gravity.NO_GRAVITY;
         for (String gravity : gravities) {
-            Integer gravityValue = sGravityMap.get(gravity.trim().toLowerCase());
+            Primitive gravityValue = sGravityMap.get(gravity);
             if (null != gravityValue) {
-                returnGravity |= gravityValue;
+                returnGravity |= gravityValue.getAsCharacter();
             }
         }
         return returnGravity;
+    }
+
+    public static Primitive getGravity(String value) {
+        return sGravityMap.get(value);
     }
 
     public static int parseDividerMode(String attributeValue) {
@@ -376,7 +381,7 @@ public class ParseHelper {
     }
 
     public static boolean parseBoolean(Value value) {
-        // TODO: we should consider 0 as false to.
+        // TODO: we should consider 0 as false too.
         return value.isPrimitive() && value.getAsPrimitive().isBoolean() ? value.getAsBoolean() : !value.isNull();
     }
 

@@ -43,6 +43,7 @@ import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
+import com.flipkart.android.proteus.processor.GravityAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.processor.TweenAnimationResourceProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
@@ -130,19 +131,18 @@ public class ViewParser<V extends View> extends TypeParser<V> {
                 }
             }
         });
-        addAttributeProcessor(Attributes.View.LayoutGravity, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.LayoutGravity, new GravityAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
+            public void handle(V view, @Gravity int gravity) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
 
                 if (layoutParams instanceof LinearLayout.LayoutParams) {
                     LinearLayout.LayoutParams linearLayoutParams = (LinearLayout.LayoutParams) layoutParams;
-                    //noinspection ResourceType
-                    linearLayoutParams.gravity = ParseHelper.parseGravity(value);
+                    linearLayoutParams.gravity = gravity;
                     view.setLayoutParams(layoutParams);
                 } else if (layoutParams instanceof FrameLayout.LayoutParams) {
                     FrameLayout.LayoutParams linearLayoutParams = (FrameLayout.LayoutParams) layoutParams;
-                    linearLayoutParams.gravity = ParseHelper.parseGravity(value);
+                    linearLayoutParams.gravity = gravity;
                     view.setLayoutParams(layoutParams);
                 } else {
                     if (ProteusConstants.isLoggingEnabled()) {

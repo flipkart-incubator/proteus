@@ -28,10 +28,11 @@ import android.widget.LinearLayout;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
+import com.flipkart.android.proteus.processor.GravityAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -62,12 +63,10 @@ public class LinearLayoutParser<T extends LinearLayout> extends TypeParser<T> {
             }
         });
 
-        addAttributeProcessor(Attributes.View.Gravity, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.View.Gravity, new GravityAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
-
-                view.setGravity(ParseHelper.parseGravity(value));
-
+            public void handle(T view, @Gravity int gravity) {
+                view.setGravity(gravity);
             }
         });
 
