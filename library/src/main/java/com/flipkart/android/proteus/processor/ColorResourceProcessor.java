@@ -57,11 +57,6 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
         });
     }
 
-    @Override
-    public int type() {
-        return super.type();
-    }
-
     public abstract void setColor(V view, int color);
 
     public abstract void setColor(V view, ColorStateList colors);

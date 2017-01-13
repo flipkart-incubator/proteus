@@ -38,11 +38,6 @@ public abstract class EventProcessor<T> extends AttributeProcessor<T> {
         setOnEventListener(view, value);
     }
 
-    @Override
-    public int type() {
-        return TYPE_COLOR;
-    }
-
     public abstract void setOnEventListener(T view, Value value);
 
     /**

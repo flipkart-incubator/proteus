@@ -23,9 +23,6 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.flipkart.android.proteus.Array;
-import com.flipkart.android.proteus.AttributeProcessor;
-import com.flipkart.android.proteus.AttributeProcessor.Type;
-import com.flipkart.android.proteus.Dimension;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Null;
 import com.flipkart.android.proteus.ObjectValue;
@@ -61,7 +58,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
     public static final ProteusInstanceHolder PROTEUS_INSTANCE_HOLDER = new ProteusInstanceHolder();
 
-    public static final TypeAdapter<Value> VALUE_TYPE_ADAPTER = new TypeAdapter<Value>() {
+    public final TypeAdapter<Value> VALUE_TYPE_ADAPTER = new TypeAdapter<Value>() {
         @Override
         public void write(JsonWriter out, Value value) throws IOException {
             if (value == null || value.isNull()) {
@@ -150,7 +147,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             }
         }
     }.nullSafe();
-    public static final TypeAdapter<Primitive> PRIMITIVE_TYPE_ADAPTER = new TypeAdapter<Primitive>() {
+    public final TypeAdapter<Primitive> PRIMITIVE_TYPE_ADAPTER = new TypeAdapter<Primitive>() {
 
         @Override
         public void write(JsonWriter out, Primitive value) throws IOException {
@@ -163,7 +160,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return value != null && value.isPrimitive() ? value.getAsPrimitive() : null;
         }
     }.nullSafe();
-    public static final TypeAdapter<ObjectValue> OBJECT_TYPE_ADAPTER = new TypeAdapter<ObjectValue>() {
+    public final TypeAdapter<ObjectValue> OBJECT_TYPE_ADAPTER = new TypeAdapter<ObjectValue>() {
         @Override
         public void write(JsonWriter out, ObjectValue value) throws IOException {
             VALUE_TYPE_ADAPTER.write(out, value);
@@ -175,7 +172,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return value != null && value.isObject() ? value.getAsObject() : null;
         }
     }.nullSafe();
-    public static final TypeAdapter<Array> ARRAY_TYPE_ADAPTER = new TypeAdapter<Array>() {
+    public final TypeAdapter<Array> ARRAY_TYPE_ADAPTER = new TypeAdapter<Array>() {
         @Override
         public void write(JsonWriter out, Array value) throws IOException {
             VALUE_TYPE_ADAPTER.write(out, value);
@@ -187,7 +184,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return value != null && value.isArray() ? value.getAsArray() : null;
         }
     }.nullSafe();
-    public static final TypeAdapter<Null> NULL_TYPE_ADAPTER = new TypeAdapter<Null>() {
+    public final TypeAdapter<Null> NULL_TYPE_ADAPTER = new TypeAdapter<Null>() {
 
         @Override
         public void write(JsonWriter out, Null value) throws IOException {
@@ -200,21 +197,12 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return value != null && value.isNull() ? value.getAsNull() : null;
         }
     }.nullSafe();
-    public static final DimensionTypeAdapter DIMENSION_TYPE_ADAPTER = new DimensionTypeAdapter();
-    public static final LayoutTypeAdapter LAYOUT_TYPE_ADAPTER = new LayoutTypeAdapter();
+    public final LayoutTypeAdapter LAYOUT_TYPE_ADAPTER = new LayoutTypeAdapter();
 
-    public static Value read(@Type int type, JsonReader in) throws IOException {
-        switch (type) {
-            case AttributeProcessor.TYPE_DIMENSION:
-                return DIMENSION_TYPE_ADAPTER.read(in, PROTEUS_INSTANCE_HOLDER.getContext());
-            default:
-            case AttributeProcessor.TYPE_ANIMATION:
-            case AttributeProcessor.TYPE_COLOR:
-            case AttributeProcessor.TYPE_DRAWABLE:
-            case AttributeProcessor.TYPE_STRING:
-            case AttributeProcessor.TYPE_VALUE:
-                return VALUE_TYPE_ADAPTER.read(in);
-        }
+    private Context context;
+
+    public ProteusTypeAdapterFactory(Context context) {
+        this.context = context;
     }
 
     @Override
@@ -244,10 +232,17 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         return null;
     }
 
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
+
     public static class ProteusInstanceHolder {
 
         private Proteus proteus;
-        private Context context;
 
         private ProteusInstanceHolder() {
         }
@@ -261,21 +256,12 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             this.proteus = proteus;
         }
 
-        @Nullable
-        public Context getContext() {
-            return context;
-        }
-
-        public void setContext(Context context) {
-            this.context = context;
-        }
-
         public boolean isLayout(String type) {
             return null != proteus && proteus.has(type);
         }
     }
 
-    public static class LayoutTypeAdapter extends TypeAdapter<Layout> {
+    public class LayoutTypeAdapter extends TypeAdapter<Layout> {
 
         @Override
         public void write(JsonWriter out, Layout value) throws IOException {
@@ -300,7 +286,8 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 } else {
                     TypeParser.AttributeSet.Attribute attribute = proteus.getAttributeId(name, type);
                     if (null != attribute) {
-                        attributes.add(new Layout.Attribute(attribute.id, ProteusTypeAdapterFactory.read(attribute.type, in)));
+                        Value value = attribute.processor.parse(VALUE_TYPE_ADAPTER.read(in), getContext());
+                        attributes.add(new Layout.Attribute(attribute.id, value));
                     } else {
                         extras.add(name, VALUE_TYPE_ADAPTER.read(in));
                     }
@@ -339,34 +326,6 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             in.endObject();
 
             return scope;
-        }
-    }
-
-    public static class DimensionTypeAdapter extends TypeAdapter<Dimension> {
-
-        @Override
-        public void write(JsonWriter out, Dimension value) throws IOException {
-            VALUE_TYPE_ADAPTER.write(out, value);
-        }
-
-        @Override
-        public Dimension read(JsonReader in) throws IOException {
-            throw new IOException("Requires context");
-        }
-
-        public Dimension read(JsonReader in, Context context) throws IOException {
-            JsonToken peek = in.peek();
-
-            if (peek == JsonToken.NULL) {
-                in.nextNull();
-                return Dimension.ZERO;
-            }
-
-            if (peek != JsonToken.STRING) {
-                throw new JsonSyntaxException("Dimension type must be a String.");
-            }
-
-            return Dimension.valueOf(in.nextString(), context);
         }
     }
 }

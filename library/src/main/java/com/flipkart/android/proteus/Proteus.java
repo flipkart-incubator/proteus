@@ -20,6 +20,7 @@
 package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.flipkart.android.proteus.toolbox.Formatter;
 
@@ -46,6 +47,7 @@ public class Proteus {
         return types.containsKey(type);
     }
 
+    @Nullable
     public TypeParser.AttributeSet.Attribute getAttributeId(String name, String type) {
         return types.get(type).getAttributeId(name);
     }
@@ -73,6 +75,7 @@ public class Proteus {
             this.attributes = attributes;
         }
 
+        @Nullable
         public TypeParser.AttributeSet.Attribute getAttributeId(String name) {
             return attributes.getAttribute(name);
         }

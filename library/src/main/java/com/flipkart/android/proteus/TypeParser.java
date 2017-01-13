@@ -101,7 +101,7 @@ public abstract class TypeParser<V extends View> {
 
     public void addAttributeProcessor(String name, AttributeProcessor<V> processor) {
         addAttributeProcessor(processor);
-        attributes.put(name, new AttributeSet.Attribute(processor.type(), getAttributeId(processors.length - 1)));
+        attributes.put(name, new AttributeSet.Attribute(getAttributeId(processors.length - 1), processor));
     }
 
     private void addAttributeProcessor(AttributeProcessor<V> handler) {
@@ -195,12 +195,12 @@ public abstract class TypeParser<V extends View> {
         }
 
         public static class Attribute {
-            @AttributeProcessor.Type
-            public final int type;
-            public final int id;
 
-            public Attribute(@AttributeProcessor.Type int type, int id) {
-                this.type = type;
+            public final int id;
+            public final AttributeProcessor processor;
+
+            public Attribute(int id, AttributeProcessor processor) {
+                this.processor = processor;
                 this.id = id;
             }
         }

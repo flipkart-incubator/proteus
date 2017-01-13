@@ -20,9 +20,11 @@
 package com.flipkart.android.proteus.processor;
 
 
+import android.content.Context;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.Dimension;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
@@ -41,13 +43,19 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
         }
     }
 
-    @Override
-    public int type() {
-        return TYPE_DIMENSION;
-    }
-
     /**
      * @param view View
      */
     public abstract void setDimension(T view, float dimension);
+
+    /**
+     * @param value
+     * @param context
+     * @return
+     */
+    @Override
+    public Value parse(Value value, Context context) {
+        return Dimension.valueOf(value.getAsString(), context);
+    }
+
 }

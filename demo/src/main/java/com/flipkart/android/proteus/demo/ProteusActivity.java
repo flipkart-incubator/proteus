@@ -160,7 +160,7 @@ public class ProteusActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (null == retrofit) {
-            ProteusTypeAdapterFactory factory = new ProteusTypeAdapterFactory();
+            ProteusTypeAdapterFactory factory = new ProteusTypeAdapterFactory(this);
             Gson gson = new GsonBuilder()
                     .registerTypeAdapterFactory(factory)
                     .create();
