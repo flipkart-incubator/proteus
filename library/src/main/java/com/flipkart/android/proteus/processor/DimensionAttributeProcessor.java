@@ -30,7 +30,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
 
     /**
      * @param view  View
-     * @param value
+     * @param value Value of the dimension
      */
     @Override
     public final void handle(T view, Value value) {

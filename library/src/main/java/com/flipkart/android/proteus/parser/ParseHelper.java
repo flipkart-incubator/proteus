@@ -21,16 +21,13 @@ package com.flipkart.android.proteus.parser;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +35,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.flipkart.android.proteus.Dimension;
 import com.flipkart.android.proteus.ObjectValue;
-import com.flipkart.android.proteus.R;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
@@ -78,11 +75,6 @@ public class ParseHelper {
     private static final String BEGINNING = "beginning";
     private static final String MARQUEE = "marquee";
 
-
-    private static final String MATCH_PARENT = "match_parent";
-    private static final String FILL_PARENT = "fill_parent";
-    private static final String WRAP_CONTENT = "wrap_content";
-
     private static final String BOLD = "bold";
     private static final String ITALIC = "italic";
     private static final String BOLD_ITALIC = "bold|italic";
@@ -95,13 +87,6 @@ public class ParseHelper {
     private static final String TEXT_ALIGNMENT_VIEW_START = "viewStart";
     private static final String TEXT_ALIGNMENT_VIEW_END = "viewEnd";
 
-    private static final String SUFFIX_PX = "px";
-    private static final String SUFFIX_DP = "dp";
-    private static final String SUFFIX_SP = "sp";
-    private static final String SUFFIX_PT = "pt";
-    private static final String SUFFIX_IN = "in";
-    private static final String SUFFIX_MM = "mm";
-
     private static final String ATTR_START_LITERAL = "?";
     private static final String COLOR_PREFIX_LITERAL = "#";
 
@@ -109,7 +94,6 @@ public class ParseHelper {
     private static final String STRING_LOCAL_RESOURCE_STR = "@string/";
     private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";
     private static final String COLOR_LOCAL_RESOURCE_STR = "@color/";
-    private static final String DIMENSION_LOCAL_RESOURCE_STR = "@dimen/";
 
     private static final String DRAWABLE_STR = "drawable";
     private static final String ID_STR = "id";
@@ -123,11 +107,7 @@ public class ParseHelper {
     private static final Map<String, Enum> sEllipsizeMode = new HashMap<>();
     private static final Map<String, Integer> sVisibilityMode = new HashMap<>();
     private static final Map<String, Integer> sTextAlignment = new HashMap<>();
-    private static final Map<String, Integer> sDimensionsMap = new HashMap<>();
-    private static final Map<String, Integer> sDimensionsUnitsMap = new HashMap<>();
     private static final Map<String, ImageView.ScaleType> sImageScaleType = new HashMap<>();
-    private static Map<String, Integer> styleMap = new HashMap<>();
-    private static Map<String, Integer> attributeMap = new HashMap<>();
 
     static {
         sStateMap.put("state_pressed", android.R.attr.state_pressed);
@@ -162,17 +142,6 @@ public class ParseHelper {
         sVisibilityMode.put(VISIBLE, View.VISIBLE);
         sVisibilityMode.put(INVISIBLE, View.INVISIBLE);
         sVisibilityMode.put(GONE, View.GONE);
-
-        sDimensionsMap.put(MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        sDimensionsMap.put(FILL_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        sDimensionsMap.put(WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        sDimensionsUnitsMap.put(SUFFIX_PX, TypedValue.COMPLEX_UNIT_PX);
-        sDimensionsUnitsMap.put(SUFFIX_DP, TypedValue.COMPLEX_UNIT_DIP);
-        sDimensionsUnitsMap.put(SUFFIX_SP, TypedValue.COMPLEX_UNIT_SP);
-        sDimensionsUnitsMap.put(SUFFIX_PT, TypedValue.COMPLEX_UNIT_PT);
-        sDimensionsUnitsMap.put(SUFFIX_IN, TypedValue.COMPLEX_UNIT_IN);
-        sDimensionsUnitsMap.put(SUFFIX_MM, TypedValue.COMPLEX_UNIT_MM);
 
         sImageScaleType.put(CENTER, ImageView.ScaleType.CENTER);
         sImageScaleType.put("center_crop", ImageView.ScaleType.CENTER_CROP);
@@ -325,70 +294,7 @@ public class ParseHelper {
     }
 
     public static float parseDimension(final String dimension, Context context) {
-        Integer parameter = sDimensionsMap.get(dimension);
-        if (parameter != null) {
-            return parameter;
-        }
-
-        int length = dimension.length();
-        if (length < 2) {
-            return 0;
-        }
-
-        // find the units and value by splitting at the second-last character of the dimension
-        Integer units = sDimensionsUnitsMap.get(dimension.substring(length - 2));
-        String stringValue = dimension.substring(0, length - 2);
-        if (units != null) {
-            float value = parseFloat(stringValue);
-            DisplayMetrics displayMetric = context.getResources().getDisplayMetrics();
-            return TypedValue.applyDimension(units, value, displayMetric);
-        }
-
-        // check if dimension is a local resource
-        if (dimension.startsWith(DIMENSION_LOCAL_RESOURCE_STR)) {
-            float value;
-            try {
-                int resourceId = context.getResources().getIdentifier(dimension, "dimen", context.getPackageName());
-                value = (int) context.getResources().getDimension(resourceId);
-            } catch (Exception e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(TAG, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
-                }
-                value = 0;
-            }
-            return value;
-        }
-
-        // check if dimension is an attribute value
-        if (dimension.startsWith(ATTR_START_LITERAL)) {
-            float value;
-            try {
-                String[] dimenArr = dimension.substring(1, length).split(":");
-                String style = dimenArr[0];
-                String attr = dimenArr[1];
-                Integer styleId = styleMap.get(style);
-                if (styleId == null) {
-                    styleId = R.style.class.getField(style).getInt(null);
-                    styleMap.put(style, styleId);
-                }
-                Integer attrId = attributeMap.get(attr);
-                if (attrId == null) {
-                    attrId = R.attr.class.getField(attr).getInt(null);
-                    attributeMap.put(attr, attrId);
-                }
-                TypedArray a = context.getTheme().obtainStyledAttributes(styleId, new int[]{attrId});
-                value = a.getDimensionPixelSize(0, 0);
-                a.recycle();
-            } catch (Exception e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(TAG, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
-                }
-                value = 0;
-            }
-            return value;
-        }
-
-        return 0;
+        return Dimension.valueOf(dimension, context).apply(context);
     }
 
     public static int getAttributeId(Context context, String attribute) {
