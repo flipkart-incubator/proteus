@@ -28,10 +28,10 @@ import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
-import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -57,19 +57,17 @@ public class ViewGroupParser<T extends ViewGroup> extends TypeParser<T> {
     @Override
     protected void addAttributeProcessors() {
 
-        addAttributeProcessor(Attributes.ViewGroup.ClipChildren, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.ViewGroup.ClipChildren, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
-                boolean clipChildren = ParseHelper.parseBoolean(value);
-                view.setClipChildren(clipChildren);
+            public void handle(T view, boolean value) {
+                view.setClipChildren(value);
             }
         });
 
-        addAttributeProcessor(Attributes.ViewGroup.ClipToPadding, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.ViewGroup.ClipToPadding, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
-                boolean clipToPadding = ParseHelper.parseBoolean(value);
-                view.setClipToPadding(clipToPadding);
+            public void handle(T view, boolean value) {
+                view.setClipToPadding(value);
             }
         });
 
@@ -86,11 +84,10 @@ public class ViewGroupParser<T extends ViewGroup> extends TypeParser<T> {
             }
         });
 
-        addAttributeProcessor(Attributes.ViewGroup.SplitMotionEvents, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.ViewGroup.SplitMotionEvents, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
-                boolean splitMotionEvents = ParseHelper.parseBoolean(value);
-                view.setMotionEventSplittingEnabled(splitMotionEvents);
+            public void handle(T view, boolean value) {
+                view.setMotionEventSplittingEnabled(value);
             }
         });
 

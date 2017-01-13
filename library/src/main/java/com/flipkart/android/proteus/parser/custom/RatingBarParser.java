@@ -27,6 +27,7 @@ import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
@@ -61,10 +62,10 @@ public class RatingBarParser<T extends FixedRatingBar> extends TypeParser<T> {
                 view.setRating(ParseHelper.parseFloat(value));
             }
         });
-        addAttributeProcessor(Attributes.RatingBar.IsIndicator, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.RatingBar.IsIndicator, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
-                view.setIsIndicator(ParseHelper.parseBoolean(value));
+            public void handle(T view, boolean value) {
+                view.setIsIndicator(value);
             }
         });
         addAttributeProcessor(Attributes.RatingBar.StepSize, new StringAttributeProcessor<T>() {

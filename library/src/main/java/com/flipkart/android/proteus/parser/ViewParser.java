@@ -39,6 +39,7 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.EventProcessor;
@@ -340,11 +341,10 @@ public class ViewParser<V extends View> extends TypeParser<V> {
                 view.setContentDescription(value);
             }
         });
-        addAttributeProcessor(Attributes.View.Clickable, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Clickable, new BooleanAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
-                boolean clickable = ParseHelper.parseBoolean(value);
-                view.setClickable(clickable);
+            public void handle(V view, boolean value) {
+                view.setClickable(value);
             }
         });
         addAttributeProcessor(Attributes.View.Tag, new StringAttributeProcessor<V>() {
@@ -353,11 +353,10 @@ public class ViewParser<V extends View> extends TypeParser<V> {
                 view.setTag(value);
             }
         });
-        addAttributeProcessor(Attributes.View.Enabled, new StringAttributeProcessor<V>() {
+        addAttributeProcessor(Attributes.View.Enabled, new BooleanAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
-                boolean enabled = ParseHelper.parseBoolean(value);
-                view.setEnabled(enabled);
+            public void handle(V view, boolean value) {
+                view.setEnabled(value);
             }
         });
 
@@ -516,12 +515,11 @@ public class ViewParser<V extends View> extends TypeParser<V> {
     }
 
     private AttributeProcessor<V> createRelativeLayoutBooleanRuleProcessor(final int rule) {
-        return new StringAttributeProcessor<V>() {
+        return new BooleanAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
+            public void handle(V view, boolean value) {
                 int trueOrFalse = ParseHelper.parseRelativeLayoutBoolean(value);
                 ParseHelper.addRelativeLayoutRule(view, rule, trueOrFalse);
-
             }
         };
     }

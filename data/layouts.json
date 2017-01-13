@@ -20,36 +20,36 @@
             "text": "Center",
             "textColor": "#323232",
             "textSize": "14sp",
-            "layout_centerVertical": "true",
-            "layout_centerHorizontal": "true"
+            "layout_centerVertical": true,
+            "layout_centerHorizontal": true
           },
           {
             "type": "ImageView",
             "src": "@drawable/star_filled",
             "layout_marginBottom": "4dp",
             "layout_above": "center",
-            "layout_centerHorizontal": "true"
+            "layout_centerHorizontal": true
           },
           {
             "type": "ImageView",
             "src": "@drawable/star_filled",
             "layout_marginTop": "4dp",
             "layout_below": "center",
-            "layout_centerHorizontal": "true"
+            "layout_centerHorizontal": true
           },
           {
             "type": "ImageView",
             "src": "@drawable/star_filled",
             "layout_marginLeft": "4dp",
             "layout_toRightOf": "center",
-            "layout_centerVertical": "true"
+            "layout_centerVertical": true
           },
           {
             "type": "ImageView",
             "src": "@drawable/star_filled",
             "layout_marginRight": "4dp",
             "layout_toLeftOf": "center",
-            "layout_centerVertical": "true"
+            "layout_centerVertical": true
           },
           {
             "type": "ImageView",
@@ -59,8 +59,8 @@
             "padding": "8dp",
             "background": "#027cd5",
             "scaleType": "fitCenter",
-            "layout_alignParentTop": "true",
-            "layout_alignParentRight": "true"
+            "layout_alignParentTop": true,
+            "layout_alignParentRight": true
           }
         ]
       }

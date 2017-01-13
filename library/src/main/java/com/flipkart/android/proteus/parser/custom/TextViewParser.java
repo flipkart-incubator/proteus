@@ -34,6 +34,7 @@ import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
@@ -215,19 +216,17 @@ public class TextViewParser<T extends TextView> extends TypeParser<T> {
             }
         });
 
-        addAttributeProcessor(Attributes.TextView.SingleLine, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.SingleLine, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
-                view.setSingleLine(ParseHelper.parseBoolean(value));
+            public void handle(T view, boolean value) {
+                view.setSingleLine(value);
             }
         });
 
-        addAttributeProcessor(Attributes.TextView.TextAllCaps, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextAllCaps, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                    view.setAllCaps(ParseHelper.parseBoolean(value));
-                }
+            public void handle(T view, boolean value) {
+                view.setAllCaps(value);
             }
         });
         addAttributeProcessor(Attributes.TextView.Hint, new StringAttributeProcessor<T>() {

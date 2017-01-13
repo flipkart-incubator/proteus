@@ -382,8 +382,8 @@ public class ParseHelper {
         return TRUE.equalsIgnoreCase(trueOrFalse);
     }
 
-    public static int parseRelativeLayoutBoolean(String trueOrFalse) {
-        return TRUE.equalsIgnoreCase(trueOrFalse) ? RelativeLayout.TRUE : 0;
+    public static int parseRelativeLayoutBoolean(boolean value) {
+        return value ? RelativeLayout.TRUE : 0;
     }
 
     public static void addRelativeLayoutRule(View view, int verb, int anchor) {
