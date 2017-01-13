@@ -55,7 +55,6 @@ public class ParseHelper {
 
     private static final String TAG = "ParseHelper";
 
-    private static final String TRUE = "true";
     private static final String FALSE = "false";
 
     private static final String VISIBLE = "visible";
@@ -265,9 +264,8 @@ public class ParseHelper {
         if (value.isPrimitive()) {
             String attributeValue = value.getAsString();
             returnValue = sVisibilityMode.get(attributeValue);
-            if (null == returnValue && (attributeValue.isEmpty() ||
-                    FALSE.equals(attributeValue) ||
-                    ProteusConstants.DATA_NULL.equals(attributeValue))) {
+            if (null == returnValue &&
+                    (attributeValue.isEmpty() || FALSE.equals(attributeValue) || ProteusConstants.DATA_NULL.equals(attributeValue))) {
                 returnValue = View.GONE;
             }
         } else if (value.isNull()) {
@@ -281,9 +279,8 @@ public class ParseHelper {
         if (value.isPrimitive()) {
             String attributeValue = value.getAsString();
             returnValue = sVisibilityMode.get(attributeValue);
-            if (null == returnValue && (attributeValue.isEmpty() ||
-                    FALSE.equals(attributeValue) ||
-                    ProteusConstants.DATA_NULL.equals(attributeValue))) {
+            if (null == returnValue &&
+                    (attributeValue.isEmpty() || FALSE.equals(attributeValue) || ProteusConstants.DATA_NULL.equals(attributeValue))) {
                 returnValue = View.VISIBLE;
             }
         } else if (value.isNull()) {
@@ -378,8 +375,9 @@ public class ParseHelper {
         return null;
     }
 
-    public static boolean parseBoolean(String trueOrFalse) {
-        return TRUE.equalsIgnoreCase(trueOrFalse);
+    public static boolean parseBoolean(Value value) {
+        // TODO: we should consider 0 as false to.
+        return value.isPrimitive() && value.getAsPrimitive().isBoolean() ? value.getAsBoolean() : !value.isNull();
     }
 
     public static int parseRelativeLayoutBoolean(boolean value) {
@@ -456,9 +454,8 @@ public class ParseHelper {
             for (Map.Entry<String, Value> entry : value.getAsObject().entrySet()) {
                 Integer stateInteger = sStateMap.get(entry.getKey());
                 if (stateInteger != null) {
-                    String stateValue = entry.getValue().getAsString();
                     //e.g state_pressed = true state_pressed = false
-                    statesToReturn.add(ParseHelper.parseBoolean(stateValue) ? stateInteger : -stateInteger);
+                    statesToReturn.add(ParseHelper.parseBoolean(entry.getValue()) ? stateInteger : -stateInteger);
                 }
             }
 

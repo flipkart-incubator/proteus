@@ -23,6 +23,7 @@ import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.parser.ParseHelper;
 
 /**
  * BooleanAttributeProcessor
@@ -34,9 +35,7 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
 
     @Override
     public void handle(V view, Value value) {
-        // TODO: we should consider 0 as false to.
-        boolean aBoolean = value.isPrimitive() && value.getAsPrimitive().isBoolean() ? value.getAsBoolean() : !value.isNull();
-        handle(view, aBoolean);
+        handle(view, ParseHelper.parseBoolean(value));
     }
 
     public abstract void handle(V view, boolean value);
