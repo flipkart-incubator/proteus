@@ -19,9 +19,11 @@
 
 package com.flipkart.android.proteus.processor;
 
+import android.content.Context;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.Primitive;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
@@ -33,6 +35,9 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 
 public abstract class BooleanAttributeProcessor<V extends View> extends AttributeProcessor<V> {
 
+    public static final Primitive TRUE = new Primitive(true);
+    public static final Primitive FALSE = new Primitive(false);
+
     @Override
     public void handle(V view, Value value) {
         handle(view, ParseHelper.parseBoolean(value));
@@ -40,4 +45,8 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
 
     public abstract void handle(V view, boolean value);
 
+    @Override
+    public Value parse(Value value, Context context) {
+        return ParseHelper.parseBoolean(value) ? TRUE : FALSE;
+    }
 }
