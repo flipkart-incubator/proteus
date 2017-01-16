@@ -244,14 +244,14 @@ public class ParseHelper {
         for (String gravity : gravities) {
             Primitive gravityValue = sGravityMap.get(gravity);
             if (null != gravityValue) {
-                returnGravity |= gravityValue.getAsCharacter();
+                returnGravity |= gravityValue.getAsInt();
             }
         }
         return returnGravity;
     }
 
     public static Primitive getGravity(String value) {
-        return sGravityMap.get(value);
+        return new Primitive(parseGravity(value));
     }
 
     public static int parseDividerMode(String attributeValue) {
