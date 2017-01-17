@@ -23,5 +23,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="defaultPadding">8dp</dimen>
     <dimen name="ab">?actionBarSize</dimen>
+    <dimen name="sixty">60dp</dimen>
 
 </resources>

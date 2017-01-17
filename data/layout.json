@@ -41,8 +41,8 @@
                 },
                 {
                   "type": "ImageView",
-                  "layout_width": "60dp",
-                  "layout_height": "60dp",
+                  "layout_width": "@dimen/sixty",
+                  "layout_height": "@dimen/sixty",
                   "src": "@drawable/github_icon",
                   "layout_marginRight": "8dp"
                 },
@@ -86,7 +86,7 @@
                 },
                 {
                   "type": "Button",
-                  "layout_height": "50dp",
+                  "layout_height": "?Theme_AppCompat:actionBarSize",
                   "layout_width": "150dp",
                   "gravity": "center",
                   "layout_marginTop" : "10dp",

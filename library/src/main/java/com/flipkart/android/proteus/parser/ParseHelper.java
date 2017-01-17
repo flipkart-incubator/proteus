@@ -87,9 +87,9 @@ public class ParseHelper {
     private static final String TEXT_ALIGNMENT_VIEW_START = "viewStart";
     private static final String TEXT_ALIGNMENT_VIEW_END = "viewEnd";
 
-    private static final String ATTR_START_LITERAL = "?";
     private static final String COLOR_PREFIX_LITERAL = "#";
 
+    private static final String ATTR_START_LITERAL = "?";
     private static final String DRAWABLE_LOCAL_RESOURCE_STR = "@drawable/";
     private static final String STRING_LOCAL_RESOURCE_STR = "@string/";
     private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";

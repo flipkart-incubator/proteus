@@ -33,7 +33,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -190,20 +189,6 @@ public class DimensionTest {
     }
 
     @Test
-    public void valueOf_Unit_Attribute() throws Exception {
-        float value = 35f;
-        when(typedArray.getDimensionPixelSize(0, 0)).thenReturn((int) value);
-        when(theme.obtainStyledAttributes(anyInt(), new int[]{anyInt()})).thenReturn(typedArray);
-        when(context.getTheme()).thenReturn(theme);
-
-
-        Dimension d = Dimension.valueOf("?Theme_AppCompat:actionBarSize", context);
-
-        assertThat(d.value, is(35f));
-        assertThat(d.unit, is(Dimension.DIMENSION_UNIT_STYLE_ATTR));
-    }
-
-    @Test
     public void valueOf_Unit_Attribute_Exception() throws Exception {
         Dimension d = Dimension.valueOf("?undefined:undefined", context);
         assertThat(d.value, is(0f));
@@ -212,7 +197,7 @@ public class DimensionTest {
 
     @Test
     public void copy() throws Exception {
-        Dimension d = new Dimension(0, 0);
+        Dimension d = Dimension.valueOf("24dp", null);
         assertThat(d, is(d.copy()));
     }
 

@@ -21,10 +21,12 @@ package com.flipkart.android.proteus.processor;
 
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Dimension;
+import com.flipkart.android.proteus.Style;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
@@ -38,8 +40,11 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
     public final void handle(T view, Value value) {
         if (value.isDimension()) {
             setDimension(view, value.getAsDimension().apply(view.getContext()));
+        } else if (value.isStyle()) {
+            TypedArray a = value.getAsStyle().apply(view.getContext());
+            setDimension(view, a.getDimensionPixelSize(0, 0));
         } else if (value.isPrimitive()) {
-            setDimension(view, ParseHelper.parseDimension(value.getAsString(), view.getContext()));
+            handle(view, parse(value, view.getContext()));
         }
     }
 
@@ -55,7 +60,12 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
      */
     @Override
     public Value parse(Value value, Context context) {
-        return Dimension.valueOf(value.getAsString(), context);
+        String string = value.getAsString();
+        if (ParseHelper.isLocalResourceAttribute(string)) {
+            return Style.valueOf(string);
+        } else {
+            return Dimension.valueOf(value.getAsString(), context);
+        }
     }
 
 }

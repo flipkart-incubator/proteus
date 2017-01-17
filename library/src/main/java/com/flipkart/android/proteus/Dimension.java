@@ -20,7 +20,6 @@
 package com.flipkart.android.proteus;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.v4.util.LruCache;
 import android.util.Log;
 import android.util.TypedValue;
@@ -40,7 +39,6 @@ import java.util.Map;
 
 public class Dimension extends Value {
 
-    public static final int DIMENSION_UNIT_STYLE_ATTR = -3;
     public static final int DIMENSION_UNIT_RESOURCE = -2;
     public static final int DIMENSION_UNIT_ENUM = -1;
     public static final int DIMENSION_UNIT_PX = TypedValue.COMPLEX_UNIT_PX;
@@ -55,7 +53,6 @@ public class Dimension extends Value {
     public static final String WRAP_CONTENT = "wrap_content";
 
     public static final String PREFIX_DIMENSION = "@dimen/";
-    public static final String PREFIX_ATTRIBUTE = "?";
 
     public static final String SUFFIX_PX = "px";
     public static final String SUFFIX_DP = "dp";
@@ -66,8 +63,6 @@ public class Dimension extends Value {
 
     public static final Map<String, Integer> sDimensionsMap = new HashMap<>();
     public static final Map<String, Integer> sDimensionsUnitsMap = new HashMap<>();
-    public static final Map<String, Integer> styleMap = new HashMap<>();
-    public static final Map<String, Integer> attributeMap = new HashMap<>();
 
     static {
         sDimensionsMap.put(MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -84,17 +79,17 @@ public class Dimension extends Value {
 
     public static final Dimension ZERO = new Dimension(0, DIMENSION_UNIT_PX);
 
-    public final float value;
+    public final double value;
     public final int unit;
 
-    public Dimension(float value, int unit) {
+    private Dimension(float value, int unit) {
         this.value = value;
         this.unit = unit;
     }
 
     private Dimension(String dimension, Context context) {
         Integer parameter = sDimensionsMap.get(dimension);
-        float value;
+        double value;
         int unit;
 
         if (parameter != null) {
@@ -111,7 +106,7 @@ public class Dimension extends Value {
                 if (u != null) {
                     value = ParseHelper.parseFloat(stringValue);
                     unit = u;
-                } else if (dimension.startsWith(PREFIX_DIMENSION)) { // check if dimension is a local resource
+                } else if (isLocalDimensionResource(dimension)) { // check if dimension is a local resource
                     try {
                         value = context.getResources().getIdentifier(dimension, "dimen", context.getPackageName());
                         unit = DIMENSION_UNIT_RESOURCE;
@@ -123,32 +118,6 @@ public class Dimension extends Value {
                         value = 0;
                         unit = DIMENSION_UNIT_PX;
                     }
-                } else if (dimension.startsWith(PREFIX_ATTRIBUTE)) { // check if dimension is an attribute value
-                    try {
-                        String[] dimenArr = dimension.substring(1, length).split(":");
-                        String style = dimenArr[0];
-                        String attr = dimenArr[1];
-                        Integer styleId = styleMap.get(style);
-                        if (styleId == null) {
-                            styleId = R.style.class.getField(style).getInt(null);
-                            styleMap.put(style, styleId);
-                        }
-                        Integer attrId = attributeMap.get(attr);
-                        if (attrId == null) {
-                            attrId = R.attr.class.getField(attr).getInt(null);
-                            attributeMap.put(attr, attrId);
-                        }
-                        TypedArray a = context.getTheme().obtainStyledAttributes(styleId, new int[]{attrId});
-                        value = a.getDimensionPixelSize(0, 0);
-                        unit = DIMENSION_UNIT_STYLE_ATTR;
-                    } catch (Exception e) {
-                        if (ProteusConstants.isLoggingEnabled()) {
-                            Log.e("Proteus", "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
-                        }
-                        value = 0;
-                        unit = DIMENSION_UNIT_PX;
-                    }
-
                 } else {
                     value = 0;
                     unit = DIMENSION_UNIT_PX;
@@ -158,6 +127,31 @@ public class Dimension extends Value {
 
         this.value = value;
         this.unit = unit;
+    }
+
+    public float apply(Context context) {
+        double result;
+
+        switch (unit) {
+            case DIMENSION_UNIT_ENUM:
+                result = value;
+                break;
+            case DIMENSION_UNIT_PX:
+            case DIMENSION_UNIT_DP:
+            case DIMENSION_UNIT_SP:
+            case DIMENSION_UNIT_PT:
+            case DIMENSION_UNIT_MM:
+            case DIMENSION_UNIT_IN:
+                result = TypedValue.applyDimension(unit, (float) value, context.getResources().getDisplayMetrics());
+                break;
+            case DIMENSION_UNIT_RESOURCE:
+                result = context.getResources().getDimension((int) value);
+                break;
+            default:
+                result = 0;
+        }
+
+        return (float) result;
     }
 
     public static Dimension valueOf(String dimension, Context context) {
@@ -172,30 +166,12 @@ public class Dimension extends Value {
         return d;
     }
 
-    public float apply(Context context) {
-        float result;
+    public static float apply(String dimension, Context context) {
+        return Dimension.valueOf(dimension, context).apply(context);
+    }
 
-        switch (unit) {
-            case DIMENSION_UNIT_ENUM:
-            case DIMENSION_UNIT_STYLE_ATTR:
-                result = value;
-                break;
-            case DIMENSION_UNIT_PX:
-            case DIMENSION_UNIT_DP:
-            case DIMENSION_UNIT_SP:
-            case DIMENSION_UNIT_PT:
-            case DIMENSION_UNIT_MM:
-            case DIMENSION_UNIT_IN:
-                result = TypedValue.applyDimension(unit, value, context.getResources().getDisplayMetrics());
-                break;
-            case DIMENSION_UNIT_RESOURCE:
-                result = context.getResources().getDimension((int) value);
-                break;
-            default:
-                result = 0;
-        }
-
-        return result;
+    public static boolean isLocalDimensionResource(String value) {
+        return value.startsWith(PREFIX_DIMENSION);
     }
 
     private static class DimensionCache {
