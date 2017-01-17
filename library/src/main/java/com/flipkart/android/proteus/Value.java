@@ -94,6 +94,13 @@ public abstract class Value {
     }
 
     /**
+     * @return
+     */
+    public boolean isColor() {
+        return this instanceof Color;
+    }
+
+    /**
      * convenience method to get this value as a {@link ObjectValue}. If the value is of some
      * other type, a {@link IllegalStateException} will result. Hence it is best to use this method
      * after ensuring that this value is of the desired type by calling {@link #isObject()}
@@ -186,6 +193,16 @@ public abstract class Value {
             return (Style) this;
         }
         throw new IllegalStateException("Not a Style: " + this);
+    }
+
+    /**
+     * @return
+     */
+    public Color getAsColor() {
+        if (isColor()) {
+            return (Color) this;
+        }
+        throw new IllegalStateException("Not a Color: " + this);
     }
 
     /**
