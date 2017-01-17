@@ -65,7 +65,7 @@ public class DimensionTest {
     @Test
     public void valueOf_Null() throws Exception {
         Dimension d = Dimension.valueOf(null, null);
-        assertThat(d.value, is(0f));
+        assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
     }
 
@@ -87,75 +87,75 @@ public class DimensionTest {
     @Test
     public void valueOf_Unit_Invalid() throws Exception {
         Dimension d = Dimension.valueOf("abcd", null);
-        assertThat(d.value, is(0f));
+        assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
 
         d = Dimension.valueOf("16q", null);
-        assertThat(d.value, is(0f));
+        assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
 
         d = Dimension.valueOf("16", null);
-        assertThat(d.value, is(0f));
+        assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
 
         d = Dimension.valueOf("1", null);
-        assertThat(d.value, is(0f));
+        assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
     }
 
     @Test
     public void valueOf_Unit_None() throws Exception {
         Dimension d = Dimension.valueOf("16", null);
-        assertThat(d.value, is(0f));
+        assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
     }
 
     @Test
     public void valueOf_Unit_PX() throws Exception {
         Dimension d = Dimension.valueOf("16px", null);
-        assertThat(d.value, is(16f));
+        assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
     }
 
     @Test
     public void valueOf_Unit_DP() throws Exception {
         Dimension d = Dimension.valueOf("16dp", null);
-        assertThat(d.value, is(16f));
+        assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_DP));
     }
 
     @Test
     public void valueOf_Unit_SP() throws Exception {
         Dimension d = Dimension.valueOf("16sp", null);
-        assertThat(d.value, is(16f));
+        assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_SP));
     }
 
     @Test
     public void valueOf_Unit_PT() throws Exception {
         Dimension d = Dimension.valueOf("16pt", null);
-        assertThat(d.value, is(16f));
+        assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PT));
     }
 
     @Test
     public void valueOf_Unit_IN() throws Exception {
         Dimension d = Dimension.valueOf("16in", null);
-        assertThat(d.value, is(16f));
+        assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_IN));
     }
 
     @Test
     public void valueOf_Unit_MM() throws Exception {
         Dimension d = Dimension.valueOf("16mm", null);
-        assertThat(d.value, is(16f));
+        assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_MM));
     }
 
     @Test
     public void valueOf_Unit_Negative() throws Exception {
         Dimension d = Dimension.valueOf("-16dp", null);
-        assertThat(d.value, is(-16f));
+        assertThat(d.value, is(-16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_DP));
     }
 
@@ -163,14 +163,14 @@ public class DimensionTest {
     public void valueOf_Unit_Resource() throws Exception {
         String input = "@dimen/padding";
         String name = "a.b.c";
-        float resId = 1;
+        int resId = 1;
 
-        when(resources.getIdentifier(input, "dimen", name)).thenReturn((int) resId);
+        when(resources.getIdentifier(input, "dimen", name)).thenReturn(resId);
         when(context.getResources()).thenReturn(resources);
         when(context.getPackageName()).thenReturn(name);
 
         Dimension d = Dimension.valueOf(input, context);
-        assertThat(d.value, is(resId));
+        assertThat((int) d.value, is(resId));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_RESOURCE));
     }
 
@@ -184,14 +184,14 @@ public class DimensionTest {
 
         Dimension d = Dimension.valueOf(input, context);
 
-        assertThat(d.value, is(0f));
+        assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
     }
 
     @Test
     public void valueOf_Unit_Attribute_Exception() throws Exception {
         Dimension d = Dimension.valueOf("?undefined:undefined", context);
-        assertThat(d.value, is(0f));
+        assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
     }
 
