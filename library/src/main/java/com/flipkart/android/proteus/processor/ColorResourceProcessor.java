@@ -19,45 +19,88 @@
 
 package com.flipkart.android.proteus.processor;
 
+import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
+import android.os.Build;
 import android.view.View;
-import android.webkit.ValueCallback;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.Color;
+import com.flipkart.android.proteus.Style;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.toolbox.ColorUtils;
+import com.flipkart.android.proteus.parser.ParseHelper;
 
 public abstract class ColorResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
-    public ColorResourceProcessor() {
-
-    }
     @Override
     public void handle(final V view, Value value) {
-        ColorUtils.loadColor(view.getContext(), value, new ValueCallback<Integer>() {
-            /**
-             * Invoked when the value is available.
-             *
-             * @param color The value.
-             */
-            @Override
-            public void onReceiveValue(Integer color) {
-                setColor(view, color);
+        if (value.isColor()) {
+            apply(view, value.getAsColor());
+        } else if (value.isStyle()) {
+            apply(view, value.getAsStyle());
+        } else if (value.isPrimitive()) {
+            handle(view, parse(value, view.getContext()));
+        }
+    }
+
+    private void apply(V view, Color color) {
+        if (color instanceof Color.Int) {
+            setColor(view, ((Color.Int) color).value);
+        } else if (color instanceof Color.StateList) {
+            setColor(view, ((Color.StateList) color).colors);
+        } else if (color instanceof Color.Resource) {
+            int resId = ((Color.Resource) color).resId;
+            ColorStateList colorStateList = null;
+            Context context = view.getContext();
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    colorStateList = context.getResources().getColorStateList(resId, context.getTheme());
+                } else {
+                    colorStateList = context.getResources().getColorStateList(resId);
+                }
+            } catch (Resources.NotFoundException nfe) {
+                //assuming this is a color now
             }
-        }, new ValueCallback<ColorStateList>() {
-            /**
-             * Invoked when the value is available.
-             *
-             * @param color The value.
-             */
-            @Override
-            public void onReceiveValue(ColorStateList color) {
-                setColor(view, color);
+            if (null != colorStateList) {
+                setColor(view, colorStateList);
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    setColor(view, context.getResources().getColor(resId, context.getTheme()));
+                } else {
+                    setColor(view, context.getResources().getColor(resId));
+                }
             }
-        });
+        }
+    }
+
+    private void apply(V view, Style style) {
+        TypedArray a = style.apply(view.getContext());
+        ColorStateList colors = a.getColorStateList(0);
+        if (null != colors) {
+            setColor(view, colors);
+        } else {
+            setColor(view, a.getColor(0, Color.Int.BLACK.value));
+        }
     }
 
     public abstract void setColor(V view, int color);
 
     public abstract void setColor(V view, ColorStateList colors);
+
+    @Override
+    public Value parse(Value value, Context context) {
+        if (value.isObject()) {
+            return Color.valueOf(value.getAsObject(), context);
+        } else {
+            String string = value.getAsString();
+            if (ParseHelper.isLocalResourceAttribute(string)) {
+                Style style = Style.valueOf(string);
+                return null != style ? style : Color.Int.BLACK;
+            } else {
+                return Color.valueOf(value.getAsString(), context);
+            }
+        }
+    }
 }

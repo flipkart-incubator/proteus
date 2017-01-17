@@ -91,6 +91,7 @@
                   "gravity": "center",
                   "layout_marginTop" : "10dp",
                   "text" : "ADD TO CART",
+                  "textColor": "?Theme_AppCompat:actionMenuTextColor",
                   "background" : {
                     "type" : "ripple",
                     "content": {
@@ -99,7 +100,7 @@
                       "children": [
                         {
                           "type": "solid",
-                          "color": "#F2575B"
+                          "color": "@color/colorAccent"
                         }
                       ]
                     },
