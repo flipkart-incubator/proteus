@@ -21,7 +21,6 @@ package com.flipkart.android.proteus;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.view.ViewGroup;
 
 import org.junit.After;
@@ -49,10 +48,6 @@ public class DimensionTest {
     private Context context = mock(Context.class);
     @Mock
     private Resources resources = mock(Resources.class);
-    @Mock
-    private Resources.Theme theme = mock(Resources.Theme.class);
-    @Mock
-    private TypedArray typedArray = mock(TypedArray.class);
 
     @Before
     @After

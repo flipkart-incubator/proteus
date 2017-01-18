@@ -20,10 +20,12 @@
 package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Primitive;
+import com.flipkart.android.proteus.Style;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
@@ -40,13 +42,23 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
 
     @Override
     public void handle(V view, Value value) {
-        handle(view, ParseHelper.parseBoolean(value));
+        if (value.isPrimitive() && value.getAsPrimitive().isBoolean()) {
+            handle(view, value.getAsPrimitive().getAsBoolean());
+        } else if (value.isStyle()) {
+            TypedArray a = value.getAsStyle().apply(view.getContext());
+            handle(view, a.getBoolean(0, false));
+        }
     }
 
     public abstract void handle(V view, boolean value);
 
     @Override
     public Value parse(Value value, Context context) {
-        return ParseHelper.parseBoolean(value) ? TRUE : FALSE;
+        if (value.isPrimitive() && ParseHelper.isLocalResourceAttribute(value.getAsString())) {
+            Style style = Style.valueOf(value.getAsString());
+            return null != style ? style : FALSE;
+        } else {
+            return ParseHelper.parseBoolean(value) ? TRUE : FALSE;
+        }
     }
 }
