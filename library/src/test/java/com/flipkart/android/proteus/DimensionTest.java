@@ -170,11 +170,11 @@ public class DimensionTest {
     }
 
     @Test
-    public void valueOf_Unit_Resource_Exception() throws Exception {
+    public void valueOf_Unit_Resource_Not_Found() throws Exception {
         String input = "@dimen/undefined";
 
         //noinspection unchecked
-        when(resources.getIdentifier(input, "dimen", context.getPackageName())).thenThrow(Exception.class);
+        when(resources.getIdentifier(input, "dimen", context.getPackageName())).thenReturn(0);
         when(context.getResources()).thenReturn(resources);
 
         Dimension d = Dimension.valueOf(input, context);

@@ -101,6 +101,13 @@ public abstract class Value {
     }
 
     /**
+     * @return
+     */
+    public boolean isResource() {
+        return this instanceof Resource;
+    }
+
+    /**
      * convenience method to get this value as a {@link ObjectValue}. If the value is of some
      * other type, a {@link IllegalStateException} will result. Hence it is best to use this method
      * after ensuring that this value is of the desired type by calling {@link #isObject()}
@@ -203,6 +210,16 @@ public abstract class Value {
             return (Color) this;
         }
         throw new IllegalStateException("Not a Color: " + this);
+    }
+
+    /**
+     * @return
+     */
+    public Resource getAsResource() {
+        if (isResource()) {
+            return (Resource) this;
+        }
+        throw new IllegalStateException("Not a Resource: " + this);
     }
 
     /**

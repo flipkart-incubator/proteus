@@ -432,12 +432,8 @@ public class ParseHelper {
         return typeface;
     }
 
-    public static boolean isLocalResourceAttribute(String attributeValue) {
-        return attributeValue.startsWith(ATTR_START_LITERAL);
-    }
-
-    public static boolean isLocalStringResource(String attributeValue) {
-        return attributeValue.startsWith(STRING_LOCAL_RESOURCE_STR);
+    public static boolean isLocalResourceAttribute(String value) {
+        return value.startsWith(ATTR_START_LITERAL);
     }
 
     public static boolean isLocalDrawableResource(String attributeValue) {

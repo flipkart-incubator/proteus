@@ -19,15 +19,15 @@
 
 package com.flipkart.android.proteus.processor;
 
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.util.Log;
+import android.content.Context;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.Primitive;
+import com.flipkart.android.proteus.Resource;
+import com.flipkart.android.proteus.Style;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
 /**
  * @author kirankumar
@@ -37,45 +37,21 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
 
     private static final String TAG = "StringProcessor";
 
+    private static final String STRING_LOCAL_RESOURCE_STR = "@string/";
+
+    public static final Primitive EMPTY = new Primitive("");
+
     /**
      * @param view  View
      * @param value
      */
     @Override
     public void handle(V view, Value value) {
-        if (value.isPrimitive()) {
-            handle(view, getStringFromAttribute(view, value.getAsPrimitive().getAsString()));
+        if (value.isResource()) {
+            handle(view, value.getAsResource().getString(view.getContext()));
         } else {
-            if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Could not resolve string for : " + value.toString());
-            }
+            handle(view, value.getAsString());
         }
-    }
-
-    private String getStringFromAttribute(V view, String attributeValue) {
-        String result;
-        if (ParseHelper.isLocalResourceAttribute(attributeValue)) {
-            int attributeId = ParseHelper.getAttributeId(view.getContext(), attributeValue);
-            if (0 != attributeId) {
-                TypedArray ta = view.getContext().obtainStyledAttributes(new int[]{attributeId});
-                result = ta.getString(0/* index */);
-                ta.recycle();
-            } else {
-                result = "";
-            }
-        } else if (ParseHelper.isLocalDrawableResource(attributeValue)) {
-            try {
-                Resources r = view.getContext().getResources();
-                int stringId = r.getIdentifier(attributeValue, "string", view.getContext().getPackageName());
-                result = r.getString(stringId);
-            } catch (Exception ex) {
-                result = "";
-                System.out.println("Could not load local resource " + attributeValue);
-            }
-        } else {
-            result = attributeValue;
-        }
-        return result;
     }
 
     /**
@@ -83,4 +59,21 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
      */
     public abstract void handle(V view, String value);
 
+    @Override
+    public Value parse(Value value, Context context) {
+        String string = value.getAsString();
+        if (ParseHelper.isLocalResourceAttribute(string)) {
+            Style style = Style.valueOf(string);
+            return null != style ? style : EMPTY;
+        } else if (isLocalStringResource(string)) {
+            Resource resource = Resource.valueOf(string, Resource.STRING, context);
+            return Resource.NOT_FOUND == resource ? EMPTY : resource;
+        } else {
+            return value;
+        }
+    }
+
+    public static boolean isLocalStringResource(String value) {
+        return value.startsWith(STRING_LOCAL_RESOURCE_STR);
+    }
 }

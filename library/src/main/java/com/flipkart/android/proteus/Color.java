@@ -21,17 +21,12 @@ package com.flipkart.android.proteus;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
-import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.StateSet;
-
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -75,15 +70,8 @@ public abstract class Color extends Value {
                 @ColorInt int colorInt = android.graphics.Color.parseColor(value);
                 color = new Int(colorInt);
             } else if (isLocalColorResource(value)) {
-                try {
-                    int resId = context.getResources().getIdentifier(value, "color", context.getPackageName());
-                    color = new Resource(resId);
-                } catch (Exception e) {
-                    if (ProteusConstants.isLoggingEnabled()) {
-                        Log.e("Proteus", "Could not load local resource " + value);
-                    }
-                    color = Int.BLACK;
-                }
+                int resId = Resource.valueOf(value, Resource.COLOR, context).resId;
+                color = resId == 0 ? Int.BLACK : new ColorResource(resId);
             } else {
                 color = Int.BLACK;
             }
@@ -197,13 +185,8 @@ public abstract class Color extends Value {
         int colorInt;
         if (color instanceof Int) {
             colorInt = ((Int) color).value;
-        } else if (color instanceof Resource) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                colorInt = context.getResources().getColor(((Resource) color).resId, context.getTheme());
-            } else {
-                //noinspection deprecation
-                colorInt = context.getResources().getColor(((Resource) color).resId);
-            }
+        } else if (color instanceof ColorResource) {
+            colorInt = Resource.getColor(((ColorResource) color).resId, context);
         } else {
             colorInt = Int.BLACK.value;
         }
@@ -317,12 +300,12 @@ public abstract class Color extends Value {
         }
     }
 
-    public static class Resource extends Color {
+    public static class ColorResource extends Color {
 
         @ColorRes
         public final int resId;
 
-        private Resource(@ColorRes int resId) {
+        private ColorResource(@ColorRes int resId) {
             this.resId = resId;
         }
 
@@ -333,28 +316,8 @@ public abstract class Color extends Value {
 
         @Override
         public Result apply(Context context) {
-            ColorStateList colorStateList = null;
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    colorStateList = context.getResources().getColorStateList(resId, context.getTheme());
-                } else {
-                    colorStateList = context.getResources().getColorStateList(resId);
-                }
-
-            } catch (Resources.NotFoundException nfe) {
-                //assuming this is a color now
-            }
-            if (null != colorStateList) {
-                return new Result(0, colorStateList);
-            } else {
-                int color;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    color = context.getResources().getColor(resId, context.getTheme());
-                } else {
-                    color = context.getResources().getColor(resId);
-                }
-                return new Result(color, null);
-            }
+            ColorStateList colors = Resource.getColorStateList(resId, context);
+            return new Result(Int.BLACK.value, colors);
         }
     }
 

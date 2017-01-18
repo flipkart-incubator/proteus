@@ -21,12 +21,10 @@ package com.flipkart.android.proteus;
 
 import android.content.Context;
 import android.support.v4.util.LruCache;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -107,16 +105,13 @@ public class Dimension extends Value {
                     value = ParseHelper.parseFloat(stringValue);
                     unit = u;
                 } else if (isLocalDimensionResource(dimension)) { // check if dimension is a local resource
-                    try {
-                        value = context.getResources().getIdentifier(dimension, "dimen", context.getPackageName());
-                        unit = DIMENSION_UNIT_RESOURCE;
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        if (ProteusConstants.isLoggingEnabled()) {
-                            Log.e("Proteus", "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
-                        }
+                    int resId = Resource.valueOf(dimension, Resource.DIMEN, context).resId;
+                    if (resId == 0) {
                         value = 0;
                         unit = DIMENSION_UNIT_PX;
+                    } else {
+                        value = resId;
+                        unit = DIMENSION_UNIT_RESOURCE;
                     }
                 } else {
                     value = 0;
