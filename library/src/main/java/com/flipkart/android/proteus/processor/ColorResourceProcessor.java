@@ -21,9 +21,7 @@ package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
@@ -46,32 +44,11 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
     }
 
     private void apply(V view, Color color) {
-        if (color instanceof Color.Int) {
-            setColor(view, ((Color.Int) color).value);
-        } else if (color instanceof Color.StateList) {
-            setColor(view, ((Color.StateList) color).colors);
-        } else if (color instanceof Color.Resource) {
-            int resId = ((Color.Resource) color).resId;
-            ColorStateList colorStateList = null;
-            Context context = view.getContext();
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    colorStateList = context.getResources().getColorStateList(resId, context.getTheme());
-                } else {
-                    colorStateList = context.getResources().getColorStateList(resId);
-                }
-            } catch (Resources.NotFoundException nfe) {
-                //assuming this is a color now
-            }
-            if (null != colorStateList) {
-                setColor(view, colorStateList);
-            } else {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    setColor(view, context.getResources().getColor(resId, context.getTheme()));
-                } else {
-                    setColor(view, context.getResources().getColor(resId));
-                }
-            }
+        Color.Result result = color.apply(view.getContext());
+        if (null != result.colors) {
+            setColor(view, result.colors);
+        } else {
+            setColor(view, result.color);
         }
     }
 

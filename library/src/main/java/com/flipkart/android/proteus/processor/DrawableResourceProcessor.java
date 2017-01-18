@@ -38,16 +38,15 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.webkit.URLUtil;
-import android.webkit.ValueCallback;
 
 import com.flipkart.android.proteus.Array;
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.Color;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.toolbox.ColorUtils;
 import com.flipkart.android.proteus.toolbox.NetworkDrawableHelper;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.google.gson.annotations.SerializedName;
@@ -255,17 +254,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         protected int loadColor(Context context, Value value) {
             mTempColor = 0;
             if (!value.isNull()) {
-                ColorUtils.loadColor(context, value, new ValueCallback<Integer>() {
-                    @Override
-                    public void onReceiveValue(Integer color) {
-                        mTempColor = color;
-                    }
-                }, new ValueCallback<ColorStateList>() {
-                    @Override
-                    public void onReceiveValue(ColorStateList color) {
-
-                    }
-                });
+                mTempColor = Color.valueOf(value, context).apply(context).color;
             }
             return mTempColor;
         }
@@ -338,29 +327,12 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
         @Override
         public void apply(Context context, final GradientDrawable gradientDrawable) {
-            ColorUtils.loadColor(context, color, new ValueCallback<Integer>() {
-                /**
-                 * Invoked when the value is available.
-                 *
-                 * @param value The value.
-                 */
-                @Override
-                public void onReceiveValue(Integer value) {
-                    gradientDrawable.setColor(value);
-                }
-            }, new ValueCallback<ColorStateList>() {
-                /**
-                 * Invoked when the value is available.
-                 *
-                 * @param value The value.
-                 */
-                @Override
-                public void onReceiveValue(ColorStateList value) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        gradientDrawable.setColor(value);
-                    }
-                }
-            });
+            Color.Result result = Color.valueOf(color, context).apply(context);
+            if (null != result.colors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                gradientDrawable.setColor(result.colors);
+            } else {
+                gradientDrawable.setColor(result.color);
+            }
         }
     }
 
@@ -686,32 +658,27 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             final Value content = object.get(CONTENT);
             final Value defaultBackground = object.get(DEFAULT_BACKGROUND);
 
-            final ColorStateList[] colorStateList = new ColorStateList[1];
+            final ColorStateList colorStateList;
             final Drawable[] contentDrawable = new Drawable[1];
             final Drawable[] maskDrawable = new Drawable[1];
             final Drawable[] defaultBackgroundDrawable = new Drawable[1];
 
             Drawable resultDrawable = null;
 
-            ColorUtils.loadColor(context, color, new ValueCallback<Integer>() {
-                @Override
-                public void onReceiveValue(Integer value) {
-                    int[][] states = new int[][]{
-                            new int[]{}
-                    };
+            Color.Result result = Color.valueOf(color, context).apply(context);
 
-                    int[] colors = new int[]{
-                            value
-                    };
+            if (null != result.colors) {
+                colorStateList = result.colors;
+            } else {
+                int[][] states = new int[][]{
+                        new int[]{}
+                };
 
-                    colorStateList[0] = new ColorStateList(states, colors);
-                }
-            }, new ValueCallback<ColorStateList>() {
-                @Override
-                public void onReceiveValue(ColorStateList value) {
-                    colorStateList[0] = value;
-                }
-            });
+                int[] colors = new int[]{
+                        result.color
+                };
+                colorStateList = new ColorStateList(states, colors);
+            }
 
             if (null != content) {
                 DrawableResourceProcessor contentDrawableProcessor = new DrawableResourceProcessor() {
@@ -723,7 +690,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 contentDrawableProcessor.handle(view, content);
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && null != colorStateList[0]) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 if (null != mask) {
                     DrawableResourceProcessor maskDrawableProcessor = new DrawableResourceProcessor() {
                         @Override
@@ -734,7 +701,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                     maskDrawableProcessor.handle(view, mask);
                 }
 
-                resultDrawable = new RippleDrawable(colorStateList[0], contentDrawable[0], maskDrawable[0]);
+                resultDrawable = new RippleDrawable(colorStateList, contentDrawable[0], maskDrawable[0]);
 
             } else if (null != defaultBackground) {
                 DrawableResourceProcessor defaultDrawableProcessor = new DrawableResourceProcessor() {
@@ -747,9 +714,9 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
                 resultDrawable = defaultBackgroundDrawable[0];
 
-            } else if (null != colorStateList[0] && contentDrawable[0] != null) {
-                int pressedColor = colorStateList[0].getColorForState(new int[]{android.R.attr.state_pressed}, colorStateList[0].getDefaultColor());
-                int focussedColor = colorStateList[0].getColorForState(new int[]{android.R.attr.state_focused}, pressedColor);
+            } else if (contentDrawable[0] != null) {
+                int pressedColor = colorStateList.getColorForState(new int[]{android.R.attr.state_pressed}, colorStateList.getDefaultColor());
+                int focussedColor = colorStateList.getColorForState(new int[]{android.R.attr.state_focused}, pressedColor);
                 ColorDrawable pressedColorDrawable = new ColorDrawable(pressedColor);
                 ColorDrawable focussedColorDrawable = new ColorDrawable(focussedColor);
                 StateListDrawable stateListDrawable = new StateListDrawable();

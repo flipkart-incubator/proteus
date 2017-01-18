@@ -21,9 +21,11 @@ package com.flipkart.android.proteus;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
+import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 import android.util.Log;
@@ -48,6 +50,8 @@ public abstract class Color extends Value {
     private static final String COLOR_LOCAL_RESOURCE_STR = "@color/";
 
     private static HashMap<String, Integer> sAttributesMap = null;
+
+    public abstract Result apply(Context context);
 
     public static Color valueOf(Value value, Context context) {
         Color color;
@@ -188,7 +192,7 @@ public abstract class Color extends Value {
         return null != result ? new Color.StateList(result) : Int.BLACK;
     }
 
-    public static int apply(String value, Context context) {
+    private static int apply(String value, Context context) {
         Color color = valueOf(value, context);
         int colorInt;
         if (color instanceof Int) {
@@ -213,6 +217,7 @@ public abstract class Color extends Value {
     public static boolean isLocalColorResource(String attributeValue) {
         return attributeValue.startsWith(COLOR_LOCAL_RESOURCE_STR);
     }
+
 
     private static HashMap<String, Integer> getAttributesMap() {
         if (null == sAttributesMap) {
@@ -266,6 +271,7 @@ public abstract class Color extends Value {
         return (baseColor & 0xFFFFFF) | (alpha << 24);
     }
 
+
     private static class ColorCache {
         private static final LruCache<String, Color> cache = new LruCache<>(64);
     }
@@ -285,6 +291,11 @@ public abstract class Color extends Value {
         Value copy() {
             return this;
         }
+
+        @Override
+        public Result apply(Context context) {
+            return new Result(value, null);
+        }
     }
 
     public static class StateList extends Color {
@@ -298,6 +309,11 @@ public abstract class Color extends Value {
         @Override
         Value copy() {
             return this;
+        }
+
+        @Override
+        public Result apply(Context context) {
+            return new Result(0, colors);
         }
     }
 
@@ -313,6 +329,45 @@ public abstract class Color extends Value {
         @Override
         Value copy() {
             return this;
+        }
+
+        @Override
+        public Result apply(Context context) {
+            ColorStateList colorStateList = null;
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    colorStateList = context.getResources().getColorStateList(resId, context.getTheme());
+                } else {
+                    colorStateList = context.getResources().getColorStateList(resId);
+                }
+
+            } catch (Resources.NotFoundException nfe) {
+                //assuming this is a color now
+            }
+            if (null != colorStateList) {
+                return new Result(0, colorStateList);
+            } else {
+                int color;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    color = context.getResources().getColor(resId, context.getTheme());
+                } else {
+                    color = context.getResources().getColor(resId);
+                }
+                return new Result(color, null);
+            }
+        }
+    }
+
+    public static class Result {
+
+        public final int color;
+
+        @Nullable
+        public final ColorStateList colors;
+
+        public Result(int color, @Nullable ColorStateList colors) {
+            this.color = color;
+            this.colors = colors;
         }
     }
 
