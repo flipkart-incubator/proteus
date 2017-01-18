@@ -155,21 +155,6 @@ public class DimensionTest {
     }
 
     @Test
-    public void valueOf_Unit_Resource() throws Exception {
-        String input = "@dimen/padding";
-        String name = "a.b.c";
-        int resId = 1;
-
-        when(resources.getIdentifier(input, "dimen", name)).thenReturn(resId);
-        when(context.getResources()).thenReturn(resources);
-        when(context.getPackageName()).thenReturn(name);
-
-        Dimension d = Dimension.valueOf(input, context);
-        assertThat((int) d.value, is(resId));
-        assertThat(d.unit, is(Dimension.DIMENSION_UNIT_RESOURCE));
-    }
-
-    @Test
     public void valueOf_Unit_Resource_Not_Found() throws Exception {
         String input = "@dimen/undefined";
 

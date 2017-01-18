@@ -186,7 +186,8 @@ public abstract class Color extends Value {
         if (color instanceof Int) {
             colorInt = ((Int) color).value;
         } else if (color instanceof ColorResource) {
-            colorInt = Resource.getColor(((ColorResource) color).resId, context);
+            Integer i = Resource.getColor(((ColorResource) color).resId, context);
+            colorInt = null == i ? Int.BLACK.value : i;
         } else {
             colorInt = Int.BLACK.value;
         }

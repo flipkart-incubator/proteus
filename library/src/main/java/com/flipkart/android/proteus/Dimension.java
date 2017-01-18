@@ -37,7 +37,6 @@ import java.util.Map;
 
 public class Dimension extends Value {
 
-    public static final int DIMENSION_UNIT_RESOURCE = -2;
     public static final int DIMENSION_UNIT_ENUM = -1;
     public static final int DIMENSION_UNIT_PX = TypedValue.COMPLEX_UNIT_PX;
     public static final int DIMENSION_UNIT_DP = TypedValue.COMPLEX_UNIT_DIP;
@@ -85,7 +84,7 @@ public class Dimension extends Value {
         this.unit = unit;
     }
 
-    private Dimension(String dimension, Context context) {
+    private Dimension(String dimension) {
         Integer parameter = sDimensionsMap.get(dimension);
         double value;
         int unit;
@@ -104,15 +103,6 @@ public class Dimension extends Value {
                 if (u != null) {
                     value = ParseHelper.parseFloat(stringValue);
                     unit = u;
-                } else if (isLocalDimensionResource(dimension)) { // check if dimension is a local resource
-                    int resId = Resource.valueOf(dimension, Resource.DIMEN, context).resId;
-                    if (resId == 0) {
-                        value = 0;
-                        unit = DIMENSION_UNIT_PX;
-                    } else {
-                        value = resId;
-                        unit = DIMENSION_UNIT_RESOURCE;
-                    }
                 } else {
                     value = 0;
                     unit = DIMENSION_UNIT_PX;
@@ -139,9 +129,6 @@ public class Dimension extends Value {
             case DIMENSION_UNIT_IN:
                 result = TypedValue.applyDimension(unit, (float) value, context.getResources().getDisplayMetrics());
                 break;
-            case DIMENSION_UNIT_RESOURCE:
-                result = context.getResources().getDimension((int) value);
-                break;
             default:
                 result = 0;
         }
@@ -155,7 +142,7 @@ public class Dimension extends Value {
         }
         Dimension d = DimensionCache.cache.get(dimension);
         if (null == d) {
-            d = new Dimension(dimension, context);
+            d = new Dimension(dimension);
             DimensionCache.cache.put(dimension, d);
         }
         return d;

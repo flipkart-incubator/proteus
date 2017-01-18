@@ -20,6 +20,7 @@
 package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
@@ -35,10 +36,9 @@ import com.flipkart.android.proteus.parser.ParseHelper;
  */
 public abstract class StringAttributeProcessor<V extends View> extends AttributeProcessor<V> {
 
-    private static final String TAG = "StringProcessor";
-
     private static final String STRING_LOCAL_RESOURCE_STR = "@string/";
 
+    public static final String EMPTY_STRING = "";
     public static final Primitive EMPTY = new Primitive("");
 
     /**
@@ -48,9 +48,18 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     @Override
     public void handle(V view, Value value) {
         if (value.isResource()) {
-            handle(view, value.getAsResource().getString(view.getContext()));
+            String string = value.getAsResource().getString(view.getContext());
+            handle(view, null == string ? EMPTY_STRING : string);
+        } else if (value.isStyle()) {
+            TypedArray a = value.getAsStyle().apply(view.getContext());
+            handle(view, a.getString(0));
         } else {
-            handle(view, value.getAsString());
+            String string = value.getAsString();
+            if (ParseHelper.isLocalResourceAttribute(string) || isLocalStringResource(string)) {
+                handle(view, parse(value, view.getContext()));
+            } else {
+                handle(view, string);
+            }
         }
     }
 

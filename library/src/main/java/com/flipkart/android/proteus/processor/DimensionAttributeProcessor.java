@@ -26,6 +26,7 @@ import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Dimension;
+import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.Style;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -40,6 +41,9 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
     public final void handle(T view, Value value) {
         if (value.isDimension()) {
             setDimension(view, value.getAsDimension().apply(view.getContext()));
+        } else if (value.isResource()) {
+            Float dimension = value.getAsResource().getDimension(view.getContext());
+            setDimension(view, null == dimension ? 0 : dimension);
         } else if (value.isStyle()) {
             TypedArray a = value.getAsStyle().apply(view.getContext());
             setDimension(view, a.getDimensionPixelSize(0, 0));
@@ -64,6 +68,9 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
         if (ParseHelper.isLocalResourceAttribute(string)) {
             Style style = Style.valueOf(string);
             return null != style ? style : Dimension.ZERO;
+        } else if (Dimension.isLocalDimensionResource(string)) {
+            Resource resource = Resource.valueOf(string, Resource.DIMEN, context);
+            return Resource.NOT_FOUND == resource ? Dimension.ZERO : resource;
         } else {
             return Dimension.valueOf(value.getAsString(), context);
         }

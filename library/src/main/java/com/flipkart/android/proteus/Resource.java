@@ -52,6 +52,7 @@ public class Resource extends Value {
         this.resId = resId;
     }
 
+    @Nullable
     public Integer getColor(Context context) {
         return getColor(resId, context);
     }
@@ -61,23 +62,18 @@ public class Resource extends Value {
         return getColorStateList(resId, context);
     }
 
+    @Nullable
+    public Float getDimension(Context context) {
+        return getDimension(resId, context);
+    }
+
+    @Nullable
     public String getString(Context context) {
         return getString(resId, context);
     }
 
-    public static Resource valueOf(String value, @ResourceType String type, Context context) {
-        if (null == value) {
-            return NOT_FOUND;
-        }
-        Resource resource = ResourceCache.cache.get(value);
-        if (null == resource) {
-            int resId = context.getResources().getIdentifier(value, type, context.getPackageName());
-            resource = resId == 0 ? NOT_FOUND : new Resource(resId);
-            ResourceCache.cache.put(value, resource);
-        }
-        return resource;
-    }
 
+    @Nullable
     public static Integer getColor(int resId, Context context) {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -105,12 +101,35 @@ public class Resource extends Value {
     }
 
     @Nullable
+    public static Float getDimension(int resId, Context context) {
+        try {
+            return context.getResources().getDimension(resId);
+        } catch (Resources.NotFoundException e) {
+            return null;
+        }
+    }
+
+    @Nullable
     public static String getString(int resId, Context context) {
         try {
             return context.getString(resId);
         } catch (Resources.NotFoundException e) {
             return null;
         }
+    }
+
+
+    public static Resource valueOf(String value, @ResourceType String type, Context context) {
+        if (null == value) {
+            return NOT_FOUND;
+        }
+        Resource resource = ResourceCache.cache.get(value);
+        if (null == resource) {
+            int resId = context.getResources().getIdentifier(value, type, context.getPackageName());
+            resource = resId == 0 ? NOT_FOUND : new Resource(resId);
+            ResourceCache.cache.put(value, resource);
+        }
+        return resource;
     }
 
     private static class ResourceCache {
