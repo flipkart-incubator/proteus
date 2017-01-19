@@ -132,10 +132,10 @@ public class Resource extends Value {
         }
     }
 
-
+    @Nullable
     public static Resource valueOf(String value, @ResourceType String type, Context context) {
         if (null == value) {
-            return NOT_FOUND;
+            return null;
         }
         Resource resource = ResourceCache.cache.get(value);
         if (null == resource) {
@@ -143,7 +143,7 @@ public class Resource extends Value {
             resource = resId == 0 ? NOT_FOUND : new Resource(resId);
             ResourceCache.cache.put(value, resource);
         }
-        return resource;
+        return NOT_FOUND == resource ? null : resource;
     }
 
     private static class ResourceCache {

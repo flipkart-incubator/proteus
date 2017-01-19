@@ -65,12 +65,12 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
     @Override
     public Value parse(Value value, Context context) {
         String string = value.getAsString();
-        if (ParseHelper.isStyleAttribute(string)) {
+        if (Dimension.isLocalDimensionResource(string)) {
+            Resource resource = Resource.valueOf(string, Resource.DIMEN, context);
+            return null == resource ? Dimension.ZERO : resource;
+        } else if (ParseHelper.isStyleAttribute(string)) {
             StyleAttribute style = StyleAttribute.valueOf(string);
             return null != style ? style : Dimension.ZERO;
-        } else if (Dimension.isLocalDimensionResource(string)) {
-            Resource resource = Resource.valueOf(string, Resource.DIMEN, context);
-            return Resource.NOT_FOUND == resource ? Dimension.ZERO : resource;
         } else {
             return Dimension.valueOf(value.getAsString(), context);
         }

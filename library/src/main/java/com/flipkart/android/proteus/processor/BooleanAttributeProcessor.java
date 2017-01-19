@@ -65,7 +65,7 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
             String string = value.getAsString();
             if (isLocalBooleanResource(string)) {
                 Resource resource = Resource.valueOf(string, Resource.BOOLEAN, context);
-                return Resource.NOT_FOUND == resource ? FALSE : resource;
+                return null == resource ? FALSE : resource;
             } else if (ParseHelper.isStyleAttribute(string)) {
                 StyleAttribute style = StyleAttribute.valueOf(string);
                 return null != style ? style : FALSE;

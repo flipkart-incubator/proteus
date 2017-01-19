@@ -82,17 +82,15 @@ public class StyleAttribute extends Value {
         if (null == style) {
             try {
                 style = new StyleAttribute(value);
-                StyleCache.cache.put(value, style);
             } catch (Exception e) {
                 if (ProteusConstants.isLoggingEnabled()) {
                     e.printStackTrace();
                 }
-                StyleCache.cache.put(value, NULL);
+                style = NULL;
             }
-        } else if (style == NULL) {
-            style = null;
+            StyleCache.cache.put(value, style);
         }
-        return style;
+        return NULL == style ? null : style;
     }
 
     private static class StyleCache {

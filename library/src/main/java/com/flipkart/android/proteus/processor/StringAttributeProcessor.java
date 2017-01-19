@@ -71,12 +71,12 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     @Override
     public Value parse(Value value, Context context) {
         String string = value.getAsString();
-        if (ParseHelper.isStyleAttribute(string)) {
+        if (isLocalStringResource(string)) {
+            Resource resource = Resource.valueOf(string, Resource.STRING, context);
+            return null == resource ? EMPTY : resource;
+        } else if (ParseHelper.isStyleAttribute(string)) {
             StyleAttribute style = StyleAttribute.valueOf(string);
             return null != style ? style : EMPTY;
-        } else if (isLocalStringResource(string)) {
-            Resource resource = Resource.valueOf(string, Resource.STRING, context);
-            return Resource.NOT_FOUND == resource ? EMPTY : resource;
         } else {
             return value;
         }
