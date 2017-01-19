@@ -65,7 +65,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
     @Override
     public Value parse(Value value, Context context) {
         String string = value.getAsString();
-        if (ParseHelper.isLocalResourceAttribute(string)) {
+        if (ParseHelper.isStyleAttribute(string)) {
             Style style = Style.valueOf(string);
             return null != style ? style : Dimension.ZERO;
         } else if (Dimension.isLocalDimensionResource(string)) {

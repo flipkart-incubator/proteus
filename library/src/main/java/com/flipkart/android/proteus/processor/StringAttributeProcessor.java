@@ -36,7 +36,7 @@ import com.flipkart.android.proteus.parser.ParseHelper;
  */
 public abstract class StringAttributeProcessor<V extends View> extends AttributeProcessor<V> {
 
-    private static final String STRING_LOCAL_RESOURCE_STR = "@string/";
+    private static final String STRING_RESOURCE_PREFIX = "@string/";
 
     public static final String EMPTY_STRING = "";
     public static final Primitive EMPTY = new Primitive("");
@@ -55,7 +55,7 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
             handle(view, a.getString(0));
         } else {
             String string = value.getAsString();
-            if (ParseHelper.isLocalResourceAttribute(string) || isLocalStringResource(string)) {
+            if (ParseHelper.isStyleAttribute(string) || isLocalStringResource(string)) {
                 handle(view, parse(value, view.getContext()));
             } else {
                 handle(view, string);
@@ -71,7 +71,7 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     @Override
     public Value parse(Value value, Context context) {
         String string = value.getAsString();
-        if (ParseHelper.isLocalResourceAttribute(string)) {
+        if (ParseHelper.isStyleAttribute(string)) {
             Style style = Style.valueOf(string);
             return null != style ? style : EMPTY;
         } else if (isLocalStringResource(string)) {
@@ -83,6 +83,6 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     }
 
     public static boolean isLocalStringResource(String value) {
-        return value.startsWith(STRING_LOCAL_RESOURCE_STR);
+        return value.startsWith(STRING_RESOURCE_PREFIX);
     }
 }

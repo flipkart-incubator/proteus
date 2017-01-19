@@ -109,7 +109,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     protected void handleString(final V view, final String value) {
         ProteusViewManager viewManager = ((ProteusView) view).getViewManager();
 
-        if (ParseHelper.isLocalResourceAttribute(value)) {
+        if (ParseHelper.isStyleAttribute(value)) {
             int attributeId = ParseHelper.getAttributeId(view.getContext(), value);
             if (0 != attributeId) {
                 TypedArray ta = view.getContext().obtainStyledAttributes(new int[]{attributeId});

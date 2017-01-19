@@ -52,7 +52,7 @@ public class Style extends Value {
     }
 
     private Style(String value) throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-        if (!ParseHelper.isLocalResourceAttribute(value)) {
+        if (!ParseHelper.isStyleAttribute(value)) {
             throw new IllegalArgumentException(value + " is not a valid style attribute");
         }
         String[] dimenArr = value.substring(1, value.length()).split(":");

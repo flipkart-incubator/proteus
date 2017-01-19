@@ -25,6 +25,7 @@ import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Primitive;
+import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.Style;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -37,6 +38,8 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 
 public abstract class BooleanAttributeProcessor<V extends View> extends AttributeProcessor<V> {
 
+    public static final String BOOLEAN_RESOURCE_PREFIX = "@bool/";
+
     public static final Primitive TRUE = new Primitive(true);
     public static final Primitive FALSE = new Primitive(false);
 
@@ -44,6 +47,8 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
     public void handle(V view, Value value) {
         if (value.isPrimitive() && value.getAsPrimitive().isBoolean()) {
             handle(view, value.getAsPrimitive().getAsBoolean());
+        } else if (value.isResource()) {
+            handle(view, value.getAsResource().getBoolean(view.getContext()));
         } else if (value.isStyle()) {
             TypedArray a = value.getAsStyle().apply(view.getContext());
             handle(view, a.getBoolean(0, false));
@@ -54,11 +59,23 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
 
     @Override
     public Value parse(Value value, Context context) {
-        if (value.isPrimitive() && ParseHelper.isLocalResourceAttribute(value.getAsString())) {
-            Style style = Style.valueOf(value.getAsString());
-            return null != style ? style : FALSE;
+        if (value.isPrimitive()) {
+            String string = value.getAsString();
+            if (ParseHelper.isStyleAttribute(string)) {
+                Style style = Style.valueOf(string);
+                return null != style ? style : FALSE;
+            } else if (isLocalBooleanResource(string)) {
+                Resource resource = Resource.valueOf(string, Resource.STRING, context);
+                return Resource.NOT_FOUND == resource ? FALSE : resource;
+            } else {
+                return ParseHelper.parseBoolean(value) ? TRUE : FALSE;
+            }
         } else {
             return ParseHelper.parseBoolean(value) ? TRUE : FALSE;
         }
+    }
+
+    public static boolean isLocalBooleanResource(String value) {
+        return value.startsWith(BOOLEAN_RESOURCE_PREFIX);
     }
 }

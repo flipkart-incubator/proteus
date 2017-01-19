@@ -89,7 +89,7 @@ public class ParseHelper {
 
     private static final String COLOR_PREFIX_LITERAL = "#";
 
-    private static final String ATTR_START_LITERAL = "?";
+    private static final String STYLE_ATTR_START_LITERAL = "?";
     private static final String DRAWABLE_LOCAL_RESOURCE_STR = "@drawable/";
     private static final String STRING_LOCAL_RESOURCE_STR = "@string/";
     private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";
@@ -432,8 +432,8 @@ public class ParseHelper {
         return typeface;
     }
 
-    public static boolean isLocalResourceAttribute(String value) {
-        return value.startsWith(ATTR_START_LITERAL);
+    public static boolean isStyleAttribute(String value) {
+        return value.startsWith(STYLE_ATTR_START_LITERAL);
     }
 
     public static boolean isLocalDrawableResource(String attributeValue) {

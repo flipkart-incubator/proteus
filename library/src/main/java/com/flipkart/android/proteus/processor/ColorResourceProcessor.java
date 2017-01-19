@@ -72,7 +72,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
             return Color.valueOf(value.getAsObject(), context);
         } else {
             String string = value.getAsString();
-            if (ParseHelper.isLocalResourceAttribute(string)) {
+            if (ParseHelper.isStyleAttribute(string)) {
                 Style style = Style.valueOf(string);
                 return null != style ? style : Color.Int.BLACK;
             } else {
