@@ -28,6 +28,7 @@
               "children": [
                 {
                   "type": "TextView",
+                  "singleLine": "@bool/True",
                   "text": "TextView",
                   "textColor": "#000000",
                   "textSize": "12sp"
