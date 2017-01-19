@@ -191,6 +191,7 @@
             "text": "$tag",
             "padding": "8dp",
             "gravity": "center",
+            "onClick": "$tag",
             "border": {
               "width": "2dp",
               "color": "#cccccc",

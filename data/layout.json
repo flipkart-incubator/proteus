@@ -44,6 +44,9 @@
                   "layout_width": "60dp",
                   "layout_height": "60dp",
                   "src": "@drawable/github_icon",
+                  "onClick": {
+                    "someKey": "someValue"
+                  },
                   "layout_marginRight": "8dp"
                 },
                 {
