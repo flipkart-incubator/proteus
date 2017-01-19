@@ -52,6 +52,8 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
         } else if (value.isStyle()) {
             TypedArray a = value.getAsStyleAttribute().apply(view.getContext());
             handle(view, a.getBoolean(0, false));
+        } else {
+            handle(view, parse(value, view.getContext()));
         }
     }
 
