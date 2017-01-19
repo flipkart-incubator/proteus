@@ -198,7 +198,8 @@
             "textColor": "#2cdb81",
             "text": "$tag",
             "padding": "8dp",
-            "gravity": "center"
+            "gravity": "center",
+            "onClick": "$tag"
           }
         }
       }

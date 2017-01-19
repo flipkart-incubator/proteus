@@ -1,8 +1,11 @@
 <h1>
   <img src="/assets/proteus-logo.png" width="150px"/>
   : Android Layout Engine
-  <a href="https://travis-ci.org/flipkart-incubator/proteus">
+  <a target="_blank" href="https://travis-ci.org/flipkart-incubator/proteus">
     <img src="https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master" alt="Build Status">
+  </a>
+  <a target="_blank" href="https://jitpack.io/#flipkart-incubator/proteus">
+    <img src="https://jitpack.io/v/flipkart-incubator/proteus.svg" alt="Build Status">
   </a>
 </h1>
 

@@ -45,6 +45,9 @@
                   "layout_width": "@dimen/sixty",
                   "layout_height": "@dimen/sixty",
                   "src": "@drawable/github_icon",
+                  "onClick": {
+                    "someKey": "someValue"
+                  },
                   "layout_marginRight": "8dp"
                 },
                 {
