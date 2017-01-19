@@ -39,6 +39,7 @@ import java.lang.annotation.RetentionPolicy;
 public class Resource extends Value {
 
     public static final String ANIM = "anim";
+    public static final String BOOLEAN = "bool";
     public static final String COLOR = "color";
     public static final String DRAWABLE = "drawable";
     public static final String DIMEN = "dimen";
@@ -50,6 +51,10 @@ public class Resource extends Value {
 
     private Resource(int resId) {
         this.resId = resId;
+    }
+
+    public Boolean getBoolean(Context context) {
+        return getBoolean(resId, context);
     }
 
     @Nullable
@@ -72,6 +77,15 @@ public class Resource extends Value {
         return getString(resId, context);
     }
 
+
+    @Nullable
+    public static Boolean getBoolean(int resId, Context context) {
+        try {
+            return context.getResources().getBoolean(resId);
+        } catch (Resources.NotFoundException e) {
+            return null;
+        }
+    }
 
     @Nullable
     public static Integer getColor(int resId, Context context) {
