@@ -20,7 +20,6 @@
 package com.flipkart.android.proteus.parser;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -91,9 +90,7 @@ public class ParseHelper {
 
     private static final String STYLE_ATTR_START_LITERAL = "?";
     private static final String DRAWABLE_LOCAL_RESOURCE_STR = "@drawable/";
-    private static final String STRING_LOCAL_RESOURCE_STR = "@string/";
     private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";
-    private static final String COLOR_LOCAL_RESOURCE_STR = "@color/";
 
     private static final String DRAWABLE_STR = "drawable";
     private static final String ID_STR = "id";
@@ -366,20 +363,6 @@ public class ParseHelper {
         }
     }
 
-    public static Integer parseId(String id) {
-        if (ProteusConstants.DATA_NULL.equals(id)) {
-            return null;
-        }
-        try {
-            return Integer.valueOf(id);
-        } catch (NumberFormatException ex) {
-            if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, id + " is not a valid resource ID.");
-            }
-        }
-        return null;
-    }
-
     public static boolean parseBoolean(Value value) {
         // TODO: we should consider 0 as false too.
         return value.isPrimitive() && value.getAsPrimitive().isBoolean() ? value.getAsBoolean() : !value.isNull();
@@ -400,14 +383,6 @@ public class ParseHelper {
                 Log.e(TAG, "cannot add relative layout rules when container is not relative");
             }
         }
-    }
-
-    public static int dpToPx(float dp) {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
-
-    public static float pxToDp(int px) {
-        return (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
     public static int parseTextStyle(String attributeValue) {
@@ -442,10 +417,6 @@ public class ParseHelper {
 
     public static boolean isTweenAnimationResource(String attributeValue) {
         return attributeValue.startsWith(TWEEN_LOCAL_RESOURCE_STR);
-    }
-
-    public static boolean isLocalColorResource(String attributeValue) {
-        return attributeValue.startsWith(COLOR_LOCAL_RESOURCE_STR);
     }
 
     public static Pair<int[], Value> parseState(ObjectValue value) {
