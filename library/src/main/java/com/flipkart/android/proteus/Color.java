@@ -22,7 +22,6 @@ package com.flipkart.android.proteus;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
@@ -34,7 +33,7 @@ import java.util.Map;
 
 /**
  * Color
- * TODO: fix the color state list to consume color resources and styles
+ * TODO: fix the color state list to consume color resources and style attributes.
  *
  * @author aditya.sharat
  */
@@ -42,7 +41,7 @@ import java.util.Map;
 public abstract class Color extends Value {
 
     private static final String COLOR_PREFIX_LITERAL = "#";
-    private static final String COLOR_LOCAL_RESOURCE_STR = "@color/";
+    private static final String COLOR_RESOURCE_PREFIX = "@color/";
 
     private static HashMap<String, Integer> sAttributesMap = null;
 
@@ -53,7 +52,7 @@ public abstract class Color extends Value {
         if (value.isPrimitive()) {
             color = valueOf(value.getAsString(), context);
         } else if (value.isObject()) {
-            color = valueOf(value, context);
+            color = valueOf(value.getAsObject(), context);
         } else {
             color = Int.BLACK;
         }
@@ -69,9 +68,6 @@ public abstract class Color extends Value {
             if (isColor(value)) {
                 @ColorInt int colorInt = android.graphics.Color.parseColor(value);
                 color = new Int(colorInt);
-            } else if (isLocalColorResource(value)) {
-                int resId = Resource.valueOf(value, Resource.COLOR, context).resId;
-                color = resId == 0 ? Int.BLACK : new ColorResource(resId);
             } else {
                 color = Int.BLACK;
             }
@@ -185,9 +181,6 @@ public abstract class Color extends Value {
         int colorInt;
         if (color instanceof Int) {
             colorInt = ((Int) color).value;
-        } else if (color instanceof ColorResource) {
-            Integer i = Resource.getColor(((ColorResource) color).resId, context);
-            colorInt = null == i ? Int.BLACK.value : i;
         } else {
             colorInt = Int.BLACK.value;
         }
@@ -199,7 +192,7 @@ public abstract class Color extends Value {
     }
 
     public static boolean isLocalColorResource(String attributeValue) {
-        return attributeValue.startsWith(COLOR_LOCAL_RESOURCE_STR);
+        return attributeValue.startsWith(COLOR_RESOURCE_PREFIX);
     }
 
 
@@ -298,27 +291,6 @@ public abstract class Color extends Value {
         @Override
         public Result apply(Context context) {
             return new Result(0, colors);
-        }
-    }
-
-    public static class ColorResource extends Color {
-
-        @ColorRes
-        public final int resId;
-
-        private ColorResource(@ColorRes int resId) {
-            this.resId = resId;
-        }
-
-        @Override
-        Value copy() {
-            return this;
-        }
-
-        @Override
-        public Result apply(Context context) {
-            ColorStateList colors = Resource.getColorStateList(resId, context);
-            return new Result(Int.BLACK.value, colors);
         }
     }
 

@@ -195,7 +195,7 @@
             "layout_marginRight": "8dp",
             "layout_height": "32dp",
             "textSize": "12sp",
-            "textColor": "#2cdb81",
+            "textColor": "@color/colorAccent",
             "text": "$tag",
             "padding": "8dp",
             "gravity": "center",

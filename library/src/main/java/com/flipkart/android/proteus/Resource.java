@@ -155,7 +155,7 @@ public class Resource extends Value {
         return this;
     }
 
-    @StringDef({ANIM, COLOR, DRAWABLE, DIMEN, STRING})
+    @StringDef({ANIM, BOOLEAN, COLOR, DRAWABLE, DIMEN, STRING})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ResourceType {
     }

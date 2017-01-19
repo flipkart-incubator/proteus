@@ -104,7 +104,7 @@
                       "children": [
                         {
                           "type": "solid",
-                          "color": "@color/colorAccent"
+                          "color": "#FF4081"
                         }
                       ]
                     },
