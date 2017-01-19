@@ -50,7 +50,7 @@ public abstract class Color extends Value {
     public static Color valueOf(Value value, Context context) {
         Color color;
         if (value.isPrimitive()) {
-            color = valueOf(value.getAsString(), context);
+            color = valueOf(value.getAsString());
         } else if (value.isObject()) {
             color = valueOf(value.getAsObject(), context);
         } else {
@@ -59,7 +59,7 @@ public abstract class Color extends Value {
         return color;
     }
 
-    public static Color valueOf(String value, Context context) {
+    public static Color valueOf(String value) {
         if (null == value) {
             return Int.BLACK;
         }
@@ -177,7 +177,7 @@ public abstract class Color extends Value {
     }
 
     private static int apply(String value, Context context) {
-        Color color = valueOf(value, context);
+        Color color = valueOf(value);
         int colorInt;
         if (color instanceof Int) {
             colorInt = ((Int) color).value;
