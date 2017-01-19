@@ -31,27 +31,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Style
+ * StyleAttribute
  *
  * @author aditya.sharat
  */
 
-public class Style extends Value {
+public class StyleAttribute extends Value {
 
     public static final Map<String, Integer> styleMap = new HashMap<>();
     public static final Map<String, Integer> attributeMap = new HashMap<>();
 
-    public static final Style NULL = new Style();
+    public static final StyleAttribute NULL = new StyleAttribute();
 
     public final int styleId;
     public final int attributeId;
 
-    private Style() {
+    private StyleAttribute() {
         this.styleId = -1;
         this.attributeId = -1;
     }
 
-    private Style(String value) throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
+    private StyleAttribute(String value) throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
         if (!ParseHelper.isStyleAttribute(value)) {
             throw new IllegalArgumentException(value + " is not a valid style attribute");
         }
@@ -77,11 +77,11 @@ public class Style extends Value {
     }
 
     @Nullable
-    public static Style valueOf(String value) {
-        Style style = StyleCache.cache.get(value);
+    public static StyleAttribute valueOf(String value) {
+        StyleAttribute style = StyleCache.cache.get(value);
         if (null == style) {
             try {
-                style = new Style(value);
+                style = new StyleAttribute(value);
                 StyleCache.cache.put(value, style);
             } catch (Exception e) {
                 if (ProteusConstants.isLoggingEnabled()) {
@@ -96,7 +96,7 @@ public class Style extends Value {
     }
 
     private static class StyleCache {
-        private static final LruCache<String, Style> cache = new LruCache<>(64);
+        private static final LruCache<String, StyleAttribute> cache = new LruCache<>(64);
     }
 
     @Override

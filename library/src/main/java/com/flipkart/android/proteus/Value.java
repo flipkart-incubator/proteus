@@ -90,7 +90,7 @@ public abstract class Value {
      * @return
      */
     public boolean isStyle() {
-        return this instanceof Style;
+        return this instanceof StyleAttribute;
     }
 
     /**
@@ -195,11 +195,11 @@ public abstract class Value {
     /**
      * @return
      */
-    public Style getAsStyle() {
+    public StyleAttribute getAsStyleAttribute() {
         if (isStyle()) {
-            return (Style) this;
+            return (StyleAttribute) this;
         }
-        throw new IllegalStateException("Not a Style: " + this);
+        throw new IllegalStateException("Not a StyleAttribute: " + this);
     }
 
     /**

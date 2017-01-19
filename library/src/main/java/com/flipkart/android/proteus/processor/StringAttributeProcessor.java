@@ -26,7 +26,7 @@ import android.view.View;
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Primitive;
 import com.flipkart.android.proteus.Resource;
-import com.flipkart.android.proteus.Style;
+import com.flipkart.android.proteus.StyleAttribute;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
@@ -51,7 +51,7 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
             String string = value.getAsResource().getString(view.getContext());
             handle(view, null == string ? EMPTY_STRING : string);
         } else if (value.isStyle()) {
-            TypedArray a = value.getAsStyle().apply(view.getContext());
+            TypedArray a = value.getAsStyleAttribute().apply(view.getContext());
             handle(view, a.getString(0));
         } else {
             String string = value.getAsString();
@@ -72,7 +72,7 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     public Value parse(Value value, Context context) {
         String string = value.getAsString();
         if (ParseHelper.isStyleAttribute(string)) {
-            Style style = Style.valueOf(string);
+            StyleAttribute style = StyleAttribute.valueOf(string);
             return null != style ? style : EMPTY;
         } else if (isLocalStringResource(string)) {
             Resource resource = Resource.valueOf(string, Resource.STRING, context);

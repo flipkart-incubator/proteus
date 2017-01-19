@@ -25,18 +25,18 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
- * StyleTest
+ * StyleAttributeTest
  *
  * @author aditya.sharat
  */
-public class StyleTest {
+public class StyleAttributeTest {
 
     @Test
     public void valueOf_valid() throws Exception {
         int styleId = 2131165442;
         int attributeId = 2130772032;
 
-        Style style = Style.valueOf("?Theme_AppCompat:actionBarSize");
+        StyleAttribute style = StyleAttribute.valueOf("?Theme_AppCompat:actionBarSize");
 
         assert style != null;
         assertThat(style.styleId, is(styleId));
@@ -45,21 +45,21 @@ public class StyleTest {
 
     @Test
     public void valueOf_not_found() throws Exception {
-        Style style = Style.valueOf("?random:random");
+        StyleAttribute style = StyleAttribute.valueOf("?random:random");
         assert style == null;
-        style = Style.valueOf("?random:random");
+        style = StyleAttribute.valueOf("?random:random");
         assert style == null;
     }
 
     @Test
     public void valueOf_invalid() throws Exception {
-        Style style = Style.valueOf("random-random");
+        StyleAttribute style = StyleAttribute.valueOf("random-random");
         assert style == null;
     }
 
     @Test
     public void copy() throws Exception {
-        Style style = Style.valueOf("?Theme_AppCompat:actionBarSize");
+        StyleAttribute style = StyleAttribute.valueOf("?Theme_AppCompat:actionBarSize");
         assert style != null;
         assertThat(style, is(style.copy()));
     }
