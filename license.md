@@ -3,9 +3,9 @@
                            Version 2.0, January 2004
                     http://www.apache.org/licenses/LICENSE-2.0
 
-TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+            TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
-Copyright 2016 Flipkart Internet Pvt. Ltd.
+                     Copyright 2017 Flipkart Internet Pvt. Ltd
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
