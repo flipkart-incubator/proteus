@@ -1,13 +1,16 @@
 <h1>
-  <img src="/assets/proteus-logo.png" width="150px"/>
-  : Android Layout Engine
-  <a target="_blank" href="https://travis-ci.org/flipkart-incubator/proteus">
+  <img src="/assets/proteus-logo.png" width="150px"/> : Android Layout Engine
+</h1>
+
+<a target="_blank" href="https://travis-ci.org/flipkart-incubator/proteus">
     <img src="https://travis-ci.org/flipkart-incubator/proteus.svg?branch=master" alt="Build Status">
   </a>
-  <a target="_blank" href="https://jitpack.io/#flipkart-incubator/proteus">
-    <img src="https://jitpack.io/v/flipkart-incubator/proteus.svg" alt="Build Status">
-  </a>
-</h1>
+<a target="_blank" href="https://jitpack.io/#flipkart-incubator/proteus">
+  <img src="https://jitpack.io/v/flipkart-incubator/proteus.svg" alt="Build Status">
+</a>
+<a href="https://android-arsenal.com/details/1/5105">
+  <img src="https://img.shields.io/badge/Android%20Arsenal-Proteus-brightgreen.svg?style=flat" border="0" alt="Android Arsenal">
+</a>
 
 **Proteus** is meant to be a drop-in replacement for Android’s `LayoutInflater`; but unlike the compiled XML layouts bundled in the APK, Proteus inflates layouts at runtime.
 With Proteus, you can control your Apps layout from the backend (no WebViews). Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. Proteus has runtime data bindings and formatters. Plugin in your own custom views and attributes and formatters.
