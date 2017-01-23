@@ -61,7 +61,11 @@ dependencies {
 
 Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON`, which can be used to inflate native android UI at runtime. The `JSON` layouts can be hosted anywhere (on the device, on servers, etc.).
 
-#### layout
+The "Layout" (represented using JSON) defines the the view heirarchy, just like XML. 
+The "Data" (optional) defines [data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings).
+You give the layout and data to LayoutBuilder, you get back a native view. Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp) to see it in action.
+
+#### Sample layout
 
 ```javascript
 {
@@ -83,7 +87,7 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
 }
 ```
 
-#### data
+#### Sample data
 
 ```javascript
 {
@@ -96,18 +100,21 @@ Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON
 }
 ```
 
-### Java
+### Sample Java code
 
 ```java
-ProteusView view = layoutBuilder.build(container, layout, data, 0, styles);
+ProteusView view = layoutBuilder.build(container, <layout>, <data>, 0, styles);
 container.addView((View) view);
 ```
 
-#### Get this
+#### Sample screenshot
 
 <img src="/assets/example-full.png" width="300px"/>
 
+
 ### Setting up the Demo App
+
+The demo app will let you play around with Proteus as well as help you understand the internals better.
 
 * Install NodeJS [here](https://nodejs.org/en/download/)
 * open a terminal
@@ -123,6 +130,7 @@ container.addView((View) view);
 
 ## Resources
 
+* [FAQ](https://github.com/flipkart-incubator/proteus/wiki/Frequently-asked-questions)
 * [Detailed Guide](https://github.com/flipkart-incubator/proteus/wiki)
 * [API References]() *under construction*
 * [Demo App](https://github.com/adityasharat/proteus-demo)
@@ -147,4 +155,4 @@ container.addView((View) view);
 
 ### One click XML to JSON conversion plugin
 
-Download [this plugin](https://github.com/flipkart-incubator/android-studio-proteus-plugin) for Android Studio. Once enabled, you can select any android XML resource file and go to **Tools > Proteus > Convert XML to JSON**
+Download [this plugin (in beta)](https://github.com/flipkart-incubator/android-studio-proteus-plugin) for Android Studio. Once enabled, you can select any android XML resource file and go to **Tools > Proteus > Convert XML to JSON**
