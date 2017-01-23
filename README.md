@@ -138,7 +138,6 @@ The demo app will let you play around with Proteus as well as help you understan
 * [FAQ](https://github.com/flipkart-incubator/proteus/wiki/Frequently-asked-questions)
 * [Detailed Guide](https://github.com/flipkart-incubator/proteus/wiki)
 * [API References]() *under construction*
-* [Demo App](https://github.com/adityasharat/proteus-demo)
 * [DroidCon Talk](https://www.youtube.com/watch?v=ue0ax2_18k8)
 * [Demo Videos](https://www.youtube.com/playlist?list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp)
 
