@@ -48,7 +48,7 @@ public class CircleViewParser extends TypeParser<CircleView> {
 
         addAttributeProcessor("color", new StringAttributeProcessor<CircleView>() {
             @Override
-            public void handle(CircleView view, String value) {
+            public void setString(CircleView view, String value) {
                 view.setColor(value);
             }
         });

@@ -28,6 +28,8 @@ import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.Resource;
+import com.flipkart.android.proteus.StyleAttribute;
 import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
@@ -59,21 +61,21 @@ public class ViewGroupParser<T extends ViewGroup> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.ViewGroup.ClipChildren, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, boolean value) {
+            public void setBoolean(T view, boolean value) {
                 view.setClipChildren(value);
             }
         });
 
         addAttributeProcessor(Attributes.ViewGroup.ClipToPadding, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, boolean value) {
+            public void setBoolean(T view, boolean value) {
                 view.setClipToPadding(value);
             }
         });
 
         addAttributeProcessor(Attributes.ViewGroup.LayoutMode, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     if (LAYOUT_MODE_CLIP_BOUNDS.equals(value)) {
                         view.setLayoutMode(ViewGroup.LAYOUT_MODE_CLIP_BOUNDS);
@@ -86,15 +88,25 @@ public class ViewGroupParser<T extends ViewGroup> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.ViewGroup.SplitMotionEvents, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, boolean value) {
+            public void setBoolean(T view, boolean value) {
                 view.setMotionEventSplittingEnabled(value);
             }
         });
 
         addAttributeProcessor(Attributes.ViewGroup.Children, new AttributeProcessor<T>() {
             @Override
-            public void handle(T view, Value value) {
+            public void handleValue(T view, Value value) {
                 handleChildren((ProteusView) view, value);
+            }
+
+            @Override
+            public void handleResource(T view, Resource resource) {
+                throw new IllegalArgumentException("children cannot be a resource");
+            }
+
+            @Override
+            public void handleStyleAttribute(T view, StyleAttribute style) {
+                throw new IllegalArgumentException("children cannot be a style attribute");
             }
         });
     }

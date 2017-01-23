@@ -23,6 +23,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -59,13 +60,17 @@ public class TextViewParser<T extends TextView> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.TextView.HTML, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
-                view.setText(Html.fromHtml(value));
+            public void setString(T view, String value) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    view.setText(Html.fromHtml(value, Html.FROM_HTML_MODE_LEGACY));
+                } else {
+                    view.setText(Html.fromHtml(value));
+                }
             }
         });
         addAttributeProcessor(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setText(value);
             }
         });
@@ -85,7 +90,7 @@ public class TextViewParser<T extends TextView> extends TypeParser<T> {
         });
         addAttributeProcessor(Attributes.TextView.Gravity, new GravityAttributeProcessor<T>() {
             @Override
-            public void handle(T view, @Gravity int gravity) {
+            public void setGravity(T view, @Gravity int gravity) {
                 view.setGravity(gravity);
             }
         });
@@ -173,14 +178,14 @@ public class TextViewParser<T extends TextView> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.TextView.MaxLines, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setMaxLines(ParseHelper.parseInt(value));
             }
         });
 
         addAttributeProcessor(Attributes.TextView.Ellipsize, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 Enum ellipsize = ParseHelper.parseEllipsize(value);
                 view.setEllipsize((android.text.TextUtils.TruncateAt) ellipsize);
             }
@@ -188,7 +193,7 @@ public class TextViewParser<T extends TextView> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.TextView.PaintFlags, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 if (value.equals("strike"))
                     view.setPaintFlags(view.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
@@ -196,21 +201,21 @@ public class TextViewParser<T extends TextView> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.TextView.Prefix, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setText(value + view.getText());
             }
         });
 
         addAttributeProcessor(Attributes.TextView.Suffix, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setText(view.getText() + value);
             }
         });
 
         addAttributeProcessor(Attributes.TextView.TextStyle, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 int typeface = ParseHelper.parseTextStyle(value);
                 view.setTypeface(Typeface.defaultFromStyle(typeface));
             }
@@ -218,20 +223,20 @@ public class TextViewParser<T extends TextView> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.TextView.SingleLine, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, boolean value) {
+            public void setBoolean(T view, boolean value) {
                 view.setSingleLine(value);
             }
         });
 
         addAttributeProcessor(Attributes.TextView.TextAllCaps, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, boolean value) {
+            public void setBoolean(T view, boolean value) {
                 view.setAllCaps(value);
             }
         });
         addAttributeProcessor(Attributes.TextView.Hint, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setHint(value);
             }
         });

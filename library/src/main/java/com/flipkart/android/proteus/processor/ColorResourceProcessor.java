@@ -34,21 +34,33 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 public abstract class ColorResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
     @Override
-    public void handle(final V view, Value value) {
+    public void handleValue(final V view, Value value) {
         if (value.isColor()) {
             apply(view, value.getAsColor());
-        } else if (value.isResource()) {
-            ColorStateList colors = value.getAsResource().getColorStateList(view.getContext());
-            if (null != colors) {
-                setColor(view, colors);
-            } else {
-                Integer color = value.getAsResource().getColor(view.getContext());
-                setColor(view, null == color ? Color.Int.BLACK.value : color);
-            }
-        } else if (value.isStyle()) {
-            apply(view, value.getAsStyleAttribute());
         } else {
-            handle(view, parse(value, view.getContext()));
+            process(view, parse(value, view.getContext()));
+        }
+    }
+
+    @Override
+    public void handleResource(V view, Resource resource) {
+        ColorStateList colors = resource.getColorStateList(view.getContext());
+        if (null != colors) {
+            setColor(view, colors);
+        } else {
+            Integer color = resource.getColor(view.getContext());
+            setColor(view, null == color ? Color.Int.BLACK.value : color);
+        }
+    }
+
+    @Override
+    public void handleStyleAttribute(V view, StyleAttribute style) {
+        TypedArray a = style.apply(view.getContext());
+        ColorStateList colors = a.getColorStateList(0);
+        if (null != colors) {
+            setColor(view, colors);
+        } else {
+            setColor(view, a.getColor(0, Color.Int.BLACK.value));
         }
     }
 
@@ -58,16 +70,6 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
             setColor(view, result.colors);
         } else {
             setColor(view, result.color);
-        }
-    }
-
-    private void apply(V view, StyleAttribute style) {
-        TypedArray a = style.apply(view.getContext());
-        ColorStateList colors = a.getColorStateList(0);
-        if (null != colors) {
-            setColor(view, colors);
-        } else {
-            setColor(view, a.getColor(0, Color.Int.BLACK.value));
         }
     }
 

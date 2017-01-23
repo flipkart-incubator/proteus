@@ -23,7 +23,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -39,16 +38,23 @@ import java.util.regex.Pattern;
  *
  * @author aditya.sharat
  */
-
 public class Binding extends Value {
 
-    public static final String DATA_PATH_DELIMITERS = ".[]";
-    public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{(\\S+?)\\}\\$\\{(\\S+?)\\}|@\\{(\\S+?)\\}");
+    public static final char BINDING_PREFIX = '~';
     public static final String TEMPLATE = "%s";
+    public static final String DATA_PATH_DELIMITERS = ".[]";
+    public static final String INDEX = "$index";
+    public static final String ARRAY_DATA_LENGTH_REFERENCE = "$length";
+    public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
+    public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{(\\S+?)\\}\\$\\{(\\S+?)\\}|@\\{(\\S+?)\\}");
 
     public final String template;
     private final Expression[] expressions;
 
+    /**
+     * @param template
+     * @param expressions
+     */
     private Binding(String template, Expression[] expressions) {
         this.template = template;
         this.expressions = expressions;
@@ -63,6 +69,11 @@ public class Binding extends Value {
         return expressions[index];
     }
 
+    /**
+     * @param data
+     * @param index
+     * @return
+     */
     public Value evaluate(JsonElement data, int index) {
         Value empty = StringAttributeProcessor.EMPTY;
         Result result;
@@ -77,6 +88,22 @@ public class Binding extends Value {
             }
             return new Primitive(String.format(template, (Object[]) variables));
         }
+    }
+
+    /**
+     * @param value
+     * @return
+     */
+    public static boolean isBindingValue(final String value) {
+        return value.charAt(0) == BINDING_PREFIX;
+    }
+
+    /**
+     * @param value
+     * @return
+     */
+    public static String getBindingValue(final String value) {
+        return value.substring(1);
     }
 
     /**
@@ -108,6 +135,9 @@ public class Binding extends Value {
         return binding;
     }
 
+    /**
+     *
+     */
     private static class BindingCache {
         private static final LruCache<String, Binding> cache = new LruCache<>(64);
     }
@@ -117,6 +147,9 @@ public class Binding extends Value {
         return this;
     }
 
+    /**
+     *
+     */
     public static class Expression {
 
         private final String[] tokens;
@@ -137,9 +170,14 @@ public class Binding extends Value {
             return tokens[index];
         }
 
+        /**
+         * @param data
+         * @param index
+         * @return
+         */
         public Result evaluate(JsonElement data, int index) {
             // replace INDEX with index value
-            if (tokens.length == 1 && ProteusConstants.INDEX.equals(tokens[0])) {
+            if (tokens.length == 1 && INDEX.equals(tokens[0])) {
                 return Result.success(new JsonPrimitive(String.valueOf(index)));
             } else {
                 JsonElement elementToReturn = data;
@@ -160,15 +198,15 @@ public class Binding extends Value {
                     if (elementToReturn.isJsonArray()) {
                         tempArray = elementToReturn.getAsJsonArray();
 
-                        if (ProteusConstants.INDEX.equals(segment)) {
+                        if (INDEX.equals(segment)) {
                             if (index < tempArray.size()) {
                                 elementToReturn = tempArray.get(index);
                             } else {
                                 return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                             }
-                        } else if (ProteusConstants.ARRAY_DATA_LENGTH_REFERENCE.equals(segment)) {
+                        } else if (ARRAY_DATA_LENGTH_REFERENCE.equals(segment)) {
                             elementToReturn = new JsonPrimitive(tempArray.size());
-                        } else if (ProteusConstants.ARRAY_DATA_LAST_INDEX_REFERENCE.equals(segment)) {
+                        } else if (ARRAY_DATA_LAST_INDEX_REFERENCE.equals(segment)) {
                             if (tempArray.size() == 0) {
                                 return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                             }
@@ -205,6 +243,11 @@ public class Binding extends Value {
             }
         }
 
+        /**
+         * @param path
+         * @param formatter
+         * @return
+         */
         public static Expression valueOf(String path, @Nullable String formatter) {
             String key = path + (null == formatter ? "" : '$' + formatter);
             Expression expression = ExpressionCache.cache.get(key);
@@ -221,6 +264,9 @@ public class Binding extends Value {
             return expression;
         }
 
+        /**
+         *
+         */
         private static class ExpressionCache {
             private static final LruCache<String, Expression> cache = new LruCache<>(64);
         }

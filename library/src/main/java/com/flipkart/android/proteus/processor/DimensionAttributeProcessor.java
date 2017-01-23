@@ -33,23 +33,25 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 
 public abstract class DimensionAttributeProcessor<T extends View> extends AttributeProcessor<T> {
 
-    /**
-     * @param view  View
-     * @param value Value of the dimension
-     */
     @Override
-    public final void handle(T view, Value value) {
+    public final void handleValue(T view, Value value) {
         if (value.isDimension()) {
             setDimension(view, value.getAsDimension().apply(view.getContext()));
-        } else if (value.isResource()) {
-            Float dimension = value.getAsResource().getDimension(view.getContext());
-            setDimension(view, null == dimension ? 0 : dimension);
-        } else if (value.isStyle()) {
-            TypedArray a = value.getAsStyleAttribute().apply(view.getContext());
-            setDimension(view, a.getDimensionPixelSize(0, 0));
         } else if (value.isPrimitive()) {
-            handle(view, parse(value, view.getContext()));
+            process(view, parse(value, view.getContext()));
         }
+    }
+
+    @Override
+    public void handleResource(T view, Resource resource) {
+        Float dimension = resource.getDimension(view.getContext());
+        setDimension(view, null == dimension ? 0 : dimension);
+    }
+
+    @Override
+    public void handleStyleAttribute(T view, StyleAttribute style) {
+        TypedArray a = style.apply(view.getContext());
+        setDimension(view, a.getDimensionPixelSize(0, 0));
     }
 
     /**

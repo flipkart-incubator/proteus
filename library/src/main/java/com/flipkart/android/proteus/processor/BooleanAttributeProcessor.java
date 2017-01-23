@@ -44,20 +44,26 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
     public static final Primitive FALSE = new Primitive(false);
 
     @Override
-    public void handle(V view, Value value) {
+    public void handleValue(V view, Value value) {
         if (value.isPrimitive() && value.getAsPrimitive().isBoolean()) {
-            handle(view, value.getAsPrimitive().getAsBoolean());
-        } else if (value.isResource()) {
-            handle(view, value.getAsResource().getBoolean(view.getContext()));
-        } else if (value.isStyle()) {
-            TypedArray a = value.getAsStyleAttribute().apply(view.getContext());
-            handle(view, a.getBoolean(0, false));
+            setBoolean(view, value.getAsPrimitive().getAsBoolean());
         } else {
-            handle(view, parse(value, view.getContext()));
+            process(view, parse(value, view.getContext()));
         }
     }
 
-    public abstract void handle(V view, boolean value);
+    @Override
+    public void handleResource(V view, Resource resource) {
+        setBoolean(view, resource.getBoolean(view.getContext()));
+    }
+
+    @Override
+    public void handleStyleAttribute(V view, StyleAttribute style) {
+        TypedArray a = style.apply(view.getContext());
+        setBoolean(view, a.getBoolean(0, false));
+    }
+
+    public abstract void setBoolean(V view, boolean value);
 
     @Override
     public Value parse(Value value, Context context) {

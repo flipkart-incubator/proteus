@@ -67,7 +67,7 @@ public class GravityAttributeProcessorTest {
 
         AttributeProcessor processor = new GravityAttributeProcessor() {
             @Override
-            public void handle(View view, @Gravity int gravity) {
+            public void setGravity(View view, @Gravity int gravity) {
 
             }
         };
@@ -83,7 +83,7 @@ public class GravityAttributeProcessorTest {
     public void parse_complex() throws Exception {
         AttributeProcessor processor = new GravityAttributeProcessor() {
             @Override
-            public void handle(View view, @Gravity int gravity) {
+            public void setGravity(View view, @Gravity int gravity) {
 
             }
         };
@@ -121,11 +121,11 @@ public class GravityAttributeProcessorTest {
             System.out.print("\nGravityAttributeProcessorTest:handle_string() when gravity : '" + entry.getKey() + "'\n");
             AttributeProcessor processor = new GravityAttributeProcessor() {
                 @Override
-                public void handle(View view, @Gravity int gravity) {
+                public void setGravity(View view, @Gravity int gravity) {
                     assertThat(gravity, is(entry.getValue()));
                 }
             };
-            processor.handle(null, new Primitive(entry.getKey()));
+            processor.handleValue(null, new Primitive(entry.getKey()));
         }
     }
 
@@ -157,12 +157,12 @@ public class GravityAttributeProcessorTest {
             System.out.print("\nGravityAttributeProcessorTest:handle_gravity() when gravity : '" + entry.getKey() + "'\n");
             AttributeProcessor processor = new GravityAttributeProcessor() {
                 @Override
-                public void handle(View view, @Gravity int gravity) {
+                public void setGravity(View view, @Gravity int gravity) {
                     assertThat(gravity, is(entry.getValue()));
                 }
             };
             Value value = processor.parse(new Primitive(entry.getKey()), null);
-            processor.handle(null, value);
+            processor.handleValue(null, value);
         }
     }
 

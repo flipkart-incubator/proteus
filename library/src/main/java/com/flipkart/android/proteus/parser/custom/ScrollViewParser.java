@@ -48,7 +48,7 @@ public class ScrollViewParser<T extends ScrollView> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.ScrollView.Scrollbars, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 if ("none".equals(value)) {
                     view.setHorizontalScrollBarEnabled(false);
                     view.setVerticalScrollBarEnabled(false);

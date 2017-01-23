@@ -98,6 +98,7 @@ public class ParseHelper {
     private static final Pattern sAttributePattern = Pattern.compile("(\\?)(\\S*)(:?)(attr\\/?)(\\S*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     private static final Map<String, Class> sHashMap = new HashMap<>();
     private static final Map<String, Integer> sAttributeCache = new HashMap<>();
+    private static final Map<Integer, Primitive> sVisibilityMap = new HashMap<>();
     private static final Map<String, Integer> sStateMap = new HashMap<>();
     private static final Map<String, Primitive> sGravityMap = new HashMap<>();
     private static final Map<String, Integer> sDividerMode = new HashMap<>();
@@ -107,6 +108,11 @@ public class ParseHelper {
     private static final Map<String, ImageView.ScaleType> sImageScaleType = new HashMap<>();
 
     static {
+
+        sVisibilityMap.put(View.VISIBLE, new Primitive(View.VISIBLE));
+        sVisibilityMap.put(View.INVISIBLE, new Primitive(View.INVISIBLE));
+        sVisibilityMap.put(View.GONE, new Primitive(View.GONE));
+
         sStateMap.put("state_pressed", android.R.attr.state_pressed);
         sStateMap.put("state_enabled", android.R.attr.state_enabled);
         sStateMap.put("state_focused", android.R.attr.state_focused);
@@ -290,6 +296,11 @@ public class ParseHelper {
         }
 
         return returnValue == null ? View.GONE : returnValue;
+    }
+
+    public static Primitive getVisibilty(int visibility) {
+        Primitive value = sVisibilityMap.get(visibility);
+        return null != value ? value : sVisibilityMap.get(View.GONE);
     }
 
     public static float parseDimension(final String dimension, Context context) {

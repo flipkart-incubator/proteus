@@ -20,10 +20,13 @@
 package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.IntDef;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.Resource;
+import com.flipkart.android.proteus.StyleAttribute;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
@@ -46,7 +49,7 @@ import static java.lang.annotation.ElementType.TYPE;
 public abstract class GravityAttributeProcessor<V extends View> extends AttributeProcessor<V> {
 
     @Override
-    public void handle(V view, Value value) {
+    public void handleValue(V view, Value value) {
         int gravity = android.view.Gravity.NO_GRAVITY;
         if (value.isPrimitive() && value.getAsPrimitive().isNumber()) {
             gravity = value.getAsInt();
@@ -54,10 +57,24 @@ public abstract class GravityAttributeProcessor<V extends View> extends Attribut
             gravity = ParseHelper.parseGravity(value.getAsString());
         }
         //noinspection WrongConstant
-        handle(view, gravity);
+        setGravity(view, gravity);
     }
 
-    public abstract void handle(V view, @Gravity int gravity);
+    @Override
+    public void handleResource(V view, Resource resource) {
+        Integer gravity = resource.getInteger(view.getContext());
+        //noinspection WrongConstant
+        setGravity(view, null != gravity ? gravity : android.view.Gravity.NO_GRAVITY);
+    }
+
+    @Override
+    public void handleStyleAttribute(V view, StyleAttribute style) {
+        TypedArray a = style.apply(view.getContext());
+        //noinspection WrongConstant
+        setGravity(view, a.getInt(0, android.view.Gravity.NO_GRAVITY));
+    }
+
+    public abstract void setGravity(V view, @Gravity int gravity);
 
     @Override
     public Value parse(Value value, Context context) {

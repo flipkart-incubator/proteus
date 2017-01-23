@@ -21,16 +21,41 @@ package com.flipkart.android.proteus;
 
 import android.content.Context;
 
+import com.flipkart.android.proteus.toolbox.Scope;
+import com.google.gson.JsonElement;
+
 /**
  * @author kirankumar
  * @author aditya.sharat
  */
 public abstract class AttributeProcessor<V> {
 
-    public abstract void handle(V view, Value value);
+    public void process(V view, Value value) {
+        if (value.isBinding()) {
+            Scope scope = ((ProteusView) view).getViewManager().getScope();
+            Value resolved = evaluate(value.getAsBinding(), scope.getData(), scope.getIndex());
+            handleValue(view, resolved);
+        } else if (value.isResource()) {
+            handleResource(view, value.getAsResource());
+        } else if (value.isStyle()) {
+            handleStyleAttribute(view, value.getAsStyleAttribute());
+        } else {
+            handleValue(view, value);
+        }
+    }
+
+    public abstract void handleValue(V view, Value value);
+
+    public abstract void handleResource(V view, Resource resource);
+
+    public abstract void handleStyleAttribute(V view, StyleAttribute style);
 
     public Value parse(Value value, Context context) {
         return value;
+    }
+
+    protected Value evaluate(Binding binding, JsonElement data, int index) {
+        return binding.evaluate(data, index);
     }
 
 }

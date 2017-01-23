@@ -54,7 +54,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.LinearLayout.Orientation, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 if ("horizontal".equals(value)) {
                     view.setOrientation(ProteusLinearLayout.HORIZONTAL);
                 } else {
@@ -65,7 +65,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.View.Gravity, new GravityAttributeProcessor<T>() {
             @Override
-            public void handle(T view, @Gravity int gravity) {
+            public void setGravity(T view, @Gravity int gravity) {
                 view.setGravity(gravity);
             }
         });
@@ -94,7 +94,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends TypeParser<T> {
         addAttributeProcessor(Attributes.LinearLayout.ShowDividers, new StringAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
 
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
                     int dividerMode = ParseHelper.parseDividerMode(value);
@@ -107,7 +107,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends TypeParser<T> {
         addAttributeProcessor(Attributes.LinearLayout.WeightSum, new StringAttributeProcessor<T>() {
             @SuppressLint("NewApi")
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setWeightSum(ParseHelper.parseFloat(value));
             }
         });

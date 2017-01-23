@@ -56,7 +56,7 @@ public class CheckBoxParser<T extends CheckBox> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.CheckBox.Checked, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setChecked(Boolean.parseBoolean(value));
             }
         });

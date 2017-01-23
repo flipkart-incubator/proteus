@@ -48,7 +48,7 @@ public class RelativeLayoutParser<T extends RelativeLayout> extends TypeParser<T
 
         addAttributeProcessor(Attributes.View.Gravity, new GravityAttributeProcessor<T>() {
             @Override
-            public void handle(T view, @Gravity int gravity) {
+            public void setGravity(T view, @Gravity int gravity) {
                 view.setGravity(gravity);
             }
         });

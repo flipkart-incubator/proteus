@@ -24,6 +24,8 @@ import android.view.View;
 import android.view.animation.Animation;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.Resource;
+import com.flipkart.android.proteus.StyleAttribute;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.AnimationUtils;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -36,7 +38,7 @@ public abstract class TweenAnimationResourceProcessor<V extends View> extends At
     private static final String TAG = "TweenAnimationResource";
 
     @Override
-    public void handle(V view, Value value) {
+    public void handleValue(V view, Value value) {
         Animation animation = AnimationUtils.loadAnimation(view.getContext(), value);
         if (null != animation) {
             setAnimation(view, animation);
@@ -45,6 +47,16 @@ public abstract class TweenAnimationResourceProcessor<V extends View> extends At
                 Log.e(TAG, "Animation Resource must be a primitive or an object. value -> " + value.toString());
             }
         }
+    }
+
+    @Override
+    public void handleResource(V view, Resource resource) {
+
+    }
+
+    @Override
+    public void handleStyleAttribute(V view, StyleAttribute style) {
+
     }
 
     public abstract void setAnimation(V view, Animation animation);

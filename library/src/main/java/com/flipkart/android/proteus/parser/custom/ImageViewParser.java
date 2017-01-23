@@ -58,7 +58,7 @@ public class ImageViewParser<T extends ImageView> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.ImageView.ScaleType, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 ProteusImageView.ScaleType scaleType = null;
                 scaleType = ParseHelper.parseScaleType(value);
                 if (scaleType != null)
@@ -68,7 +68,7 @@ public class ImageViewParser<T extends ImageView> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.ImageView.AdjustViewBounds, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 if ("true".equals(value)) {
                     view.setAdjustViewBounds(true);
                 } else {

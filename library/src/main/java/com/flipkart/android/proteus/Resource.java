@@ -22,6 +22,7 @@ package com.flipkart.android.proteus;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
@@ -53,6 +54,7 @@ public class Resource extends Value {
         this.resId = resId;
     }
 
+    @Nullable
     public Boolean getBoolean(Context context) {
         return getBoolean(resId, context);
     }
@@ -68,8 +70,18 @@ public class Resource extends Value {
     }
 
     @Nullable
+    public Drawable getDrawable(Context context) {
+        return getDrawable(resId, context);
+    }
+
+    @Nullable
     public Float getDimension(Context context) {
         return getDimension(resId, context);
+    }
+
+    @Nullable
+    public Integer getInteger(Context context) {
+        return getInteger(resId, context);
     }
 
     @Nullable
@@ -115,12 +127,30 @@ public class Resource extends Value {
     }
 
     @Nullable
+    public static Drawable getDrawable(int resId, Context context) {
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                return context.getResources().getDrawable(resId, context.getTheme());
+            } else {
+                return context.getResources().getDrawable(resId);
+            }
+        } catch (Resources.NotFoundException e) {
+            return null;
+        }
+    }
+
+    @Nullable
     public static Float getDimension(int resId, Context context) {
         try {
             return context.getResources().getDimension(resId);
         } catch (Resources.NotFoundException e) {
             return null;
         }
+    }
+
+    @Nullable
+    public Integer getInteger(int resId, Context context) {
+        return context.getResources().getInteger(resId);
     }
 
     @Nullable
@@ -131,6 +161,7 @@ public class Resource extends Value {
             return null;
         }
     }
+
 
     @Nullable
     public static Resource valueOf(String value, @ResourceType String type, Context context) {

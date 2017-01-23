@@ -49,14 +49,14 @@ public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends TypePar
 
         addAttributeProcessor(Attributes.FrameLayout.HeightRatio, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setAspectRatioHeight(ParseHelper.parseInt(value));
 
             }
         });
         addAttributeProcessor(Attributes.FrameLayout.WidthRatio, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setAspectRatioWidth(ParseHelper.parseInt(value));
 
             }

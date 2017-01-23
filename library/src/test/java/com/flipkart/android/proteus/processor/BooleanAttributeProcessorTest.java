@@ -60,7 +60,7 @@ public class BooleanAttributeProcessorTest {
         Value True = new Primitive(true);
         AttributeProcessor processor = new BooleanAttributeProcessor() {
             @Override
-            public void handle(View view, boolean value) {
+            public void setBoolean(View view, boolean value) {
 
             }
         };
@@ -74,7 +74,7 @@ public class BooleanAttributeProcessorTest {
         Value False = new Primitive(false);
         AttributeProcessor processor = new BooleanAttributeProcessor() {
             @Override
-            public void handle(View view, boolean value) {
+            public void setBoolean(View view, boolean value) {
 
             }
         };
@@ -88,7 +88,7 @@ public class BooleanAttributeProcessorTest {
         Value Truthy = new Primitive("I'm true");
         AttributeProcessor processor = new BooleanAttributeProcessor() {
             @Override
-            public void handle(View view, boolean value) {
+            public void setBoolean(View view, boolean value) {
 
             }
         };
@@ -102,7 +102,7 @@ public class BooleanAttributeProcessorTest {
         Value Truthy = Null.INSTANCE;
         AttributeProcessor processor = new BooleanAttributeProcessor() {
             @Override
-            public void handle(View view, boolean value) {
+            public void setBoolean(View view, boolean value) {
 
             }
         };
@@ -116,7 +116,7 @@ public class BooleanAttributeProcessorTest {
         Value attribute = new Primitive("?style:true");
         AttributeProcessor processor = new BooleanAttributeProcessor() {
             @Override
-            public void handle(View view, boolean value) {
+            public void setBoolean(View view, boolean value) {
 
             }
         };
@@ -129,26 +129,26 @@ public class BooleanAttributeProcessorTest {
     public void handle_true() throws Exception {
         AttributeProcessor processor = new BooleanAttributeProcessor() {
             @Override
-            public void handle(View view, boolean value) {
+            public void setBoolean(View view, boolean value) {
                 assertThat(value, is(true));
             }
         };
 
         Value value = processor.parse(new Primitive(true), null);
-        processor.handle(null, value);
+        processor.handleValue(null, value);
     }
 
     @Test
     public void handle_false() throws Exception {
         AttributeProcessor processor = new BooleanAttributeProcessor() {
             @Override
-            public void handle(View view, boolean value) {
+            public void setBoolean(View view, boolean value) {
                 assertThat(value, is(false));
             }
         };
 
         Value value = processor.parse(new Primitive(false), null);
-        processor.handle(null, value);
+        processor.handleValue(null, value);
     }
 
     @Test
@@ -159,13 +159,13 @@ public class BooleanAttributeProcessorTest {
         when(view.getContext()).thenReturn(context);
         AttributeProcessor processor = new BooleanAttributeProcessor() {
             @Override
-            public void handle(View view, boolean value) {
+            public void setBoolean(View view, boolean value) {
                 assertThat(value, is(true));
             }
         };
 
         Value value = processor.parse(new Primitive("?Theme_AppCompat:windowNoTitle"), null);
-        processor.handle(view, value);
+        processor.handleValue(view, value);
     }
 
 }

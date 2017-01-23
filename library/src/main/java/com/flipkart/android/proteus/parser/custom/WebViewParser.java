@@ -47,13 +47,13 @@ public class WebViewParser<T extends WebView> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.WebView.Url, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.loadUrl(value);
             }
         });
         addAttributeProcessor(Attributes.WebView.HTML, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.loadData(value, "text/html", "UTF-8");
             }
         });

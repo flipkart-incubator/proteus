@@ -76,7 +76,7 @@ public abstract class TypeParser<V extends View> {
         }
         AttributeProcessor attributeProcessor = processors[position];
         //noinspection unchecked
-        attributeProcessor.handle(view, value);
+        attributeProcessor.process(view, value);
         return true;
     }
 

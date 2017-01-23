@@ -44,6 +44,8 @@ import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Color;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.Resource;
+import com.flipkart.android.proteus.StyleAttribute;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -83,13 +85,8 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     private static final String RADIAL_GRADIENT = "radial";
     private static final String SWEEP_GRADIENT = "sweep";
 
-    @Nullable
-    public static GradientDrawable loadGradientDrawable(Context context, ObjectValue value) {
-        return ShapeDrawableParser.parse(value, context);
-    }
-
     @Override
-    public void handle(V view, Value value) {
+    public void handleValue(V view, Value value) {
         if (value.isPrimitive()) {
             handleString(view, value.getAsString());
         } else if (value.isObject()) {
@@ -99,6 +96,16 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 Log.e(TAG, "Drawable Resource must be a primitive or an object. value -> " + value.toString());
             }
         }
+    }
+
+    @Override
+    public void handleResource(V view, Resource resource) {
+
+    }
+
+    @Override
+    public void handleStyleAttribute(V view, StyleAttribute style) {
+
     }
 
     /**
@@ -151,7 +158,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     /**
      * This block handles different drawables.
      * Selector and LayerListDrawable are handled here.
-     * Override this to handle more types of drawables
+     * Override this to setBoolean more types of drawables
      *
      * @param view
      */
@@ -174,7 +181,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                                     stateListDrawable.addState(state.first, drawable);
                                 }
                             };
-                            processor.handle(view, state.second);
+                            processor.process(view, state.second);
                         }
 
                     }
@@ -201,7 +208,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                                     onLayerDrawableFinish(view, drawables);
                                 }
                             };
-                            processor.handle(view, layerPair.second);
+                            processor.process(view, layerPair.second);
                         }
                     }
                 }
@@ -221,6 +228,13 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 setDrawable(view, RippleDrawableParser.parse(view, value));
                 break;
         }
+    }
+
+    public abstract void setDrawable(V view, Drawable drawable);
+
+    @Nullable
+    public static GradientDrawable loadGradientDrawable(Context context, ObjectValue value) {
+        return ShapeDrawableParser.parse(value, context);
     }
 
     private void onLayerDrawableFinish(V view, List<Pair<Integer, Drawable>> drawables) {
@@ -243,8 +257,6 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
         setDrawable(view, layerDrawable);
     }
-
-    public abstract void setDrawable(V view, Drawable drawable);
 
     private abstract static class GradientDrawableElement {
         private int mTempColor = 0;
@@ -551,7 +563,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                     levelListDrawable.addLevel(minLevel, maxLevel, drawable);
                 }
             };
-            processor.handle(view, drawable);
+            processor.process(view, drawable);
         }
     }
 
@@ -687,7 +699,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                         contentDrawable[0] = drawable;
                     }
                 };
-                contentDrawableProcessor.handle(view, content);
+                contentDrawableProcessor.process(view, content);
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -698,7 +710,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                             maskDrawable[0] = drawable;
                         }
                     };
-                    maskDrawableProcessor.handle(view, mask);
+                    maskDrawableProcessor.process(view, mask);
                 }
 
                 resultDrawable = new RippleDrawable(colorStateList, contentDrawable[0], maskDrawable[0]);
@@ -710,7 +722,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                         defaultBackgroundDrawable[0] = drawable;
                     }
                 };
-                defaultDrawableProcessor.handle(view, defaultBackground);
+                defaultDrawableProcessor.process(view, defaultBackground);
 
                 resultDrawable = defaultBackgroundDrawable[0];
 

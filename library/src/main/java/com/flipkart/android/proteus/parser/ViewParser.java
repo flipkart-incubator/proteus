@@ -20,6 +20,8 @@
 package com.flipkart.android.proteus.parser;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
@@ -36,6 +38,8 @@ import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.Resource;
+import com.flipkart.android.proteus.StyleAttribute;
 import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
@@ -118,7 +122,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
         });
         addAttributeProcessor(Attributes.View.Weight, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
+            public void setString(V view, String value) {
                 LinearLayout.LayoutParams layoutParams;
                 if (view.getLayoutParams() instanceof LinearLayout.LayoutParams) {
                     layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
@@ -133,7 +137,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
         });
         addAttributeProcessor(Attributes.View.LayoutGravity, new GravityAttributeProcessor<V>() {
             @Override
-            public void handle(V view, @Gravity int gravity) {
+            public void setGravity(V view, @Gravity int gravity) {
                 ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
 
                 if (layoutParams instanceof LinearLayout.LayoutParams) {
@@ -281,27 +285,75 @@ public class ViewParser<V extends View> extends TypeParser<V> {
         });
         addAttributeProcessor(Attributes.View.Alpha, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
+            public void setString(V view, String value) {
                 view.setAlpha(ParseHelper.parseFloat(value));
             }
         });
         addAttributeProcessor(Attributes.View.Visibility, new AttributeProcessor<V>() {
             @Override
-            public void handle(V view, Value value) {
-                // noinspection ResourceType
-                view.setVisibility(ParseHelper.parseVisibility(value));
+            public void handleValue(V view, Value value) {
+                if (value.isPrimitive() && value.getAsPrimitive().isNumber()) {
+                    // noinspection ResourceType
+                    view.setVisibility(value.getAsInt());
+                } else {
+                    process(view, parse(value, view.getContext()));
+                }
+            }
+
+            @Override
+            public void handleResource(V view, Resource resource) {
+                Integer visibility = resource.getInteger(view.getContext());
+                //noinspection WrongConstant
+                view.setVisibility(null != visibility ? visibility : View.GONE);
+            }
+
+            @Override
+            public void handleStyleAttribute(V view, StyleAttribute style) {
+                TypedArray a = style.apply(view.getContext());
+                //noinspection WrongConstant
+                view.setVisibility(a.getInt(0, View.GONE));
+            }
+
+            @Override
+            public Value parse(Value value, Context context) {
+                int visibility = ParseHelper.parseVisibility(value);
+                return ParseHelper.getVisibilty(visibility);
             }
         });
         addAttributeProcessor(Attributes.View.Invisibility, new AttributeProcessor<V>() {
             @Override
-            public void handle(V view, Value value) {
-                // noinspection ResourceType
-                view.setVisibility(ParseHelper.parseInvisibility(value));
+            public void handleValue(V view, Value value) {
+                if (value.isPrimitive() && value.getAsPrimitive().isNumber()) {
+                    // noinspection ResourceType
+                    view.setVisibility(value.getAsInt());
+                } else {
+                    process(view, parse(value, view.getContext()));
+                }
+            }
+
+            @Override
+            public void handleResource(V view, Resource resource) {
+                Integer visibility = resource.getInteger(view.getContext());
+                //noinspection WrongConstant
+                view.setVisibility(null != visibility ? visibility : View.GONE);
+            }
+
+            @Override
+            public void handleStyleAttribute(V view, StyleAttribute style) {
+                TypedArray a = style.apply(view.getContext());
+                //noinspection WrongConstant
+                view.setVisibility(a.getInt(0, View.GONE));
+            }
+
+            @Override
+            public Value parse(Value value, Context context) {
+                int visibility = ParseHelper.parseInvisibility(value);
+                return ParseHelper.getVisibilty(visibility);
             }
         });
         addAttributeProcessor(Attributes.View.Id, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(final V view, String value) {
+            public void setString(final V view, String value) {
                 if (view instanceof ProteusView) {
                     view.setId(((ProteusView) view).getViewManager().getUniqueViewId(value));
                 }
@@ -337,32 +389,32 @@ public class ViewParser<V extends View> extends TypeParser<V> {
         });
         addAttributeProcessor(Attributes.View.ContentDescription, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
+            public void setString(V view, String value) {
                 view.setContentDescription(value);
             }
         });
         addAttributeProcessor(Attributes.View.Clickable, new BooleanAttributeProcessor<V>() {
             @Override
-            public void handle(V view, boolean value) {
+            public void setBoolean(V view, boolean value) {
                 view.setClickable(value);
             }
         });
         addAttributeProcessor(Attributes.View.Tag, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
+            public void setString(V view, String value) {
                 view.setTag(value);
             }
         });
         addAttributeProcessor(Attributes.View.Enabled, new BooleanAttributeProcessor<V>() {
             @Override
-            public void handle(V view, boolean value) {
+            public void setBoolean(V view, boolean value) {
                 view.setEnabled(value);
             }
         });
 
         addAttributeProcessor(Attributes.View.Style, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
+            public void setString(V view, String value) {
                 ProteusViewManager viewManager = ((ProteusView) view).getViewManager();
                 Layout layout = viewManager.getLayout();
                 Styles styles = viewManager.getStyles();
@@ -389,7 +441,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
 
         addAttributeProcessor(Attributes.View.TransitionName, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
+            public void setString(V view, String value) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     view.setTransitionName(value);
                 }
@@ -404,7 +456,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
             private final String HORIZONTAL = "horizontal";
 
             @Override
-            public void handle(V view, String value) {
+            public void setString(V view, String value) {
 
                 switch (value) {
                     case NONE:
@@ -433,7 +485,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
 
         addAttributeProcessor(Attributes.View.FadingEdgeLength, new StringAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
+            public void setString(V view, String value) {
                 view.setFadingEdgeLength(ParseHelper.parseInt(value));
             }
         });
@@ -451,7 +503,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
 
                 @SuppressLint("NewApi")
                 @Override
-                public void handle(V view, String value) {
+                public void setString(V view, String value) {
 
                     Integer textAlignment = ParseHelper.parseTextAlignment(value);
                     if (null != textAlignment) {
@@ -505,7 +557,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
     private AttributeProcessor<V> createRelativeLayoutRuleProcessor(final int rule) {
         return new StringAttributeProcessor<V>() {
             @Override
-            public void handle(V view, String value) {
+            public void setString(V view, String value) {
                 if (view instanceof ProteusView) {
                     int id = ((ProteusView) view).getViewManager().getUniqueViewId(value);
                     ParseHelper.addRelativeLayoutRule(view, rule, id);
@@ -517,7 +569,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
     private AttributeProcessor<V> createRelativeLayoutBooleanRuleProcessor(final int rule) {
         return new BooleanAttributeProcessor<V>() {
             @Override
-            public void handle(V view, boolean value) {
+            public void setBoolean(V view, boolean value) {
                 int trueOrFalse = ParseHelper.parseRelativeLayoutBoolean(value);
                 ParseHelper.addRelativeLayoutRule(view, rule, trueOrFalse);
             }

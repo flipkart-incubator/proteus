@@ -21,6 +21,7 @@ package com.flipkart.android.proteus.parser.custom;
 
 
 import android.content.res.ColorStateList;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ClipDrawable;
@@ -37,6 +38,8 @@ import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.Resource;
+import com.flipkart.android.proteus.StyleAttribute;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.TypeParser;
@@ -62,27 +65,26 @@ public class ProgressBarParser<T extends ProgressBar> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.ProgressBar.Max, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setMax((int) ParseHelper.parseDouble(value));
             }
         });
         addAttributeProcessor(Attributes.ProgressBar.Progress, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setProgress((int) ParseHelper.parseDouble(value));
             }
         });
 
         addAttributeProcessor(Attributes.ProgressBar.ProgressTint, new AttributeProcessor<T>() {
             @Override
-            public void handle(T view, Value value) {
+            public void handleValue(T view, Value value) {
                 if (!value.isObject()) {
                     return;
                 }
-                ObjectValue object = value.getAsObject();
                 int background = Color.TRANSPARENT;
                 int progress = Color.TRANSPARENT;
-
+                ObjectValue object = value.getAsObject();
                 String string = object.getAsString("background");
                 if (string != null) {
                     background = ParseHelper.parseColor(string);
@@ -93,6 +95,18 @@ public class ProgressBarParser<T extends ProgressBar> extends TypeParser<T> {
                 }
 
                 view.setProgressDrawable(getLayerDrawable(progress, background));
+            }
+
+            @Override
+            public void handleResource(T view, Resource resource) {
+                Drawable d = resource.getDrawable(view.getContext());
+                view.setProgressDrawable(d);
+            }
+
+            @Override
+            public void handleStyleAttribute(T view, StyleAttribute style) {
+                TypedArray a = style.apply(view.getContext());
+                view.setProgressDrawable(a.getDrawable(0));
             }
         });
 

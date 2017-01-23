@@ -46,27 +46,31 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
      * @param value
      */
     @Override
-    public void handle(V view, Value value) {
-        if (value.isResource()) {
-            String string = value.getAsResource().getString(view.getContext());
-            handle(view, null == string ? EMPTY_STRING : string);
-        } else if (value.isStyle()) {
-            TypedArray a = value.getAsStyleAttribute().apply(view.getContext());
-            handle(view, a.getString(0));
+    public void handleValue(V view, Value value) {
+        String string = value.getAsString();
+        if (ParseHelper.isStyleAttribute(string) || isLocalStringResource(string)) {
+            process(view, parse(value, view.getContext()));
         } else {
-            String string = value.getAsString();
-            if (ParseHelper.isStyleAttribute(string) || isLocalStringResource(string)) {
-                handle(view, parse(value, view.getContext()));
-            } else {
-                handle(view, string);
-            }
+            setString(view, string);
         }
+    }
+
+    @Override
+    public void handleResource(V view, Resource resource) {
+        String string = resource.getString(view.getContext());
+        setString(view, null == string ? EMPTY_STRING : string);
+    }
+
+    @Override
+    public void handleStyleAttribute(V view, StyleAttribute style) {
+        TypedArray a = style.apply(view.getContext());
+        setString(view, a.getString(0));
     }
 
     /**
      * @param view View
      */
-    public abstract void handle(V view, String value);
+    public abstract void setString(V view, String value);
 
     @Override
     public Value parse(Value value, Context context) {

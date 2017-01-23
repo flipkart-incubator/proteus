@@ -52,25 +52,25 @@ public class RatingBarParser<T extends FixedRatingBar> extends TypeParser<T> {
 
         addAttributeProcessor(Attributes.RatingBar.NumStars, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setNumStars(ParseHelper.parseInt(value));
             }
         });
         addAttributeProcessor(Attributes.RatingBar.Rating, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setRating(ParseHelper.parseFloat(value));
             }
         });
         addAttributeProcessor(Attributes.RatingBar.IsIndicator, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, boolean value) {
+            public void setBoolean(T view, boolean value) {
                 view.setIsIndicator(value);
             }
         });
         addAttributeProcessor(Attributes.RatingBar.StepSize, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 view.setStepSize(ParseHelper.parseFloat(value));
             }
         });

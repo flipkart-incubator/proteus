@@ -49,7 +49,7 @@ public interface ProteusLayoutInflater {
      * that is being built.
      *
      * @param handler
-     * @param view      The view to handle the attribute on.
+     * @param view      The view to setBoolean the attribute on.
      * @param attribute
      * @param value     @return true if the attribute is processed false otherwise.
      */
@@ -105,7 +105,7 @@ public interface ProteusLayoutInflater {
     Formatter getFormatter(String name);
 
     /**
-     * Used to set a callback object to handle unknown view types and unknown attributes and other
+     * Used to set a callback object to setBoolean unknown view types and unknown attributes and other
      * exceptions. This callback is also used for requesting {@link android.support.v4.view.PagerAdapter}s
      * and {@link android.widget.Adapter}s
      *
@@ -114,7 +114,7 @@ public interface ProteusLayoutInflater {
     void setCallback(LayoutInflaterCallback listener);
 
     /**
-     * @return The helper object that is being used to handle drawables that need to fetched from a
+     * @return The helper object that is being used to setBoolean drawables that need to fetched from a
      * network.
      */
     BitmapLoader getBitmapLoader();

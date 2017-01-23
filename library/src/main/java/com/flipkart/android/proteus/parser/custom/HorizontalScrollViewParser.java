@@ -22,12 +22,10 @@ package com.flipkart.android.proteus.parser.custom;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 
-import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.TypeParser;
-import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
@@ -52,13 +50,13 @@ public class HorizontalScrollViewParser<T extends HorizontalScrollView> extends 
 
         addAttributeProcessor(Attributes.HorizontalScrollView.FillViewPort, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(T view, boolean value) {
+            public void setBoolean(T view, boolean value) {
                 view.setFillViewport(value);
             }
         });
         addAttributeProcessor(Attributes.ScrollView.Scrollbars, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(T view, String value) {
+            public void setString(T view, String value) {
                 if ("none".equals(value)) {
                     view.setHorizontalScrollBarEnabled(false);
                     view.setVerticalScrollBarEnabled(false);
