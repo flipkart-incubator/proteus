@@ -123,7 +123,8 @@ container.addView((View) view);
 * [Detailed Guide](https://github.com/flipkart-incubator/proteus/wiki)
 * [API References]() *under construction*
 * [Demo App](https://github.com/adityasharat/proteus-demo)
-* [Videos - silent :|](https://www.youtube.com/playlist?list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp)
+* [DroidCon Talk](https://www.youtube.com/watch?v=ue0ax2_18k8)
+* [Demo Videos](https://www.youtube.com/playlist?list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp)
 
 ## Contributing
 
