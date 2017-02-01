@@ -64,34 +64,6 @@ public class ProteusActivity extends BaseActivity {
     private JsonObject data;
     private ViewGroup.LayoutParams layoutParams;
     private Styles styles;
-    private BitmapLoader bitmapLoader = new BitmapLoader() {
-        @Override
-        public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback callback, Layout layout) {
-            URL url;
-            try {
-                url = new URL(imageUrl);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return;
-            }
-            new AsyncTask<URL, Integer, Bitmap>() {
-
-                @Override
-                protected Bitmap doInBackground(URL... params) {
-                    try {
-                        return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                protected void onPostExecute(Bitmap result) {
-                    callback.onResponse(result);
-                }
-            }.execute(url);
-        }
-    };
     private LayoutInflaterCallback callback = new LayoutInflaterCallback() {
 
         @Override
@@ -128,6 +100,34 @@ public class ProteusActivity extends BaseActivity {
         @Override
         public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
             return null;
+        }
+    };
+    private BitmapLoader bitmapLoader = new BitmapLoader() {
+        @Override
+        public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback callback) {
+            URL url;
+            try {
+                url = new URL(imageUrl);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return;
+            }
+            new AsyncTask<URL, Integer, Bitmap>() {
+
+                @Override
+                protected Bitmap doInBackground(URL... params) {
+                    try {
+                        return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }
+
+                protected void onPostExecute(Bitmap result) {
+                    callback.onResponse(result);
+                }
+            }.execute(url);
         }
     };
 
