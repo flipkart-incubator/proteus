@@ -34,7 +34,6 @@ import java.util.Map;
  *
  * @author aditya.sharat
  */
-
 public class Dimension extends Value {
 
     public static final int DIMENSION_UNIT_ENUM = -1;
@@ -60,6 +59,7 @@ public class Dimension extends Value {
 
     public static final Map<String, Integer> sDimensionsMap = new HashMap<>();
     public static final Map<String, Integer> sDimensionsUnitsMap = new HashMap<>();
+    public static final Dimension ZERO = new Dimension(0, DIMENSION_UNIT_PX);
 
     static {
         sDimensionsMap.put(MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -73,8 +73,6 @@ public class Dimension extends Value {
         sDimensionsUnitsMap.put(SUFFIX_IN, DIMENSION_UNIT_IN);
         sDimensionsUnitsMap.put(SUFFIX_MM, DIMENSION_UNIT_MM);
     }
-
-    public static final Dimension ZERO = new Dimension(0, DIMENSION_UNIT_PX);
 
     public final double value;
     public final int unit;
@@ -114,6 +112,26 @@ public class Dimension extends Value {
         this.unit = unit;
     }
 
+    public static Dimension valueOf(String dimension, Context context) {
+        if (null == dimension) {
+            return ZERO;
+        }
+        Dimension d = DimensionCache.cache.get(dimension);
+        if (null == d) {
+            d = new Dimension(dimension);
+            DimensionCache.cache.put(dimension, d);
+        }
+        return d;
+    }
+
+    public static float apply(String dimension, Context context) {
+        return Dimension.valueOf(dimension, context).apply(context);
+    }
+
+    public static boolean isLocalDimensionResource(String value) {
+        return value.startsWith(PREFIX_DIMENSION);
+    }
+
     public float apply(Context context) {
         double result;
 
@@ -136,33 +154,13 @@ public class Dimension extends Value {
         return (float) result;
     }
 
-    public static Dimension valueOf(String dimension, Context context) {
-        if (null == dimension) {
-            return ZERO;
-        }
-        Dimension d = DimensionCache.cache.get(dimension);
-        if (null == d) {
-            d = new Dimension(dimension);
-            DimensionCache.cache.put(dimension, d);
-        }
-        return d;
-    }
-
-    public static float apply(String dimension, Context context) {
-        return Dimension.valueOf(dimension, context).apply(context);
-    }
-
-    public static boolean isLocalDimensionResource(String value) {
-        return value.startsWith(PREFIX_DIMENSION);
+    @Override
+    Value copy() {
+        return this;
     }
 
     private static class DimensionCache {
         private static final LruCache<String, Dimension> cache = new LruCache<>(64);
-    }
-
-    @Override
-    Value copy() {
-        return this;
     }
 
 }

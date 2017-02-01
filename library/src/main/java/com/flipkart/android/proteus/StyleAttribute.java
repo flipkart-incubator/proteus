@@ -72,10 +72,6 @@ public class StyleAttribute extends Value {
         this.attributeId = attrId;
     }
 
-    public TypedArray apply(Context context) {
-        return context.getTheme().obtainStyledAttributes(styleId, new int[]{attributeId});
-    }
-
     @Nullable
     public static StyleAttribute valueOf(String value) {
         StyleAttribute style = StyleCache.cache.get(value);
@@ -93,12 +89,16 @@ public class StyleAttribute extends Value {
         return NULL == style ? null : style;
     }
 
-    private static class StyleCache {
-        private static final LruCache<String, StyleAttribute> cache = new LruCache<>(64);
+    public TypedArray apply(Context context) {
+        return context.getTheme().obtainStyledAttributes(styleId, new int[]{attributeId});
     }
 
     @Override
     Value copy() {
         return this;
+    }
+
+    private static class StyleCache {
+        private static final LruCache<String, StyleAttribute> cache = new LruCache<>(64);
     }
 }

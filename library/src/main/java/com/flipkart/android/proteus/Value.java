@@ -29,6 +29,23 @@ import com.google.gson.JsonElement;
 
 public abstract class Value {
 
+    public static Value fromJson(JsonElement element) {
+        Value value;
+        if (element.isJsonPrimitive()) {
+            value = Primitive.fromJson(element.getAsJsonPrimitive());
+        } else if (element.isJsonObject()) {
+            value = ObjectValue.fromJson(element.getAsJsonObject());
+        } else if (element.isJsonArray()) {
+            value = Array.fromJson(element.getAsJsonArray());
+        } else if (element.isJsonNull()) {
+            value = Null.INSTANCE;
+        } else {
+            value = new Primitive(element.toString());
+        }
+
+        return value;
+    }
+
     /**
      * Returns a deep copy of this value. Immutable elements
      * like primitives and nulls are not copied.
@@ -112,6 +129,13 @@ public abstract class Value {
      */
     public boolean isBinding() {
         return this instanceof Binding;
+    }
+
+    /**
+     * @return
+     */
+    public boolean isDrawable() {
+        return this instanceof DrawableValue;
     }
 
     /**
@@ -216,7 +240,7 @@ public abstract class Value {
         if (isColor()) {
             return (Color) this;
         }
-        throw new IllegalStateException("Not a Color: " + this);
+        throw new IllegalStateException("Not a ColorValue: " + this);
     }
 
     /**
@@ -231,13 +255,22 @@ public abstract class Value {
 
     /**
      * @return
-     * @return
      */
     public Binding getAsBinding() {
         if (isBinding()) {
             return (Binding) this;
         }
         throw new IllegalStateException("Not a Binding: " + this);
+    }
+
+    /**
+     * @return
+     */
+    public DrawableValue getAsDrawable() {
+        if (isDrawable()) {
+            return (DrawableValue) this;
+        }
+        throw new IllegalStateException("Not a Drawable: " + this);
     }
 
     /**
@@ -326,23 +359,6 @@ public abstract class Value {
         } else {
             throw new IllegalArgumentException("object must be primitive, string or Json");
         }
-        return value;
-    }
-
-    public static Value fromJson(JsonElement element) {
-        Value value;
-        if (element.isJsonPrimitive()) {
-            value = Primitive.fromJson(element.getAsJsonPrimitive());
-        } else if (element.isJsonObject()) {
-            value = ObjectValue.fromJson(element.getAsJsonObject());
-        } else if (element.isJsonArray()) {
-            value = Array.fromJson(element.getAsJsonArray());
-        } else if (element.isJsonNull()) {
-            value = Null.INSTANCE;
-        } else {
-            value = new Primitive(element.toString());
-        }
-
         return value;
     }
 

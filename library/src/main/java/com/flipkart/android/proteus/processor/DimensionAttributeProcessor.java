@@ -26,12 +26,49 @@ import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Dimension;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleAttribute;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
+/**
+ *
+ */
 public abstract class DimensionAttributeProcessor<T extends View> extends AttributeProcessor<T> {
+
+    public static float evaluate(Value value, ProteusView view) {
+        if (value == null) {
+            return Dimension.ZERO.apply(((View) view).getContext());
+        }
+
+        final float[] result = new float[1];
+        DimensionAttributeProcessor<View> processor = new DimensionAttributeProcessor<View>() {
+            @Override
+            public void setDimension(View view, float dimension) {
+                result[0] = dimension;
+            }
+        };
+        processor.process((View) view, value);
+
+        return result[0];
+    }
+
+    public static Value staticParse(Value value, Context context) {
+        if (null == value || !value.isPrimitive()) {
+            return Dimension.ZERO;
+        }
+        String string = value.getAsString();
+        if (Dimension.isLocalDimensionResource(string)) {
+            Resource resource = Resource.valueOf(string, Resource.DIMEN, context);
+            return null == resource ? Dimension.ZERO : resource;
+        } else if (ParseHelper.isStyleAttribute(string)) {
+            StyleAttribute style = StyleAttribute.valueOf(string);
+            return null != style ? style : Dimension.ZERO;
+        } else {
+            return Dimension.valueOf(string, context);
+        }
+    }
 
     @Override
     public final void handleValue(T view, Value value) {
@@ -59,23 +96,9 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
      */
     public abstract void setDimension(T view, float dimension);
 
-    /**
-     * @param value
-     * @param context
-     * @return
-     */
     @Override
     public Value parse(Value value, Context context) {
-        String string = value.getAsString();
-        if (Dimension.isLocalDimensionResource(string)) {
-            Resource resource = Resource.valueOf(string, Resource.DIMEN, context);
-            return null == resource ? Dimension.ZERO : resource;
-        } else if (ParseHelper.isStyleAttribute(string)) {
-            StyleAttribute style = StyleAttribute.valueOf(string);
-            return null != style ? style : Dimension.ZERO;
-        } else {
-            return Dimension.valueOf(value.getAsString(), context);
-        }
+        return staticParse(value, context);
     }
 
 }

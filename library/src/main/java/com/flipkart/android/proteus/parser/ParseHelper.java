@@ -209,18 +209,14 @@ public class ParseHelper {
         return new IntResult(null, num);
     }
 
-    public static float parseFloat(String attributeValue) {
-        float number;
-        if (ProteusConstants.DATA_NULL.equals(attributeValue)) {
-            return 0;
-        }
-        try {
-            number = Float.parseFloat(attributeValue);
-        } catch (NumberFormatException e) {
-            if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, attributeValue + " is NAN. Error: " + e.getMessage());
+    public static float parseFloat(String value) {
+        float number = 0;
+        if (!TextUtils.isEmpty(value)) {
+            try {
+                number = Float.parseFloat(value);
+            } catch (NumberFormatException e) {
+                number = 0;
             }
-            number = 0;
         }
         return number;
     }

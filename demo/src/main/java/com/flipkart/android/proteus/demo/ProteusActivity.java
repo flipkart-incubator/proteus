@@ -85,11 +85,11 @@ public class ProteusActivity extends AppCompatActivity {
      */
     private BitmapLoader bitmapLoader = new BitmapLoader() {
         @Override
-        public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback callback, Layout layout) {
-            URL url;
+        public void getBitmap(ProteusView view, String url, final ImageLoaderCallback callback) {
+            URL _url;
 
             try {
-                url = new URL(imageUrl);
+                _url = new URL(url);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
                 return;
@@ -109,7 +109,7 @@ public class ProteusActivity extends AppCompatActivity {
                 protected void onPostExecute(Bitmap result) {
                     callback.onResponse(result);
                 }
-            }.execute(url);
+            }.execute(_url);
         }
     };
 

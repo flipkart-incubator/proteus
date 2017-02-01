@@ -55,42 +55,6 @@ public class Resource extends Value {
     }
 
     @Nullable
-    public Boolean getBoolean(Context context) {
-        return getBoolean(resId, context);
-    }
-
-    @Nullable
-    public Integer getColor(Context context) {
-        return getColor(resId, context);
-    }
-
-    @Nullable
-    public ColorStateList getColorStateList(Context context) {
-        return getColorStateList(resId, context);
-    }
-
-    @Nullable
-    public Drawable getDrawable(Context context) {
-        return getDrawable(resId, context);
-    }
-
-    @Nullable
-    public Float getDimension(Context context) {
-        return getDimension(resId, context);
-    }
-
-    @Nullable
-    public Integer getInteger(Context context) {
-        return getInteger(resId, context);
-    }
-
-    @Nullable
-    public String getString(Context context) {
-        return getString(resId, context);
-    }
-
-
-    @Nullable
     public static Boolean getBoolean(int resId, Context context) {
         try {
             return context.getResources().getBoolean(resId);
@@ -149,11 +113,6 @@ public class Resource extends Value {
     }
 
     @Nullable
-    public Integer getInteger(int resId, Context context) {
-        return context.getResources().getInteger(resId);
-    }
-
-    @Nullable
     public static String getString(int resId, Context context) {
         try {
             return context.getString(resId);
@@ -161,7 +120,6 @@ public class Resource extends Value {
             return null;
         }
     }
-
 
     @Nullable
     public static Resource valueOf(String value, @ResourceType String type, Context context) {
@@ -177,8 +135,44 @@ public class Resource extends Value {
         return NOT_FOUND == resource ? null : resource;
     }
 
-    private static class ResourceCache {
-        private static final LruCache<String, Resource> cache = new LruCache<>(64);
+    @Nullable
+    public Boolean getBoolean(Context context) {
+        return getBoolean(resId, context);
+    }
+
+    @Nullable
+    public Integer getColor(Context context) {
+        return getColor(resId, context);
+    }
+
+    @Nullable
+    public ColorStateList getColorStateList(Context context) {
+        return getColorStateList(resId, context);
+    }
+
+    @Nullable
+    public Drawable getDrawable(Context context) {
+        return getDrawable(resId, context);
+    }
+
+    @Nullable
+    public Float getDimension(Context context) {
+        return getDimension(resId, context);
+    }
+
+    @Nullable
+    public Integer getInteger(Context context) {
+        return getInteger(resId, context);
+    }
+
+    @Nullable
+    public String getString(Context context) {
+        return getString(resId, context);
+    }
+
+    @Nullable
+    public Integer getInteger(int resId, Context context) {
+        return context.getResources().getInteger(resId);
     }
 
     @Override
@@ -189,5 +183,9 @@ public class Resource extends Value {
     @StringDef({ANIM, BOOLEAN, COLOR, DRAWABLE, DIMEN, STRING})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ResourceType {
+    }
+
+    private static class ResourceCache {
+        private static final LruCache<String, Resource> cache = new LruCache<>(64);
     }
 }

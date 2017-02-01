@@ -19,7 +19,6 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusView;
 
 /**
@@ -29,9 +28,8 @@ public interface BitmapLoader {
     /**
      * Useful for asynchronous download of bitmap.
      *
-     * @param imageUrl
-     * @param imageLoaderCallback
-     * @param layout
+     * @param url
+     * @param loader
      */
-    void getBitmap(ProteusView view, String imageUrl, ImageLoaderCallback imageLoaderCallback, Layout layout);
+    void getBitmap(ProteusView view, String url, ImageLoaderCallback loader);
 }

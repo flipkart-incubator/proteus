@@ -26,12 +26,52 @@ import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Color;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleAttribute;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
 public abstract class ColorResourceProcessor<V extends View> extends AttributeProcessor<V> {
+
+    public static Color.Result evaluate(Value value, ProteusView view) {
+        final Color.Result[] result = new Color.Result[1];
+        ColorResourceProcessor<View> processor = new ColorResourceProcessor<View>() {
+            @Override
+            public void setColor(View view, int color) {
+                result[0] = new Color.Result(color, null);
+            }
+
+            @Override
+            public void setColor(View view, ColorStateList colors) {
+                result[0] = new Color.Result(Color.Int.BLACK.value, colors);
+            }
+        };
+        processor.process((View) view, value);
+        return result[0];
+    }
+
+    public static Value staticParse(Value value, Context context) {
+        if (null == value) {
+            return Color.Int.BLACK;
+        }
+        if (value.isObject()) {
+            return Color.valueOf(value.getAsObject(), context);
+        } else if (value.isPrimitive()) {
+            String string = value.getAsString();
+            if (Color.isLocalColorResource(string)) {
+                Resource resource = Resource.valueOf(string, Resource.COLOR, context);
+                return null == resource ? Color.Int.BLACK : resource;
+            } else if (ParseHelper.isStyleAttribute(string)) {
+                StyleAttribute style = StyleAttribute.valueOf(string);
+                return null != style ? style : Color.Int.BLACK;
+            } else {
+                return Color.valueOf(value.getAsString());
+            }
+        } else {
+            return Color.Int.BLACK;
+        }
+    }
 
     @Override
     public void handleValue(final V view, Value value) {
@@ -79,19 +119,6 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
 
     @Override
     public Value parse(Value value, Context context) {
-        if (value.isObject()) {
-            return Color.valueOf(value.getAsObject(), context);
-        } else {
-            String string = value.getAsString();
-            if (Color.isLocalColorResource(string)) {
-                Resource resource = Resource.valueOf(string, Resource.COLOR, context);
-                return null == resource ? Color.Int.BLACK : resource;
-            } else if (ParseHelper.isStyleAttribute(string)) {
-                StyleAttribute style = StyleAttribute.valueOf(string);
-                return null != style ? style : Color.Int.BLACK;
-            } else {
-                return Color.valueOf(value.getAsString());
-            }
-        }
+        return staticParse(value, context);
     }
 }

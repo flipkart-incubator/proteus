@@ -32,32 +32,17 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Color
+ * ColorValue
  * TODO: fix the color state list to consume color resources and style attributes.
  *
  * @author aditya.sharat
  */
-
 public abstract class Color extends Value {
 
     private static final String COLOR_PREFIX_LITERAL = "#";
     private static final String COLOR_RESOURCE_PREFIX = "@color/";
 
     private static HashMap<String, Integer> sAttributesMap = null;
-
-    public abstract Result apply(Context context);
-
-    public static Color valueOf(Value value, Context context) {
-        Color color;
-        if (value.isPrimitive()) {
-            color = valueOf(value.getAsString());
-        } else if (value.isObject()) {
-            color = valueOf(value.getAsObject(), context);
-        } else {
-            color = Int.BLACK;
-        }
-        return color;
-    }
 
     public static Color valueOf(String value) {
         if (null == value) {
@@ -123,7 +108,7 @@ public abstract class Color extends Value {
                                     case android.R.attr.color:
                                         String colorRes = entry.getValue().getAsString();
                                         if (!TextUtils.isEmpty(colorRes)) {
-                                            baseColor = apply(colorRes, context);
+                                            baseColor = apply(colorRes);
                                         }
                                         break;
                                     case android.R.attr.alpha:
@@ -141,7 +126,7 @@ public abstract class Color extends Value {
                         if (!ignoreItem) {
                             stateSpec = StateSet.trimStateSet(stateSpec, j);
                             if (null == baseColor) {
-                                throw new IllegalStateException("No Color Specified");
+                                throw new IllegalStateException("No ColorValue Specified");
                             }
 
                             if (listSize + 1 >= listAllocated) {
@@ -176,7 +161,7 @@ public abstract class Color extends Value {
         return null != result ? new Color.StateList(result) : Int.BLACK;
     }
 
-    private static int apply(String value, Context context) {
+    private static int apply(String value) {
         Color color = valueOf(value);
         int colorInt;
         if (color instanceof Int) {
@@ -194,7 +179,6 @@ public abstract class Color extends Value {
     public static boolean isLocalColorResource(String attributeValue) {
         return attributeValue.startsWith(COLOR_RESOURCE_PREFIX);
     }
-
 
     private static HashMap<String, Integer> getAttributesMap() {
         if (null == sAttributesMap) {
@@ -248,6 +232,7 @@ public abstract class Color extends Value {
         return (baseColor & 0xFFFFFF) | (alpha << 24);
     }
 
+    public abstract Result apply(Context context);
 
     private static class ColorCache {
         private static final LruCache<String, Color> cache = new LruCache<>(64);
@@ -290,7 +275,7 @@ public abstract class Color extends Value {
 
         @Override
         public Result apply(Context context) {
-            return new Result(0, colors);
+            return new Result(Int.BLACK.value, colors);
         }
     }
 
