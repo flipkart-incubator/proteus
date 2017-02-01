@@ -211,7 +211,7 @@ public class ParseHelper {
 
     public static float parseFloat(String value) {
         float number = 0;
-        if (!TextUtils.isEmpty(value)) {
+        if (null != value && value.length() > 0) {
             try {
                 number = Float.parseFloat(value);
             } catch (NumberFormatException e) {
