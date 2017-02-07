@@ -49,7 +49,7 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     public void handleValue(V view, Value value) {
         String string = value.getAsString();
         if (ParseHelper.isStyleAttribute(string) || isLocalStringResource(string)) {
-            process(view, parse(value, view.getContext()));
+            process(view, compile(value, view.getContext()));
         } else {
             setString(view, string);
         }
@@ -73,7 +73,7 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     public abstract void setString(V view, String value);
 
     @Override
-    public Value parse(Value value, Context context) {
+    public Value compile(Value value, Context context) {
         String string = value.getAsString();
         if (isLocalStringResource(string)) {
             Resource resource = Resource.valueOf(string, Resource.STRING, context);

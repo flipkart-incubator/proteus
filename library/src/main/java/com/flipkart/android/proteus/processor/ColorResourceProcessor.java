@@ -78,7 +78,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
         if (value.isColor()) {
             apply(view, value.getAsColor());
         } else {
-            process(view, parse(value, view.getContext()));
+            process(view, compile(value, view.getContext()));
         }
     }
 
@@ -118,7 +118,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
     public abstract void setColor(V view, ColorStateList colors);
 
     @Override
-    public Value parse(Value value, Context context) {
+    public Value compile(Value value, Context context) {
         return staticParse(value, context);
     }
 }

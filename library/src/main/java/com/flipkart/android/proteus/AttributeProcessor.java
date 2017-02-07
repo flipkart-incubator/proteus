@@ -50,7 +50,7 @@ public abstract class AttributeProcessor<V> {
 
     public abstract void handleStyleAttribute(V view, StyleAttribute style);
 
-    public Value parse(Value value, Context context) {
+    public Value compile(Value value, Context context) {
         return value;
     }
 

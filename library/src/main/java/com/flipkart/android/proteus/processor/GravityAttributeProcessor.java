@@ -77,7 +77,7 @@ public abstract class GravityAttributeProcessor<V extends View> extends Attribut
     public abstract void setGravity(V view, @Gravity int gravity);
 
     @Override
-    public Value parse(Value value, Context context) {
+    public Value compile(Value value, Context context) {
         return ParseHelper.getGravity(value.getAsString());
     }
 

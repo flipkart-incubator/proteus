@@ -74,7 +74,7 @@ public class GravityAttributeProcessorTest {
 
         for (Map.Entry<String, Integer> entry : sGravityMap.entrySet()) {
             System.out.print("\nGravityAttributeProcessorTest:parse_simple() when gravity : '" + entry.getKey() + "'\n");
-            Value value = processor.parse(new Primitive(entry.getKey()), null);
+            Value value = processor.compile(new Primitive(entry.getKey()), null);
             assertThat(value.getAsInt(), is(entry.getValue()));
         }
     }
@@ -88,7 +88,7 @@ public class GravityAttributeProcessorTest {
             }
         };
 
-        Value value = processor.parse(new Primitive("top|left"), null);
+        Value value = processor.compile(new Primitive("top|left"), null);
         int gravity = Gravity.TOP | Gravity.LEFT;
         assertThat(value.getAsInt(), is(gravity));
     }
@@ -161,7 +161,7 @@ public class GravityAttributeProcessorTest {
                     assertThat(gravity, is(entry.getValue()));
                 }
             };
-            Value value = processor.parse(new Primitive(entry.getKey()), null);
+            Value value = processor.compile(new Primitive(entry.getKey()), null);
             processor.handleValue(null, value);
         }
     }

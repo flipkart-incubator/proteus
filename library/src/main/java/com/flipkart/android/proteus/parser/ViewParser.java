@@ -296,7 +296,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
                     // noinspection ResourceType
                     view.setVisibility(value.getAsInt());
                 } else {
-                    process(view, parse(value, view.getContext()));
+                    process(view, compile(value, view.getContext()));
                 }
             }
 
@@ -315,7 +315,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
             }
 
             @Override
-            public Value parse(Value value, Context context) {
+            public Value compile(Value value, Context context) {
                 int visibility = ParseHelper.parseVisibility(value);
                 return ParseHelper.getVisibilty(visibility);
             }
@@ -327,7 +327,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
                     // noinspection ResourceType
                     view.setVisibility(value.getAsInt());
                 } else {
-                    process(view, parse(value, view.getContext()));
+                    process(view, compile(value, view.getContext()));
                 }
             }
 
@@ -346,7 +346,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
             }
 
             @Override
-            public Value parse(Value value, Context context) {
+            public Value compile(Value value, Context context) {
                 int visibility = ParseHelper.parseInvisibility(value);
                 return ParseHelper.getVisibilty(visibility);
             }

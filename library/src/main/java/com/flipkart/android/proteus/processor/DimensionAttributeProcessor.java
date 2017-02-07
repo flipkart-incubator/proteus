@@ -75,7 +75,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
         if (value.isDimension()) {
             setDimension(view, value.getAsDimension().apply(view.getContext()));
         } else if (value.isPrimitive()) {
-            process(view, parse(value, view.getContext()));
+            process(view, compile(value, view.getContext()));
         }
     }
 
@@ -97,7 +97,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
     public abstract void setDimension(T view, float dimension);
 
     @Override
-    public Value parse(Value value, Context context) {
+    public Value compile(Value value, Context context) {
         return staticParse(value, context);
     }
 

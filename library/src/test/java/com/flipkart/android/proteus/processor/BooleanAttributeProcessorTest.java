@@ -65,7 +65,7 @@ public class BooleanAttributeProcessorTest {
             }
         };
 
-        Value value = processor.parse(True, null);
+        Value value = processor.compile(True, null);
         assertThat(value, is((Value) BooleanAttributeProcessor.TRUE));
     }
 
@@ -79,7 +79,7 @@ public class BooleanAttributeProcessorTest {
             }
         };
 
-        Value value = processor.parse(False, null);
+        Value value = processor.compile(False, null);
         assertThat(value, is((Value) BooleanAttributeProcessor.FALSE));
     }
 
@@ -93,7 +93,7 @@ public class BooleanAttributeProcessorTest {
             }
         };
 
-        Value value = processor.parse(Truthy, null);
+        Value value = processor.compile(Truthy, null);
         assertThat(value, is((Value) BooleanAttributeProcessor.TRUE));
     }
 
@@ -107,7 +107,7 @@ public class BooleanAttributeProcessorTest {
             }
         };
 
-        Value value = processor.parse(Truthy, null);
+        Value value = processor.compile(Truthy, null);
         assertThat(value, is((Value) BooleanAttributeProcessor.FALSE));
     }
 
@@ -121,7 +121,7 @@ public class BooleanAttributeProcessorTest {
             }
         };
 
-        Value value = processor.parse(attribute, null);
+        Value value = processor.compile(attribute, null);
         assertThat(value, is((Value) BooleanAttributeProcessor.FALSE));
     }
 
@@ -134,7 +134,7 @@ public class BooleanAttributeProcessorTest {
             }
         };
 
-        Value value = processor.parse(new Primitive(true), null);
+        Value value = processor.compile(new Primitive(true), null);
         processor.handleValue(null, value);
     }
 
@@ -147,7 +147,7 @@ public class BooleanAttributeProcessorTest {
             }
         };
 
-        Value value = processor.parse(new Primitive(false), null);
+        Value value = processor.compile(new Primitive(false), null);
         processor.handleValue(null, value);
     }
 
@@ -164,7 +164,7 @@ public class BooleanAttributeProcessorTest {
             }
         };
 
-        Value value = processor.parse(new Primitive("?Theme_AppCompat:windowNoTitle"), null);
+        Value value = processor.compile(new Primitive("?Theme_AppCompat:windowNoTitle"), null);
         processor.handleValue(view, value);
     }
 

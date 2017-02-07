@@ -65,7 +65,7 @@ public class DimensionAttributeProcessorTest {
             }
         };
 
-        Value value = processor.parse(dimension, context);
+        Value value = processor.compile(dimension, context);
 
         assertThat(value.getAsResource().resId, is(resId));
     }

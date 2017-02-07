@@ -48,7 +48,7 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
         if (value.isPrimitive() && value.getAsPrimitive().isBoolean()) {
             setBoolean(view, value.getAsPrimitive().getAsBoolean());
         } else {
-            process(view, parse(value, view.getContext()));
+            process(view, compile(value, view.getContext()));
         }
     }
 
@@ -66,7 +66,7 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
     public abstract void setBoolean(V view, boolean value);
 
     @Override
-    public Value parse(Value value, Context context) {
+    public Value compile(Value value, Context context) {
         if (value.isPrimitive()) {
             String string = value.getAsString();
             if (isLocalBooleanResource(string)) {
