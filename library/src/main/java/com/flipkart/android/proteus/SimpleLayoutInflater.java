@@ -83,12 +83,11 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
          */
         final ProteusView view;
 
-        onBeforeCreateView(parser, parent, layout, data, styles, index);
         view = createView(parser, parent, layout, data, styles, index);
         onAfterCreateView(parser, view, parent, layout, data, styles, index);
 
         ProteusViewManager viewManager = createViewManager(parser, parent, layout, data, styles, index);
-        viewManager.setView((View) view);
+        viewManager.setView(view.getAsView());
         view.setViewManager(viewManager);
 
         /**
@@ -109,17 +108,13 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return view;
     }
 
-    protected void onBeforeCreateView(ViewTypeParser parser, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
-        parser.onBeforeCreateView(this, parent, layout, data, styles, index);
-    }
-
     protected ProteusView createView(ViewTypeParser parser, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         return parser.createView(this, parent, layout, data, styles, index);
     }
 
     protected void onAfterCreateView(ViewTypeParser parser, ProteusView view, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         //noinspection unchecked
-        parser.onAfterCreateView(this, parent, (View) view, layout, data, styles, index);
+        parser.onAfterCreateView(this, parent, view, layout, data, styles, index);
     }
 
     protected ProteusViewManager createViewManager(ViewTypeParser parser, View parent, Layout layout, JsonObject data, Styles styles, int index) {
@@ -147,7 +142,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
             Log.d(TAG, "Handle '" + attribute + "' : " + value);
         }
         //noinspection unchecked
-        return parser.handleAttribute((View) view, attribute, value);
+        return parser.handleAttribute(view.getAsView(), attribute, value);
     }
 
     protected void onUnknownAttributeEncountered(ProteusView view, int attribute, Value value) {
@@ -196,13 +191,13 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return callback;
     }
 
-    public Formatter getFormatter(String name) {
-        return this.formatter.get(name);
-    }
-
     @Override
     public void setCallback(@Nullable LayoutInflaterCallback listener) {
         this.callback = listener;
+    }
+
+    public Formatter getFormatter(String name) {
+        return this.formatter.get(name);
     }
 
     @Override

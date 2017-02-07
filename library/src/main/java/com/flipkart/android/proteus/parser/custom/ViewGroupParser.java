@@ -165,7 +165,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     @Override
     public boolean addView(ProteusView parent, ProteusView view) {
         if (parent instanceof ViewGroup) {
-            ((ViewGroup) parent).addView((View) view);
+            ((ViewGroup) parent).addView(view.getAsView());
             return true;
         }
         return false;
