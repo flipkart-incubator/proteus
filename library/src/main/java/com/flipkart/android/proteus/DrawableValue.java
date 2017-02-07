@@ -125,7 +125,7 @@ public abstract class DrawableValue extends Value {
         }
 
         public static ColorValue valueOf(Value value, Context context) {
-            return new ColorValue(ColorResourceProcessor.staticParse(value, context));
+            return new ColorValue(ColorResourceProcessor.staticCompile(value, context));
         }
 
         @Override
@@ -340,7 +340,7 @@ public abstract class DrawableValue extends Value {
             private Level(ObjectValue value, Context context) {
                 minLevel = value.getAsInteger(MIN_LEVEL);
                 maxLevel = value.getAsInteger(MAX_LEVEL);
-                drawable = DrawableResourceProcessor.staticParse(value.get(DRAWABLE), context);
+                drawable = DrawableResourceProcessor.staticCompile(value.get(DRAWABLE), context);
             }
 
             public void apply(ProteusView view, final LevelListDrawable levelListDrawable) {
@@ -367,19 +367,19 @@ public abstract class DrawableValue extends Value {
 
             value = object.get(MASK);
             if (null != value) {
-                mask = DrawableResourceProcessor.staticParse(value, context);
+                mask = DrawableResourceProcessor.staticCompile(value, context);
             } else {
                 mask = null;
             }
             value = object.get(CONTENT);
             if (null != value) {
-                content = DrawableResourceProcessor.staticParse(value, context);
+                content = DrawableResourceProcessor.staticCompile(value, context);
             } else {
                 content = null;
             }
             value = object.get(DEFAULT_BACKGROUND);
             if (null != value) {
-                defaultBackground = DrawableResourceProcessor.staticParse(value, context);
+                defaultBackground = DrawableResourceProcessor.staticCompile(value, context);
             } else {
                 defaultBackground = null;
             }
@@ -509,10 +509,10 @@ public abstract class DrawableValue extends Value {
             angle = gradient.getAsInteger(ANGLE);
             centerX = gradient.getAsFloat(CENTER_X);
             centerY = gradient.getAsFloat(CENTER_Y);
-            centerColor = ColorResourceProcessor.staticParse(gradient.get(CENTER_COLOR), context);
-            endColor = ColorResourceProcessor.staticParse(gradient.get(END_COLOR), context);
-            gradientRadius = DimensionAttributeProcessor.staticParse(gradient.get(GRADIENT_RADIUS), context);
-            startColor = ColorResourceProcessor.staticParse(gradient.get(START_COLOR), context);
+            centerColor = ColorResourceProcessor.staticCompile(gradient.get(CENTER_COLOR), context);
+            endColor = ColorResourceProcessor.staticCompile(gradient.get(END_COLOR), context);
+            gradientRadius = DimensionAttributeProcessor.staticCompile(gradient.get(GRADIENT_RADIUS), context);
+            startColor = ColorResourceProcessor.staticCompile(gradient.get(START_COLOR), context);
             gradientType = getGradientType(gradient.getAsString(GRADIENT_TYPE));
             useLevel = gradient.getAsBoolean(USE_LEVEL);
         }
@@ -629,11 +629,11 @@ public abstract class DrawableValue extends Value {
         private final Value bottomRightRadius;
 
         private Corners(ObjectValue corner, Context context) {
-            radius = DimensionAttributeProcessor.staticParse(corner.get(RADIUS), context);
-            topLeftRadius = DimensionAttributeProcessor.staticParse(corner.get(TOP_LEFT_RADIUS), context);
-            topRightRadius = DimensionAttributeProcessor.staticParse(corner.get(TOP_RIGHT_RADIUS), context);
-            bottomLeftRadius = DimensionAttributeProcessor.staticParse(corner.get(BOTTOM_LEFT_RADIUS), context);
-            bottomRightRadius = DimensionAttributeProcessor.staticParse(corner.get(BOTTOM_RIGHT_RADIUS), context);
+            radius = DimensionAttributeProcessor.staticCompile(corner.get(RADIUS), context);
+            topLeftRadius = DimensionAttributeProcessor.staticCompile(corner.get(TOP_LEFT_RADIUS), context);
+            topRightRadius = DimensionAttributeProcessor.staticCompile(corner.get(TOP_RIGHT_RADIUS), context);
+            bottomLeftRadius = DimensionAttributeProcessor.staticCompile(corner.get(BOTTOM_LEFT_RADIUS), context);
+            bottomRightRadius = DimensionAttributeProcessor.staticCompile(corner.get(BOTTOM_RIGHT_RADIUS), context);
         }
 
         public static Corners valueOf(ObjectValue corner, Context context) {
@@ -670,7 +670,7 @@ public abstract class DrawableValue extends Value {
         private final Value color;
 
         private Solid(ObjectValue value, Context context) {
-            color = ColorResourceProcessor.staticParse(value.get(COLOR), context);
+            color = ColorResourceProcessor.staticCompile(value.get(COLOR), context);
         }
 
         public static Solid valueOf(ObjectValue value, Context context) {
@@ -697,8 +697,8 @@ public abstract class DrawableValue extends Value {
         private final Value height;
 
         private Size(ObjectValue value, Context context) {
-            width = DimensionAttributeProcessor.staticParse(value.get(WIDTH), context);
-            height = DimensionAttributeProcessor.staticParse(value.get(HEIGHT), context);
+            width = DimensionAttributeProcessor.staticCompile(value.get(WIDTH), context);
+            height = DimensionAttributeProcessor.staticCompile(value.get(HEIGHT), context);
         }
 
         public static Size valueOf(ObjectValue value, Context context) {
@@ -724,10 +724,10 @@ public abstract class DrawableValue extends Value {
         public final Value dashGap;
 
         private Stroke(ObjectValue stroke, Context context) {
-            width = DimensionAttributeProcessor.staticParse(stroke.get(WIDTH), context);
-            color = ColorResourceProcessor.staticParse(stroke.get(COLOR), context);
-            dashWidth = DimensionAttributeProcessor.staticParse(stroke.get(DASH_WIDTH), context);
-            dashGap = DimensionAttributeProcessor.staticParse(stroke.get(DASH_GAP), context);
+            width = DimensionAttributeProcessor.staticCompile(stroke.get(WIDTH), context);
+            color = ColorResourceProcessor.staticCompile(stroke.get(COLOR), context);
+            dashWidth = DimensionAttributeProcessor.staticCompile(stroke.get(DASH_WIDTH), context);
+            dashGap = DimensionAttributeProcessor.staticCompile(stroke.get(DASH_GAP), context);
         }
 
         public static Stroke valueOf(ObjectValue stroke, Context context) {

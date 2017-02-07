@@ -54,7 +54,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
         return result[0];
     }
 
-    public static Value staticParse(Value value, Context context) {
+    public static Value staticCompile(Value value, Context context) {
         if (null == value || !value.isPrimitive()) {
             return Dimension.ZERO;
         }
@@ -98,7 +98,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
 
     @Override
     public Value compile(Value value, Context context) {
-        return staticParse(value, context);
+        return staticCompile(value, context);
     }
 
 }

@@ -55,7 +55,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         return d[0];
     }
 
-    public static Value staticParse(Value value, Context context) {
+    public static Value staticCompile(Value value, Context context) {
         if (value.isPrimitive()) {
             String string = value.getAsString();
             if (DrawableValue.isLocalDrawableResource(string)) {
@@ -113,6 +113,6 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
 
     @Override
     public Value compile(Value value, Context context) {
-        return staticParse(value, context);
+        return staticCompile(value, context);
     }
 }

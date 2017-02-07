@@ -43,6 +43,10 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
     public static final Primitive TRUE = new Primitive(true);
     public static final Primitive FALSE = new Primitive(false);
 
+    public static boolean isLocalBooleanResource(String value) {
+        return value.startsWith(BOOLEAN_RESOURCE_PREFIX);
+    }
+
     @Override
     public void handleValue(V view, Value value) {
         if (value.isPrimitive() && value.getAsPrimitive().isBoolean()) {
@@ -54,7 +58,8 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
 
     @Override
     public void handleResource(V view, Resource resource) {
-        setBoolean(view, resource.getBoolean(view.getContext()));
+        Boolean bool = resource.getBoolean(view.getContext());
+        setBoolean(view, null != bool ? bool : false);
     }
 
     @Override
@@ -81,9 +86,5 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
         } else {
             return ParseHelper.parseBoolean(value) ? TRUE : FALSE;
         }
-    }
-
-    public static boolean isLocalBooleanResource(String value) {
-        return value.startsWith(BOOLEAN_RESOURCE_PREFIX);
     }
 }

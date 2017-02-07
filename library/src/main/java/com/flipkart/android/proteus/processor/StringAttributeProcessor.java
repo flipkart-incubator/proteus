@@ -36,10 +36,13 @@ import com.flipkart.android.proteus.parser.ParseHelper;
  */
 public abstract class StringAttributeProcessor<V extends View> extends AttributeProcessor<V> {
 
-    private static final String STRING_RESOURCE_PREFIX = "@string/";
-
     public static final String EMPTY_STRING = "";
     public static final Primitive EMPTY = new Primitive("");
+    private static final String STRING_RESOURCE_PREFIX = "@string/";
+
+    public static boolean isLocalStringResource(String value) {
+        return value.startsWith(STRING_RESOURCE_PREFIX);
+    }
 
     /**
      * @param view  View
@@ -84,9 +87,5 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
         } else {
             return value;
         }
-    }
-
-    public static boolean isLocalStringResource(String value) {
-        return value.startsWith(STRING_RESOURCE_PREFIX);
     }
 }
