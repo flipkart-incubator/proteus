@@ -25,7 +25,7 @@ import android.view.animation.Animation;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Resource;
-import com.flipkart.android.proteus.StyleAttribute;
+import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.AnimationUtils;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -55,7 +55,7 @@ public abstract class TweenAnimationResourceProcessor<V extends View> extends At
     }
 
     @Override
-    public void handleStyleAttribute(V view, StyleAttribute style) {
+    public void handleStyleResource(V view, StyleResource style) {
 
     }
 

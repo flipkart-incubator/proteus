@@ -38,7 +38,7 @@ public abstract class AttributeProcessor<V> {
         } else if (value.isResource()) {
             handleResource(view, value.getAsResource());
         } else if (value.isStyle()) {
-            handleStyleAttribute(view, value.getAsStyleAttribute());
+            handleStyleResource(view, value.getAsStyleResource());
         } else {
             handleValue(view, value);
         }
@@ -48,7 +48,7 @@ public abstract class AttributeProcessor<V> {
 
     public abstract void handleResource(V view, Resource resource);
 
-    public abstract void handleStyleAttribute(V view, StyleAttribute style);
+    public abstract void handleStyleResource(V view, StyleResource style);
 
     public Value compile(Value value, Context context) {
         return value;

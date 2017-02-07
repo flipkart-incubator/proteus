@@ -26,7 +26,7 @@ import android.view.View;
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Primitive;
 import com.flipkart.android.proteus.Resource;
-import com.flipkart.android.proteus.StyleAttribute;
+import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
@@ -63,7 +63,7 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
     }
 
     @Override
-    public void handleStyleAttribute(V view, StyleAttribute style) {
+    public void handleStyleResource(V view, StyleResource style) {
         TypedArray a = style.apply(view.getContext());
         setBoolean(view, a.getBoolean(0, false));
     }
@@ -78,7 +78,7 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
                 Resource resource = Resource.valueOf(string, Resource.BOOLEAN, context);
                 return null == resource ? FALSE : resource;
             } else if (ParseHelper.isStyleAttribute(string)) {
-                StyleAttribute style = StyleAttribute.valueOf(string);
+                StyleResource style = StyleResource.valueOf(string);
                 return null != style ? style : FALSE;
             } else {
                 return ParseHelper.parseBoolean(value) ? TRUE : FALSE;

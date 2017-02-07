@@ -29,7 +29,7 @@ import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.DrawableValue;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
-import com.flipkart.android.proteus.StyleAttribute;
+import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
@@ -61,7 +61,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
             if (DrawableValue.isLocalDrawableResource(string)) {
                 return Resource.valueOf(string, Resource.DRAWABLE, context);
             } else if (ParseHelper.isStyleAttribute(string)) {
-                return StyleAttribute.valueOf(string);
+                return StyleResource.valueOf(string);
             } else {
                 return DrawableValue.valueOf(string, context);
             }
@@ -101,7 +101,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     @Override
-    public void handleStyleAttribute(V view, StyleAttribute style) {
+    public void handleStyleResource(V view, StyleResource style) {
         TypedArray a = style.apply(view.getContext());
         Drawable d = a.getDrawable(0);
         if (null != d) {

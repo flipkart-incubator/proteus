@@ -29,7 +29,7 @@ import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
-import com.flipkart.android.proteus.StyleAttribute;
+import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
@@ -105,7 +105,7 @@ public class ViewGroupParser<T extends ViewGroup> extends TypeParser<T> {
             }
 
             @Override
-            public void handleStyleAttribute(T view, StyleAttribute style) {
+            public void handleStyleResource(T view, StyleResource style) {
                 throw new IllegalArgumentException("children cannot be a style attribute");
             }
         });

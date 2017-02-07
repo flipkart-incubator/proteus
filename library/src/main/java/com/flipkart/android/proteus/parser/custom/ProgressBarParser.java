@@ -39,7 +39,7 @@ import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
-import com.flipkart.android.proteus.StyleAttribute;
+import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.TypeParser;
@@ -104,7 +104,7 @@ public class ProgressBarParser<T extends ProgressBar> extends TypeParser<T> {
             }
 
             @Override
-            public void handleStyleAttribute(T view, StyleAttribute style) {
+            public void handleStyleResource(T view, StyleResource style) {
                 TypedArray a = style.apply(view.getContext());
                 view.setProgressDrawable(a.getDrawable(0));
             }

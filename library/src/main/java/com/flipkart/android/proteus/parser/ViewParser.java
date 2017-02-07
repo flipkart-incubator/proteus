@@ -39,7 +39,7 @@ import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
-import com.flipkart.android.proteus.StyleAttribute;
+import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
@@ -308,7 +308,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
             }
 
             @Override
-            public void handleStyleAttribute(V view, StyleAttribute style) {
+            public void handleStyleResource(V view, StyleResource style) {
                 TypedArray a = style.apply(view.getContext());
                 //noinspection WrongConstant
                 view.setVisibility(a.getInt(0, View.GONE));

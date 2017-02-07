@@ -26,7 +26,7 @@ import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Resource;
-import com.flipkart.android.proteus.StyleAttribute;
+import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
@@ -68,7 +68,7 @@ public abstract class GravityAttributeProcessor<V extends View> extends Attribut
     }
 
     @Override
-    public void handleStyleAttribute(V view, StyleAttribute style) {
+    public void handleStyleResource(V view, StyleResource style) {
         TypedArray a = style.apply(view.getContext());
         //noinspection WrongConstant
         setGravity(view, a.getInt(0, android.view.Gravity.NO_GRAVITY));

@@ -28,7 +28,7 @@ import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.Color;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
-import com.flipkart.android.proteus.StyleAttribute;
+import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 
@@ -63,7 +63,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
                 Resource resource = Resource.valueOf(string, Resource.COLOR, context);
                 return null == resource ? Color.Int.BLACK : resource;
             } else if (ParseHelper.isStyleAttribute(string)) {
-                StyleAttribute style = StyleAttribute.valueOf(string);
+                StyleResource style = StyleResource.valueOf(string);
                 return null != style ? style : Color.Int.BLACK;
             } else {
                 return Color.valueOf(value.getAsString());
@@ -94,7 +94,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
     }
 
     @Override
-    public void handleStyleAttribute(V view, StyleAttribute style) {
+    public void handleStyleResource(V view, StyleResource style) {
         TypedArray a = style.apply(view.getContext());
         ColorStateList colors = a.getColorStateList(0);
         if (null != colors) {
