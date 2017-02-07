@@ -47,7 +47,6 @@ public class Attributes {
         public static final String Elevation = "elevation";
         public static final String Alpha = "alpha";
         public static final String Visibility = "visibility";
-        public static final String Invisibility = "invisibility";
         public static final String Id = "id";
         public static final String Tag = "tag";
         public static final String Above = "layout_above";

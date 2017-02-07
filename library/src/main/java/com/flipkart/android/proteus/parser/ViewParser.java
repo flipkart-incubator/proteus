@@ -320,37 +320,6 @@ public class ViewParser<V extends View> extends TypeParser<V> {
                 return ParseHelper.getVisibilty(visibility);
             }
         });
-        addAttributeProcessor(Attributes.View.Invisibility, new AttributeProcessor<V>() {
-            @Override
-            public void handleValue(V view, Value value) {
-                if (value.isPrimitive() && value.getAsPrimitive().isNumber()) {
-                    // noinspection ResourceType
-                    view.setVisibility(value.getAsInt());
-                } else {
-                    process(view, compile(value, view.getContext()));
-                }
-            }
-
-            @Override
-            public void handleResource(V view, Resource resource) {
-                Integer visibility = resource.getInteger(view.getContext());
-                //noinspection WrongConstant
-                view.setVisibility(null != visibility ? visibility : View.GONE);
-            }
-
-            @Override
-            public void handleStyleAttribute(V view, StyleAttribute style) {
-                TypedArray a = style.apply(view.getContext());
-                //noinspection WrongConstant
-                view.setVisibility(a.getInt(0, View.GONE));
-            }
-
-            @Override
-            public Value compile(Value value, Context context) {
-                int visibility = ParseHelper.parseInvisibility(value);
-                return ParseHelper.getVisibilty(visibility);
-            }
-        });
         addAttributeProcessor(Attributes.View.Id, new StringAttributeProcessor<V>() {
             @Override
             public void setString(final V view, String value) {

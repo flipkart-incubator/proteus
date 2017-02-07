@@ -278,22 +278,6 @@ public class ParseHelper {
         return returnValue == null ? View.VISIBLE : returnValue;
     }
 
-    public static int parseInvisibility(Value value) {
-        Integer returnValue = null;
-        if (value.isPrimitive()) {
-            String attributeValue = value.getAsString();
-            returnValue = sVisibilityMode.get(attributeValue);
-            if (null == returnValue &&
-                    (attributeValue.isEmpty() || FALSE.equals(attributeValue) || ProteusConstants.DATA_NULL.equals(attributeValue))) {
-                returnValue = View.VISIBLE;
-            }
-        } else if (value.isNull()) {
-            returnValue = View.VISIBLE;
-        }
-
-        return returnValue == null ? View.GONE : returnValue;
-    }
-
     public static Primitive getVisibilty(int visibility) {
         Primitive value = sVisibilityMap.get(visibility);
         return null != value ? value : sVisibilityMap.get(View.GONE);
