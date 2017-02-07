@@ -37,14 +37,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author kirankumar
+ * @author adityasharat
  */
-public abstract class TypeParser<V extends View> {
+public abstract class ViewTypeParser<V extends View> {
 
     private static XmlResourceParser sParser = null;
 
     @Nullable
-    private TypeParser parent;
+    private ViewTypeParser parent;
     private AttributeProcessor[] processors = new AttributeProcessor[0];
 
     private Map<String, AttributeSet.Attribute> attributes = new HashMap<>();
@@ -89,7 +89,7 @@ public abstract class TypeParser<V extends View> {
     }
 
     @NonNull
-    public AttributeSet prepare(@Nullable TypeParser parent) {
+    public AttributeSet prepare(@Nullable ViewTypeParser parent) {
         this.parent = parent;
         this.processors = new AttributeProcessor[0];
         this.attributes = new HashMap<>();
@@ -137,7 +137,7 @@ public abstract class TypeParser<V extends View> {
          * Refer : http://stackoverflow.com/questions/7018267/generating-a-layoutparams-based-on-the-type-of-parent
          */
         if (null == sParser) {
-            synchronized (TypeParser.class) {
+            synchronized (ViewTypeParser.class) {
                 if (null == sParser) {
                     initializeAttributeSet(parent);
                 }
