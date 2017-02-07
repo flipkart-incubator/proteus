@@ -37,12 +37,12 @@ import com.google.gson.JsonObject;
 public interface ProteusLayoutInflater {
 
     /**
-     * Returns the {@link TypeParser} for the specified view type.
+     * Returns the {@link ViewTypeParser} for the specified view type.
      *
      * @param type The name of the view type.
-     * @return The {@link TypeParser} associated to the specified view type
+     * @return The {@link ViewTypeParser} associated to the specified view type
      */
-    TypeParser getParser(String type);
+    ViewTypeParser getParser(String type);
 
     /**
      * This method is used to process the attributes from the layout and set them on the {@link View}
@@ -53,7 +53,7 @@ public interface ProteusLayoutInflater {
      * @param attribute
      * @param value     @return true if the attribute is processed false otherwise.
      */
-    boolean handleAttribute(TypeParser handler, ProteusView view, int attribute, Value value);
+    boolean handleAttribute(ViewTypeParser handler, ProteusView view, int attribute, Value value);
 
     /**
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.

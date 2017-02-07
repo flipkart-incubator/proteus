@@ -28,7 +28,7 @@ import com.flipkart.android.proteus.Null;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.Primitive;
 import com.flipkart.android.proteus.Proteus;
-import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.google.gson.Gson;
@@ -280,7 +280,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 if (ProteusConstants.SCOPE.equals(name)) {
                     scope = readScope(in);
                 } else {
-                    TypeParser.AttributeSet.Attribute attribute = proteus.getAttributeId(name, type);
+                    ViewTypeParser.AttributeSet.Attribute attribute = proteus.getAttributeId(name, type);
                     if (null != attribute) {
                         Value value = attribute.processor.compile(VALUE_TYPE_ADAPTER.read(in), getContext());
                         attributes.add(new Layout.Attribute(attribute.id, value));

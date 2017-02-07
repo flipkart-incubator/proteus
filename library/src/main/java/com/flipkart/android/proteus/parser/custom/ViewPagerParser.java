@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusViewPager;
 import com.google.gson.JsonObject;
@@ -34,7 +34,7 @@ import com.google.gson.JsonObject;
 /**
  * Created by kiran.kumar on 13/05/14.
  */
-public class ViewPagerParser<T extends ViewPager> extends TypeParser<T> {
+public class ViewPagerParser<T extends ViewPager> extends ViewTypeParser<T> {
 
 
     @Override

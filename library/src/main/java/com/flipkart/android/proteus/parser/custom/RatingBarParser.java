@@ -25,8 +25,8 @@ import android.view.ViewGroup;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
@@ -40,7 +40,7 @@ import com.google.gson.JsonObject;
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class RatingBarParser<T extends FixedRatingBar> extends TypeParser<T> {
+public class RatingBarParser<T extends FixedRatingBar> extends ViewTypeParser<T> {
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {

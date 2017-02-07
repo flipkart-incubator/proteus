@@ -26,7 +26,7 @@ import android.widget.EditText;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusEditText;
 import com.google.gson.JsonObject;
@@ -34,7 +34,7 @@ import com.google.gson.JsonObject;
 /**
  * Created by kirankumar on 25/11/14.
  */
-public class EditTextParser<T extends EditText> extends TypeParser<T> {
+public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {

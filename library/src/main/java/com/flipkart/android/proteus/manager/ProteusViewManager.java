@@ -24,7 +24,7 @@ import android.view.View;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.toolbox.Binding;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -56,9 +56,9 @@ public interface ProteusViewManager {
 
     void setProteusLayoutInflater(ProteusLayoutInflater proteusLayoutInflater);
 
-    TypeParser getTypeParser();
+    ViewTypeParser getTypeParser();
 
-    void setTypeParser(TypeParser typeParser);
+    void setTypeParser(ViewTypeParser parser);
 
     Layout getLayout();
 

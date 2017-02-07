@@ -40,7 +40,7 @@ import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleResource;
-import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
@@ -62,7 +62,7 @@ import java.util.Map;
 /**
  * @author kiran.kumar
  */
-public class ViewParser<V extends View> extends TypeParser<V> {
+public class ViewParser<V extends View> extends ViewTypeParser<V> {
 
     private static final String TAG = "ViewParser";
 
@@ -388,7 +388,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
                 Layout layout = viewManager.getLayout();
                 Styles styles = viewManager.getStyles();
 
-                TypeParser handler = viewManager.getProteusLayoutInflater().getParser(layout.type);
+                ViewTypeParser handler = viewManager.getProteusLayoutInflater().getParser(layout.type);
                 if (styles == null) {
                     return;
                 }
@@ -401,7 +401,7 @@ public class ViewParser<V extends View> extends TypeParser<V> {
                 }
             }
 
-            private void process(Map<String, Value> style, ProteusView proteusView, TypeParser handler, ProteusLayoutInflater inflater, String type) {
+            private void process(Map<String, Value> style, ProteusView proteusView, ViewTypeParser handler, ProteusLayoutInflater inflater, String type) {
                 for (Map.Entry<String, Value> entry : style.entrySet()) {
                     inflater.handleAttribute(handler, proteusView, handler.getAttributeId(entry.getKey()), entry.getValue());
                 }

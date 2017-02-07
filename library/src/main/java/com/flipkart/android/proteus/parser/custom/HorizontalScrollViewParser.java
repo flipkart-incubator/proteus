@@ -25,7 +25,7 @@ import android.widget.HorizontalScrollView;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
@@ -37,7 +37,7 @@ import com.google.gson.JsonObject;
  * @author kiran.kumar
  * @author adityasharat
  */
-public class HorizontalScrollViewParser<T extends HorizontalScrollView> extends TypeParser<T> {
+public class HorizontalScrollViewParser<T extends HorizontalScrollView> extends ViewTypeParser<T> {
 
 
     @Override

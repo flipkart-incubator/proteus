@@ -69,14 +69,14 @@ public class ProteusBuilder {
         registerDefaults();
     }
 
-    public ProteusBuilder register(String type, TypeParser parser) {
-        TypeParser.AttributeSet attributeSet = parser.prepare(null);
+    public ProteusBuilder register(String type, ViewTypeParser parser) {
+        ViewTypeParser.AttributeSet attributeSet = parser.prepare(null);
         Proteus.Type t = new Proteus.Type(ID, type, parser, attributeSet);
         types.put(type, t);
         return this;
     }
 
-    public ProteusBuilder register(String type, TypeParser parser, String parent) {
+    public ProteusBuilder register(String type, ViewTypeParser parser, String parent) {
         Proteus.Type p = types.get(parent);
         if (null == p) {
             throw new IllegalStateException(parent + " is not a registered type parser");

@@ -37,7 +37,7 @@ public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater 
     @Nullable
     private Map<String, Layout> layouts;
 
-    protected DataAndViewParsingLayoutInflater(Map<String, TypeParser> parsers, Map<String, Formatter> formatter, @NonNull IdGenerator idGenerator) {
+    protected DataAndViewParsingLayoutInflater(Map<String, ViewTypeParser> parsers, Map<String, Formatter> formatter, @NonNull IdGenerator idGenerator) {
         super(parsers, formatter, idGenerator);
     }
 

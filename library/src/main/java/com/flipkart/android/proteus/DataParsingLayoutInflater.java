@@ -49,12 +49,12 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
 
     private static final String TAG = "ProteusLayoutInflater";
 
-    protected DataParsingLayoutInflater(Map<String, TypeParser> parsers, Map<String, Formatter> formatter, @NonNull IdGenerator idGenerator) {
+    protected DataParsingLayoutInflater(Map<String, ViewTypeParser> parsers, Map<String, Formatter> formatter, @NonNull IdGenerator idGenerator) {
         super(parsers, formatter, idGenerator);
     }
 
     @Override
-    protected ProteusViewManager createViewManager(TypeParser parser, View parent, Layout layout, JsonObject data, Styles styles, int index) {
+    protected ProteusViewManager createViewManager(ViewTypeParser parser, View parent, Layout layout, JsonObject data, Styles styles, int index) {
         ProteusViewManagerImpl viewManager = new ProteusViewManagerImpl();
         Scope scope, parentScope = null;
         Map<String, String> map = layout.scope;
@@ -91,7 +91,7 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     }
 
     @Override
-    public boolean handleAttribute(TypeParser parser, ProteusView view, int attribute, Value value) {
+    public boolean handleAttribute(ViewTypeParser parser, ProteusView view, int attribute, Value value) {
         String dataPath = isDataPath(value);
         if (dataPath != null) {
             value = this.findAndReturnValue(view, parser, value, dataPath, attribute);
@@ -99,7 +99,7 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
         return super.handleAttribute(parser, view, attribute, value);
     }
 
-    private Value findAndReturnValue(ProteusView view, TypeParser handler, Value value, String dataPath, int attribute) {
+    private Value findAndReturnValue(ProteusView view, ViewTypeParser handler, Value value, String dataPath, int attribute) {
 
         ProteusViewManager viewManager = view.getViewManager();
 

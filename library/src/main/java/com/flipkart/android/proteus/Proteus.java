@@ -48,12 +48,12 @@ public class Proteus {
     }
 
     @Nullable
-    public TypeParser.AttributeSet.Attribute getAttributeId(String name, String type) {
+    public ViewTypeParser.AttributeSet.Attribute getAttributeId(String name, String type) {
         return types.get(type).getAttributeId(name);
     }
 
-    private Map<String, TypeParser> map(Map<String, Type> types) {
-        Map<String, TypeParser> parsers = new HashMap<>();
+    private Map<String, ViewTypeParser> map(Map<String, Type> types) {
+        Map<String, ViewTypeParser> parsers = new HashMap<>();
         for (Map.Entry<String, Type> entry : types.entrySet()) {
             parsers.put(entry.getKey(), entry.getValue().parser);
         }
@@ -64,11 +64,11 @@ public class Proteus {
 
         public final int id;
         public final String type;
-        public final TypeParser parser;
+        public final ViewTypeParser parser;
 
-        private final TypeParser.AttributeSet attributes;
+        private final ViewTypeParser.AttributeSet attributes;
 
-        Type(int id, @NonNull String type, @NonNull TypeParser parser, @NonNull TypeParser.AttributeSet attributes) {
+        Type(int id, @NonNull String type, @NonNull ViewTypeParser parser, @NonNull ViewTypeParser.AttributeSet attributes) {
             this.id = id;
             this.type = type;
             this.parser = parser;
@@ -76,7 +76,7 @@ public class Proteus {
         }
 
         @Nullable
-        public TypeParser.AttributeSet.Attribute getAttributeId(String name) {
+        public ViewTypeParser.AttributeSet.Attribute getAttributeId(String name) {
             return attributes.getAttribute(name);
         }
     }

@@ -30,7 +30,7 @@ import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleResource;
-import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
@@ -46,7 +46,7 @@ import com.google.gson.JsonObject;
 
 import java.util.Iterator;
 
-public class ViewGroupParser<T extends ViewGroup> extends TypeParser<T> {
+public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
 
     private static final String LAYOUT_MODE_CLIP_BOUNDS = "clipBounds";
     private static final String LAYOUT_MODE_OPTICAL_BOUNDS = "opticalBounds";

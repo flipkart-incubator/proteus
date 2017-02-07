@@ -24,8 +24,8 @@ import android.view.ViewGroup;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -37,7 +37,7 @@ import com.google.gson.JsonObject;
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends TypeParser<T> {
+public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends ViewTypeParser<T> {
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {

@@ -24,8 +24,8 @@ import android.view.ViewGroup;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.demo.customviews.CircleView;
-import com.flipkart.android.proteus.TypeParser;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.google.gson.JsonObject;
@@ -36,7 +36,7 @@ import com.google.gson.JsonObject;
  * @author aditya.sharat
  */
 
-public class CircleViewParser extends TypeParser<CircleView> {
+public class CircleViewParser extends ViewTypeParser<CircleView> {
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {

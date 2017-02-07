@@ -24,7 +24,7 @@ import android.view.ViewGroup;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.TypeParser;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusHorizontalProgressBar;
 import com.flipkart.android.proteus.view.custom.HorizontalProgressBar;
@@ -35,7 +35,7 @@ import com.google.gson.JsonObject;
  *
  * @author Aditya Sharat
  */
-public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extends TypeParser<T> {
+public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extends ViewTypeParser<T> {
 
     @Override
     public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
