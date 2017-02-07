@@ -40,11 +40,23 @@ import com.flipkart.android.proteus.manager.ProteusViewManager;
 
 public class CircleView extends View implements ProteusView {
 
+    ProteusViewManager viewManager;
+    private String HEX_COLOR = "#45ba8a";
+    private Paint drawPaint;
+    private float radius;
+
+    public CircleView(Context context) {
+        super(context);
+        init();
+    }
+    public CircleView(final Context context, final AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
     public void setColor(String HEX_COLOR) {
         this.HEX_COLOR = HEX_COLOR;
     }
-
-    ProteusViewManager viewManager;
 
     @Override
     public ProteusViewManager getViewManager() {
@@ -54,20 +66,6 @@ public class CircleView extends View implements ProteusView {
     @Override
     public void setViewManager(ProteusViewManager viewManager) {
         this.viewManager = viewManager;
-    }
-
-    private String HEX_COLOR = "#45ba8a";
-    private Paint drawPaint;
-    private float radius;
-
-    public CircleView(Context context) {
-        super(context);
-        init();
-    }
-
-    public CircleView(final Context context, final AttributeSet attrs) {
-        super(context, attrs);
-        init();
     }
 
     private void init() {
@@ -102,4 +100,10 @@ public class CircleView extends View implements ProteusView {
             getViewTreeObserver().removeOnGlobalLayoutListener(listener);
         }
     }
+
+    @Override
+    public View getAsView() {
+        return this;
+    }
+
 }

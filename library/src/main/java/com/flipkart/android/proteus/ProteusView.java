@@ -19,6 +19,8 @@
 
 package com.flipkart.android.proteus;
 
+import android.view.View;
+
 import com.flipkart.android.proteus.manager.ProteusViewManager;
 
 /**
@@ -29,5 +31,7 @@ public interface ProteusView {
     ProteusViewManager getViewManager();
 
     void setViewManager(ProteusViewManager proteusViewManager);
+
+    View getAsView();
 
 }

@@ -23,6 +23,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
@@ -61,5 +62,10 @@ public class ProteusAndroidView extends android.view.View implements ProteusView
     @Override
     public void setViewManager(ProteusViewManager proteusViewManager) {
         this.viewManager = proteusViewManager;
+    }
+
+    @Override
+    public View getAsView() {
+        return this;
     }
 }
