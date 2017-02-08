@@ -21,12 +21,12 @@ package com.flipkart.android.proteus.processor;
 
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.toolbox.EventType;
-import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 
 /**
  * Use this as the base processor for handling events like OnClick , OnLongClick , OnTouch etc.
@@ -56,7 +56,7 @@ public abstract class EventProcessor<T> extends AttributeProcessor<T> {
      * This delegates Event with required attributes to client
      */
     public void fireEvent(ProteusView view, EventType eventType, Value parser) {
-        LayoutInflaterCallback callback = view.getViewManager().getProteusLayoutInflater().getCallback();
+        ProteusLayoutInflater.Callback callback = view.getViewManager().getProteusLayoutInflater().getCallback();
         if (null != callback) {
             callback.onEvent(view, eventType, parser);
         }

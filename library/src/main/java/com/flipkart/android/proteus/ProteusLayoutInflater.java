@@ -20,15 +20,19 @@
 package com.flipkart.android.proteus;
 
 import android.support.annotation.Nullable;
+import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
+import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
-import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.google.gson.JsonObject;
+
+import java.util.List;
 
 /**
  * @author kirankumar
@@ -95,14 +99,7 @@ public interface ProteusLayoutInflater {
     /**
      * @return The callback object used by this {@link ProteusLayoutInflater}
      */
-    LayoutInflaterCallback getCallback();
-
-    /**
-     *
-     * @param name
-     * @return
-     */
-    Formatter getFormatter(String name);
+    Callback getCallback();
 
     /**
      * Used to set a callback object to setBoolean unknown view types and unknown attributes and other
@@ -111,7 +108,13 @@ public interface ProteusLayoutInflater {
      *
      * @param listener The callback object.
      */
-    void setCallback(LayoutInflaterCallback listener);
+    void setCallback(Callback listener);
+
+    /**
+     * @param name
+     * @return
+     */
+    Formatter getFormatter(String name);
 
     /**
      * @return The helper object that is being used to setBoolean drawables that need to fetched from a
@@ -129,4 +132,47 @@ public interface ProteusLayoutInflater {
      */
     void setBitmapLoader(BitmapLoader bitmapLoader);
 
+    /**
+     * @author kiran.kumar
+     */
+    interface Callback {
+
+        /**
+         * called when the builder encounters a view type which it cannot understand.
+         */
+        @Nullable
+        ProteusView onUnknownViewType(String type, View parent, Layout layout, JsonObject data, Styles styles, int index);
+
+        /**
+         * @param type
+         * @param include
+         * @return Layout
+         */
+        Layout onLayoutRequired(String type, Layout include);
+
+        /**
+         * called when any click occurs on views
+         *
+         * @param view  The view that triggered the event
+         * @param value Value set to the event attribute
+         */
+        View onEvent(ProteusView view, EventType eventType, Value value);
+
+        /**
+         * @param parent
+         * @param children
+         * @param layout
+         * @return Adapter
+         */
+        PagerAdapter onPagerAdapterRequired(ProteusView parent, final List<ProteusView> children, Layout layout);
+
+        /**
+         * @param parent
+         * @param children
+         * @param layout
+         * @return Adapter
+         */
+        Adapter onAdapterRequired(ProteusView parent, final List<ProteusView> children, Layout layout);
+
+    }
 }

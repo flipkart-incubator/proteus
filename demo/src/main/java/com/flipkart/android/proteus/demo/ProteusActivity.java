@@ -38,6 +38,7 @@ import com.flipkart.android.proteus.DataAndViewParsingLayoutInflater;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
@@ -46,7 +47,6 @@ import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
-import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -114,15 +114,10 @@ public class ProteusActivity extends AppCompatActivity {
     };
 
     /**
-     * Implementation of LayoutInflaterCallback. This is where we get callbacks from proteus regarding
+     * Implementation of Callback. This is where we get callbacks from proteus regarding
      * errors and events.
      */
-    private LayoutInflaterCallback callback = new LayoutInflaterCallback() {
-
-        @Override
-        public void onUnknownAttribute(ProteusView view, int attribute, Value value) {
-
-        }
+    private ProteusLayoutInflater.Callback callback = new ProteusLayoutInflater.Callback() {
 
         @Nullable
         @Override
@@ -133,11 +128,6 @@ public class ProteusActivity extends AppCompatActivity {
         @Override
         public Layout onLayoutRequired(String type, Layout include) {
             return null;
-        }
-
-        @Override
-        public void onViewBuiltFromViewProvider(ProteusView view, View parent, String type, int index) {
-
         }
 
         @Override

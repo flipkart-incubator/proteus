@@ -30,7 +30,6 @@ import com.flipkart.android.proteus.manager.ProteusViewManagerImpl;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
-import com.flipkart.android.proteus.toolbox.LayoutInflaterCallback;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -51,7 +50,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     protected final Map<String, Formatter> formatter;
 
     @Nullable
-    protected LayoutInflaterCallback callback;
+    protected Callback callback;
 
     @Nullable
     private BitmapLoader bitmapLoader;
@@ -98,10 +97,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
             Layout.Attribute attribute;
             while (iterator.hasNext()) {
                 attribute = iterator.next();
-                boolean handled = handleAttribute(parser, view, attribute.id, attribute.value);
-                if (!handled) {
-                    onUnknownAttributeEncountered(view, attribute.id, attribute.value);
-                }
+                handleAttribute(parser, view, attribute.id, attribute.value);
             }
         }
 
@@ -145,12 +141,6 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return parser.handleAttribute(view.getAsView(), attribute, value);
     }
 
-    protected void onUnknownAttributeEncountered(ProteusView view, int attribute, Value value) {
-        if (callback != null) {
-            callback.onUnknownAttribute(view, attribute, value);
-        }
-    }
-
     @Nullable
     protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
         if (ProteusConstants.isLoggingEnabled()) {
@@ -187,12 +177,12 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     @Nullable
     @Override
-    public LayoutInflaterCallback getCallback() {
+    public Callback getCallback() {
         return callback;
     }
 
     @Override
-    public void setCallback(@Nullable LayoutInflaterCallback listener) {
+    public void setCallback(@Nullable Callback listener) {
         this.callback = listener;
     }
 

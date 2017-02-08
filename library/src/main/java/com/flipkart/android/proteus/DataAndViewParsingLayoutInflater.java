@@ -50,12 +50,6 @@ public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater 
         return null != layout ? layout : super.onIncludeLayout(type, include);
     }
 
-    private void onViewBuiltFromViewProvider(ProteusView view, String type, View parent, int childIndex) {
-        if (callback != null) {
-            callback.onViewBuiltFromViewProvider(view, parent, type, childIndex);
-        }
-    }
-
     public void setLayouts(Map<String, Layout> layouts) {
         this.layouts = layouts;
     }
