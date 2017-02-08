@@ -37,7 +37,7 @@ public class LayoutInflaterFactory {
     private final Map<String, ViewTypeParser> parsers;
     private final Map<String, Formatter> formatters;
 
-    public LayoutInflaterFactory(Map<String, ViewTypeParser> parsers, Map<String, Formatter> formatters) {
+    LayoutInflaterFactory(Map<String, ViewTypeParser> parsers, Map<String, Formatter> formatters) {
         this.parsers = parsers;
         this.formatters = formatters;
     }

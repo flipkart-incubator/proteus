@@ -180,7 +180,7 @@ public class ProteusActivity extends AppCompatActivity {
                 .register("CircleView", new CircleViewParser(), "View")
                 .build();
 
-        layoutInflater = proteus.factory.getDataAndViewParsingLayoutInflater();
+        layoutInflater = proteus.getFactory().getDataAndViewParsingLayoutInflater();
         layoutInflater.setCallback(callback);
         layoutInflater.setBitmapLoader(bitmapLoader);
 

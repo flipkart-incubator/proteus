@@ -21,6 +21,7 @@ package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.Size;
 
 import com.flipkart.android.proteus.toolbox.Formatter;
 
@@ -33,31 +34,38 @@ import java.util.Map;
  * @author aditya.sharat
  */
 
-public class Proteus {
+public final class Proteus {
 
-    public final LayoutInflaterFactory factory;
+    @NonNull
+    private final LayoutInflaterFactory factory;
+    @NonNull
     private final Map<String, Type> types;
 
-    Proteus(Map<String, Type> types, Map<String, Formatter> formatters) {
+    Proteus(@NonNull Map<String, Type> types, @NonNull Map<String, Formatter> formatters) {
         this.types = types;
         this.factory = new LayoutInflaterFactory(map(types), formatters);
     }
 
-    public boolean has(String type) {
+    public boolean has(@NonNull @Size(min = 1) String type) {
         return types.containsKey(type);
     }
 
     @Nullable
-    public ViewTypeParser.AttributeSet.Attribute getAttributeId(String name, String type) {
+    public ViewTypeParser.AttributeSet.Attribute getAttributeId(@NonNull @Size(min = 1) String name, @NonNull @Size(min = 1) String type) {
         return types.get(type).getAttributeId(name);
     }
 
     private Map<String, ViewTypeParser> map(Map<String, Type> types) {
-        Map<String, ViewTypeParser> parsers = new HashMap<>();
+        Map<String, ViewTypeParser> parsers = new HashMap<>(types.size());
         for (Map.Entry<String, Type> entry : types.entrySet()) {
             parsers.put(entry.getKey(), entry.getValue().parser);
         }
         return parsers;
+    }
+
+    @NonNull
+    public LayoutInflaterFactory getFactory() {
+        return factory;
     }
 
     static class Type {

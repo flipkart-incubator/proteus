@@ -142,7 +142,7 @@ public class ProteusActivity extends BaseActivity {
 
         Proteus proteus = new ProteusBuilder().build();
 
-        builder = proteus.factory.getDataAndViewParsingLayoutInflater();
+        builder = proteus.getFactory().getDataAndViewParsingLayoutInflater();
         builder.setCallback(callback);
         builder.setBitmapLoader(bitmapLoader);
 
