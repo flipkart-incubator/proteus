@@ -35,7 +35,6 @@ import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.demo.R;
-import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.DrawableCallback;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -92,7 +91,7 @@ public class ProteusActivity extends BaseActivity {
             return null;
         }
     };
-    private BitmapLoader bitmapLoader = new BitmapLoader() {
+    private ProteusLayoutInflater.ImageLoader bitmapLoader = new ProteusLayoutInflater.ImageLoader() {
         @Override
         public void getBitmap(final ProteusView view, final String imageUrl, final DrawableCallback callback) {
             URL url;
@@ -133,8 +132,6 @@ public class ProteusActivity extends BaseActivity {
         Proteus proteus = new ProteusBuilder().build();
 
         builder = proteus.getFactory().getDataAndViewParsingLayoutInflater();
-        builder.setCallback(callback);
-        builder.setBitmapLoader(bitmapLoader);
 
         container = new FrameLayout(ProteusActivity.this);
         layoutParams = new ViewGroup.LayoutParams(
@@ -146,7 +143,7 @@ public class ProteusActivity extends BaseActivity {
 
     @Override
     View createAndBindView() {
-        proteusView = builder.inflate(container, pageLayout, data, styles, 0);
+        proteusView = builder.inflate(container, pageLayout, data, styles, callback, bitmapLoader, 0);
         return (View) proteusView;
     }
 

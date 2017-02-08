@@ -20,7 +20,6 @@
 package com.flipkart.android.proteus.parser.custom;
 
 import android.os.Build;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.AttributeProcessor;
@@ -30,8 +29,8 @@ import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleResource;
-import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
@@ -52,7 +51,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     private static final String LAYOUT_MODE_OPTICAL_BOUNDS = "opticalBounds";
 
     @Override
-    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, ProteusLayoutInflater.Callback callback, ProteusLayoutInflater.ImageLoader loader, int index) {
         return new ProteusAspectRatioFrameLayout(parent.getContext());
     }
 
@@ -123,7 +122,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
             ProteusView child;
             Iterator<Value> iterator = children.getAsArray().iterator();
             while (iterator.hasNext()) {
-                child = layoutInflater.inflate((ViewGroup) view, iterator.next().getAsLayout(), data, styles, dataIndex);
+                child = layoutInflater.inflate((ViewGroup) view, iterator.next().getAsLayout(), data, styles, viewManager.getInflaterCallback(), viewManager.getImageLoader(), dataIndex);
                 addView(view, child);
             }
         } else if (children.isObject()) {
@@ -155,7 +154,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
 
         ProteusView child;
         for (int index = 0; index < length; index++) {
-            child = layoutInflater.inflate((ViewGroup) parent, childLayout, data, styles, index);
+            child = layoutInflater.inflate((ViewGroup) parent, childLayout, data, styles, viewManager.getInflaterCallback(), viewManager.getImageLoader(), index);
             if (child != null) {
                 this.addView(parent, child);
             }

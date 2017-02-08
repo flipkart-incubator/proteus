@@ -27,12 +27,12 @@ import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.DrawableValue;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.toolbox.BitmapLoader;
 
 /**
  * Use this as the base processor for references like @drawable or remote resources with http:// urls.
@@ -77,7 +77,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         if (value.isDrawable()) {
             DrawableValue d = value.getAsDrawable();
             if (null != d) {
-                BitmapLoader loader = ((ProteusView) view).getViewManager().getProteusLayoutInflater().getBitmapLoader();
+                ProteusLayoutInflater.ImageLoader loader = ((ProteusView) view).getViewManager().getImageLoader();
                 d.apply((ProteusView) view, view.getContext(), loader, new DrawableValue.Callback() {
                     @Override
                     public void apply(Drawable drawable) {

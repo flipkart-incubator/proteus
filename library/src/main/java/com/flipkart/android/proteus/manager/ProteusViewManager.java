@@ -56,6 +56,16 @@ public interface ProteusViewManager {
 
     void setProteusLayoutInflater(ProteusLayoutInflater proteusLayoutInflater);
 
+    @Nullable
+    ProteusLayoutInflater.Callback getInflaterCallback();
+
+    void setInflaterCallback(@Nullable ProteusLayoutInflater.Callback callback);
+
+    @Nullable
+    ProteusLayoutInflater.ImageLoader getImageLoader();
+
+    void setImageLoader(@Nullable ProteusLayoutInflater.ImageLoader loader);
+
     ViewTypeParser getTypeParser();
 
     void setTypeParser(ViewTypeParser parser);

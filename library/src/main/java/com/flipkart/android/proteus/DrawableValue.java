@@ -37,7 +37,6 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
-import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.DrawableCallback;
 
 import java.util.ArrayList;
@@ -102,7 +101,7 @@ public abstract class DrawableValue extends Value {
         }
     }
 
-    public abstract void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback);
+    public abstract void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, Callback callback);
 
     @Override
     Value copy() {
@@ -130,7 +129,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
+        public void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, Callback callback) {
             Drawable drawable = new ColorDrawable(ColorResourceProcessor.evaluate(color, view).color);
             callback.apply(drawable);
         }
@@ -217,7 +216,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
+        public void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, Callback callback) {
             GradientDrawable drawable = null != gradient ? gradient.init(view) : new GradientDrawable();
             if (-1 != shape) {
                 drawable.setShape(shape);
@@ -255,7 +254,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
+        public void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, Callback callback) {
             final Drawable[] drawables = new Drawable[layers.length];
             int index = 0;
             for (Value layer : layers) {
@@ -294,7 +293,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
+        public void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, Callback callback) {
             final StateListDrawable stateListDrawable = new StateListDrawable();
             for (final Pair<int[], Value> layer : states) {
                 stateListDrawable.addState(layer.first, DrawableResourceProcessor.evaluate(layer.second, view));
@@ -322,7 +321,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
+        public void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, Callback callback) {
             final LevelListDrawable levelListDrawable = new LevelListDrawable();
             for (Level level : levels) {
                 level.apply(view, levelListDrawable);
@@ -391,7 +390,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
+        public void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, Callback callback) {
             ColorStateList colorStateList;
             Drawable contentDrawable = null;
             Drawable maskDrawable = null;
@@ -453,7 +452,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(ProteusView view, Context context, BitmapLoader loader, final Callback callback) {
+        public void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, final Callback callback) {
             loader.getBitmap(view, url, new DrawableCallback(view.getAsView().getContext()) {
                 @Override
                 protected void apply(@NonNull Drawable drawable) {

@@ -25,9 +25,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 
-import com.flipkart.android.proteus.toolbox.BitmapLoader;
+import com.flipkart.android.proteus.toolbox.DrawableCallback;
 import com.flipkart.android.proteus.toolbox.EventType;
-import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.google.gson.JsonObject;
@@ -62,14 +61,26 @@ public interface ProteusLayoutInflater {
     /**
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
      *
-     * @param parent The intended parent view for the {@link View} that will be built.
-     * @param layout The {@link Layout} which defines the layout for the {@link View} to be built.
-     * @param data   The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
-     * @param styles The styles to be applied to the view.
-     * @param index  The index of this view in its parent. Pass 0 if it has no parent.
-     * @return A {@link ProteusView} with the built view, an array of its children and optionally its bindings.
+     * @param parent   The intended parent view for the {@link View} that will be built.
+     * @param layout   The {@link Layout} which defines the layout for the {@link View} to be built.
+     * @param data     The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
+     * @param styles   The styles to be applied to the view.
+     * @param callback The {@link Callback} for the inflater
+     * @param loader   The {@link ImageLoader} for the inflater
+     * @param index    The index of this view in its parent. Pass 0 if it has no parent.
+     * @return An native android view
      */
-    ProteusView inflate(ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index);
+    ProteusView inflate(ViewGroup parent, Layout layout, JsonObject data, Styles styles, @Nullable Callback callback, @Nullable ImageLoader loader, int index);
+
+    /**
+     *
+     * @param callback
+     * @param type
+     * @param include
+     * @return The required layout.
+     */
+    @Nullable
+    Layout getLayout(@Nullable Callback callback, String type, Layout include);
 
     /**
      * Give the View ID for this string. This will generally be given by the instance of ID Generator
@@ -81,14 +92,6 @@ public interface ProteusLayoutInflater {
     int getUniqueViewId(String id);
 
     /**
-     * @param type
-     * @param include
-     * @return
-     */
-    @Nullable
-    Layout onIncludeLayout(String type, Layout include);
-
-    /**
      * All consumers of this should ensure that they save the instance state of the ID generator along with the activity/
      * fragment and resume it when the Layout Builder is being re-initialized
      *
@@ -97,43 +100,7 @@ public interface ProteusLayoutInflater {
     IdGenerator getIdGenerator();
 
     /**
-     * @return The callback object used by this {@link ProteusLayoutInflater}
-     */
-    Callback getCallback();
-
-    /**
-     * Used to set a callback object to setBoolean unknown view types and unknown attributes and other
-     * exceptions. This callback is also used for requesting {@link android.support.v4.view.PagerAdapter}s
-     * and {@link android.widget.Adapter}s
-     *
-     * @param listener The callback object.
-     */
-    void setCallback(Callback listener);
-
-    /**
-     * @param name
-     * @return
-     */
-    Formatter getFormatter(String name);
-
-    /**
-     * @return The helper object that is being used to setBoolean drawables that need to fetched from a
-     * network.
-     */
-    BitmapLoader getBitmapLoader();
-
-    /**
-     * All network bitmap calls will be handed over to this loader. This method is used to
-     * set the {@link com.flipkart.android.proteus.toolbox.BitmapLoader} for the
-     * {@link ProteusLayoutInflater}
-     *
-     * @param bitmapLoader {@link com.flipkart.android.proteus.toolbox.BitmapLoader} to use for
-     *                     loading images.
-     */
-    void setBitmapLoader(BitmapLoader bitmapLoader);
-
-    /**
-     * @author kiran.kumar
+     * The Layout Inflaters callback interface
      */
     interface Callback {
 
@@ -174,5 +141,18 @@ public interface ProteusLayoutInflater {
          */
         Adapter onAdapterRequired(ProteusView parent, final List<ProteusView> children, Layout layout);
 
+    }
+
+    /**
+     * Used for loading drawables/images/bitmaps asynchronously
+     */
+    interface ImageLoader {
+        /**
+         * Useful for asynchronous download of bitmap.
+         *
+         * @param url      the url for the drawable/bitmap/image
+         * @param callback the callback to set the drawable/bitmap
+         */
+        void getBitmap(ProteusView view, String url, DrawableCallback callback);
     }
 }

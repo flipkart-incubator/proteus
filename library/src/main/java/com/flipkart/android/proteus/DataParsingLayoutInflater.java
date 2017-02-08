@@ -54,7 +54,7 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
     }
 
     @Override
-    protected ProteusViewManager createViewManager(ViewTypeParser parser, View parent, Layout layout, JsonObject data, Styles styles, int index) {
+    protected ProteusViewManager createViewManager(ViewTypeParser parser, View parent, Layout layout, JsonObject data, Styles styles, Callback callback, ImageLoader loader, int index) {
         ProteusViewManagerImpl viewManager = new ProteusViewManagerImpl();
         Scope scope, parentScope = null;
         Map<String, String> map = layout.scope;
@@ -85,6 +85,8 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
         viewManager.setScope(scope);
         viewManager.setStyles(styles);
         viewManager.setProteusLayoutInflater(this);
+        viewManager.setInflaterCallback(callback);
+        viewManager.setImageLoader(loader);
         viewManager.setTypeParser(parser);
 
         return viewManager;

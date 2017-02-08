@@ -56,7 +56,7 @@ public abstract class EventProcessor<T> extends AttributeProcessor<T> {
      * This delegates Event with required attributes to client
      */
     public void fireEvent(ProteusView view, EventType eventType, Value parser) {
-        ProteusLayoutInflater.Callback callback = view.getViewManager().getProteusLayoutInflater().getCallback();
+        ProteusLayoutInflater.Callback callback = view.getViewManager().getInflaterCallback();
         if (null != callback) {
             callback.onEvent(view, eventType, parser);
         }

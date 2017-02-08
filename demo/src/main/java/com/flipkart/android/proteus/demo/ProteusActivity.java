@@ -44,7 +44,6 @@ import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
-import com.flipkart.android.proteus.toolbox.BitmapLoader;
 import com.flipkart.android.proteus.toolbox.DrawableCallback;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -81,9 +80,9 @@ public class ProteusActivity extends AppCompatActivity {
     private Map<String, Layout> layouts;
 
     /**
-     * Simple implementation of BitmapLoader for loading images from url in background.
+     * Simple implementation of ImageLoader for loading images from url in background.
      */
-    private BitmapLoader bitmapLoader = new BitmapLoader() {
+    private ProteusLayoutInflater.ImageLoader loader = new ProteusLayoutInflater.ImageLoader() {
         @Override
         public void getBitmap(ProteusView view, String url, final DrawableCallback callback) {
             URL _url;
@@ -171,8 +170,6 @@ public class ProteusActivity extends AppCompatActivity {
                 .build();
 
         layoutInflater = proteus.getFactory().getDataAndViewParsingLayoutInflater();
-        layoutInflater.setCallback(callback);
-        layoutInflater.setBitmapLoader(bitmapLoader);
 
         ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setProteus(proteus);
 
@@ -209,7 +206,7 @@ public class ProteusActivity extends AppCompatActivity {
     private void render() {
         // Inflate a new view using proteus
         long start = System.currentTimeMillis();
-        ProteusView view = layoutInflater.inflate(container, layout, data, styles, 0);
+        ProteusView view = layoutInflater.inflate(container, layout, data, styles, callback, loader, 0);
         System.out.println(System.currentTimeMillis() - start);
         container.addView((View) view);
     }

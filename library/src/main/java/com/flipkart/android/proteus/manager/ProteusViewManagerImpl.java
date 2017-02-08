@@ -19,6 +19,7 @@
 
 package com.flipkart.android.proteus.manager;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
@@ -54,6 +55,10 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     private Styles styles;
     private Scope scope;
     private ProteusLayoutInflater proteusLayoutInflater;
+    @Nullable
+    private ProteusLayoutInflater.Callback callback;
+    @Nullable
+    private ProteusLayoutInflater.ImageLoader loader;
     private ViewTypeParser parser;
     private OnUpdateDataListener onUpdateDataListener;
     private String dataPathForChildren;
@@ -157,7 +162,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                     ((ProteusView) child).getViewManager().update(data);
                 }
             } else if (childLayout != null) {
-                childView = proteusLayoutInflater.inflate(parent, getLayout(), data, styles, scope.getIndex());
+                childView = proteusLayoutInflater.inflate(parent, getLayout(), data, styles, callback, loader, scope.getIndex());
                 parser.addView((ProteusView) view, childView);
             }
         }
@@ -201,12 +206,35 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         }
     }
 
+    @NonNull
     public ProteusLayoutInflater getProteusLayoutInflater() {
         return proteusLayoutInflater;
     }
 
-    public void setProteusLayoutInflater(ProteusLayoutInflater proteusLayoutInflater) {
+    public void setProteusLayoutInflater(@NonNull ProteusLayoutInflater proteusLayoutInflater) {
         this.proteusLayoutInflater = proteusLayoutInflater;
+    }
+
+    @Override
+    @Nullable
+    public ProteusLayoutInflater.Callback getInflaterCallback() {
+        return this.callback;
+    }
+
+    @Override
+    public void setInflaterCallback(@Nullable ProteusLayoutInflater.Callback callback) {
+        this.callback = callback;
+    }
+
+    @Override
+    @Nullable
+    public ProteusLayoutInflater.ImageLoader getImageLoader() {
+        return this.loader;
+    }
+
+    @Override
+    public void setImageLoader(@Nullable ProteusLayoutInflater.ImageLoader loader) {
+        this.loader = loader;
     }
 
     public ViewTypeParser getTypeParser() {

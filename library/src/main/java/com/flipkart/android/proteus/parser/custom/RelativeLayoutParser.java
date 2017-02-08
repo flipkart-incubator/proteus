@@ -39,7 +39,7 @@ import com.google.gson.JsonObject;
 public class RelativeLayoutParser<T extends RelativeLayout> extends ViewTypeParser<T> {
 
     @Override
-    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, ProteusLayoutInflater.Callback callback, ProteusLayoutInflater.ImageLoader loader, int index) {
         return new ProteusRelativeLayout(parent.getContext());
     }
 
