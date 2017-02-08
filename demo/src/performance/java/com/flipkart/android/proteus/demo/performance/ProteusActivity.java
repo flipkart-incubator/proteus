@@ -36,8 +36,8 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.demo.R;
 import com.flipkart.android.proteus.toolbox.BitmapLoader;
+import com.flipkart.android.proteus.toolbox.DrawableCallback;
 import com.flipkart.android.proteus.toolbox.EventType;
-import com.flipkart.android.proteus.toolbox.ImageLoaderCallback;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -94,7 +94,7 @@ public class ProteusActivity extends BaseActivity {
     };
     private BitmapLoader bitmapLoader = new BitmapLoader() {
         @Override
-        public void getBitmap(ProteusView view, String imageUrl, final ImageLoaderCallback callback) {
+        public void getBitmap(final ProteusView view, final String imageUrl, final DrawableCallback callback) {
             URL url;
             try {
                 url = new URL(imageUrl);
@@ -115,7 +115,7 @@ public class ProteusActivity extends BaseActivity {
                 }
 
                 protected void onPostExecute(Bitmap result) {
-                    callback.onResponse(result);
+                    callback.setBitmap(result);
                 }
             }.execute(url);
         }

@@ -19,14 +19,13 @@
 
 package com.flipkart.android.proteus.toolbox;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
-import android.view.View;
-
-import com.flipkart.android.proteus.ProteusView;
 
 /**
  * DrawableCallback
@@ -35,30 +34,24 @@ import com.flipkart.android.proteus.ProteusView;
  */
 public abstract class DrawableCallback {
 
-    public DrawableCallback(final ProteusView view, final String url, BitmapLoader loader) {
-        loader.getBitmap(view, url, new ImageLoaderCallback() {
-            @Override
-            public void onResponse(Bitmap bitmap) {
-                if (bitmap == null) {
-                    return;
-                }
-                onDrawableLoad(url, convertBitmapToDrawable(bitmap, (View) view));
-            }
+    @NonNull
+    private final Context context;
 
-            @Override
-            public void onErrorReceived(String errorMessage, Drawable errorDrawable) {
-                onDrawableError(url, errorMessage, errorDrawable);
-            }
-        });
+    protected DrawableCallback(@NonNull Context context) {
+        this.context = context;
     }
 
-    public abstract void onDrawableLoad(String url, Drawable drawable);
+    public void setBitmap(@NonNull Bitmap bitmap) {
+        apply(convertBitmapToDrawable(bitmap));
+    }
 
-    public abstract void onDrawableError(String url, String reason, Drawable error);
+    public void setDrawable(@NonNull Drawable drawable) {
+        apply(drawable);
+    }
 
-    private Drawable convertBitmapToDrawable(Bitmap original, View view) {
+    private Drawable convertBitmapToDrawable(Bitmap original) {
 
-        DisplayMetrics displayMetrics = view.getContext().getResources().getDisplayMetrics();
+        DisplayMetrics displayMetrics = this.context.getResources().getDisplayMetrics();
         int width = original.getWidth();
         int height = original.getHeight();
 
@@ -69,7 +62,8 @@ public abstract class DrawableCallback {
 
         Bitmap resizedBitmap = Bitmap.createBitmap(original, 0, 0, width, height, matrix, true);
 
-        return new BitmapDrawable(view.getContext().getResources(), resizedBitmap);
+        return new BitmapDrawable(this.context.getResources(), resizedBitmap);
     }
 
+    protected abstract void apply(@NonNull Drawable drawable);
 }

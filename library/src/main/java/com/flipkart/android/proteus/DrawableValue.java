@@ -29,6 +29,7 @@ import android.graphics.drawable.LevelListDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Pair;
 
@@ -101,7 +102,7 @@ public abstract class DrawableValue extends Value {
         }
     }
 
-    public abstract void apply(Context context, Callback callback, BitmapLoader loader, ProteusView view);
+    public abstract void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback);
 
     @Override
     Value copy() {
@@ -129,7 +130,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(Context context, Callback callback, BitmapLoader loader, ProteusView view) {
+        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
             Drawable drawable = new ColorDrawable(ColorResourceProcessor.evaluate(color, view).color);
             callback.apply(drawable);
         }
@@ -216,7 +217,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(Context context, Callback callback, BitmapLoader loader, ProteusView view) {
+        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
             GradientDrawable drawable = null != gradient ? gradient.init(view) : new GradientDrawable();
             if (-1 != shape) {
                 drawable.setShape(shape);
@@ -254,7 +255,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(Context context, Callback callback, BitmapLoader loader, ProteusView view) {
+        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
             final Drawable[] drawables = new Drawable[layers.length];
             int index = 0;
             for (Value layer : layers) {
@@ -293,7 +294,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(Context context, Callback callback, BitmapLoader loader, ProteusView view) {
+        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
             final StateListDrawable stateListDrawable = new StateListDrawable();
             for (final Pair<int[], Value> layer : states) {
                 stateListDrawable.addState(layer.first, DrawableResourceProcessor.evaluate(layer.second, view));
@@ -321,7 +322,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(Context context, Callback callback, BitmapLoader loader, ProteusView view) {
+        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
             final LevelListDrawable levelListDrawable = new LevelListDrawable();
             for (Level level : levels) {
                 level.apply(view, levelListDrawable);
@@ -390,7 +391,7 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(Context context, Callback callback, BitmapLoader loader, ProteusView view) {
+        public void apply(ProteusView view, Context context, BitmapLoader loader, Callback callback) {
             ColorStateList colorStateList;
             Drawable contentDrawable = null;
             Drawable maskDrawable = null;
@@ -452,19 +453,13 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(Context context, final Callback callback, BitmapLoader loader, ProteusView view) {
-            new DrawableCallback(view, url, loader) {
-
+        public void apply(ProteusView view, Context context, BitmapLoader loader, final Callback callback) {
+            loader.getBitmap(view, url, new DrawableCallback(view.getAsView().getContext()) {
                 @Override
-                public void onDrawableLoad(String url, final Drawable drawable) {
+                protected void apply(@NonNull Drawable drawable) {
                     callback.apply(drawable);
                 }
-
-                @Override
-                public void onDrawableError(String url, String reason, Drawable errorDrawable) {
-                    callback.apply(errorDrawable);
-                }
-            };
+            });
         }
     }
 

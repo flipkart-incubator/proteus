@@ -27,8 +27,8 @@ import com.flipkart.android.proteus.ProteusView;
 public interface BitmapLoader {
     /**
      * Useful for asynchronous download of bitmap.
-     *  @param url
+     * @param url
      * @param callback
      */
-    void getBitmap(ProteusView view, String url, ImageLoaderCallback callback);
+    void getBitmap(ProteusView view, String url, DrawableCallback callback);
 }
