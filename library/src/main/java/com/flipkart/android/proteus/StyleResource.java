@@ -55,9 +55,9 @@ public class StyleResource extends Value {
         if (!ParseHelper.isStyleAttribute(value)) {
             throw new IllegalArgumentException(value + " is not a valid style attribute");
         }
-        String[] dimenArr = value.substring(1, value.length()).split(":");
-        String style = dimenArr[0];
-        String attr = dimenArr[1];
+        String[] tokens = value.substring(1, value.length()).split(":");
+        String style = tokens[0];
+        String attr = tokens[1];
         Integer styleId = styleMap.get(style);
         if (styleId == null) {
             styleId = R.style.class.getField(style).getInt(null);
