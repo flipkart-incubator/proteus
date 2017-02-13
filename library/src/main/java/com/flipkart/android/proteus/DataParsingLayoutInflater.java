@@ -21,8 +21,6 @@ package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.flipkart.android.proteus.manager.ProteusViewManager;
@@ -30,17 +28,12 @@ import com.flipkart.android.proteus.manager.ProteusViewManagerImpl;
 import com.flipkart.android.proteus.toolbox.Binding;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
-import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.util.Map;
-import java.util.regex.Matcher;
 
 /**
  * A layout builder which can parse data bindings before passing it on to {@link SimpleLayoutInflater}
@@ -95,99 +88,10 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
 
     @Override
     public boolean handleAttribute(ViewTypeParser parser, ProteusView view, int attribute, Value value) {
-        String dataPath = isDataPath(value);
-        if (dataPath != null) {
-            value = this.findAndReturnValue(view, parser, value, dataPath, attribute);
+        if (value.isBinding()) {
+            addBinding(view.getViewManager(), "", attribute, "", true);
         }
         return super.handleAttribute(parser, view, attribute, value);
-    }
-
-    private Value findAndReturnValue(ProteusView view, ViewTypeParser handler, Value value, String dataPath, int attribute) {
-
-        ProteusViewManager viewManager = view.getViewManager();
-
-        if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "Find '" + dataPath + "' for " + attribute + " for view with " + viewManager.getLayout());
-        }
-
-        char firstChar = TextUtils.isEmpty(dataPath) ? 0 : dataPath.charAt(0);
-        Result result;
-        switch (firstChar) {
-            case ProteusConstants.DATA_PREFIX:
-                JsonElement elementFromData;
-                dataPath = dataPath.substring(1);
-                result = Utils.readJson(dataPath, viewManager.getScope().getData(), viewManager.getScope().getIndex());
-
-                if (result.isSuccess()) {
-                    elementFromData = result.element;
-                } else {
-                    elementFromData = new JsonPrimitive(ProteusConstants.DATA_NULL);
-                }
-
-                if (elementFromData != null) {
-                    value = value.create(elementFromData);
-                }
-                addBinding(viewManager, dataPath, attribute, dataPath, false);
-                break;
-            case ProteusConstants.REGEX_PREFIX:
-                Matcher regexMatcher = ProteusConstants.REGEX_PATTERN.matcher(dataPath);
-                String finalValue = dataPath;
-                while (regexMatcher.find()) {
-                    String matchedString = regexMatcher.group(0);
-                    String bindingName;
-                    if (regexMatcher.group(3) != null) {
-
-                        // has NO formatter
-                        dataPath = regexMatcher.group(3);
-                        result = Utils.readJson(dataPath, viewManager.getScope().getData(), viewManager.getScope().getIndex());
-                        if (result.isSuccess() && null != result.element) {
-                            finalValue = finalValue.replace(matchedString, result.element.getAsString());
-                        } else {
-                            finalValue = dataPath;
-                        }
-                        bindingName = dataPath;
-                    } else {
-
-                        // has formatter
-                        dataPath = regexMatcher.group(1);
-                        String formatterName = regexMatcher.group(2);
-
-                        String formattedValue;
-                        result = Utils.readJson(dataPath, viewManager.getScope().getData(), viewManager.getScope().getIndex());
-                        if (result.isSuccess() && null != result.element) {
-                            formattedValue = format(result.element, formatterName);
-                        } else {
-                            formattedValue = dataPath;
-                        }
-
-                        finalValue = finalValue.replace(matchedString, formattedValue != null ? formattedValue : "");
-                        bindingName = dataPath;
-                    }
-                    addBinding(viewManager, bindingName, attribute, dataPath, true);
-                }
-
-                // remove the REGEX_PREFIX
-                finalValue = finalValue.substring(1);
-
-                // return as a Value
-                value = value.create(finalValue);
-
-                break;
-        }
-
-        return value;
-    }
-
-    @Nullable
-    public String isDataPath(Value value) {
-        if (!value.isPrimitive()) {
-            return null;
-        }
-        String attributeValue = value.getAsString();
-        if (attributeValue != null && !"".equals(attributeValue) && (attributeValue.charAt(0) == ProteusConstants.DATA_PREFIX || attributeValue.charAt(0) == ProteusConstants.REGEX_PREFIX)) {
-            return attributeValue;
-        }
-        return null;
     }
 
     private void addBinding(ProteusViewManager viewManager, String bindingName, int attributeId, String attributeValue, boolean hasRegEx) {
