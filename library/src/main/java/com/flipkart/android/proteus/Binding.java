@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 /**
  * Binding
  *
- * @author aditya.sharat
+ * @author adityasharat
  */
 public class Binding extends Value {
 
@@ -61,41 +61,11 @@ public class Binding extends Value {
     }
 
     /**
-     * @param index
-     * @return
-     * @throws IndexOutOfBoundsException
-     */
-    public Expression getExpression(int index) {
-        return expressions[index];
-    }
-
-    /**
-     * @param data
-     * @param index
-     * @return
-     */
-    public Value evaluate(JsonElement data, int index) {
-        Value empty = StringAttributeProcessor.EMPTY;
-        Result result;
-        if (expressions.length == 1) {
-            result = expressions[0].evaluate(data, index);
-            return result.isSuccess() ? Value.fromJson(result.element) : empty;
-        } else {
-            String[] variables = new String[expressions.length];
-            for (int i = 0; i < expressions.length; i++) {
-                result = expressions[i].evaluate(data, index);
-                variables[i] = result.isSuccess() ? result.element.toString() : "";
-            }
-            return new Primitive(String.format(template, (Object[]) variables));
-        }
-    }
-
-    /**
      * @param value
      * @return
      */
     public static boolean isBindingValue(final String value) {
-        return value.charAt(0) == BINDING_PREFIX;
+        return !value.isEmpty() && value.charAt(0) == BINDING_PREFIX;
     }
 
     /**
@@ -136,10 +106,33 @@ public class Binding extends Value {
     }
 
     /**
-     *
+     * @param index
+     * @return
+     * @throws IndexOutOfBoundsException
      */
-    private static class BindingCache {
-        private static final LruCache<String, Binding> cache = new LruCache<>(64);
+    public Expression getExpression(int index) {
+        return expressions[index];
+    }
+
+    /**
+     * @param data
+     * @param index
+     * @return
+     */
+    public Value evaluate(JsonElement data, int index) {
+        Value empty = StringAttributeProcessor.EMPTY;
+        Result result;
+        if (expressions.length == 1) {
+            result = expressions[0].evaluate(data, index);
+            return result.isSuccess() ? Value.fromJson(result.element) : empty;
+        } else {
+            String[] variables = new String[expressions.length];
+            for (int i = 0; i < expressions.length; i++) {
+                result = expressions[i].evaluate(data, index);
+                variables[i] = result.isSuccess() ? result.element.toString() : "";
+            }
+            return new Primitive(String.format(template, (Object[]) variables));
+        }
     }
 
     @Override
@@ -150,16 +143,43 @@ public class Binding extends Value {
     /**
      *
      */
-    public static class Expression {
+    private static class BindingCache {
+        private static final LruCache<String, Binding> cache = new LruCache<>(64);
+    }
 
-        private final String[] tokens;
+    /**
+     *
+     */
+    public static class Expression {
 
         @Nullable
         public final String formatter;
+        private final String[] tokens;
 
         private Expression(String[] tokens, @Nullable String formatter) {
             this.tokens = tokens;
             this.formatter = formatter;
+        }
+
+        /**
+         * @param path
+         * @param formatter
+         * @return
+         */
+        public static Expression valueOf(String path, @Nullable String formatter) {
+            String key = path + (null == formatter ? "" : '$' + formatter);
+            Expression expression = ExpressionCache.cache.get(key);
+            if (null == expression) {
+                StringTokenizer tokenizer = new StringTokenizer(path, DATA_PATH_DELIMITERS);
+                String[] tokens = new String[0];
+                while (tokenizer.hasMoreTokens()) {
+                    tokens = Arrays.copyOf(tokens, tokens.length + 1);
+                    tokens[tokens.length - 1] = tokenizer.nextToken();
+                }
+                expression = new Expression(tokens, formatter);
+                ExpressionCache.cache.put(key, expression);
+            }
+            return expression;
         }
 
         /**
@@ -241,27 +261,6 @@ public class Binding extends Value {
                 }
                 return Result.success(elementToReturn);
             }
-        }
-
-        /**
-         * @param path
-         * @param formatter
-         * @return
-         */
-        public static Expression valueOf(String path, @Nullable String formatter) {
-            String key = path + (null == formatter ? "" : '$' + formatter);
-            Expression expression = ExpressionCache.cache.get(key);
-            if (null == expression) {
-                StringTokenizer tokenizer = new StringTokenizer(path, DATA_PATH_DELIMITERS);
-                String[] tokens = new String[0];
-                while (tokenizer.hasMoreTokens()) {
-                    tokens = Arrays.copyOf(tokens, tokens.length + 1);
-                    tokens[tokens.length - 1] = tokenizer.nextToken();
-                }
-                expression = new Expression(tokens, formatter);
-                ExpressionCache.cache.put(key, expression);
-            }
-            return expression;
         }
 
         /**

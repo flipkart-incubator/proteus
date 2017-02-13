@@ -106,7 +106,7 @@ public abstract class Value {
     /**
      * @return
      */
-    public boolean isStyle() {
+    public boolean isStyleResource() {
         return this instanceof StyleResource;
     }
 
@@ -115,6 +115,13 @@ public abstract class Value {
      */
     public boolean isColor() {
         return this instanceof Color;
+    }
+
+    /**
+     * @return
+     */
+    public boolean isAttributeResource() {
+        return this instanceof AttributeResource;
     }
 
     /**
@@ -227,10 +234,20 @@ public abstract class Value {
      * @return
      */
     public StyleResource getAsStyleResource() {
-        if (isStyle()) {
+        if (isStyleResource()) {
             return (StyleResource) this;
         }
         throw new IllegalStateException("Not a StyleResource: " + this);
+    }
+
+    /**
+     * @return
+     */
+    public AttributeResource getAsAttributeResource() {
+        if (isAttributeResource()) {
+            return (AttributeResource) this;
+        }
+        throw new IllegalStateException("Not a Resource: " + this);
     }
 
     /**

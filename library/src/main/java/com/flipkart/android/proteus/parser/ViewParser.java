@@ -35,6 +35,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.AttributeResource;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
@@ -305,6 +306,13 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 Integer visibility = resource.getInteger(view.getContext());
                 //noinspection WrongConstant
                 view.setVisibility(null != visibility ? visibility : View.GONE);
+            }
+
+            @Override
+            public void handleAttributeResource(V view, AttributeResource attribute) {
+                TypedArray a = attribute.apply(view.getContext());
+                //noinspection WrongConstant
+                view.setVisibility(a.getInt(0, View.GONE));
             }
 
             @Override

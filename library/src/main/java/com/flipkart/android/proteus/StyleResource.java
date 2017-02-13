@@ -90,7 +90,7 @@ public class StyleResource extends Value {
     }
 
     public TypedArray apply(Context context) {
-        return context.getTheme().obtainStyledAttributes(styleId, new int[]{attributeId});
+        return context.obtainStyledAttributes(styleId, new int[]{attributeId});
     }
 
     @Override

@@ -25,6 +25,7 @@ import android.content.res.TypedArray;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.AttributeResource;
 import com.flipkart.android.proteus.Color;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
@@ -94,8 +95,18 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
     }
 
     @Override
+    public void handleAttributeResource(V view, AttributeResource attribute) {
+        TypedArray a = attribute.apply(view.getContext());
+        set(view, a);
+    }
+
+    @Override
     public void handleStyleResource(V view, StyleResource style) {
         TypedArray a = style.apply(view.getContext());
+        set(view, a);
+    }
+
+    private void set(V view, TypedArray a) {
         ColorStateList colors = a.getColorStateList(0);
         if (null != colors) {
             setColor(view, colors);

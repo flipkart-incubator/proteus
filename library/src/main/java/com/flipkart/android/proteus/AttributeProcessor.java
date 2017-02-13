@@ -37,7 +37,9 @@ public abstract class AttributeProcessor<V> {
             handleValue(view, resolved);
         } else if (value.isResource()) {
             handleResource(view, value.getAsResource());
-        } else if (value.isStyle()) {
+        } else if (value.isAttributeResource()) {
+            handleAttributeResource(view, value.getAsAttributeResource());
+        } else if (value.isStyleResource()) {
             handleStyleResource(view, value.getAsStyleResource());
         } else {
             handleValue(view, value);
@@ -48,7 +50,21 @@ public abstract class AttributeProcessor<V> {
 
     public abstract void handleResource(V view, Resource resource);
 
+    public abstract void handleAttributeResource(V view, AttributeResource attribute);
+
     public abstract void handleStyleResource(V view, StyleResource style);
+
+    public Value precompile(Value value, Context context) {
+        if (value.isPrimitive()) {
+            String string = value.getAsString();
+            if (Binding.isBindingValue(string)) {
+                return Binding.valueOf(string);
+            } else if (true) {
+
+            }
+        }
+        return compile(value, context);
+    }
 
     public Value compile(Value value, Context context) {
         return value;

@@ -25,6 +25,7 @@ import android.content.res.TypedArray;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.AttributeResource;
 import com.flipkart.android.proteus.Dimension;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
@@ -83,6 +84,12 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
     public void handleResource(T view, Resource resource) {
         Float dimension = resource.getDimension(view.getContext());
         setDimension(view, null == dimension ? 0 : dimension);
+    }
+
+    @Override
+    public void handleAttributeResource(T view, AttributeResource attribute) {
+        TypedArray a = attribute.apply(view.getContext());
+        setDimension(view, a.getDimensionPixelSize(0, 0));
     }
 
     @Override

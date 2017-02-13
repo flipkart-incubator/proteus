@@ -26,6 +26,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.AttributeResource;
 import com.flipkart.android.proteus.DrawableValue;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
@@ -101,8 +102,18 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     }
 
     @Override
+    public void handleAttributeResource(V view, AttributeResource attribute) {
+        TypedArray a = attribute.apply(view.getContext());
+        set(view, a);
+    }
+
+    @Override
     public void handleStyleResource(V view, StyleResource style) {
         TypedArray a = style.apply(view.getContext());
+        set(view, a);
+    }
+
+    private void set(V view, TypedArray a) {
         Drawable d = a.getDrawable(0);
         if (null != d) {
             setDrawable(view, d);

@@ -24,6 +24,7 @@ import android.content.res.TypedArray;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.AttributeResource;
 import com.flipkart.android.proteus.Primitive;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleResource;
@@ -62,6 +63,12 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     public void handleResource(V view, Resource resource) {
         String string = resource.getString(view.getContext());
         setString(view, null == string ? EMPTY_STRING : string);
+    }
+
+    @Override
+    public void handleAttributeResource(V view, AttributeResource attribute) {
+        TypedArray a = attribute.apply(view.getContext());
+        setString(view, a.getString(0));
     }
 
     @Override

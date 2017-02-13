@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.AttributeResource;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
@@ -101,6 +102,12 @@ public class ProgressBarParser<T extends ProgressBar> extends ViewTypeParser<T> 
             public void handleResource(T view, Resource resource) {
                 Drawable d = resource.getDrawable(view.getContext());
                 view.setProgressDrawable(d);
+            }
+
+            @Override
+            public void handleAttributeResource(T view, AttributeResource attribute) {
+                TypedArray a = attribute.apply(view.getContext());
+                view.setProgressDrawable(a.getDrawable(0));
             }
 
             @Override

@@ -23,6 +23,7 @@ import android.os.Build;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.AttributeResource;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
@@ -100,6 +101,11 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
 
             @Override
             public void handleResource(T view, Resource resource) {
+                throw new IllegalArgumentException("children cannot be a resource");
+            }
+
+            @Override
+            public void handleAttributeResource(T view, AttributeResource attribute) {
                 throw new IllegalArgumentException("children cannot be a resource");
             }
 

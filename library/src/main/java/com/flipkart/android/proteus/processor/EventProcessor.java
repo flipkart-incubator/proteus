@@ -21,6 +21,7 @@ package com.flipkart.android.proteus.processor;
 
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.AttributeResource;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
@@ -43,6 +44,11 @@ public abstract class EventProcessor<T> extends AttributeProcessor<T> {
     @Override
     public void handleResource(T view, Resource resource) {
         setOnEventListener(view, resource);
+    }
+
+    @Override
+    public void handleAttributeResource(T view, AttributeResource attribute) {
+        setOnEventListener(view, attribute);
     }
 
     @Override
