@@ -20,6 +20,7 @@
 package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
@@ -48,12 +49,12 @@ public class LayoutInflaterFactory {
      *
      * @return A new {@link DataAndViewParsingLayoutInflater}
      */
-    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutInflater(@NonNull IdGenerator idGenerator) {
-        return new DataAndViewParsingLayoutInflater(parsers, formatters, idGenerator);
+    public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutInflater(@NonNull IdGenerator idGenerator, @Nullable ProteusLayoutInflater.ImageLoader loader, @Nullable ProteusLayoutInflater.Callback callback) {
+        return new DataAndViewParsingLayoutInflater(parsers, formatters, idGenerator, loader, callback);
     }
 
     public DataAndViewParsingLayoutInflater getDataAndViewParsingLayoutInflater() {
-        return getDataAndViewParsingLayoutInflater(new IdGeneratorImpl());
+        return getDataAndViewParsingLayoutInflater(new IdGeneratorImpl(), null, null);
     }
 
     /**
@@ -61,12 +62,12 @@ public class LayoutInflaterFactory {
      *
      * @return A new {@link DataParsingLayoutInflater}
      */
-    public DataParsingLayoutInflater getDataParsingLayoutInflater(@NonNull IdGenerator idGenerator) {
-        return new DataParsingLayoutInflater(parsers, formatters, idGenerator);
+    public DataParsingLayoutInflater getDataParsingLayoutInflater(@NonNull IdGenerator idGenerator, @Nullable ProteusLayoutInflater.ImageLoader loader, @Nullable ProteusLayoutInflater.Callback callback) {
+        return new DataParsingLayoutInflater(parsers, formatters, idGenerator, loader, callback);
     }
 
     public DataParsingLayoutInflater getDataParsingLayoutInflater() {
-        return getDataParsingLayoutInflater(new IdGeneratorImpl());
+        return getDataParsingLayoutInflater(new IdGeneratorImpl(), null, null);
     }
 
     /**
@@ -74,11 +75,11 @@ public class LayoutInflaterFactory {
      *
      * @return A new {@link SimpleLayoutInflater}
      */
-    public SimpleLayoutInflater getSimpleLayoutInflater(@NonNull IdGenerator idGenerator) {
-        return new SimpleLayoutInflater(parsers, formatters, idGenerator);
+    public SimpleLayoutInflater getSimpleLayoutInflater(@NonNull IdGenerator idGenerator, @Nullable ProteusLayoutInflater.ImageLoader loader, @Nullable ProteusLayoutInflater.Callback callback) {
+        return new SimpleLayoutInflater(parsers, formatters, idGenerator, loader, callback);
     }
 
     public SimpleLayoutInflater getSimpleLayoutInflater() {
-        return getSimpleLayoutInflater(new IdGeneratorImpl());
+        return getSimpleLayoutInflater(new IdGeneratorImpl(), null, null);
     }
 }

@@ -40,47 +40,16 @@ import java.util.List;
 public interface ProteusLayoutInflater {
 
     /**
-     * Returns the {@link ViewTypeParser} for the specified view type.
-     *
-     * @param type The name of the view type.
-     * @return The {@link ViewTypeParser} associated to the specified view type
-     */
-    ViewTypeParser getParser(String type);
-
-    /**
-     * This method is used to process the attributes from the layout and set them on the {@link View}
-     * that is being built.
-     *
-     * @param handler
-     * @param view      The view to setBoolean the attribute on.
-     * @param attribute
-     * @param value     @return true if the attribute is processed false otherwise.
-     */
-    boolean handleAttribute(ViewTypeParser handler, ProteusView view, int attribute, Value value);
-
-    /**
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
      *
-     * @param parent   The intended parent view for the {@link View} that will be built.
-     * @param layout   The {@link Layout} which defines the layout for the {@link View} to be built.
-     * @param data     The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
-     * @param styles   The styles to be applied to the view.
-     * @param callback The {@link Callback} for the inflater
-     * @param loader   The {@link ImageLoader} for the inflater
-     * @param index    The index of this view in its parent. Pass 0 if it has no parent.
+     * @param layout The {@link Layout} which defines the layout for the {@link View} to be built.
+     * @param data   The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
+     * @param parent The intended parent view for the {@link View} that will be built.
+     * @param styles The styles to be applied to the view.
+     * @param index  The index of this view in its parent. Pass 0 if it has no parent.
      * @return An native android view
      */
-    ProteusView inflate(ViewGroup parent, Layout layout, JsonObject data, Styles styles, @Nullable Callback callback, @Nullable ImageLoader loader, int index);
-
-    /**
-     *
-     * @param callback
-     * @param type
-     * @param include
-     * @return The required layout.
-     */
-    @Nullable
-    Layout getLayout(@Nullable Callback callback, String type, Layout include);
+    ProteusView inflate(Layout layout, JsonObject data, @Nullable ViewGroup parent, @Nullable Styles styles, int index);
 
     /**
      * Give the View ID for this string. This will generally be given by the instance of ID Generator
@@ -155,4 +124,46 @@ public interface ProteusLayoutInflater {
          */
         void getBitmap(ProteusView view, String url, DrawableCallback callback);
     }
+
+    /**
+     * The interface used inside proteus to inflate and handle attributes.
+     * Extend this interface if you want to implement your own Proteus Layout Inflater.
+     */
+    interface Internal extends ProteusLayoutInflater {
+
+        /**
+         * Returns the {@link ViewTypeParser} for the specified view type.
+         *
+         * @param type The name of the view type.
+         * @return The {@link ViewTypeParser} associated to the specified view type
+         */
+        ViewTypeParser getParser(String type);
+
+        /**
+         * This method is used to process the attributes from the layout and set them on the {@link View}
+         * that is being built.
+         *
+         * @param handler   The {@link ViewTypeParser} of the view
+         * @param view      The view to setBoolean the attribute on.
+         * @param attribute The attribute to handle
+         * @param value     @return true if the attribute is processed false otherwise.
+         */
+        boolean handleAttribute(ViewTypeParser handler, ProteusView view, int attribute, Value value);
+
+        /**
+         * @param type
+         * @param include
+         * @return The required layout.
+         */
+        @Nullable
+        Layout getLayout(String type, Layout include);
+
+        @Nullable
+        ImageLoader getImageLoader();
+
+        @Nullable
+        Callback getInflaterCallback();
+
+    }
+
 }

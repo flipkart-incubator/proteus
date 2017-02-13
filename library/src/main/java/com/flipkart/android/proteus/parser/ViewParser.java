@@ -41,8 +41,8 @@ import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleResource;
-import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
@@ -72,7 +72,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
     private static final String ID_STRING_NORMALIZED_PATTERN = ":id/";
 
     @Override
-    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, ProteusLayoutInflater.Callback callback, ProteusLayoutInflater.ImageLoader loader, int index) {
+    public ProteusView createView(ProteusLayoutInflater.Internal inflater, Layout layout, JsonObject data, ViewGroup parent, Styles styles, int index) {
         return new ProteusAndroidView(parent.getContext());
     }
 
@@ -396,7 +396,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 Layout layout = viewManager.getLayout();
                 Styles styles = viewManager.getStyles();
 
-                ViewTypeParser handler = viewManager.getProteusLayoutInflater().getParser(layout.type);
+                ViewTypeParser handler = viewManager.getInflater().getParser(layout.type);
                 if (styles == null) {
                     return;
                 }
@@ -404,12 +404,13 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 String[] styleSet = value.split(ProteusConstants.STYLE_DELIMITER);
                 for (String styleName : styleSet) {
                     if (styles.contains(styleName)) {
-                        process(styles.getStyle(styleName), (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getProteusLayoutInflater(), layout.type);
+                        process(styles.getStyle(styleName), (ProteusView) view, (handler != null ? handler : ViewParser.this), viewManager.getInflater());
                     }
                 }
             }
 
-            private void process(Map<String, Value> style, ProteusView proteusView, ViewTypeParser handler, ProteusLayoutInflater inflater, String type) {
+            private void process(Map<String, Value> style, ProteusView proteusView,
+                                 ViewTypeParser handler, ProteusLayoutInflater.Internal inflater) {
                 for (Map.Entry<String, Value> entry : style.entrySet()) {
                     inflater.handleAttribute(handler, proteusView, handler.getAttributeId(entry.getKey()), entry.getValue());
                 }

@@ -43,7 +43,7 @@ import com.google.gson.JsonObject;
 public class RatingBarParser<T extends FixedRatingBar> extends ViewTypeParser<T> {
 
     @Override
-    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, ProteusLayoutInflater.Callback callback, ProteusLayoutInflater.ImageLoader loader, int index) {
+    public ProteusView createView(ProteusLayoutInflater.Internal inflater, Layout layout, JsonObject data, ViewGroup parent, Styles styles, int index) {
         return new ProteusFixedRatingBar(parent.getContext());
     }
 

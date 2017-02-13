@@ -143,7 +143,7 @@ public class ProteusActivity extends BaseActivity {
 
     @Override
     View createAndBindView() {
-        proteusView = builder.inflate(container, pageLayout, data, styles, callback, bitmapLoader, 0);
+        proteusView = builder.inflate(pageLayout, data, container, styles, 0);
         return (View) proteusView;
     }
 

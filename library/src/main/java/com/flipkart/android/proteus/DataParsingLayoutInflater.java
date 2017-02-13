@@ -49,8 +49,9 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
 
     private static final String TAG = "ProteusLayoutInflater";
 
-    protected DataParsingLayoutInflater(Map<String, ViewTypeParser> parsers, Map<String, Formatter> formatter, @NonNull IdGenerator idGenerator) {
-        super(parsers, formatter, idGenerator);
+    protected DataParsingLayoutInflater(@NonNull Map<String, ViewTypeParser> parsers, @NonNull Map<String, Formatter> formatter,
+                                        @NonNull IdGenerator idGenerator, @Nullable ImageLoader loader, @Nullable Callback callback) {
+        super(parsers, formatter, idGenerator, loader, callback);
     }
 
     @Override
@@ -84,7 +85,7 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
         viewManager.setLayout(layout);
         viewManager.setScope(scope);
         viewManager.setStyles(styles);
-        viewManager.setProteusLayoutInflater(this);
+        viewManager.setInflater(this);
         viewManager.setInflaterCallback(callback);
         viewManager.setImageLoader(loader);
         viewManager.setTypeParser(parser);

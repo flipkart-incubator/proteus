@@ -46,6 +46,7 @@ import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
 import com.flipkart.android.proteus.toolbox.DrawableCallback;
 import com.flipkart.android.proteus.toolbox.EventType;
+import com.flipkart.android.proteus.toolbox.IdGeneratorImpl;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -169,7 +170,7 @@ public class ProteusActivity extends AppCompatActivity {
                 .register("CircleView", new CircleViewParser(), "View")
                 .build();
 
-        layoutInflater = proteus.getFactory().getDataAndViewParsingLayoutInflater();
+        layoutInflater = proteus.getFactory().getDataAndViewParsingLayoutInflater(new IdGeneratorImpl(), loader, callback);
 
         ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setProteus(proteus);
 
@@ -206,7 +207,7 @@ public class ProteusActivity extends AppCompatActivity {
     private void render() {
         // Inflate a new view using proteus
         long start = System.currentTimeMillis();
-        ProteusView view = layoutInflater.inflate(container, layout, data, styles, callback, loader, 0);
+        ProteusView view = layoutInflater.inflate(layout, data, container, styles, 0);
         System.out.println(System.currentTimeMillis() - start);
         container.addView((View) view);
     }

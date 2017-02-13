@@ -52,9 +52,11 @@ public abstract class ViewTypeParser<V extends View> {
     private int offset;
     private AttributeSet attributeSet;
 
-    public abstract ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, ProteusLayoutInflater.Callback callback, ProteusLayoutInflater.ImageLoader loader, int index);
+    public abstract ProteusView createView(ProteusLayoutInflater.Internal inflater, Layout layout, JsonObject data,
+                                           @Nullable ViewGroup parent, @Nullable Styles styles, int index);
 
-    public void onAfterCreateView(ProteusLayoutInflater inflater, ViewGroup parent, ProteusView view, Layout layout, JsonObject data, Styles styles, int index) {
+    public void onAfterCreateView(ProteusLayoutInflater inflater, ProteusView view, Layout layout, JsonObject data,
+                                  @Nullable ViewGroup parent, @Nullable Styles styles, int index) {
         View v = ((View) view);
         if (null == v.getLayoutParams()) {
             ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent);

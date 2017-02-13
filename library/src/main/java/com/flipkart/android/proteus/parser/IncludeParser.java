@@ -39,10 +39,10 @@ import com.google.gson.JsonObject;
 public class IncludeParser<V extends View> extends ViewTypeParser<V> {
 
     @Override
-    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout include, JsonObject data, Styles styles, ProteusLayoutInflater.Callback callback, ProteusLayoutInflater.ImageLoader loader, int index) {
+    public ProteusView createView(ProteusLayoutInflater.Internal inflater, Layout include, JsonObject data, ViewGroup parent, Styles styles, int index) {
         String type = include.extras.getAsString(ProteusConstants.LAYOUT);
-        Layout layout = inflater.getLayout(callback, type, include);
-        return inflater.inflate(parent, layout, data, styles, callback, loader, index);
+        Layout layout = inflater.getLayout(type, include);
+        return inflater.inflate(layout, data, parent, styles, index);
     }
 
     @Override

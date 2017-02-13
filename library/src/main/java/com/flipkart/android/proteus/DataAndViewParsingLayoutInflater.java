@@ -36,21 +36,22 @@ public class DataAndViewParsingLayoutInflater extends DataParsingLayoutInflater 
     @Nullable
     private Map<String, Layout> layouts;
 
-    protected DataAndViewParsingLayoutInflater(Map<String, ViewTypeParser> parsers, Map<String, Formatter> formatter, @NonNull IdGenerator idGenerator) {
-        super(parsers, formatter, idGenerator);
+    protected DataAndViewParsingLayoutInflater(@NonNull Map<String, ViewTypeParser> parsers, @NonNull Map<String, Formatter> formatter,
+                                               @NonNull IdGenerator idGenerator, @Nullable ImageLoader loader, @Nullable Callback callback) {
+        super(parsers, formatter, idGenerator, loader, callback);
     }
 
     @Override
     @Nullable
-    public Layout getLayout(@Nullable Callback callback, String type, Layout include) {
+    public Layout getLayout(String type, Layout include) {
         Layout layout = null;
         if (layouts != null) {
             layout = layouts.get(type);
         }
-        return null != layout ? layout : super.getLayout(callback, type, include);
+        return null != layout ? layout : super.getLayout(type, include);
     }
 
-    public void setLayouts(Map<String, Layout> layouts) {
+    public void setLayouts(@Nullable Map<String, Layout> layouts) {
         this.layouts = layouts;
     }
 }

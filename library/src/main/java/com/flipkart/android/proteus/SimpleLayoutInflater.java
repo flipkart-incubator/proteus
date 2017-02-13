@@ -41,7 +41,7 @@ import java.util.Map;
  * A layout builder which can parse json to construct an android view out of it. It uses the
  * registered parsers to convert the json string to a view and then assign attributes.
  */
-public class SimpleLayoutInflater implements ProteusLayoutInflater {
+public class SimpleLayoutInflater implements ProteusLayoutInflater.Internal {
 
     private static final String TAG = "SimpleLayoutInflater";
 
@@ -52,12 +52,21 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     protected final Map<String, Formatter> formatter;
 
     @NonNull
-    private IdGenerator idGenerator;
+    protected final IdGenerator idGenerator;
 
-    SimpleLayoutInflater(@NonNull Map<String, ViewTypeParser> parsers, @NonNull Map<String, Formatter> formatter, @NonNull IdGenerator idGenerator) {
+    @Nullable
+    protected final ImageLoader loader;
+
+    @Nullable
+    protected final Callback callback;
+
+    SimpleLayoutInflater(@NonNull Map<String, ViewTypeParser> parsers, @NonNull Map<String, Formatter> formatter,
+                         @NonNull IdGenerator idGenerator, @Nullable ImageLoader loader, @Nullable Callback callback) {
         this.parsers = parsers;
         this.formatter = formatter;
         this.idGenerator = idGenerator;
+        this.loader = loader;
+        this.callback = callback;
     }
 
     @Override
@@ -68,7 +77,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     @Override
     @Nullable
-    public ProteusView inflate(ViewGroup parent, Layout layout, JsonObject data, Styles styles, Callback callback, ImageLoader loader, int index) {
+    public ProteusView inflate(Layout layout, JsonObject data, ViewGroup parent, Styles styles, int index) {
         ViewTypeParser parser = parsers.get(layout.type);
         if (parser == null) {
             return onUnknownViewEncountered(layout.type, parent, layout, data, styles, callback, loader, index);
@@ -103,20 +112,32 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     @Override
     @Nullable
-    public Layout getLayout(@Nullable Callback callback, String type, Layout include) {
+    public Layout getLayout(String type, Layout include) {
         if (null != callback) {
             return callback.onLayoutRequired(type, include);
         }
         return null;
     }
 
+    @Override
+    @Nullable
+    public ImageLoader getImageLoader() {
+        return this.loader;
+    }
+
+    @Override
+    @Nullable
+    public Callback getInflaterCallback() {
+        return this.callback;
+    }
+
     protected ProteusView createView(ViewTypeParser parser, ViewGroup parent, Layout layout, JsonObject data, Styles styles, Callback callback, ImageLoader loader, int index) {
-        return parser.createView(this, parent, layout, data, styles, callback, loader, index);
+        return parser.createView(this, layout, data, parent, styles, index);
     }
 
     protected void onAfterCreateView(ViewTypeParser parser, ProteusView view, ViewGroup parent, Layout layout, JsonObject data, Styles styles, Callback callback, ImageLoader loader, int index) {
         //noinspection unchecked
-        parser.onAfterCreateView(this, parent, view, layout, data, styles, index);
+        parser.onAfterCreateView(this, view, layout, data, parent, styles, index);
     }
 
     protected ProteusViewManager createViewManager(ViewTypeParser parser, View parent, Layout layout, JsonObject data, Styles styles, Callback callback, ImageLoader loader, int index) {
@@ -133,7 +154,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         viewManager.setScope(scope);
         viewManager.setLayout(layout);
         viewManager.setStyles(styles);
-        viewManager.setProteusLayoutInflater(this);
+        viewManager.setInflater(this);
         viewManager.setInflaterCallback(callback);
         viewManager.setImageLoader(loader);
         viewManager.setTypeParser(parser);

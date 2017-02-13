@@ -52,7 +52,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     private static final String LAYOUT_MODE_OPTICAL_BOUNDS = "opticalBounds";
 
     @Override
-    public ProteusView createView(ProteusLayoutInflater inflater, ViewGroup parent, Layout layout, JsonObject data, Styles styles, ProteusLayoutInflater.Callback callback, ProteusLayoutInflater.ImageLoader loader, int index) {
+    public ProteusView createView(ProteusLayoutInflater.Internal inflater, Layout layout, JsonObject data, ViewGroup parent, Styles styles, int index) {
         return new ProteusAspectRatioFrameLayout(parent.getContext());
     }
 
@@ -119,7 +119,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     @Override
     public boolean handleChildren(ProteusView view, Value children) {
         ProteusViewManager viewManager = view.getViewManager();
-        ProteusLayoutInflater layoutInflater = viewManager.getProteusLayoutInflater();
+        ProteusLayoutInflater layoutInflater = viewManager.getInflater();
         JsonObject data = viewManager.getScope().getData();
         int dataIndex = viewManager.getScope().getIndex();
         Styles styles = view.getViewManager().getStyles();
@@ -128,7 +128,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
             ProteusView child;
             Iterator<Value> iterator = children.getAsArray().iterator();
             while (iterator.hasNext()) {
-                child = layoutInflater.inflate((ViewGroup) view, iterator.next().getAsLayout(), data, styles, viewManager.getInflaterCallback(), viewManager.getImageLoader(), dataIndex);
+                child = layoutInflater.inflate(iterator.next().getAsLayout(), data, (ViewGroup) view, styles, dataIndex);
                 addView(view, child);
             }
         } else if (children.isObject()) {
@@ -160,7 +160,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
 
         ProteusView child;
         for (int index = 0; index < length; index++) {
-            child = layoutInflater.inflate((ViewGroup) parent, childLayout, data, styles, viewManager.getInflaterCallback(), viewManager.getImageLoader(), index);
+            child = layoutInflater.inflate(childLayout, data, (ViewGroup) parent, styles, index);
             if (child != null) {
                 this.addView(parent, child);
             }

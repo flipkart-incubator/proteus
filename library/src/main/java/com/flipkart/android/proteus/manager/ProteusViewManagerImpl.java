@@ -54,7 +54,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     private View view;
     private Styles styles;
     private Scope scope;
-    private ProteusLayoutInflater proteusLayoutInflater;
+    private ProteusLayoutInflater.Internal inflater;
     @Nullable
     private ProteusLayoutInflater.Callback callback;
     @Nullable
@@ -162,7 +162,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                     ((ProteusView) child).getViewManager().update(data);
                 }
             } else if (childLayout != null) {
-                childView = proteusLayoutInflater.inflate(parent, getLayout(), data, styles, callback, loader, scope.getIndex());
+                childView = inflater.inflate(getLayout(), data, parent, styles, scope.getIndex());
                 parser.addView((ProteusView) view, childView);
             }
         }
@@ -198,21 +198,21 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     private void handleBinding(Binding binding) {
         if (binding.hasRegEx()) {
-            proteusLayoutInflater.handleAttribute(parser, (ProteusView) view, binding.getAttributeId(), getLayout().create(binding.getAttributeValue()));
+            inflater.handleAttribute(parser, (ProteusView) view, binding.getAttributeId(), getLayout().create(binding.getAttributeValue()));
         } else {
             Result result = Utils.readJson(binding.getBindingName(), scope.getData(), scope.getIndex());
             JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
-            proteusLayoutInflater.handleAttribute(parser, (ProteusView) view, binding.getAttributeId(), getLayout().create(dataValue));
+            inflater.handleAttribute(parser, (ProteusView) view, binding.getAttributeId(), getLayout().create(dataValue));
         }
     }
 
     @NonNull
-    public ProteusLayoutInflater getProteusLayoutInflater() {
-        return proteusLayoutInflater;
+    public ProteusLayoutInflater.Internal getInflater() {
+        return inflater;
     }
 
-    public void setProteusLayoutInflater(@NonNull ProteusLayoutInflater proteusLayoutInflater) {
-        this.proteusLayoutInflater = proteusLayoutInflater;
+    public void setInflater(@NonNull ProteusLayoutInflater.Internal inflater) {
+        this.inflater = inflater;
     }
 
     @Override
@@ -237,21 +237,23 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         this.loader = loader;
     }
 
+    @NonNull
     public ViewTypeParser getTypeParser() {
         return parser;
     }
 
-    public void setTypeParser(ViewTypeParser parser) {
+    public void setTypeParser(@NonNull ViewTypeParser parser) {
         this.parser = parser;
     }
 
+    @NonNull
     @Override
     public Layout getLayout() {
         return this.layout;
     }
 
     @Override
-    public void setLayout(Layout layout) {
+    public void setLayout(@NonNull Layout layout) {
         this.layout = layout;
     }
 
@@ -267,15 +269,21 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     }
 
     @Override
-    public int getUniqueViewId(String id) {
-        return proteusLayoutInflater.getUniqueViewId(id);
+    public int getUniqueViewId(@NonNull String id) {
+        return inflater.getUniqueViewId(id);
     }
 
-    public JsonElement get(String dataPath, int index) {
+    @Nullable
+    @Override
+    public View findViewById(@NonNull String id) {
+        return view.findViewById(getUniqueViewId(id));
+    }
+
+    public JsonElement get(@NonNull String dataPath, int index) {
         return scope.get(dataPath);
     }
 
-    public void set(String dataPath, JsonElement newValue) {
+    public void set(@NonNull String dataPath, JsonElement newValue) {
         if (dataPath == null) {
             return;
         }
@@ -293,15 +301,15 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         update(aliasedDataPath);
     }
 
-    public void set(String dataPath, String newValue) {
+    public void set(@NonNull String dataPath, String newValue) {
         set(dataPath, new JsonPrimitive(newValue));
     }
 
-    public void set(String dataPath, Number newValue) {
+    public void set(@NonNull String dataPath, Number newValue) {
         set(dataPath, new JsonPrimitive(newValue));
     }
 
-    public void set(String dataPath, boolean newValue) {
+    public void set(@NonNull String dataPath, boolean newValue) {
         set(dataPath, new JsonPrimitive(newValue));
     }
 
@@ -344,11 +352,12 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         this.childLayout = layout;
     }
 
+    @NonNull
     public Scope getScope() {
         return scope;
     }
 
-    public void setScope(Scope scope) {
+    public void setScope(@NonNull Scope scope) {
         this.scope = scope;
     }
 
@@ -367,7 +376,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     }
 
     @Override
-    public void addBinding(Binding binding) {
+    public void addBinding(@NonNull Binding binding) {
         if (this.bindings == null) {
             this.bindings = new ArrayList<>();
         }
@@ -379,7 +388,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         view = null;
         childLayout = null;
         styles = null;
-        proteusLayoutInflater = null;
+        inflater = null;
         parser = null;
         onUpdateDataListener = null;
         dataPathForChildren = null;
