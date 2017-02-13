@@ -47,27 +47,4 @@ public class DimensionAttributeProcessorTest {
     @Mock
     private Resources resources = mock(Resources.class);
 
-    @Test
-    public void parse() throws Exception {
-        String input = "@dimen/padding";
-        Primitive dimension = new Primitive("@dimen/padding");
-        String name = "a.b.c";
-        int resId = 1;
-
-        when(resources.getIdentifier(input, "dimen", name)).thenReturn(resId);
-        when(context.getResources()).thenReturn(resources);
-        when(context.getPackageName()).thenReturn(name);
-
-        AttributeProcessor processor = new DimensionAttributeProcessor() {
-            @Override
-            public void setDimension(View view, float dimension) {
-
-            }
-        };
-
-        Value value = processor.compile(dimension, context);
-
-        assertThat(value.getAsResource().resId, is(resId));
-    }
-
 }

@@ -112,20 +112,6 @@ public class BooleanAttributeProcessorTest {
     }
 
     @Test
-    public void parse_style() throws Exception {
-        Value attribute = new Primitive("?style:true");
-        AttributeProcessor processor = new BooleanAttributeProcessor() {
-            @Override
-            public void setBoolean(View view, boolean value) {
-
-            }
-        };
-
-        Value value = processor.compile(attribute, null);
-        assertThat(value, is((Value) BooleanAttributeProcessor.FALSE));
-    }
-
-    @Test
     public void handle_true() throws Exception {
         AttributeProcessor processor = new BooleanAttributeProcessor() {
             @Override
