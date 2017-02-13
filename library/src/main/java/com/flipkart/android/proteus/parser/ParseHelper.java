@@ -88,7 +88,7 @@ public class ParseHelper {
 
     private static final String COLOR_PREFIX_LITERAL = "#";
 
-    private static final String STYLE_ATTR_START_LITERAL = "?";
+    private static final String ATTR_START_LITERAL = "?";
     private static final String DRAWABLE_LOCAL_RESOURCE_STR = "@drawable/";
     private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";
 
@@ -263,9 +263,9 @@ public class ParseHelper {
         return returnValue == null ? TextUtils.TruncateAt.END : returnValue;
     }
 
-    public static int parseVisibility(Value value) {
+    public static int parseVisibility(@Nullable Value value) {
         Integer returnValue = null;
-        if (value.isPrimitive()) {
+        if (null != value && value.isPrimitive()) {
             String attributeValue = value.getAsString();
             returnValue = sVisibilityMode.get(attributeValue);
             if (null == returnValue &&
@@ -354,9 +354,9 @@ public class ParseHelper {
         }
     }
 
-    public static boolean parseBoolean(Value value) {
+    public static boolean parseBoolean(@Nullable Value value) {
         // TODO: we should consider 0 as false too.
-        return value.isPrimitive() && value.getAsPrimitive().isBoolean() ? value.getAsBoolean() : !value.isNull();
+        return null != value && value.isPrimitive() && value.getAsPrimitive().isBoolean() ? value.getAsBoolean() : null != value && !value.isNull();
     }
 
     public static int parseRelativeLayoutBoolean(boolean value) {
@@ -398,8 +398,8 @@ public class ParseHelper {
         return typeface;
     }
 
-    public static boolean isStyleAttribute(String value) {
-        return value.startsWith(STYLE_ATTR_START_LITERAL);
+    public static boolean isLocalAttribute(String value) {
+        return value.startsWith(ATTR_START_LITERAL);
     }
 
     public static boolean isLocalDrawableResource(String attributeValue) {

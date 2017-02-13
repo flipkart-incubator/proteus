@@ -158,9 +158,15 @@ public interface ProteusLayoutInflater {
         @Nullable
         Layout getLayout(String type, Layout include);
 
+        /**
+         * @return
+         */
         @Nullable
         ImageLoader getImageLoader();
 
+        /**
+         * @return
+         */
         @Nullable
         Callback getInflaterCallback();
 

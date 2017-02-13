@@ -22,6 +22,7 @@ package com.flipkart.android.proteus.processor;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
@@ -31,7 +32,6 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.parser.ParseHelper;
 
 public abstract class ColorResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
@@ -52,23 +52,14 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
         return result[0];
     }
 
-    public static Value staticCompile(Value value, Context context) {
+    public static Value staticCompile(@Nullable Value value, Context context) {
         if (null == value) {
             return Color.Int.BLACK;
         }
         if (value.isObject()) {
             return Color.valueOf(value.getAsObject(), context);
         } else if (value.isPrimitive()) {
-            String string = value.getAsString();
-            if (Color.isLocalColorResource(string)) {
-                Resource resource = Resource.valueOf(string, Resource.COLOR, context);
-                return null == resource ? Color.Int.BLACK : resource;
-            } else if (ParseHelper.isStyleAttribute(string)) {
-                StyleResource style = StyleResource.valueOf(string);
-                return null != style ? style : Color.Int.BLACK;
-            } else {
-                return Color.valueOf(value.getAsString());
-            }
+            return Color.valueOf(value.getAsString());
         } else {
             return Color.Int.BLACK;
         }
@@ -79,7 +70,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
         if (value.isColor()) {
             apply(view, value.getAsColor());
         } else {
-            process(view, compile(value, view.getContext()));
+            process(view, precompile(value, view.getContext()));
         }
     }
 
@@ -129,7 +120,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
     public abstract void setColor(V view, ColorStateList colors);
 
     @Override
-    public Value compile(Value value, Context context) {
+    public Value compile(@Nullable Value value, Context context) {
         return staticCompile(value, context);
     }
 }

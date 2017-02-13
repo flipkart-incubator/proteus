@@ -39,11 +39,18 @@ import java.lang.annotation.RetentionPolicy;
 
 public class Resource extends Value {
 
+    public static final String RESOURCE_PREFIX_ANIMATION = "@anim/";
+    public static final String RESOURCE_PREFIX_BOOLEAN = "@bool/";
+    public static final String RESOURCE_PREFIX_COLOR = "@color/";
+    public static final String RESOURCE_PREFIX_DIMENSION = "@dimen/";
+    public static final String RESOURCE_PREFIX_DRAWABLE = "@drawable/";
+    public static final String RESOURCE_PREFIX_STRING = "@string/";
+
     public static final String ANIM = "anim";
     public static final String BOOLEAN = "bool";
     public static final String COLOR = "color";
-    public static final String DRAWABLE = "drawable";
     public static final String DIMEN = "dimen";
+    public static final String DRAWABLE = "drawable";
     public static final String STRING = "string";
 
     public static final Resource NOT_FOUND = new Resource(0);
@@ -52,6 +59,34 @@ public class Resource extends Value {
 
     private Resource(int resId) {
         this.resId = resId;
+    }
+
+    public static boolean isAnimation(String string) {
+        return string.startsWith(RESOURCE_PREFIX_ANIMATION);
+    }
+
+    public static boolean isBoolean(String string) {
+        return string.startsWith(RESOURCE_PREFIX_BOOLEAN);
+    }
+
+    public static boolean isColor(String string) {
+        return string.startsWith(RESOURCE_PREFIX_COLOR);
+    }
+
+    public static boolean isDimension(String string) {
+        return string.startsWith(RESOURCE_PREFIX_DIMENSION);
+    }
+
+    public static boolean isDrawable(String string) {
+        return string.startsWith(RESOURCE_PREFIX_DRAWABLE);
+    }
+
+    public static boolean isString(String string) {
+        return string.startsWith(RESOURCE_PREFIX_STRING);
+    }
+
+    public static boolean isResource(String string) {
+        return isAnimation(string) || isBoolean(string) || isColor(string) || isDimension(string) || isDrawable(string) || isString(string);
     }
 
     @Nullable
@@ -122,7 +157,7 @@ public class Resource extends Value {
     }
 
     @Nullable
-    public static Resource valueOf(String value, @ResourceType String type, Context context) {
+    public static Resource valueOf(String value, @Nullable @ResourceType String type, Context context) {
         if (null == value) {
             return null;
         }

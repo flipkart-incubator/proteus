@@ -22,6 +22,7 @@ package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
@@ -31,7 +32,6 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.parser.ParseHelper;
 
 /**
  *
@@ -55,20 +55,11 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
         return result[0];
     }
 
-    public static Value staticCompile(Value value, Context context) {
+    public static Value staticCompile(@Nullable Value value, Context context) {
         if (null == value || !value.isPrimitive()) {
             return Dimension.ZERO;
         }
-        String string = value.getAsString();
-        if (Dimension.isLocalDimensionResource(string)) {
-            Resource resource = Resource.valueOf(string, Resource.DIMEN, context);
-            return null == resource ? Dimension.ZERO : resource;
-        } else if (ParseHelper.isStyleAttribute(string)) {
-            StyleResource style = StyleResource.valueOf(string);
-            return null != style ? style : Dimension.ZERO;
-        } else {
-            return Dimension.valueOf(string, context);
-        }
+        return Dimension.valueOf(value.getAsString(), context);
     }
 
     @Override
@@ -76,7 +67,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
         if (value.isDimension()) {
             setDimension(view, value.getAsDimension().apply(view.getContext()));
         } else if (value.isPrimitive()) {
-            process(view, compile(value, view.getContext()));
+            process(view, precompile(value, view.getContext()));
         }
     }
 
@@ -104,7 +95,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
     public abstract void setDimension(T view, float dimension);
 
     @Override
-    public Value compile(Value value, Context context) {
+    public Value compile(@Nullable Value value, Context context) {
         return staticCompile(value, context);
     }
 

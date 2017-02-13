@@ -103,11 +103,11 @@
                 "layout_height": "wrap_content",
                 "layout_marginRight": "4dp",
                 "textSize": "18dp",
-                "text": "$user.name"
+                "text": "~@{user.name}"
               },
               {
                 "type": "TextView",
-                "text": "~({{user.level}})",
+                "text": "~(@{user.level})",
                 "textColor": "#c48866",
                 "layout_width": "wrap_content",
                 "layout_height": "wrap_content",
@@ -128,8 +128,8 @@
                 "layout_width": "match_parent",
                 "layout_height": "wrap_content",
                 "layout_marginTop": "8dp",
-                "max": "$user.experience.max",
-                "progress": "$user.experience.current"
+                "max": "~@{user.experience.max}",
+                "progress": "~@{user.experience.current}"
               },
               {
                 "type": "TextView",
@@ -140,7 +140,7 @@
                 "padding": "8dp",
                 "paddingTop": "16dp",
                 "paddingBottom": "16dp",
-                "text": "~Credits : {{user.credits}}$(number)",
+                "text": "~Credits : @{user.credits}${number()}",
                 "style": "money.center",
                 "background": {
                   "type": "shape",
@@ -186,7 +186,7 @@
         "background": "#ffffff",
         "padding": "16dp",
         "children": {
-          "data": "$user.tags",
+          "data": "~@{user.tags}",
           "layout":{
             "type": "TextView",
             "scope": {
@@ -196,10 +196,10 @@
             "layout_height": "32dp",
             "textSize": "12sp",
             "textColor": "@color/colorAccent",
-            "text": "$tag",
+            "text": "~@{tag}",
             "padding": "8dp",
             "gravity": "center",
-            "onClick": "$tag"
+            "onClick": "~@{tag}"
           }
         }
       }

@@ -22,10 +22,12 @@ package com.flipkart.android.proteus.processor;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.IntDef;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.AttributeResource;
+import com.flipkart.android.proteus.Primitive;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
@@ -48,6 +50,8 @@ import static java.lang.annotation.ElementType.TYPE;
  */
 
 public abstract class GravityAttributeProcessor<V extends View> extends AttributeProcessor<V> {
+
+    public static final Primitive NO_GRAVITY = new Primitive(android.view.Gravity.NO_GRAVITY);
 
     @Override
     public void handleValue(V view, Value value) {
@@ -88,7 +92,10 @@ public abstract class GravityAttributeProcessor<V extends View> extends Attribut
     public abstract void setGravity(V view, @Gravity int gravity);
 
     @Override
-    public Value compile(Value value, Context context) {
+    public Value compile(@Nullable Value value, Context context) {
+        if (null == value) {
+            return NO_GRAVITY;
+        }
         return ParseHelper.getGravity(value.getAsString());
     }
 

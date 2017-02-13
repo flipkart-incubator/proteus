@@ -33,7 +33,6 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.Resource;
 import com.flipkart.android.proteus.StyleResource;
 import com.flipkart.android.proteus.Value;
-import com.flipkart.android.proteus.parser.ParseHelper;
 
 /**
  * Use this as the base processor for references like @drawable or remote resources with http:// urls.
@@ -56,20 +55,16 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         return d[0];
     }
 
-    public static Value staticCompile(Value value, Context context) {
+    public static Value staticCompile(@Nullable Value value, Context context) {
+        if (null == value) {
+            return DrawableValue.ColorValue.BLACK;
+        }
         if (value.isPrimitive()) {
-            String string = value.getAsString();
-            if (DrawableValue.isLocalDrawableResource(string)) {
-                return Resource.valueOf(string, Resource.DRAWABLE, context);
-            } else if (ParseHelper.isStyleAttribute(string)) {
-                return StyleResource.valueOf(string);
-            } else {
-                return DrawableValue.valueOf(string, context);
-            }
+            return DrawableValue.valueOf(value.getAsString(), context);
         } else if (value.isObject()) {
             return DrawableValue.valueOf(value.getAsObject(), context);
         } else {
-            throw new IllegalArgumentException("drawable must be a primitive or object");
+            return DrawableValue.ColorValue.BLACK;
         }
     }
 
@@ -89,7 +84,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 });
             }
         } else {
-            process(view, compile(value, view.getContext()));
+            process(view, precompile(value, view.getContext()));
         }
     }
 
@@ -123,7 +118,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
     public abstract void setDrawable(V view, Drawable drawable);
 
     @Override
-    public Value compile(Value value, Context context) {
+    public Value compile(@Nullable Value value, Context context) {
         return staticCompile(value, context);
     }
 }

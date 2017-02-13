@@ -24,6 +24,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -297,7 +298,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                     // noinspection ResourceType
                     view.setVisibility(value.getAsInt());
                 } else {
-                    process(view, compile(value, view.getContext()));
+                    process(view, precompile(value, view.getContext()));
                 }
             }
 
@@ -323,7 +324,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
             }
 
             @Override
-            public Value compile(Value value, Context context) {
+            public Value compile(@Nullable Value value, Context context) {
                 int visibility = ParseHelper.parseVisibility(value);
                 return ParseHelper.getVisibilty(visibility);
             }

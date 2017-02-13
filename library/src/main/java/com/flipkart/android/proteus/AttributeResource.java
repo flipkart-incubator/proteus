@@ -21,6 +21,7 @@ package com.flipkart.android.proteus;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -34,13 +35,14 @@ import java.util.regex.Pattern;
 /**
  * AttributeResource
  *
- * @author aditya.sharat
+ * @author adityasharat
  */
-
 public class AttributeResource extends Value {
 
     public static final AttributeResource NULL = new AttributeResource(-1);
 
+    private static final String ATTR_START_LITERAL = "?";
+    private static final String ATTR_LITERAL = "attr/";
     private static final Pattern sAttributePattern = Pattern.compile("(\\?)(\\S*)(:?)(attr/?)(\\S*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     private static final Map<String, Class> sHashMap = new HashMap<>();
 
@@ -79,6 +81,11 @@ public class AttributeResource extends Value {
         attributeId = field.getInt(null);
     }
 
+    @Nullable
+    public static boolean isAttributeResource(String value) {
+        return value.startsWith(ATTR_START_LITERAL) && value.contains(ATTR_LITERAL);
+    }
+
     public static AttributeResource valueOf(String value, Context context) {
         AttributeResource attribute = AttributeCache.cache.get(value);
         if (null == attribute) {
@@ -104,7 +111,7 @@ public class AttributeResource extends Value {
         return this;
     }
 
-    public static class AttributeCache {
+    private static class AttributeCache {
         private static final LruCache<String, AttributeResource> cache = new LruCache<>(16);
     }
 

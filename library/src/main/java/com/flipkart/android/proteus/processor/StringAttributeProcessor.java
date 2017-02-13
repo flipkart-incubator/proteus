@@ -21,6 +21,7 @@ package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
@@ -52,8 +53,8 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     @Override
     public void handleValue(V view, Value value) {
         String string = value.getAsString();
-        if (ParseHelper.isStyleAttribute(string) || isLocalStringResource(string)) {
-            process(view, compile(value, view.getContext()));
+        if (ParseHelper.isLocalAttribute(string) || isLocalStringResource(string)) {
+            process(view, precompile(value, view.getContext()));
         } else {
             setString(view, string);
         }
@@ -83,16 +84,10 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     public abstract void setString(V view, String value);
 
     @Override
-    public Value compile(Value value, Context context) {
-        String string = value.getAsString();
-        if (isLocalStringResource(string)) {
-            Resource resource = Resource.valueOf(string, Resource.STRING, context);
-            return null == resource ? EMPTY : resource;
-        } else if (ParseHelper.isStyleAttribute(string)) {
-            StyleResource style = StyleResource.valueOf(string);
-            return null != style ? style : EMPTY;
-        } else {
-            return value;
+    public Value compile(@Nullable Value value, Context context) {
+        if (null == value || value.isNull()) {
+            return EMPTY;
         }
+        return value;
     }
 }

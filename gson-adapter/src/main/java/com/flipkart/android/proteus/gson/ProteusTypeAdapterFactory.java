@@ -282,7 +282,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 } else {
                     ViewTypeParser.AttributeSet.Attribute attribute = proteus.getAttributeId(name, type);
                     if (null != attribute) {
-                        Value value = attribute.processor.compile(VALUE_TYPE_ADAPTER.read(in), getContext());
+                        Value value = attribute.processor.precompile(VALUE_TYPE_ADAPTER.read(in), getContext());
                         attributes.add(new Layout.Attribute(attribute.id, value));
                     } else {
                         extras.add(name, VALUE_TYPE_ADAPTER.read(in));

@@ -20,6 +20,7 @@
 package com.flipkart.android.proteus;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.google.gson.JsonElement;
@@ -55,18 +56,23 @@ public abstract class AttributeProcessor<V> {
     public abstract void handleStyleResource(V view, StyleResource style);
 
     public Value precompile(Value value, Context context) {
+        Value compiled = null;
         if (value.isPrimitive()) {
             String string = value.getAsString();
             if (Binding.isBindingValue(string)) {
-                return Binding.valueOf(string);
-            } else if (true) {
-
+                compiled = Binding.valueOf(string);
+            } else if (Resource.isResource(string)) {
+                compiled = Resource.valueOf(string, null, context);
+            } else if (AttributeResource.isAttributeResource(string)) {
+                compiled = AttributeResource.valueOf(string, context);
+            } else if (StyleResource.isStyleResource(string)) {
+                compiled = StyleResource.valueOf(string, context);
             }
         }
-        return compile(value, context);
+        return null != compiled ? compiled : compile(value, context);
     }
 
-    public Value compile(Value value, Context context) {
+    public Value compile(@Nullable Value value, Context context) {
         return value;
     }
 

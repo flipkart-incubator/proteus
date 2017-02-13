@@ -21,6 +21,7 @@ package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
@@ -53,7 +54,7 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
         if (value.isPrimitive() && value.getAsPrimitive().isBoolean()) {
             setBoolean(view, value.getAsPrimitive().getAsBoolean());
         } else {
-            process(view, compile(value, view.getContext()));
+            process(view, precompile(value, view.getContext()));
         }
     }
 
@@ -78,20 +79,7 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
     public abstract void setBoolean(V view, boolean value);
 
     @Override
-    public Value compile(Value value, Context context) {
-        if (value.isPrimitive()) {
-            String string = value.getAsString();
-            if (isLocalBooleanResource(string)) {
-                Resource resource = Resource.valueOf(string, Resource.BOOLEAN, context);
-                return null == resource ? FALSE : resource;
-            } else if (ParseHelper.isStyleAttribute(string)) {
-                StyleResource style = StyleResource.valueOf(string);
-                return null != style ? style : FALSE;
-            } else {
-                return ParseHelper.parseBoolean(value) ? TRUE : FALSE;
-            }
-        } else {
-            return ParseHelper.parseBoolean(value) ? TRUE : FALSE;
-        }
+    public Value compile(@Nullable Value value, Context context) {
+        return ParseHelper.parseBoolean(value) ? TRUE : FALSE;
     }
 }

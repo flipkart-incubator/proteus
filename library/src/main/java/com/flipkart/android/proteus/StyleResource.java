@@ -38,10 +38,11 @@ import java.util.Map;
 
 public class StyleResource extends Value {
 
-    public static final Map<String, Integer> styleMap = new HashMap<>();
-    public static final Map<String, Integer> attributeMap = new HashMap<>();
-
     public static final StyleResource NULL = new StyleResource();
+    private static final Map<String, Integer> styleMap = new HashMap<>();
+    private static final Map<String, Integer> attributeMap = new HashMap<>();
+    private static final Map<String, Class> sHashMap = new HashMap<>();
+    private static final String ATTR_START_LITERAL = "?";
 
     public final int styleId;
     public final int attributeId;
@@ -51,33 +52,51 @@ public class StyleResource extends Value {
         this.attributeId = -1;
     }
 
-    private StyleResource(String value) throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException {
-        if (!ParseHelper.isStyleAttribute(value)) {
+    private StyleResource(String value, Context context) throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
+        if (!ParseHelper.isLocalAttribute(value)) {
             throw new IllegalArgumentException(value + " is not a valid style attribute");
         }
         String[] tokens = value.substring(1, value.length()).split(":");
         String style = tokens[0];
         String attr = tokens[1];
+        Class clazz;
+
         Integer styleId = styleMap.get(style);
         if (styleId == null) {
-            styleId = R.style.class.getField(style).getInt(null);
+            String className = context.getPackageName() + ".R$style";
+            clazz = sHashMap.get(className);
+            if (null == clazz) {
+                clazz = Class.forName(className);
+                sHashMap.put(className, clazz);
+            }
+            styleId = clazz.getField(style).getInt(null);
             styleMap.put(style, styleId);
         }
         this.styleId = styleId;
         Integer attrId = attributeMap.get(attr);
         if (attrId == null) {
-            attrId = R.attr.class.getField(attr).getInt(null);
+            String className = context.getPackageName() + ".R$attr";
+            clazz = sHashMap.get(className);
+            if (null == clazz) {
+                clazz = Class.forName(className);
+                sHashMap.put(className, clazz);
+            }
+            attrId = clazz.getField(attr).getInt(null);
             attributeMap.put(attr, attrId);
         }
         this.attributeId = attrId;
     }
 
+    public static boolean isStyleResource(String value) {
+        return value.startsWith(ATTR_START_LITERAL);
+    }
+
     @Nullable
-    public static StyleResource valueOf(String value) {
+    public static StyleResource valueOf(String value, Context context) {
         StyleResource style = StyleCache.cache.get(value);
         if (null == style) {
             try {
-                style = new StyleResource(value);
+                style = new StyleResource(value, context);
             } catch (Exception e) {
                 if (ProteusConstants.isLoggingEnabled()) {
                     e.printStackTrace();
