@@ -29,7 +29,7 @@ import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
-import com.flipkart.android.proteus.toolbox.Binding;
+import com.flipkart.android.proteus.toolbox.BoundAttribute;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Scope;
@@ -64,7 +64,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     private String dataPathForChildren;
     private Layout childLayout;
     private boolean isViewUpdating;
-    private ArrayList<Binding> bindings;
+    private ArrayList<BoundAttribute> boundAttributes;
     private Layout layout;
 
     @Override
@@ -83,10 +83,10 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
         data = onAfterDataContext(scope.getData());
 
-        // update the bindings of this view
-        if (this.bindings != null) {
-            for (Binding binding : this.bindings) {
-                this.handleBinding(binding);
+        // update the boundAttributes of this view
+        if (this.boundAttributes != null) {
+            for (BoundAttribute boundAttribute : this.boundAttributes) {
+                this.handleBinding(boundAttribute);
             }
         }
 
@@ -196,13 +196,13 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         }
     }
 
-    private void handleBinding(Binding binding) {
-        if (binding.hasRegEx()) {
-            inflater.handleAttribute(parser, (ProteusView) view, binding.getAttributeId(), getLayout().create(binding.getAttributeValue()));
+    private void handleBinding(BoundAttribute boundAttribute) {
+        if (boundAttribute.hasRegEx()) {
+            inflater.handleAttribute(parser, (ProteusView) view, boundAttribute.getAttributeId(), getLayout().create(boundAttribute.getAttributeValue()));
         } else {
-            Result result = Utils.readJson(binding.getBindingName(), scope.getData(), scope.getIndex());
+            Result result = Utils.readJson(boundAttribute.getBindingName(), scope.getData(), scope.getIndex());
             JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
-            inflater.handleAttribute(parser, (ProteusView) view, binding.getAttributeId(), getLayout().create(dataValue));
+            inflater.handleAttribute(parser, (ProteusView) view, boundAttribute.getAttributeId(), getLayout().create(dataValue));
         }
     }
 
@@ -316,10 +316,10 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     protected void update(String dataPath) {
         this.isViewUpdating = true;
 
-        if (this.bindings != null) {
-            for (Binding binding : this.bindings) {
-                if (binding.getBindingName().equals(dataPath)) {
-                    this.handleBinding(binding);
+        if (this.boundAttributes != null) {
+            for (BoundAttribute boundAttribute : this.boundAttributes) {
+                if (boundAttribute.getBindingName().equals(dataPath)) {
+                    this.handleBinding(boundAttribute);
                 }
             }
         }
@@ -376,11 +376,11 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     }
 
     @Override
-    public void addBinding(@NonNull Binding binding) {
-        if (this.bindings == null) {
-            this.bindings = new ArrayList<>();
+    public void addBinding(@NonNull BoundAttribute boundAttribute) {
+        if (this.boundAttributes == null) {
+            this.boundAttributes = new ArrayList<>();
         }
-        bindings.add(binding);
+        boundAttributes.add(boundAttribute);
     }
 
     @Override
@@ -392,7 +392,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         parser = null;
         onUpdateDataListener = null;
         dataPathForChildren = null;
-        bindings = null;
+        boundAttributes = null;
     }
 
     @Override

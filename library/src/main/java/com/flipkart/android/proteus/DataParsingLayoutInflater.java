@@ -25,7 +25,7 @@ import android.view.View;
 
 import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.manager.ProteusViewManagerImpl;
-import com.flipkart.android.proteus.toolbox.Binding;
+import com.flipkart.android.proteus.toolbox.BoundAttribute;
 import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.Scope;
@@ -98,8 +98,8 @@ public class DataParsingLayoutInflater extends SimpleLayoutInflater {
         // check if the view is in update mode if not that means that the update flow
         // is running and we must not add more bindings for they will be duplicates
         if (!viewManager.isViewUpdating()) {
-            Binding binding = new Binding(bindingName, attributeId, attributeValue, hasRegEx);
-            viewManager.addBinding(binding);
+            BoundAttribute boundAttribute = new BoundAttribute(bindingName, attributeId, attributeValue, hasRegEx);
+            viewManager.addBinding(boundAttribute);
         }
     }
 

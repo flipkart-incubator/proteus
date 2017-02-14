@@ -21,16 +21,16 @@ package com.flipkart.android.proteus.toolbox;
 
 /**
  * @author kirankumar
- * @author aditya.sharat
+ * @author adityasharat
  */
-public class Binding {
+public class BoundAttribute {
 
     private String bindingName;
     private int attributeId;
     private String attributeValue;
     private boolean hasRegEx;
 
-    public Binding(String bindingName, int attributeId, String attributeValue, boolean hasRegEx) {
+    public BoundAttribute(String bindingName, int attributeId, String attributeValue, boolean hasRegEx) {
         this.bindingName = bindingName;
         this.attributeId = attributeId;
         this.attributeValue = attributeValue;

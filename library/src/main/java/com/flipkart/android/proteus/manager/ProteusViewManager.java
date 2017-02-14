@@ -26,9 +26,8 @@ import android.view.View;
 
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
-import com.flipkart.android.proteus.toolbox.Binding;
+import com.flipkart.android.proteus.toolbox.BoundAttribute;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.google.gson.JsonElement;
@@ -207,9 +206,9 @@ public interface ProteusViewManager {
     boolean isViewUpdating();
 
     /**
-     * @param binding
+     * @param boundAttribute
      */
-    void addBinding(@NonNull Binding binding);
+    void addBinding(@NonNull BoundAttribute boundAttribute);
 
     /**
      * Free all resources held by the view manager
