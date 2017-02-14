@@ -27,9 +27,26 @@ import com.google.gson.JsonElement;
 
 /**
  * @author kirankumar
- * @author aditya.sharat
+ * @author adityasharat
  */
 public abstract class AttributeProcessor<V> {
+
+    @Nullable
+    public static Value staticPrecompile(Value value, Context context) {
+        if (value.isPrimitive()) {
+            String string = value.getAsString();
+            if (Binding.isBindingValue(string)) {
+                return Binding.valueOf(string);
+            } else if (Resource.isResource(string)) {
+                return Resource.valueOf(string, null, context);
+            } else if (AttributeResource.isAttributeResource(string)) {
+                return AttributeResource.valueOf(string, context);
+            } else if (StyleResource.isStyleResource(string)) {
+                return StyleResource.valueOf(string, context);
+            }
+        }
+        return null;
+    }
 
     public void process(V view, Value value) {
         if (value.isBinding()) {
@@ -58,16 +75,7 @@ public abstract class AttributeProcessor<V> {
     public Value precompile(Value value, Context context) {
         Value compiled = null;
         if (value.isPrimitive()) {
-            String string = value.getAsString();
-            if (Binding.isBindingValue(string)) {
-                compiled = Binding.valueOf(string);
-            } else if (Resource.isResource(string)) {
-                compiled = Resource.valueOf(string, null, context);
-            } else if (AttributeResource.isAttributeResource(string)) {
-                compiled = AttributeResource.valueOf(string, context);
-            } else if (StyleResource.isStyleResource(string)) {
-                compiled = StyleResource.valueOf(string, context);
-            }
+            compiled = staticPrecompile(value, context);
         }
         return null != compiled ? compiled : compile(value, context);
     }
