@@ -72,14 +72,6 @@ public class Binding extends Value {
      * @param value
      * @return
      */
-    public static String getBindingValue(final String value) {
-        return value.substring(1);
-    }
-
-    /**
-     * @param value
-     * @return
-     */
     public static Binding valueOf(final String value) {
         Binding binding = BindingCache.cache.get(value);
         if (null == binding) {

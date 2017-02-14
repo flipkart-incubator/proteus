@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.AttributeResource;
+import com.flipkart.android.proteus.Binding;
 import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.ObjectValue;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
@@ -39,7 +40,6 @@ import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -142,10 +142,10 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
                                           ObjectValue children, JsonObject data, Styles styles, int dataIndex) {
 
         //noinspection ConstantConditions : We want to throw an exception (for now)
-        String dataPath = children.getAsString(ProteusConstants.DATA).substring(1);
-        viewManager.setDataPathForChildren(dataPath);
+        String binding = children.getAsString(ProteusConstants.DATA).substring(1);
+        viewManager.setDataPathForChildren(binding);
 
-        Result result = Utils.readJson(dataPath, data, dataIndex);
+        Result result = Binding.valueOf(binding).getExpression(0).evaluate(data, dataIndex);
         JsonElement element = result.isSuccess() ? result.element : null;
 
         Layout childLayout = children.getAsLayout(ProteusConstants.LAYOUT);
