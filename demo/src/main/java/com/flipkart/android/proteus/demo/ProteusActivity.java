@@ -35,12 +35,12 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 
 import com.flipkart.android.proteus.DataAndViewParsingLayoutInflater;
-import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;

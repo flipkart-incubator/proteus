@@ -19,7 +19,7 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.value.Value;
 
 import java.util.HashMap;
 import java.util.Map;

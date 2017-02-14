@@ -21,19 +21,12 @@ package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.view.View;
 
-import com.flipkart.android.proteus.AttributeProcessor;
-import com.flipkart.android.proteus.Primitive;
-import com.flipkart.android.proteus.Value;
-
-import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * DimensionAttributeProcessorTest

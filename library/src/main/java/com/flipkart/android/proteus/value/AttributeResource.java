@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -107,7 +107,7 @@ public class AttributeResource extends Value {
     }
 
     @Override
-    Value copy() {
+    public Value copy() {
         return this;
     }
 

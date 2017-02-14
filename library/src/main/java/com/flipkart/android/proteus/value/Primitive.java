@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.$Gson$Preconditions;
@@ -112,7 +112,7 @@ public class Primitive extends Value {
     }
 
     @Override
-    Primitive copy() {
+    public Primitive copy() {
         return this;
     }
 

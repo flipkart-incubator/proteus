@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
@@ -128,7 +128,7 @@ public class Binding extends Value {
     }
 
     @Override
-    Value copy() {
+    public Value copy() {
         return this;
     }
 

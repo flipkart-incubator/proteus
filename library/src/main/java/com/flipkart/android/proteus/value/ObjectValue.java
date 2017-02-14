@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import android.support.annotation.Nullable;
 
@@ -39,7 +39,7 @@ public class ObjectValue extends Value {
     private final HashMap<String, Value> members = new HashMap<>();
 
     @Override
-    ObjectValue copy() {
+    public ObjectValue copy() {
         ObjectValue result = new ObjectValue();
         for (Map.Entry<String, Value> entry : members.entrySet()) {
             result.add(entry.getKey(), entry.getValue().copy());

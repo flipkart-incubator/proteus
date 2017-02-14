@@ -22,7 +22,7 @@ package com.flipkart.android.proteus.parser.custom;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 
-import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;

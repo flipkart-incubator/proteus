@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -250,7 +250,7 @@ public abstract class Color extends Value {
         }
 
         @Override
-        Value copy() {
+        public Value copy() {
             return this;
         }
 
@@ -269,7 +269,7 @@ public abstract class Color extends Value {
         }
 
         @Override
-        Value copy() {
+        public Value copy() {
             return this;
         }
 

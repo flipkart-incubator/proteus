@@ -29,9 +29,8 @@ import com.flipkart.android.proteus.toolbox.IdGeneratorImpl;
 import java.util.Map;
 
 /**
- * Factory class for creating Layout inflaters with different predefined behaviours. This is the
- * only way to create layout inflater objects. To create a simple layout inflater use
- * {@link LayoutInflaterFactory#getSimpleLayoutInflater(IdGenerator)}
+ * Factory class for creating Layout inflaters with different predefined behaviours. NOTE: This is the
+ * only way to create proteus layout inflaters.
  */
 public class LayoutInflaterFactory {
 

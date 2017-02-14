@@ -23,8 +23,8 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.flipkart.android.proteus.AttributeProcessor;
-import com.flipkart.android.proteus.Primitive;
-import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.value.Primitive;
+import com.flipkart.android.proteus.value.Value;
 
 import org.junit.Test;
 

@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -54,7 +54,7 @@ public class Layout extends Value {
     }
 
     @Override
-    Layout copy() {
+    public Layout copy() {
         List<Attribute> attributes = null;
         if (this.attributes != null) {
             attributes = new ArrayList<>(this.attributes.size());

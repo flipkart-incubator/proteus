@@ -24,7 +24,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.Size;
 import android.view.View;
 
-import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.toolbox.BoundAttribute;

@@ -42,8 +42,8 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
-import com.flipkart.android.proteus.ObjectValue;
-import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.google.gson.annotations.SerializedName;
 

@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 /**
  * Null
@@ -34,7 +34,7 @@ public class Null extends Value {
     public static final Null INSTANCE = new Null();
 
     @Override
-    Null copy() {
+    public Null copy() {
         return INSTANCE;
     }
 

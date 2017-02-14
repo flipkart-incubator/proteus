@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import android.content.Context;
 import android.support.v4.util.LruCache;
@@ -155,7 +155,7 @@ public class Dimension extends Value {
     }
 
     @Override
-    Value copy() {
+    public Value copy() {
         return this;
     }
 

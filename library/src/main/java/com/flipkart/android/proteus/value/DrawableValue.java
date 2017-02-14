@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -33,6 +33,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Pair;
 
+import com.flipkart.android.proteus.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
@@ -104,7 +106,7 @@ public abstract class DrawableValue extends Value {
     public abstract void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, Callback callback);
 
     @Override
-    Value copy() {
+    public Value copy() {
         return this;
     }
 
@@ -399,7 +401,7 @@ public abstract class DrawableValue extends Value {
 
             Drawable resultDrawable = null;
 
-            com.flipkart.android.proteus.Color.Result result = ColorResourceProcessor.evaluate(color, view);
+            Color.Result result = ColorResourceProcessor.evaluate(color, view);
 
             if (null != result.colors) {
                 colorStateList = result.colors;
@@ -675,7 +677,7 @@ public abstract class DrawableValue extends Value {
 
         @Override
         public void apply(ProteusView view, final GradientDrawable gradientDrawable) {
-            com.flipkart.android.proteus.Color.Result result = ColorResourceProcessor.evaluate(color, view);
+            Color.Result result = ColorResourceProcessor.evaluate(color, view);
             if (null != result.colors && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 gradientDrawable.setColor(result.colors);
             } else {

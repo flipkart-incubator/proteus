@@ -17,11 +17,13 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.view.ViewGroup;
+
+import com.flipkart.android.proteus.value.Dimension;
 
 import org.junit.After;
 import org.junit.Before;

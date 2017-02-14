@@ -19,7 +19,7 @@
 
 package com.flipkart.android.proteus.demo.models;
 
-import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.toolbox.Styles;
 import com.google.gson.JsonObject;
 

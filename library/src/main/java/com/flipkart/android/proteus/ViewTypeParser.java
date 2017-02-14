@@ -26,6 +26,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.Value;
 import com.google.gson.JsonObject;
 
 import org.xmlpull.v1.XmlPullParser;

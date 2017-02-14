@@ -36,13 +36,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.flipkart.android.proteus.AttributeProcessor;
-import com.flipkart.android.proteus.AttributeResource;
-import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.value.AttributeResource;
+import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.Resource;
-import com.flipkart.android.proteus.StyleResource;
-import com.flipkart.android.proteus.Value;
+import com.flipkart.android.proteus.value.Resource;
+import com.flipkart.android.proteus.value.StyleResource;
+import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;

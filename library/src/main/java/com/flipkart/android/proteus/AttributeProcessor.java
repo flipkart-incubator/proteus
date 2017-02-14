@@ -23,6 +23,11 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.flipkart.android.proteus.toolbox.Scope;
+import com.flipkart.android.proteus.value.AttributeResource;
+import com.flipkart.android.proteus.value.Binding;
+import com.flipkart.android.proteus.value.Resource;
+import com.flipkart.android.proteus.value.StyleResource;
+import com.flipkart.android.proteus.value.Value;
 import com.google.gson.JsonElement;
 
 /**

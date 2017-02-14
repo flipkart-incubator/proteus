@@ -17,9 +17,11 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import android.content.Context;
+
+import com.flipkart.android.proteus.value.StyleResource;
 
 import org.junit.Test;
 import org.mockito.Mock;

@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -44,7 +44,7 @@ public class Array extends Value {
     }
 
     @Override
-    Array copy() {
+    public Array copy() {
         Array result = new Array();
         for (Value value : values) {
             result.add(value.copy());

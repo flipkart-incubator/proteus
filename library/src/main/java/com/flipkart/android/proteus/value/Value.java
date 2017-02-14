@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
 import com.google.gson.JsonElement;
 
@@ -50,7 +50,7 @@ public abstract class Value {
      * Returns a deep copy of this value. Immutable elements
      * like primitives and nulls are not copied.
      */
-    abstract Value copy();
+    public abstract Value copy();
 
     /**
      * provides check for verifying if this value is an array or not.

@@ -17,9 +17,10 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.value;
 
-import com.flipkart.android.proteus.toolbox.Result;
+import com.flipkart.android.proteus.value.Binding;
+import com.flipkart.android.proteus.value.Value;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -30,11 +31,11 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * ExpressionTest
+ * BindingTest
  *
  * @author aditya.sharat
  */
-public class ExpressionTest {
+public class BindingTest {
 
     public static JsonObject data() {
         JsonObject object = new JsonObject();
@@ -42,8 +43,10 @@ public class ExpressionTest {
         JsonObject a = new JsonObject();
         JsonObject b = new JsonObject();
         JsonElement c = new JsonPrimitive(10);
+        JsonElement d = new JsonPrimitive(true);
 
         b.add("c", c);
+        b.add("d", d);
         a.add("b", b);
         object.add("a", a);
 
@@ -52,23 +55,30 @@ public class ExpressionTest {
 
     @Test
     public void valueOf_cache() throws Exception {
-        Binding.Expression expression1 = Binding.Expression.valueOf("a.b.c", null);
-        Binding.Expression expression2 = Binding.Expression.valueOf("a.b.c", null);
-        assertThat(expression1, is(expression2));
+        Binding binding1 = Binding.valueOf("@{a.b.c}");
+        Binding binding2 = Binding.valueOf("@{a.b.c}");
+
+        assertThat(binding1, is(binding2));
     }
 
     @Test
-    public void valueOf_cache_with_formatter() throws Exception {
-        Binding.Expression expression1 = Binding.Expression.valueOf("a.b.c", "data('d-m-y')");
-        Binding.Expression expression2 = Binding.Expression.valueOf("a.b.c", "data('d-m-y')");
-        assertThat(expression1, is(expression2));
+    public void evaluate_single() throws Exception {
+        Binding binding = Binding.valueOf("@{a.b.c}");
+
+        Value value = binding.evaluate(data(), 0);
+
+        assertThat(value.getAsString(), is("10"));
+
     }
 
     @Test
-    public void evaluate() throws Exception {
-        Binding.Expression expression = Binding.Expression.valueOf("a.b.c", null);
-        Result result = expression.evaluate(data(), 0);
-        assertThat(result.isSuccess(), is(true));
+    public void evaluate_multiple() throws Exception {
+        Binding binding = Binding.valueOf("@{a.b.c} and @{a.b.d}");
+
+        Value value = binding.evaluate(data(), 0);
+
+        assertThat(value.getAsString(), is("10 and true"));
 
     }
+
 }

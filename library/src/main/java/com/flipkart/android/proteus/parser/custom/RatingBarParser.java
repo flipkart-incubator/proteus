@@ -22,7 +22,7 @@ package com.flipkart.android.proteus.parser.custom;
 import android.graphics.drawable.Drawable;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.Layout;
+import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
