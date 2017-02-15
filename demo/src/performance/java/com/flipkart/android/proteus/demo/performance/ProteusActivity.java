@@ -58,7 +58,7 @@ public class ProteusActivity extends BaseActivity {
 
         Proteus proteus = new ProteusBuilder().build();
 
-        builder = proteus.createContext(this, null, null, null, null).getInflater();
+        builder = proteus.createContext(this).getInflater();
 
         container = new FrameLayout(ProteusActivity.this);
         layoutParams = new ViewGroup.LayoutParams(
