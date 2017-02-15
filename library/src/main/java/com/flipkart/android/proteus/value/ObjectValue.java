@@ -38,6 +38,19 @@ public class ObjectValue extends Value {
 
     private final HashMap<String, Value> members = new HashMap<>();
 
+    static ObjectValue fromJson(JsonObject json) {
+        ObjectValue object = new ObjectValue();
+        String name;
+        JsonElement element;
+        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
+            name = entry.getKey();
+            element = entry.getValue();
+            object.add(name, Value.fromJson(element));
+        }
+
+        return object;
+    }
+
     @Override
     public ObjectValue copy() {
         ObjectValue result = new ObjectValue();
@@ -284,19 +297,6 @@ public class ObjectValue extends Value {
             return (Layout) members.get(memberName);
         }
         return null;
-    }
-
-    static ObjectValue fromJson(JsonObject json) {
-        ObjectValue object = new ObjectValue();
-        String name;
-        JsonElement element;
-        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
-            name = entry.getKey();
-            element = entry.getValue();
-            object.add(name, Value.fromJson(element));
-        }
-
-        return object;
     }
 
     @Override

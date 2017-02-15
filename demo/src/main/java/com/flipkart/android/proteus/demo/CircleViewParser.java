@@ -24,11 +24,11 @@ import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;
-import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.demo.customviews.CircleView;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.value.Layout;
 import com.google.gson.JsonObject;
 
 /**
@@ -41,7 +41,7 @@ public class CircleViewParser extends ViewTypeParser<CircleView> {
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new CircleView(parent.getContext());
+        return new CircleView(context);
     }
 
     @Override

@@ -26,9 +26,9 @@ import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;
-import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.view.ProteusViewPager;
 import com.google.gson.JsonObject;
 

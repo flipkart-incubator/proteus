@@ -37,18 +37,18 @@ import android.widget.ProgressBar;
 
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.ProteusContext;
-import com.flipkart.android.proteus.value.AttributeResource;
-import com.flipkart.android.proteus.value.Layout;
-import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.value.Resource;
-import com.flipkart.android.proteus.value.StyleResource;
-import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
+import com.flipkart.android.proteus.value.AttributeResource;
+import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Resource;
+import com.flipkart.android.proteus.value.StyleResource;
+import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.view.ProteusProgressBar;
 import com.google.gson.JsonObject;
 

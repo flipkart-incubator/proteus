@@ -34,11 +34,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.value.Dimension;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Value;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

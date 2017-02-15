@@ -19,9 +19,6 @@
 
 package com.flipkart.android.proteus;
 
-import android.annotation.SuppressLint;
-import android.os.Build;
-
 import com.flipkart.android.proteus.parser.IncludeParser;
 import com.flipkart.android.proteus.parser.ViewParser;
 import com.flipkart.android.proteus.parser.custom.ButtonParser;
@@ -42,13 +39,7 @@ import com.flipkart.android.proteus.parser.custom.ViewGroupParser;
 import com.flipkart.android.proteus.parser.custom.ViewPagerParser;
 import com.flipkart.android.proteus.parser.custom.WebViewParser;
 import com.flipkart.android.proteus.toolbox.Formatter;
-import com.flipkart.android.proteus.toolbox.Utils;
-import com.google.gson.JsonElement;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -116,8 +107,6 @@ public class ProteusBuilder {
         register("CheckBox", new CheckBoxParser(), "Button");
         register("ProgressBar", new ProgressBarParser(), "View");
         register("HorizontalProgressBar", new HorizontalProgressBarParser(), "ProgressBar");
-
-
 
 
         register(Formatter.DATE);

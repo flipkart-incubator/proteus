@@ -53,6 +53,15 @@ public class Array extends Value {
         values = new ArrayList<>(capacity);
     }
 
+    static Array fromJson(JsonArray json) {
+        Array array = new Array();
+        Iterator<JsonElement> iterator = json.iterator();
+        while (iterator.hasNext()) {
+            array.add(Value.fromJson(iterator.next()));
+        }
+        return array;
+    }
+
     @Override
     public Array copy() {
         Array result = new Array(values.size());
@@ -198,15 +207,6 @@ public class Array extends Value {
      */
     public Value get(int i) {
         return values.get(i);
-    }
-
-    static Array fromJson(JsonArray json) {
-        Array array = new Array();
-        Iterator<JsonElement> iterator = json.iterator();
-        while (iterator.hasNext()) {
-            array.add(Value.fromJson(iterator.next()));
-        }
-        return array;
     }
 
     @Override

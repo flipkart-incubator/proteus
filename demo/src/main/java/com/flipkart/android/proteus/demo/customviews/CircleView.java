@@ -49,6 +49,7 @@ public class CircleView extends View implements ProteusView {
         super(context);
         init();
     }
+
     public CircleView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();

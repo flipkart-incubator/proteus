@@ -48,8 +48,8 @@ final class GsonRequestBodyConverter<T> implements Converter<T, RequestBody> {
     }
 
     private TypeAdapter<T> getAdapter() {
-        if(null == typeAdapter) {
-            typeAdapter = (TypeAdapter<T>)gson.getAdapter(TypeToken.get(type));
+        if (null == typeAdapter) {
+            typeAdapter = (TypeAdapter<T>) gson.getAdapter(TypeToken.get(type));
         }
         return typeAdapter;
     }

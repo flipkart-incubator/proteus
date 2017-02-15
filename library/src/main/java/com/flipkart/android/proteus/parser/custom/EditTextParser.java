@@ -26,9 +26,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.flipkart.android.proteus.ProteusContext;
-import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.view.ProteusEditText;
 import com.google.gson.JsonObject;
 

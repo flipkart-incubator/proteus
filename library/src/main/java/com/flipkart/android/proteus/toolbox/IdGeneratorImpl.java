@@ -38,6 +38,17 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author aditya.sharat
  */
 public class IdGeneratorImpl implements IdGenerator {
+    public final static Parcelable.Creator<IdGeneratorImpl> CREATOR = new Creator<IdGeneratorImpl>() {
+        @Override
+        public IdGeneratorImpl createFromParcel(Parcel source) {
+            return new IdGeneratorImpl(source);
+        }
+
+        @Override
+        public IdGeneratorImpl[] newArray(int size) {
+            return new IdGeneratorImpl[size];
+        }
+    };
     private static final ClassLoader ID_MAP_CLASS_LOADER = new TypeToken<Map<String, Integer>>() {
     }.getClass().getClassLoader();
     private final HashMap<String, Integer> idMap = new HashMap<>();
@@ -51,18 +62,6 @@ public class IdGeneratorImpl implements IdGenerator {
         sNextGeneratedId = new AtomicInteger(source.readInt());
         source.readMap(idMap, ID_MAP_CLASS_LOADER);
     }
-
-    public final static Parcelable.Creator<IdGeneratorImpl> CREATOR = new Creator<IdGeneratorImpl>() {
-        @Override
-        public IdGeneratorImpl createFromParcel(Parcel source) {
-            return new IdGeneratorImpl(source);
-        }
-
-        @Override
-        public IdGeneratorImpl[] newArray(int size) {
-            return new IdGeneratorImpl[size];
-        }
-    };
 
     /**
      * Flatten this object in to a Parcel.

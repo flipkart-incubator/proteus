@@ -24,12 +24,12 @@ import android.view.View;
 import android.view.animation.Animation;
 
 import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.toolbox.AnimationUtils;
+import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
-import com.flipkart.android.proteus.toolbox.AnimationUtils;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
 /**
  * Use this as the base processor for references like @anim

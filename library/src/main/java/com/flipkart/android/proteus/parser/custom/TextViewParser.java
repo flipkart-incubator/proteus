@@ -32,7 +32,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.flipkart.android.proteus.ProteusContext;
-import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -43,6 +42,7 @@ import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.GravityAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
+import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.view.ProteusTextView;
 import com.google.gson.JsonObject;
 

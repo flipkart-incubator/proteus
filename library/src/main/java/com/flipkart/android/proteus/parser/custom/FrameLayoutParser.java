@@ -24,12 +24,12 @@ import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;
-import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
+import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
 import com.flipkart.android.proteus.view.custom.AspectRatioFrameLayout;
 import com.google.gson.JsonObject;
