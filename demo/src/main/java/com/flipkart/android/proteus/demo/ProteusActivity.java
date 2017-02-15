@@ -39,12 +39,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 
+import com.flipkart.android.proteus.LayoutManager;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.LayoutManager;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.StyleManager;
 import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
@@ -65,8 +66,6 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
-
-import com.flipkart.android.proteus.StyleManager;
 
 
 public class ProteusActivity extends AppCompatActivity {
@@ -201,7 +200,14 @@ public class ProteusActivity extends AppCompatActivity {
                 .register("CircleView", new CircleViewParser(), "View")
                 .build();
 
-        layoutInflater = proteus.createContext(this, loader, callback, layoutManager, styleManager).getInflater();
+        ProteusContext context = proteus.createContextBuilder(this)
+                .setLayoutManager(layoutManager)
+                .setCallback(callback)
+                .setImageLoader(loader)
+                .setStyleManager(styleManager)
+                .build();
+
+        layoutInflater = context.getInflater();
 
         ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setProteus(proteus);
 

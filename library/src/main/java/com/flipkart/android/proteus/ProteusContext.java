@@ -107,4 +107,65 @@ public class ProteusContext extends ContextWrapper {
     public Map<String, Value> getStyle(String name) {
         return resources.getStyle(name);
     }
+
+    /**
+     * Builder
+     *
+     * @author adityasharat
+     */
+    public static class Builder {
+
+        @NonNull
+        private final Context base;
+
+        @NonNull
+        private final FormatterManager formatterManager;
+
+        @NonNull
+        private final Map<String, ViewTypeParser> parsers;
+
+        @Nullable
+        private ProteusLayoutInflater.ImageLoader loader;
+
+        @Nullable
+        private ProteusLayoutInflater.Callback callback;
+
+        @Nullable
+        private LayoutManager layoutManager;
+
+        @Nullable
+        private StyleManager styleManager;
+
+        Builder(@NonNull Context context, @NonNull Map<String, ViewTypeParser> parsers, @NonNull FormatterManager formatterManager) {
+            this.base = context;
+            this.parsers = parsers;
+            this.formatterManager = formatterManager;
+        }
+
+        public Builder setImageLoader(@Nullable ProteusLayoutInflater.ImageLoader loader) {
+            this.loader = loader;
+            return this;
+        }
+
+        public Builder setCallback(@Nullable ProteusLayoutInflater.Callback callback) {
+            this.callback = callback;
+            return this;
+        }
+
+        public Builder setLayoutManager(@Nullable LayoutManager layoutManager) {
+            this.layoutManager = layoutManager;
+            return this;
+        }
+
+        public Builder setStyleManager(@Nullable StyleManager styleManager) {
+            this.styleManager = styleManager;
+            return this;
+        }
+
+        public ProteusContext build() {
+            ProteusResources resources = new ProteusResources(parsers, layoutManager, formatterManager, styleManager);
+            return new ProteusContext(base, resources, loader, callback);
+        }
+
+    }
 }

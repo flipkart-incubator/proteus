@@ -77,17 +77,12 @@ public final class Proteus {
 
     @NonNull
     public ProteusContext createContext(@NonNull Context base) {
-        return createContext(base, null, null, null, null);
+        return createContextBuilder(base).build();
     }
 
     @NonNull
-    public ProteusContext createContext(@NonNull Context base,
-                                        @Nullable ProteusLayoutInflater.ImageLoader loader,
-                                        @Nullable ProteusLayoutInflater.Callback callback,
-                                        @Nullable LayoutManager layoutManager,
-                                        @Nullable StyleManager styleManager) {
-        ProteusResources resources = new ProteusResources(parsers, layoutManager, formatterManager, styleManager);
-        return new ProteusContext(base, resources, loader, callback);
+    public ProteusContext.Builder createContextBuilder(@NonNull Context base) {
+        return new ProteusContext.Builder(base, parsers, formatterManager);
     }
 
     static class Type {
