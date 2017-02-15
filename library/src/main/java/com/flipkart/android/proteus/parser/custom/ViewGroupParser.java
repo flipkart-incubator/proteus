@@ -20,18 +20,13 @@
 package com.flipkart.android.proteus.parser.custom;
 
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.AttributeProcessor;
-import com.flipkart.android.proteus.value.AttributeResource;
-import com.flipkart.android.proteus.value.Binding;
-import com.flipkart.android.proteus.value.Layout;
-import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.value.Resource;
-import com.flipkart.android.proteus.value.StyleResource;
-import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
@@ -40,6 +35,13 @@ import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.value.AttributeResource;
+import com.flipkart.android.proteus.value.Binding;
+import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Resource;
+import com.flipkart.android.proteus.value.StyleResource;
+import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -52,7 +54,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     private static final String LAYOUT_MODE_OPTICAL_BOUNDS = "opticalBounds";
 
     @Override
-    public ProteusView createView(ProteusLayoutInflater.Internal inflater, Layout layout, JsonObject data, ViewGroup parent, Styles styles, int index) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, ViewGroup parent, int dataIndex) {
         return new ProteusAspectRatioFrameLayout(parent.getContext());
     }
 
@@ -119,27 +121,26 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     @Override
     public boolean handleChildren(ProteusView view, Value children) {
         ProteusViewManager viewManager = view.getViewManager();
-        ProteusLayoutInflater layoutInflater = viewManager.getInflater();
+        ProteusLayoutInflater layoutInflater = viewManager.getContext().getInflater();
         JsonObject data = viewManager.getScope().getData();
         int dataIndex = viewManager.getScope().getIndex();
-        Styles styles = view.getViewManager().getStyles();
 
         if (children.isArray()) {
             ProteusView child;
             Iterator<Value> iterator = children.getAsArray().iterator();
             while (iterator.hasNext()) {
-                child = layoutInflater.inflate(iterator.next().getAsLayout(), data, (ViewGroup) view, styles, dataIndex);
+                child = layoutInflater.inflate(iterator.next().getAsLayout(), data, (ViewGroup) view, dataIndex);
                 addView(view, child);
             }
         } else if (children.isObject()) {
-            handleDataDrivenChildren(layoutInflater, view, viewManager, children.getAsObject(), data, styles, dataIndex);
+            handleDataDrivenChildren(layoutInflater, view, viewManager, children.getAsObject(), data, dataIndex);
         }
 
         return true;
     }
 
     private void handleDataDrivenChildren(ProteusLayoutInflater layoutInflater, ProteusView parent, ProteusViewManager viewManager,
-                                          ObjectValue children, JsonObject data, Styles styles, int dataIndex) {
+                                          ObjectValue children, JsonObject data, int dataIndex) {
 
         //noinspection ConstantConditions : We want to throw an exception (for now)
         String binding = children.getAsString(ProteusConstants.DATA).substring(1);
@@ -160,7 +161,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
 
         ProteusView child;
         for (int index = 0; index < length; index++) {
-            child = layoutInflater.inflate(childLayout, data, (ViewGroup) parent, styles, index);
+            child = layoutInflater.inflate(childLayout, data, (ViewGroup) parent, index);
             if (child != null) {
                 this.addView(parent, child);
             }

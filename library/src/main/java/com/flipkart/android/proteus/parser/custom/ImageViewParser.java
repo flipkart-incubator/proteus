@@ -20,18 +20,18 @@
 package com.flipkart.android.proteus.parser.custom;
 
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.value.Layout;
-import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
-import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusImageView;
 import com.google.gson.JsonObject;
 
@@ -42,7 +42,7 @@ import com.google.gson.JsonObject;
 public class ImageViewParser<T extends ImageView> extends ViewTypeParser<T> {
 
     @Override
-    public ProteusView createView(ProteusLayoutInflater.Internal inflater, Layout layout, JsonObject data, ViewGroup parent, Styles styles, int index) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, ViewGroup parent, int dataIndex) {
         return new ProteusImageView(parent.getContext());
     }
 

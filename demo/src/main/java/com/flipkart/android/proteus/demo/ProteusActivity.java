@@ -19,8 +19,11 @@
 
 package com.flipkart.android.proteus.demo;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,26 +31,27 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 
-import com.flipkart.android.proteus.DataAndViewParsingLayoutInflater;
-import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusResources.LayoutManager;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
 import com.flipkart.android.proteus.toolbox.DrawableCallback;
 import com.flipkart.android.proteus.toolbox.EventType;
-import com.flipkart.android.proteus.toolbox.IdGeneratorImpl;
 import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.Value;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -61,6 +65,8 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
+import static com.flipkart.android.proteus.ProteusResources.StyleManager;
+
 
 public class ProteusActivity extends AppCompatActivity {
 
@@ -72,13 +78,31 @@ public class ProteusActivity extends AppCompatActivity {
 
     private ViewGroup container;
 
-    private DataAndViewParsingLayoutInflater layoutInflater;
+    private ProteusLayoutInflater layoutInflater;
 
     private JsonObject data;
     private Layout layout;
 
     private Styles styles;
     private Map<String, Layout> layouts;
+
+    private StyleManager styleManager = new StyleManager() {
+
+        @Nullable
+        @Override
+        protected Styles getStyles() {
+            return styles;
+        }
+    };
+
+    private LayoutManager layoutManager = new LayoutManager() {
+
+        @Nullable
+        @Override
+        protected Map<String, Layout> getLayouts() {
+            return layouts;
+        }
+    };
 
     /**
      * Simple implementation of ImageLoader for loading images from url in background.
@@ -98,16 +122,24 @@ public class ProteusActivity extends AppCompatActivity {
             new AsyncTask<URL, Integer, Bitmap>() {
                 @Override
                 protected Bitmap doInBackground(URL... params) {
-                    try {
-                        return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if (isNetworkAvailable()) {
+                        try {
+                            return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        Log.e("PROTEUS", "No network");
                     }
                     return null;
                 }
 
-                protected void onPostExecute(Bitmap result) {
-                    callback.setBitmap(result);
+                protected void onPostExecute(@Nullable Bitmap result) {
+                    if (result != null) {
+                        callback.setBitmap(result);
+                    } else {
+                        callback.setDrawable(ProteusActivity.this.getResources().getDrawable(R.drawable.ic_launcher));
+                    }
                 }
             }.execute(_url);
         }
@@ -121,7 +153,7 @@ public class ProteusActivity extends AppCompatActivity {
 
         @Nullable
         @Override
-        public ProteusView onUnknownViewType(String type, View parent, Layout layout, JsonObject data, Styles styles, int index) {
+        public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, JsonObject data, int index) {
             return null;
         }
 
@@ -164,13 +196,11 @@ public class ProteusActivity extends AppCompatActivity {
             resources = retrofit.create(JsonResource.class);
         }
 
-        // create a new DataAndViewParsingLayoutInflater
-        // and set layouts, callback and image loader.
         proteus = new ProteusBuilder()
                 .register("CircleView", new CircleViewParser(), "View")
                 .build();
 
-        layoutInflater = proteus.getFactory().getDataAndViewParsingLayoutInflater(new IdGeneratorImpl(), loader, callback);
+        layoutInflater = proteus.getProteusContext(this, loader, callback, layoutManager, styleManager).getInflater();
 
         ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setProteus(proteus);
 
@@ -199,15 +229,11 @@ public class ProteusActivity extends AppCompatActivity {
         container = (ViewGroup) findViewById(R.id.content_main);
     }
 
-    private void setup() {
-        container.removeAllViews();
-        layoutInflater.setLayouts(layouts);
-    }
-
     private void render() {
+        container.removeAllViews();
         // Inflate a new view using proteus
         long start = System.currentTimeMillis();
-        ProteusView view = layoutInflater.inflate(layout, data, container, styles, 0);
+        ProteusView view = layoutInflater.inflate(layout, data, container, 0);
         System.out.println(System.currentTimeMillis() - start);
         container.addView((View) view);
     }
@@ -241,7 +267,6 @@ public class ProteusActivity extends AppCompatActivity {
             protected void onPostExecute(Void aVoid) {
                 super.onPostExecute(aVoid);
                 try {
-                    setup();
                     render();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -265,11 +290,17 @@ public class ProteusActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.fetch) {
-            fetch();
+        if (id == R.id.render) {
+            render();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

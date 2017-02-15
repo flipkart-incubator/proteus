@@ -19,6 +19,7 @@
 
 package com.flipkart.android.proteus;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.Size;
@@ -37,13 +38,24 @@ import java.util.Map;
 public final class Proteus {
 
     @NonNull
-    private final LayoutInflaterFactory factory;
-    @NonNull
     private final Map<String, Type> types;
 
-    Proteus(@NonNull Map<String, Type> types, @NonNull Map<String, Formatter> formatters) {
+    @NonNull
+    private final ProteusResources.FormatterManager formatterManager;
+
+    @NonNull
+    private final Map<String, ViewTypeParser> parsers;
+
+    Proteus(@NonNull Map<String, Type> types, @NonNull final Map<String, Formatter> formatters) {
         this.types = types;
-        this.factory = new LayoutInflaterFactory(map(types), formatters);
+        this.formatterManager = new ProteusResources.FormatterManager() {
+            @Nullable
+            @Override
+            protected Map<String, Formatter> getFormatters() {
+                return formatters;
+            }
+        };
+        this.parsers = map(types);
     }
 
     public boolean has(@NonNull @Size(min = 1) String type) {
@@ -64,8 +76,13 @@ public final class Proteus {
     }
 
     @NonNull
-    public LayoutInflaterFactory getFactory() {
-        return factory;
+    public ProteusContext getProteusContext(@NonNull Context base,
+                                            @Nullable ProteusLayoutInflater.ImageLoader loader,
+                                            @Nullable ProteusLayoutInflater.Callback callback,
+                                            @Nullable ProteusResources.LayoutManager layoutManager,
+                                            @Nullable ProteusResources.StyleManager styleManager) {
+        ProteusResources resources = new ProteusResources(parsers, layoutManager, formatterManager, styleManager);
+        return new ProteusContext(base, resources, loader, callback);
     }
 
     static class Type {

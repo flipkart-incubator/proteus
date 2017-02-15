@@ -22,67 +22,47 @@ package com.flipkart.android.proteus;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.manager.ProteusViewManager;
-import com.flipkart.android.proteus.manager.ProteusViewManagerImpl;
-import com.flipkart.android.proteus.toolbox.Formatter;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
-import com.flipkart.android.proteus.toolbox.Scope;
-import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Value;
 import com.google.gson.JsonObject;
 
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * A layout builder which can parse json to construct an android view out of it. It uses the
  * registered parsers to convert the json string to a view and then assign attributes.
  */
-public class SimpleLayoutInflater implements ProteusLayoutInflater.Internal {
+public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     private static final String TAG = "SimpleLayoutInflater";
 
     @NonNull
-    protected final Map<String, ViewTypeParser> parsers;
+    protected final ProteusContext context;
 
     @NonNull
-    protected final Map<String, Formatter> formatter;
+    final IdGenerator idGenerator;
 
-    @NonNull
-    protected final IdGenerator idGenerator;
-
-    @Nullable
-    protected final ImageLoader loader;
-
-    @Nullable
-    protected final Callback callback;
-
-    SimpleLayoutInflater(@NonNull Map<String, ViewTypeParser> parsers, @NonNull Map<String, Formatter> formatter,
-                         @NonNull IdGenerator idGenerator, @Nullable ImageLoader loader, @Nullable Callback callback) {
-        this.parsers = parsers;
-        this.formatter = formatter;
+    SimpleLayoutInflater(@NonNull ProteusContext context, IdGenerator idGenerator) {
+        this.context = context;
         this.idGenerator = idGenerator;
-        this.loader = loader;
-        this.callback = callback;
     }
 
     @Override
     @Nullable
     public ViewTypeParser getParser(String type) {
-        return parsers.get(type);
+        return context.getParser(type);
     }
 
     @Override
-    @Nullable
-    public ProteusView inflate(Layout layout, JsonObject data, ViewGroup parent, Styles styles, int index) {
-        ViewTypeParser parser = parsers.get(layout.type);
+    public ProteusView inflate(Layout layout, JsonObject data, ViewGroup parent, int dataIndex) {
+        ViewTypeParser parser = getParser(layout.type);
         if (parser == null) {
-            return onUnknownViewEncountered(layout.type, parent, layout, data, styles, callback, loader, index);
+            return onUnknownViewEncountered(context, layout.type, layout, data, dataIndex);
         }
 
         /**
@@ -90,11 +70,10 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater.Internal {
          */
         final ProteusView view;
 
-        view = createView(parser, parent, layout, data, styles, callback, loader, index);
-        onAfterCreateView(parser, view, parent, layout, data, styles, callback, loader, index);
+        view = createView(parser, layout, data, parent, dataIndex);
+        onAfterCreateView(parser, view, parent, dataIndex);
 
-        ProteusViewManager viewManager = createViewManager(parser, parent, layout, data, styles, callback, loader, index);
-        viewManager.setView(view.getAsView());
+        ProteusViewManager viewManager = createViewManager(parser, view, layout, data, parent, dataIndex);
         view.setViewManager(viewManager);
 
         /**
@@ -113,55 +92,27 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater.Internal {
     }
 
     @Override
-    @Nullable
-    public Layout getLayout(String type, Layout include) {
-        if (null != callback) {
-            return callback.onLayoutRequired(type, include);
-        }
-        return null;
+    public ProteusView inflate(Layout layout, JsonObject data, int dataIndex) {
+        return inflate(layout, data, null, dataIndex);
     }
 
     @Override
-    @Nullable
-    public ImageLoader getImageLoader() {
-        return this.loader;
+    public ProteusView inflate(Layout layout, JsonObject data) {
+        return inflate(layout, data, null, -1);
     }
 
-    @Override
-    @Nullable
-    public Callback getInflaterCallback() {
-        return this.callback;
+    protected ProteusView createView(@NonNull ViewTypeParser parser, @NonNull Layout layout,
+                                     @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+        return parser.createView(context, layout, data, parent, dataIndex);
     }
 
-    protected ProteusView createView(ViewTypeParser parser, ViewGroup parent, Layout layout, JsonObject data, Styles styles, Callback callback, ImageLoader loader, int index) {
-        return parser.createView(this, layout, data, parent, styles, index);
+    protected void onAfterCreateView(@NonNull ViewTypeParser parser, @NonNull ProteusView view,
+                                     @Nullable ViewGroup parent, int index) {
+        parser.onAfterCreateView(view, parent, index);
     }
 
-    protected void onAfterCreateView(ViewTypeParser parser, ProteusView view, ViewGroup parent, Layout layout, JsonObject data, Styles styles, Callback callback, ImageLoader loader, int index) {
-        //noinspection unchecked
-        parser.onAfterCreateView(this, view, layout, data, parent, styles, index);
-    }
-
-    protected ProteusViewManager createViewManager(ViewTypeParser parser, View parent, Layout layout, JsonObject data, Styles styles, Callback callback, ImageLoader loader, int index) {
-        if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "ProteusView created with " + layout);
-        }
-
-        ProteusViewManagerImpl viewManager = new ProteusViewManagerImpl();
-
-        Scope scope = new Scope();
-        scope.setData(data);
-        scope.setIndex(index);
-
-        viewManager.setScope(scope);
-        viewManager.setLayout(layout);
-        viewManager.setStyles(styles);
-        viewManager.setInflater(this);
-        viewManager.setInflaterCallback(callback);
-        viewManager.setImageLoader(loader);
-        viewManager.setTypeParser(parser);
-
-        return viewManager;
+    protected ProteusViewManager createViewManager(ViewTypeParser parser, ProteusView view, Layout layout, JsonObject data, ViewGroup parent, int dataIndex) {
+        return parser.createViewManager(context, view, layout, data, parent, dataIndex);
     }
 
     public boolean handleAttribute(ViewTypeParser parser, ProteusView view, int attribute, Value value) {
@@ -173,12 +124,12 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater.Internal {
     }
 
     @Nullable
-    protected ProteusView onUnknownViewEncountered(String type, ViewGroup parent, Layout layout, JsonObject data, Styles styles, Callback callback, ImageLoader loader, int index) {
+    protected ProteusView onUnknownViewEncountered(ProteusContext context, String type, Layout layout, JsonObject data, int dataIndex) {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "No ViewTypeParser for: " + type);
         }
-        if (callback != null) {
-            return callback.onUnknownViewType(type, parent, layout, data, styles, index);
+        if (context.getCallback() != null) {
+            return context.getCallback().onUnknownViewType(context, type, layout, data, dataIndex);
         }
         return null;
     }

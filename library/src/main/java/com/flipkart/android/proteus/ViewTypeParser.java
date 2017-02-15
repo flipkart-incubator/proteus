@@ -25,7 +25,9 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.manager.ProteusViewManager;
+import com.flipkart.android.proteus.manager.ProteusViewManagerImpl;
+import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Value;
 import com.google.gson.JsonObject;
@@ -54,11 +56,42 @@ public abstract class ViewTypeParser<V extends View> {
     private int offset;
     private AttributeSet attributeSet;
 
-    public abstract ProteusView createView(ProteusLayoutInflater.Internal inflater, Layout layout, JsonObject data,
-                                           @Nullable ViewGroup parent, @Nullable Styles styles, int index);
+    public abstract ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout,
+                                           @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex);
 
-    public void onAfterCreateView(ProteusLayoutInflater inflater, ProteusView view, Layout layout, JsonObject data,
-                                  @Nullable ViewGroup parent, @Nullable Styles styles, int index) {
+    public ProteusViewManager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view,
+                                                @NonNull Layout layout, @NonNull JsonObject data,
+                                                @Nullable ViewGroup parent, int dataIndex) {
+
+        Scope scope, parentScope = null;
+        Map<String, String> map = layout.scope;
+
+        if (parent instanceof ProteusView) {
+            parentScope = ((ProteusView) parent).getViewManager().getScope();
+        }
+
+        if (map == null) {
+            if (parentScope != null) {
+                scope = new Scope(parentScope);
+            } else {
+                scope = new Scope();
+                scope.setData(data);
+                scope.setIndex(dataIndex);
+            }
+        } else {
+            if (parentScope != null) {
+                scope = parentScope.createChildScope(map, dataIndex);
+            } else {
+                scope = new Scope();
+                scope.setData(data);
+                scope = scope.createChildScope(map, dataIndex);
+            }
+        }
+
+        return new ProteusViewManagerImpl(context, this, view.getAsView(), layout, scope);
+    }
+
+    public void onAfterCreateView(@NonNull ProteusView view, @Nullable ViewGroup parent, int dataIndex) {
         View v = ((View) view);
         if (null == v.getLayoutParams()) {
             ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent);

@@ -19,15 +19,15 @@
 
 package com.flipkart.android.proteus.parser;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.value.Layout;
-import com.flipkart.android.proteus.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
-import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.value.Layout;
 import com.google.gson.JsonObject;
 
 /**
@@ -39,10 +39,10 @@ import com.google.gson.JsonObject;
 public class IncludeParser<V extends View> extends ViewTypeParser<V> {
 
     @Override
-    public ProteusView createView(ProteusLayoutInflater.Internal inflater, Layout include, JsonObject data, ViewGroup parent, Styles styles, int index) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout include, @NonNull JsonObject data, ViewGroup parent, int dataIndex) {
         String type = include.extras.getAsString(ProteusConstants.LAYOUT);
-        Layout layout = inflater.getLayout(type, include);
-        return inflater.inflate(layout, data, parent, styles, index);
+        Layout layout = context.getLayout(type).merge(include);
+        return context.getInflater().inflate(layout, data, parent, dataIndex);
     }
 
     @Override

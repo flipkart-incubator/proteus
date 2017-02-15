@@ -27,17 +27,17 @@ import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
 
-import com.flipkart.android.proteus.DataAndViewParsingLayoutInflater;
-import com.flipkart.android.proteus.Layout;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.Value;
 import com.flipkart.android.proteus.demo.R;
 import com.flipkart.android.proteus.toolbox.DrawableCallback;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.Value;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -57,7 +57,7 @@ public class ProteusActivity extends BaseActivity {
 
     private ProteusView proteusView;
     private Gson gson;
-    private DataAndViewParsingLayoutInflater builder;
+    private ProteusLayoutInflater builder;
     private FrameLayout container;
     private Layout pageLayout;
     private JsonObject data;
@@ -65,9 +65,10 @@ public class ProteusActivity extends BaseActivity {
     private Styles styles;
     private ProteusLayoutInflater.Callback callback = new ProteusLayoutInflater.Callback() {
 
+
         @Nullable
         @Override
-        public ProteusView onUnknownViewType(String type, View parent, Layout layout, JsonObject data, Styles styles, int index) {
+        public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, JsonObject data, int index) {
             return null;
         }
 
@@ -131,7 +132,7 @@ public class ProteusActivity extends BaseActivity {
 
         Proteus proteus = new ProteusBuilder().build();
 
-        builder = proteus.getFactory().getDataAndViewParsingLayoutInflater();
+        builder = proteus.getProteusContext(this, null, null, null, null).getInflater();
 
         container = new FrameLayout(ProteusActivity.this);
         layoutParams = new ViewGroup.LayoutParams(
@@ -143,7 +144,7 @@ public class ProteusActivity extends BaseActivity {
 
     @Override
     View createAndBindView() {
-        proteusView = builder.inflate(pageLayout, data, container, styles, 0);
+        proteusView = builder.inflate(pageLayout, data, container, -1);
         return (View) proteusView;
     }
 

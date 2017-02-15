@@ -20,14 +20,14 @@
 package com.flipkart.android.proteus.parser.custom;
 
 
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.value.Layout;
-import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
-import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.view.ProteusViewPager;
 import com.google.gson.JsonObject;
 
@@ -38,7 +38,7 @@ public class ViewPagerParser<T extends ViewPager> extends ViewTypeParser<T> {
 
 
     @Override
-    public ProteusView createView(ProteusLayoutInflater.Internal inflater, Layout layout, JsonObject data, ViewGroup parent, Styles styles, int index) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, ViewGroup parent, int dataIndex) {
         return new ProteusViewPager(parent.getContext());
     }
 

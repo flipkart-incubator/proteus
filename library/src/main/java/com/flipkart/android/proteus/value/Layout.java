@@ -66,6 +66,9 @@ public class Layout extends Value {
         return new Layout(type, attributes, scope, extras);
     }
 
+    public Layout merge(Layout include) {
+        return this;
+    }
 
     /**
      * Attribute

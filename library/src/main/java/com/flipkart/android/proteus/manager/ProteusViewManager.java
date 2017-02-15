@@ -24,12 +24,11 @@ import android.support.annotation.Nullable;
 import android.support.annotation.Size;
 import android.view.View;
 
-import com.flipkart.android.proteus.value.Layout;
-import com.flipkart.android.proteus.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.toolbox.BoundAttribute;
 import com.flipkart.android.proteus.toolbox.Scope;
-import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.value.Layout;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -47,56 +46,14 @@ public interface ProteusViewManager {
      */
     void update(@Nullable JsonObject data);
 
-    /**
-     * Set the {@link View} which will be managed.
-     *
-     * @param view The view to manage.
-     */
-    void setView(View view);
+    @NonNull
+    ProteusContext getContext();
 
     /**
      * @return
      */
     @NonNull
-    ProteusLayoutInflater.Internal getInflater();
-
-    /**
-     * @param inflater
-     */
-    void setInflater(@NonNull ProteusLayoutInflater.Internal inflater);
-
-    /**
-     * @return
-     */
-    @Nullable
-    ProteusLayoutInflater.Callback getInflaterCallback();
-
-    /**
-     * @param callback
-     */
-    void setInflaterCallback(@Nullable ProteusLayoutInflater.Callback callback);
-
-    /**
-     * @return
-     */
-    @Nullable
-    ProteusLayoutInflater.ImageLoader getImageLoader();
-
-    /**
-     * @param loader
-     */
-    void setImageLoader(@Nullable ProteusLayoutInflater.ImageLoader loader);
-
-    /**
-     * @return
-     */
-    @NonNull
-    ViewTypeParser getTypeParser();
-
-    /**
-     * @param parser
-     */
-    void setTypeParser(@NonNull ViewTypeParser parser);
+    ViewTypeParser getParser();
 
     /**
      * @return
@@ -105,22 +62,10 @@ public interface ProteusViewManager {
     Layout getLayout();
 
     /**
-     * @param layout
+     * @return
      */
-    void setLayout(@NonNull Layout layout);
-
-    /**
-     * Returns the current {@link Styles} set in this {@link android.view.View}.
-     *
-     * @return Returns the {@link Styles}.
-     */
-    @Nullable
-    Styles getStyles();
-
-    /**
-     * Sets the {@link Styles} to be applied to this {@link android.view.View}
-     */
-    void setStyles(@Nullable Styles styles);
+    @NonNull
+    Scope getScope();
 
     /**
      * @param id
@@ -129,7 +74,6 @@ public interface ProteusViewManager {
     int getUniqueViewId(@NonNull String id);
 
     /**
-     *
      * @param id
      * @return
      */
@@ -181,17 +125,6 @@ public interface ProteusViewManager {
     /**
      * @return
      */
-    @NonNull
-    Scope getScope();
-
-    /**
-     * @param scope
-     */
-    void setScope(@NonNull Scope scope);
-
-    /**
-     * @return
-     */
     @Nullable
     String getDataPathForChildren();
 
@@ -218,7 +151,7 @@ public interface ProteusViewManager {
     /**
      * @param listener
      */
-    void setOnUpdateDataListener(@Nullable OnUpdateDataListener listener);
+    void setOnUpdateCallback(@Nullable OnUpdateCallback listener);
 
     /**
      *
@@ -226,9 +159,12 @@ public interface ProteusViewManager {
     void removeOnUpdateDataListener();
 
     @Nullable
-    OnUpdateDataListener getOnUpdateDataListeners();
+    OnUpdateCallback getOnUpdateDataListeners();
 
-    interface OnUpdateDataListener {
+    /**
+     *
+     */
+    interface OnUpdateCallback {
 
         JsonObject onBeforeUpdateData(@Nullable JsonObject data);
 

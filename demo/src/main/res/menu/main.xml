@@ -22,9 +22,9 @@
       xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/fetch"
+        android:id="@+id/render"
         android:orderInCategory="100"
-        android:title="Load"
+        android:icon="@android:drawable/ic_dialog_info"
         app:showAsAction="always"
         tools:ignore="HardcodedText"/>
 

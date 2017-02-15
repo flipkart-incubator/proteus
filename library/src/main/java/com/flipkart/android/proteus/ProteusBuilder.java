@@ -95,7 +95,6 @@ public class ProteusBuilder {
         return new Proteus(types, formatters);
     }
 
-
     private void registerDefaults() {
 
         register("View", new ViewParser());
@@ -209,5 +208,4 @@ public class ProteusBuilder {
         register(IndexFormatter);
         register(joinFormatter);
     }
-
 }

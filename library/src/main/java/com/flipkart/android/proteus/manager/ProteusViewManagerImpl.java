@@ -25,16 +25,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.value.Layout;
-import com.flipkart.android.proteus.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.toolbox.BoundAttribute;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Scope;
-import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.toolbox.Utils;
+import com.flipkart.android.proteus.value.Layout;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -51,21 +50,39 @@ import java.util.ArrayList;
 public class ProteusViewManagerImpl implements ProteusViewManager {
 
     private static final String TAG = "ProteusViewManagerImpl";
-    private View view;
-    private Styles styles;
-    private Scope scope;
-    private ProteusLayoutInflater.Internal inflater;
-    @Nullable
-    private ProteusLayoutInflater.Callback callback;
-    @Nullable
-    private ProteusLayoutInflater.ImageLoader loader;
-    private ViewTypeParser parser;
-    private OnUpdateDataListener onUpdateDataListener;
+
+    @NonNull
+    private final ProteusContext context;
+
+    @NonNull
+    private final View view;
+
+    @NonNull
+    private final Layout layout;
+
+    @NonNull
+    private final Scope scope;
+
+    @NonNull
+    private final ViewTypeParser parser;
+
+    private OnUpdateCallback onUpdateCallback;
+
     private String dataPathForChildren;
     private Layout childLayout;
+
     private boolean isViewUpdating;
+
     private ArrayList<BoundAttribute> boundAttributes;
-    private Layout layout;
+
+    public ProteusViewManagerImpl(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
+                                  @NonNull View view, @NonNull Layout layout, @NonNull Scope scope) {
+        this.context = context;
+        this.parser = parser;
+        this.view = view;
+        this.layout = layout;
+        this.scope = scope;
+    }
 
     @Override
     public void update(@Nullable JsonObject data) {
@@ -116,9 +133,162 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         onUpdateDataComplete(scope.getData());
     }
 
+    @NonNull
     @Override
-    public void setView(View view) {
-        this.view = view;
+    public ProteusContext getContext() {
+        return this.context;
+    }
+
+    @NonNull
+    @Override
+    public ViewTypeParser getParser() {
+        return parser;
+    }
+
+    @NonNull
+    @Override
+    public Layout getLayout() {
+        return this.layout;
+    }
+
+    @NonNull
+    @Override
+    public Scope getScope() {
+        return scope;
+    }
+
+    @Override
+    public int getUniqueViewId(@NonNull String id) {
+        return context.getInflater().getUniqueViewId(id);
+    }
+
+    @Nullable
+    @Override
+    public View findViewById(@NonNull String id) {
+        return view.findViewById(getUniqueViewId(id));
+    }
+
+    @Override
+    public JsonElement get(@NonNull String dataPath, int index) {
+        return scope.get(dataPath);
+    }
+
+    @Override
+    public void set(@NonNull String dataPath, JsonElement newValue) {
+        String aliasedDataPath = Scope.getAliasedDataPath(dataPath, scope.getReverseScope(), true);
+        Result result = Utils.readJson(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")), scope.getData(), scope.getIndex());
+        JsonElement parent = result.isSuccess() ? result.element : null;
+        if (parent == null || !parent.isJsonObject()) {
+            return;
+        }
+
+        String propertyName = aliasedDataPath.substring(aliasedDataPath.lastIndexOf(".") + 1, aliasedDataPath.length());
+        parent.getAsJsonObject().add(propertyName, newValue);
+
+        update(aliasedDataPath);
+    }
+
+    @Override
+    public void set(@NonNull String dataPath, String newValue) {
+        set(dataPath, new JsonPrimitive(newValue));
+    }
+
+    @Override
+    public void set(@NonNull String dataPath, Number newValue) {
+        set(dataPath, new JsonPrimitive(newValue));
+    }
+
+    @Override
+    public void set(@NonNull String dataPath, boolean newValue) {
+        set(dataPath, new JsonPrimitive(newValue));
+    }
+
+    protected void update(String dataPath) {
+        this.isViewUpdating = true;
+
+        if (this.boundAttributes != null) {
+            for (BoundAttribute boundAttribute : this.boundAttributes) {
+                if (boundAttribute.getBindingName().equals(dataPath)) {
+                    this.handleBinding(boundAttribute);
+                }
+            }
+        }
+
+        if (view instanceof ViewGroup) {
+            ViewGroup parent = (ViewGroup) view;
+            int childCount = parent.getChildCount();
+            View child;
+            String aliasedDataPath;
+
+            for (int index = 0; index < childCount; index++) {
+                child = parent.getChildAt(index);
+                if (child instanceof ProteusView) {
+                    aliasedDataPath = Scope.getAliasedDataPath(dataPath, scope.getReverseScope(), false);
+                    ((ProteusViewManagerImpl) ((ProteusView) child).getViewManager()).update(aliasedDataPath);
+                }
+            }
+        }
+
+        this.isViewUpdating = false;
+    }
+
+    @Nullable
+    @Override
+    public Layout getChildLayout() {
+        return childLayout;
+    }
+
+    @Override
+    public void setChildLayout(@Nullable Layout layout) {
+        this.childLayout = layout;
+    }
+
+    @Nullable
+    @Override
+    public String getDataPathForChildren() {
+        return dataPathForChildren;
+    }
+
+    @Override
+    public void setDataPathForChildren(@Nullable String dataPathForChildren) {
+        this.dataPathForChildren = dataPathForChildren;
+    }
+
+    @Override
+    public boolean isViewUpdating() {
+        return isViewUpdating;
+    }
+
+    @Override
+    public void addBinding(@NonNull BoundAttribute boundAttribute) {
+        if (this.boundAttributes == null) {
+            this.boundAttributes = new ArrayList<>();
+        }
+        boundAttributes.add(boundAttribute);
+    }
+
+    @Override
+    public void destroy() {
+        childLayout = null;
+        onUpdateCallback = null;
+        dataPathForChildren = null;
+        boundAttributes = null;
+    }
+
+    @Override
+    public void setOnUpdateCallback(@Nullable OnUpdateCallback listener) {
+        this.onUpdateCallback = listener;
+    }
+
+    @Override
+    public void removeOnUpdateDataListener() {
+        onUpdateCallback = null;
+    }
+
+    @Nullable
+    @Override
+    public OnUpdateCallback getOnUpdateDataListeners() {
+        return onUpdateCallback;
     }
 
     private void updateDataContext(JsonObject data) {
@@ -162,7 +332,7 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                     ((ProteusView) child).getViewManager().update(data);
                 }
             } else if (childLayout != null) {
-                childView = inflater.inflate(getLayout(), data, parent, styles, scope.getIndex());
+                childView = context.getInflater().inflate(getLayout(), data, parent, scope.getIndex());
                 parser.addView((ProteusView) view, childView);
             }
         }
@@ -170,8 +340,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     @Nullable
     private JsonObject onBeforeUpdateData(JsonObject data) {
-        if (onUpdateDataListener != null) {
-            JsonObject override = onUpdateDataListener.onBeforeUpdateData(data);
+        if (onUpdateCallback != null) {
+            JsonObject override = onUpdateCallback.onBeforeUpdateData(data);
             if (override != null) {
                 return override;
             }
@@ -181,8 +351,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     @Nullable
     private JsonObject onAfterDataContext(JsonObject data) {
-        if (onUpdateDataListener != null) {
-            JsonObject override = onUpdateDataListener.onAfterDataContext(data);
+        if (onUpdateCallback != null) {
+            JsonObject override = onUpdateCallback.onAfterDataContext(data);
             if (override != null) {
                 return override;
             }
@@ -191,223 +361,18 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     }
 
     private void onUpdateDataComplete(JsonObject data) {
-        if (onUpdateDataListener != null) {
-            onUpdateDataListener.onUpdateDataComplete(data);
+        if (onUpdateCallback != null) {
+            onUpdateCallback.onUpdateDataComplete(data);
         }
     }
 
     private void handleBinding(BoundAttribute boundAttribute) {
         if (boundAttribute.hasRegEx()) {
-            inflater.handleAttribute(parser, (ProteusView) view, boundAttribute.getAttributeId(), getLayout().create(boundAttribute.getAttributeValue()));
+            parser.handleAttribute(view, boundAttribute.getAttributeId(), getLayout().create(boundAttribute.getAttributeValue()));
         } else {
             Result result = Utils.readJson(boundAttribute.getBindingName(), scope.getData(), scope.getIndex());
             JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
-            inflater.handleAttribute(parser, (ProteusView) view, boundAttribute.getAttributeId(), getLayout().create(dataValue));
+            parser.handleAttribute(view, boundAttribute.getAttributeId(), getLayout().create(dataValue));
         }
-    }
-
-    @NonNull
-    public ProteusLayoutInflater.Internal getInflater() {
-        return inflater;
-    }
-
-    public void setInflater(@NonNull ProteusLayoutInflater.Internal inflater) {
-        this.inflater = inflater;
-    }
-
-    @Override
-    @Nullable
-    public ProteusLayoutInflater.Callback getInflaterCallback() {
-        return this.callback;
-    }
-
-    @Override
-    public void setInflaterCallback(@Nullable ProteusLayoutInflater.Callback callback) {
-        this.callback = callback;
-    }
-
-    @Override
-    @Nullable
-    public ProteusLayoutInflater.ImageLoader getImageLoader() {
-        return this.loader;
-    }
-
-    @Override
-    public void setImageLoader(@Nullable ProteusLayoutInflater.ImageLoader loader) {
-        this.loader = loader;
-    }
-
-    @NonNull
-    public ViewTypeParser getTypeParser() {
-        return parser;
-    }
-
-    public void setTypeParser(@NonNull ViewTypeParser parser) {
-        this.parser = parser;
-    }
-
-    @NonNull
-    @Override
-    public Layout getLayout() {
-        return this.layout;
-    }
-
-    @Override
-    public void setLayout(@NonNull Layout layout) {
-        this.layout = layout;
-    }
-
-    @Nullable
-    @Override
-    public Styles getStyles() {
-        return styles;
-    }
-
-    @Override
-    public void setStyles(@Nullable Styles styles) {
-        this.styles = styles;
-    }
-
-    @Override
-    public int getUniqueViewId(@NonNull String id) {
-        return inflater.getUniqueViewId(id);
-    }
-
-    @Nullable
-    @Override
-    public View findViewById(@NonNull String id) {
-        return view.findViewById(getUniqueViewId(id));
-    }
-
-    public JsonElement get(@NonNull String dataPath, int index) {
-        return scope.get(dataPath);
-    }
-
-    public void set(@NonNull String dataPath, JsonElement newValue) {
-        if (dataPath == null) {
-            return;
-        }
-
-        String aliasedDataPath = Scope.getAliasedDataPath(dataPath, scope.getReverseScope(), true);
-        Result result = Utils.readJson(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")), scope.getData(), scope.getIndex());
-        JsonElement parent = result.isSuccess() ? result.element : null;
-        if (parent == null || !parent.isJsonObject()) {
-            return;
-        }
-
-        String propertyName = aliasedDataPath.substring(aliasedDataPath.lastIndexOf(".") + 1, aliasedDataPath.length());
-        parent.getAsJsonObject().add(propertyName, newValue);
-
-        update(aliasedDataPath);
-    }
-
-    public void set(@NonNull String dataPath, String newValue) {
-        set(dataPath, new JsonPrimitive(newValue));
-    }
-
-    public void set(@NonNull String dataPath, Number newValue) {
-        set(dataPath, new JsonPrimitive(newValue));
-    }
-
-    public void set(@NonNull String dataPath, boolean newValue) {
-        set(dataPath, new JsonPrimitive(newValue));
-    }
-
-    protected void update(String dataPath) {
-        this.isViewUpdating = true;
-
-        if (this.boundAttributes != null) {
-            for (BoundAttribute boundAttribute : this.boundAttributes) {
-                if (boundAttribute.getBindingName().equals(dataPath)) {
-                    this.handleBinding(boundAttribute);
-                }
-            }
-        }
-
-        if (view instanceof ViewGroup) {
-            ViewGroup parent = (ViewGroup) view;
-            int childCount = parent.getChildCount();
-            View child;
-            String aliasedDataPath;
-
-            for (int index = 0; index < childCount; index++) {
-                child = parent.getChildAt(index);
-                if (child instanceof ProteusView) {
-                    aliasedDataPath = Scope.getAliasedDataPath(dataPath, scope.getReverseScope(), false);
-                    ((ProteusViewManagerImpl) ((ProteusView) child).getViewManager()).update(aliasedDataPath);
-                }
-            }
-        }
-
-        this.isViewUpdating = false;
-    }
-
-    @Nullable
-    @Override
-    public Layout getChildLayout() {
-        return childLayout;
-    }
-
-    public void setChildLayout(@Nullable Layout layout) {
-        this.childLayout = layout;
-    }
-
-    @NonNull
-    public Scope getScope() {
-        return scope;
-    }
-
-    public void setScope(@NonNull Scope scope) {
-        this.scope = scope;
-    }
-
-    @Nullable
-    @Override
-    public String getDataPathForChildren() {
-        return dataPathForChildren;
-    }
-
-    public void setDataPathForChildren(@Nullable String dataPathForChildren) {
-        this.dataPathForChildren = dataPathForChildren;
-    }
-
-    public boolean isViewUpdating() {
-        return isViewUpdating;
-    }
-
-    @Override
-    public void addBinding(@NonNull BoundAttribute boundAttribute) {
-        if (this.boundAttributes == null) {
-            this.boundAttributes = new ArrayList<>();
-        }
-        boundAttributes.add(boundAttribute);
-    }
-
-    @Override
-    public void destroy() {
-        view = null;
-        childLayout = null;
-        styles = null;
-        inflater = null;
-        parser = null;
-        onUpdateDataListener = null;
-        dataPathForChildren = null;
-        boundAttributes = null;
-    }
-
-    @Override
-    public void setOnUpdateDataListener(@Nullable OnUpdateDataListener listener) {
-        this.onUpdateDataListener = listener;
-    }
-
-    @Override
-    public void removeOnUpdateDataListener() {
-        onUpdateDataListener = null;
-    }
-
-    @Nullable
-    @Override
-    public OnUpdateDataListener getOnUpdateDataListeners() {
-        return onUpdateDataListener;
     }
 }
