@@ -32,8 +32,6 @@ import com.flipkart.android.proteus.value.Layout;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import java.util.ArrayList;
-
 /**
  * ViewManager
  *
@@ -64,7 +62,7 @@ public class ViewManager implements ProteusViewManager {
     @Nullable
     private Layout childLayout;
 
-    private ArrayList<BoundAttribute> boundAttributes;
+    private BoundAttribute[] boundAttributes;
 
     public ViewManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
                        @NonNull View view, @NonNull Layout layout, @NonNull Scope scope) {
@@ -158,14 +156,6 @@ public class ViewManager implements ProteusViewManager {
     @Override
     public void setDataPathForChildren(@Nullable String dataPathForChildren) {
         this.dataPathForChildren = dataPathForChildren;
-    }
-
-    @Override
-    public void addBinding(@NonNull BoundAttribute boundAttribute) {
-        if (this.boundAttributes == null) {
-            this.boundAttributes = new ArrayList<>();
-        }
-        boundAttributes.add(boundAttribute);
     }
 
     @Override

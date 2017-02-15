@@ -23,7 +23,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.flipkart.android.proteus.toolbox.BoundAttribute;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.value.Layout;
 import com.google.gson.JsonObject;
@@ -94,11 +93,6 @@ public interface ProteusViewManager {
      * @param dataPathForChildren
      */
     void setDataPathForChildren(@Nullable String dataPathForChildren);
-
-    /**
-     * @param boundAttribute
-     */
-    void addBinding(@NonNull BoundAttribute boundAttribute);
 
     /**
      * Free all resources held by the view manager
