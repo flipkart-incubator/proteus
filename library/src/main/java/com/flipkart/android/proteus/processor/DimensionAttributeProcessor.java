@@ -40,7 +40,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
 
     public static float evaluate(Value value, ProteusView view) {
         if (value == null) {
-            return Dimension.ZERO.apply(((View) view).getContext());
+            return Dimension.ZERO.apply(view.getAsView().getContext());
         }
 
         final float[] result = new float[1];
@@ -50,7 +50,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
                 result[0] = dimension;
             }
         };
-        processor.process((View) view, value);
+        processor.process(view.getAsView(), value);
 
         return result[0];
     }

@@ -104,7 +104,7 @@ You give the layout and data to LayoutBuilder, you get back a native view. Watch
 
 ```java
 ProteusView view = layoutBuilder.build(container, <layout>, <data>, 0, styles);
-container.addView((View) view);
+container.addView(view.getAsView());
 ```
 
 #### Sample screenshot

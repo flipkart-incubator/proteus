@@ -19,13 +19,15 @@
 
 package com.flipkart.android.proteus.exceptions;
 
+import android.view.InflateException;
+
 /**
  * ProteusInflateException
  *
  * @author adityasharat
  */
 
-public class ProteusInflateException extends RuntimeException {
+public class ProteusInflateException extends InflateException {
 
     public ProteusInflateException(String message) {
         super(message);

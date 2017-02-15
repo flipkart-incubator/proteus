@@ -236,7 +236,7 @@ public class ProteusActivity extends AppCompatActivity {
         long start = System.currentTimeMillis();
         ProteusView view = layoutInflater.inflate(layout, data, container, 0);
         System.out.println(System.currentTimeMillis() - start);
-        container.addView((View) view);
+        container.addView(view.getAsView());
     }
 
     private void fetch() {

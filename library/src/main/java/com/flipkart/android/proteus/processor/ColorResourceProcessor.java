@@ -48,7 +48,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
                 result[0] = new Color.Result(Color.Int.BLACK.value, colors);
             }
         };
-        processor.process((View) view, value);
+        processor.process(view.getAsView(), value);
         return result[0];
     }
 

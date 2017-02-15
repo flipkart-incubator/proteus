@@ -51,7 +51,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 d[0] = drawable;
             }
         };
-        processor.process((View) view, value);
+        processor.process(view.getAsView(), value);
         return d[0];
     }
 
