@@ -21,7 +21,6 @@ package com.flipkart.android.proteus.manager;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.Size;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusContext;
@@ -29,7 +28,6 @@ import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.toolbox.BoundAttribute;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.value.Layout;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
@@ -46,6 +44,9 @@ public interface ProteusViewManager {
      */
     void update(@Nullable JsonObject data);
 
+    /**
+     * @return
+     */
     @NonNull
     ProteusContext getContext();
 

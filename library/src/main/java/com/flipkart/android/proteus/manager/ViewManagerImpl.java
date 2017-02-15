@@ -42,13 +42,13 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 
 /**
- * ProteusViewManagerImpl
+ * ViewManagerImpl
  *
  * @author aditya.sharat
  */
-public class ProteusViewManagerImpl implements ProteusViewManager {
+public class ViewManagerImpl implements ProteusViewManager {
 
-    private static final String TAG = "ProteusViewManagerImpl";
+    private static final String TAG = "ViewManagerImpl";
 
     @NonNull
     private final ProteusContext context;
@@ -73,8 +73,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
 
     private ArrayList<BoundAttribute> boundAttributes;
 
-    public ProteusViewManagerImpl(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
-                                  @NonNull View view, @NonNull Layout layout, @NonNull Scope scope) {
+    public ViewManagerImpl(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
+                           @NonNull View view, @NonNull Layout layout, @NonNull Scope scope) {
         this.context = context;
         this.parser = parser;
         this.view = view;
