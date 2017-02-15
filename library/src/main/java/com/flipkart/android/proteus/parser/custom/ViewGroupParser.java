@@ -56,7 +56,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusAspectRatioFrameLayout(parent.getContext());
+        return new ProteusAspectRatioFrameLayout(context);
     }
 
     @Override

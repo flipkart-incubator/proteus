@@ -39,7 +39,7 @@ public class ButtonParser<T extends Button> extends ViewTypeParser<T> {
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusButton(parent.getContext());
+        return new ProteusButton(context);
     }
 
     @Override

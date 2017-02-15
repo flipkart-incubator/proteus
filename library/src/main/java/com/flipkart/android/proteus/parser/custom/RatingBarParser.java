@@ -45,7 +45,7 @@ public class RatingBarParser<T extends FixedRatingBar> extends ViewTypeParser<T>
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusFixedRatingBar(parent.getContext());
+        return new ProteusFixedRatingBar(context);
     }
 
     @Override

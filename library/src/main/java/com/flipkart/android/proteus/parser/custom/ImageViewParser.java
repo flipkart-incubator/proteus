@@ -44,7 +44,7 @@ public class ImageViewParser<T extends ImageView> extends ViewTypeParser<T> {
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusImageView(parent.getContext());
+        return new ProteusImageView(context);
     }
 
     @Override

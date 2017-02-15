@@ -53,7 +53,7 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusTextView(parent.getContext());
+        return new ProteusTextView(context);
     }
 
     @Override

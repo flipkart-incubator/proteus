@@ -40,7 +40,7 @@ public class ViewPagerParser<T extends ViewPager> extends ViewTypeParser<T> {
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusViewPager(parent.getContext());
+        return new ProteusViewPager(context);
     }
 
     @Override

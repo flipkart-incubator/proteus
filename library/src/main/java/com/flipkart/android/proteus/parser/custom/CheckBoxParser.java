@@ -42,7 +42,7 @@ public class CheckBoxParser<T extends CheckBox> extends ViewTypeParser<T> {
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusCheckBox(parent.getContext());
+        return new ProteusCheckBox(context);
     }
 
     @Override

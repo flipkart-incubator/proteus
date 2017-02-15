@@ -94,7 +94,12 @@ public abstract class ViewTypeParser<V extends View> {
     public void onAfterCreateView(@NonNull ProteusView view, @Nullable ViewGroup parent, int dataIndex) {
         View v = view.getAsView();
         if (null == v.getLayoutParams()) {
-            ViewGroup.LayoutParams layoutParams = generateDefaultLayoutParams(parent);
+            ViewGroup.LayoutParams layoutParams;
+            if (parent != null) {
+                layoutParams = generateDefaultLayoutParams(parent);
+            } else {
+                layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            }
             v.setLayoutParams(layoutParams);
         }
     }

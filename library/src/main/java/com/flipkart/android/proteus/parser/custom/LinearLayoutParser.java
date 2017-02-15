@@ -47,7 +47,7 @@ public class LinearLayoutParser<T extends LinearLayout> extends ViewTypeParser<T
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusLinearLayout(parent.getContext());
+        return new ProteusLinearLayout(context);
     }
 
     @Override

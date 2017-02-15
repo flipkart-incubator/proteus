@@ -41,7 +41,7 @@ public class RelativeLayoutParser<T extends RelativeLayout> extends ViewTypePars
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusRelativeLayout(parent.getContext());
+        return new ProteusRelativeLayout(context);
     }
 
     @Override

@@ -40,7 +40,7 @@ public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extend
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusHorizontalProgressBar(parent.getContext());
+        return new ProteusHorizontalProgressBar(context);
     }
 
     @Override

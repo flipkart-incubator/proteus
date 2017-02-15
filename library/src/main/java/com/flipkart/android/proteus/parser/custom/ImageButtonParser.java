@@ -38,7 +38,7 @@ public class ImageButtonParser<T extends ImageButton> extends ViewTypeParser<T> 
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusImageButton(parent.getContext());
+        return new ProteusImageButton(context);
     }
 
     @Override

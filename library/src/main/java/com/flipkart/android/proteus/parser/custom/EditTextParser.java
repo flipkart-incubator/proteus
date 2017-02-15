@@ -39,7 +39,7 @@ public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
 
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusEditText(parent.getContext());
+        return new ProteusEditText(context);
     }
 
     @Override
