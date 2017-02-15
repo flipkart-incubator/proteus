@@ -71,45 +71,8 @@ public interface ProteusViewManager {
      * @param id
      * @return
      */
-    int getUniqueViewId(@NonNull String id);
-
-    /**
-     * @param id
-     * @return
-     */
     @Nullable
     View findViewById(@NonNull String id);
-
-    /**
-     * @param dataPath
-     * @param index
-     * @return
-     */
-    JsonElement get(@NonNull @Size(min = 2) String dataPath, int index);
-
-    /**
-     * @param dataPath
-     * @param newValue
-     */
-    void set(@NonNull @Size(min = 2) String dataPath, JsonElement newValue);
-
-    /**
-     * @param dataPath
-     * @param newValue
-     */
-    void set(@NonNull @Size(min = 2) String dataPath, String newValue);
-
-    /**
-     * @param dataPath
-     * @param newValue
-     */
-    void set(@NonNull @Size(min = 2) String dataPath, Number newValue);
-
-    /**
-     * @param dataPath
-     * @param newValue
-     */
-    void set(@NonNull @Size(min = 2) String dataPath, boolean newValue);
 
     /**
      * @return

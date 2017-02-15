@@ -38,7 +38,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
 
@@ -150,50 +149,10 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         return scope;
     }
 
-    @Override
-    public int getUniqueViewId(@NonNull String id) {
-        return context.getInflater().getUniqueViewId(id);
-    }
-
     @Nullable
     @Override
     public View findViewById(@NonNull String id) {
-        return view.findViewById(getUniqueViewId(id));
-    }
-
-    @Override
-    public JsonElement get(@NonNull String dataPath, int index) {
-        return scope.get(dataPath);
-    }
-
-    @Override
-    public void set(@NonNull String dataPath, JsonElement newValue) {
-        String aliasedDataPath = Scope.getAliasedDataPath(dataPath, scope.getReverseScope(), true);
-        Result result = Utils.readJson(aliasedDataPath.substring(0, aliasedDataPath.lastIndexOf(".")), scope.getData(), scope.getIndex());
-        JsonElement parent = result.isSuccess() ? result.element : null;
-        if (parent == null || !parent.isJsonObject()) {
-            return;
-        }
-
-        String propertyName = aliasedDataPath.substring(aliasedDataPath.lastIndexOf(".") + 1, aliasedDataPath.length());
-        parent.getAsJsonObject().add(propertyName, newValue);
-
-        update(aliasedDataPath);
-    }
-
-    @Override
-    public void set(@NonNull String dataPath, String newValue) {
-        set(dataPath, new JsonPrimitive(newValue));
-    }
-
-    @Override
-    public void set(@NonNull String dataPath, Number newValue) {
-        set(dataPath, new JsonPrimitive(newValue));
-    }
-
-    @Override
-    public void set(@NonNull String dataPath, boolean newValue) {
-        set(dataPath, new JsonPrimitive(newValue));
+        return view.findViewById(context.getInflater().getUniqueViewId(id));
     }
 
     protected void update(String dataPath) {
