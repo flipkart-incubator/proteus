@@ -41,14 +41,14 @@ public final class Proteus {
     private final Map<String, Type> types;
 
     @NonNull
-    private final ProteusResources.FormatterManager formatterManager;
+    private final FormatterManager formatterManager;
 
     @NonNull
     private final Map<String, ViewTypeParser> parsers;
 
     Proteus(@NonNull Map<String, Type> types, @NonNull final Map<String, Formatter> formatters) {
         this.types = types;
-        this.formatterManager = new ProteusResources.FormatterManager() {
+        this.formatterManager = new FormatterManager() {
             @Nullable
             @Override
             protected Map<String, Formatter> getFormatters() {
@@ -84,8 +84,8 @@ public final class Proteus {
     public ProteusContext createContext(@NonNull Context base,
                                         @Nullable ProteusLayoutInflater.ImageLoader loader,
                                         @Nullable ProteusLayoutInflater.Callback callback,
-                                        @Nullable ProteusResources.LayoutManager layoutManager,
-                                        @Nullable ProteusResources.StyleManager styleManager) {
+                                        @Nullable LayoutManager layoutManager,
+                                        @Nullable StyleManager styleManager) {
         ProteusResources resources = new ProteusResources(parsers, layoutManager, formatterManager, styleManager);
         return new ProteusContext(base, resources, loader, callback);
     }

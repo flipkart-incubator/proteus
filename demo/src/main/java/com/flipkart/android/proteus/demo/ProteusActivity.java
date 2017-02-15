@@ -43,7 +43,7 @@ import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
-import com.flipkart.android.proteus.ProteusResources.LayoutManager;
+import com.flipkart.android.proteus.LayoutManager;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
@@ -66,7 +66,7 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
-import static com.flipkart.android.proteus.ProteusResources.StyleManager;
+import com.flipkart.android.proteus.StyleManager;
 
 
 public class ProteusActivity extends AppCompatActivity {

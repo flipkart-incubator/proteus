@@ -23,7 +23,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.flipkart.android.proteus.toolbox.Formatter;
-import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Value;
 
@@ -75,38 +74,6 @@ public class ProteusResources {
     @Nullable
     public Map<String, Value> getStyle(String name) {
         return null != styleManager ? styleManager.get(name) : null;
-    }
-
-    public static abstract class LayoutManager {
-
-        @Nullable
-        protected abstract Map<String, Layout> getLayouts();
-
-        @Nullable
-        private Layout get(@NonNull String name) {
-            return null != getLayouts() ? getLayouts().get(name) : null;
-        }
-    }
-
-    public static abstract class FormatterManager {
-
-        @Nullable
-        protected abstract Map<String, Formatter> getFormatters();
-
-        @NonNull
-        private Formatter get(@NonNull String name) {
-            return null != getFormatters() ? getFormatters().get(name) : Formatter.NOOP;
-        }
-    }
-
-    public static abstract class StyleManager {
-        @Nullable
-        protected abstract Styles getStyles();
-
-        @Nullable
-        private Map<String, Value> get(@NonNull String name) {
-            return null != getStyles() ? getStyles().get(name) : null;
-        }
     }
 
 }
