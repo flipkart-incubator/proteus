@@ -73,7 +73,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
     private static final String ID_STRING_NORMALIZED_PATTERN = ":id/";
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusAndroidView(parent.getContext());
     }
 

@@ -21,6 +21,7 @@ package com.flipkart.android.proteus.parser.custom;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 
@@ -38,7 +39,7 @@ public class ViewPagerParser<T extends ViewPager> extends ViewTypeParser<T> {
 
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusViewPager(parent.getContext());
     }
 

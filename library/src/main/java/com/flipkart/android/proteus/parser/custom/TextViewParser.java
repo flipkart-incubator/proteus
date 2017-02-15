@@ -25,6 +25,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -51,7 +52,7 @@ import com.google.gson.JsonObject;
 public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusTextView(parent.getContext());
     }
 

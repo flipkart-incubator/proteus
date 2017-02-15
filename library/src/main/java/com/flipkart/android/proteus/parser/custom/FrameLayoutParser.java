@@ -20,6 +20,7 @@
 package com.flipkart.android.proteus.parser.custom;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;
@@ -40,7 +41,7 @@ import com.google.gson.JsonObject;
 public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends ViewTypeParser<T> {
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusAspectRatioFrameLayout(parent.getContext());
     }
 

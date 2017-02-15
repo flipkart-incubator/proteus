@@ -163,7 +163,7 @@ public abstract class ViewTypeParser<V extends View> {
         return this.attributeSet;
     }
 
-    private ViewGroup.LayoutParams generateDefaultLayoutParams(ViewGroup parent) {
+    private ViewGroup.LayoutParams generateDefaultLayoutParams(@NonNull ViewGroup parent) {
 
         /**
          * This whole method is a hack! To generate layout params, since no other way exists.
@@ -180,7 +180,7 @@ public abstract class ViewTypeParser<V extends View> {
         return parent.generateLayoutParams(sParser);
     }
 
-    private void initializeAttributeSet(ViewGroup parent) {
+    private void initializeAttributeSet(@NonNull ViewGroup parent) {
         sParser = parent.getResources().getLayout(R.layout.layout_params_hack);
         //noinspection StatementWithEmptyBody
         try {
