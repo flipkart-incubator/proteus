@@ -155,35 +155,6 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         return view.findViewById(context.getInflater().getUniqueViewId(id));
     }
 
-    protected void update(String dataPath) {
-        this.isViewUpdating = true;
-
-        if (this.boundAttributes != null) {
-            for (BoundAttribute boundAttribute : this.boundAttributes) {
-                if (boundAttribute.getBindingName().equals(dataPath)) {
-                    this.handleBinding(boundAttribute);
-                }
-            }
-        }
-
-        if (view instanceof ViewGroup) {
-            ViewGroup parent = (ViewGroup) view;
-            int childCount = parent.getChildCount();
-            View child;
-            String aliasedDataPath;
-
-            for (int index = 0; index < childCount; index++) {
-                child = parent.getChildAt(index);
-                if (child instanceof ProteusView) {
-                    aliasedDataPath = Scope.getAliasedDataPath(dataPath, scope.getReverseScope(), false);
-                    ((ProteusViewManagerImpl) ((ProteusView) child).getViewManager()).update(aliasedDataPath);
-                }
-            }
-        }
-
-        this.isViewUpdating = false;
-    }
-
     @Nullable
     @Override
     public Layout getChildLayout() {

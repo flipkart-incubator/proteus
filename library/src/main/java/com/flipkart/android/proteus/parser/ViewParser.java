@@ -333,7 +333,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
             @Override
             public void setString(final V view, String value) {
                 if (view instanceof ProteusView) {
-                    view.setId(((ProteusView) view).getViewManager().getUniqueViewId(value));
+                    view.setId(((ProteusView) view).getViewManager().getContext().getInflater().getUniqueViewId(value));
                 }
 
                 // set view id resource name
@@ -535,7 +535,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
             @Override
             public void setString(V view, String value) {
                 if (view instanceof ProteusView) {
-                    int id = ((ProteusView) view).getViewManager().getUniqueViewId(value);
+                    int id = ((ProteusView) view).getViewManager().getContext().getInflater().getUniqueViewId(value);
                     ParseHelper.addRelativeLayoutRule(view, rule, id);
                 }
             }
