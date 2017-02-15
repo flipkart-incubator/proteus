@@ -65,7 +65,7 @@ public class ProteusContext extends ContextWrapper {
         return callback;
     }
 
-    @Nullable
+    @NonNull
     public Formatter getFormatter(@NonNull String name) {
         return resources.getFormatter(name);
     }

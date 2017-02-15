@@ -57,9 +57,9 @@ public class ProteusResources {
         this.styleManager = styleManager;
     }
 
-    @Nullable
+    @NonNull
     public Formatter getFormatter(@NonNull String name) {
-        return null != formatterManager ? formatterManager.get(name) : null;
+        return null != formatterManager ? formatterManager.get(name) : Formatter.NOOP;
     }
 
     @Nullable
@@ -93,9 +93,9 @@ public class ProteusResources {
         @Nullable
         protected abstract Map<String, Formatter> getFormatters();
 
-        @Nullable
+        @NonNull
         private Formatter get(@NonNull String name) {
-            return null != getFormatters() ? getFormatters().get(name) : null;
+            return null != getFormatters() ? getFormatters().get(name) : Formatter.NOOP;
         }
     }
 

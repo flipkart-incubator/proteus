@@ -19,7 +19,15 @@
 
 package com.flipkart.android.proteus.toolbox;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
+
 import com.google.gson.JsonElement;
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author Aditya Sharat on 18-05-2015.
@@ -38,6 +46,91 @@ public abstract class Formatter {
         @Override
         public String getName() {
             return "noop";
+        }
+    };
+
+    public static final Formatter NUMBER = new Formatter() {
+
+        private DecimalFormat formatter;
+
+        @Override
+        public String format(JsonElement elementValue) {
+            double valueAsNumber;
+            try {
+                valueAsNumber = Double.parseDouble(elementValue.getAsString());
+            } catch (NumberFormatException e) {
+                return elementValue.toString();
+            }
+            formatter = new DecimalFormat("#,###");
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
+                formatter.setRoundingMode(RoundingMode.FLOOR);
+            }
+            formatter.setMinimumFractionDigits(0);
+            formatter.setMaximumFractionDigits(2);
+            return formatter.format(valueAsNumber);
+        }
+
+        @Override
+        public String getName() {
+            return "number";
+        }
+    };
+
+    public static final Formatter DATE = new Formatter() {
+
+        @SuppressLint("SimpleDateFormat")
+        private SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        @SuppressLint("SimpleDateFormat")
+        private SimpleDateFormat to = new SimpleDateFormat("d MMM, E");
+
+        @Override
+        public String format(JsonElement elementValue) {
+            try {
+                // 2015-06-18 12:01:37
+                Date date = from.parse(elementValue.getAsString());
+                return to.format(date);
+            } catch (Exception e) {
+                return elementValue.toString();
+            }
+        }
+
+        @Override
+        public String getName() {
+            return "date";
+        }
+    };
+
+    public static final Formatter INDEX = new Formatter() {
+        @Override
+        public String format(JsonElement elementValue) {
+            int valueAsNumber;
+            try {
+                valueAsNumber = Integer.parseInt(elementValue.getAsString());
+            } catch (NumberFormatException e) {
+                return elementValue.toString();
+            }
+            return String.valueOf(valueAsNumber + 1);
+        }
+
+        @Override
+        public String getName() {
+            return "index";
+        }
+    };
+
+    public static final Formatter JOIN = new Formatter() {
+        @Override
+        public String format(JsonElement elementValue) {
+            if (elementValue.isJsonArray()) {
+                return Utils.getStringFromArray(elementValue.getAsJsonArray(), ",");
+            } else {
+                return elementValue.toString();
+            }
+        }
+
+        @Override
+        public String getName() {
+            return "join";
         }
     };
 
