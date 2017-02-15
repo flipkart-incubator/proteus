@@ -21,8 +21,6 @@ package com.flipkart.android.proteus;
 
 import android.view.View;
 
-import com.flipkart.android.proteus.manager.ProteusViewManager;
-
 /**
  *
  */

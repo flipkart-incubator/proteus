@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.manager;
+package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,9 +25,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.ProteusContext;
-import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.toolbox.BoundAttribute;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
@@ -42,13 +39,13 @@ import com.google.gson.JsonObject;
 import java.util.ArrayList;
 
 /**
- * ViewManagerImpl
+ * ViewManager
  *
  * @author aditya.sharat
  */
-public class ViewManagerImpl implements ProteusViewManager {
+public class ViewManager implements ProteusViewManager {
 
-    private static final String TAG = "ViewManagerImpl";
+    private static final String TAG = "ViewManager";
 
     @NonNull
     private final ProteusContext context;
@@ -73,8 +70,8 @@ public class ViewManagerImpl implements ProteusViewManager {
 
     private ArrayList<BoundAttribute> boundAttributes;
 
-    public ViewManagerImpl(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
-                           @NonNull View view, @NonNull Layout layout, @NonNull Scope scope) {
+    public ViewManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
+                       @NonNull View view, @NonNull Layout layout, @NonNull Scope scope) {
         this.context = context;
         this.parser = parser;
         this.view = view;

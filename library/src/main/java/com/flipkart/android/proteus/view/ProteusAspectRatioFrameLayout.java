@@ -26,7 +26,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.manager.ProteusViewManager;
+import com.flipkart.android.proteus.ProteusViewManager;
 
 /**
  * AspectRatioFrameLayout

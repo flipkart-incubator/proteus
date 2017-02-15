@@ -25,7 +25,6 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.exceptions.ProteusInflateException;
-import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.value.Layout;

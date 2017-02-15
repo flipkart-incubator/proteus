@@ -30,7 +30,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.manager.ProteusViewManager;
+import com.flipkart.android.proteus.ProteusViewManager;
 
 /**
  * CircleView
