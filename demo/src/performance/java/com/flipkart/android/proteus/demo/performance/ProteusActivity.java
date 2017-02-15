@@ -16,40 +16,25 @@
 
 package com.flipkart.android.proteus.demo.performance;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.FrameLayout;
 
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusBuilder;
-import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.demo.R;
-import com.flipkart.android.proteus.toolbox.DrawableCallback;
-import com.flipkart.android.proteus.toolbox.EventType;
-import com.flipkart.android.proteus.toolbox.Styles;
 import com.flipkart.android.proteus.value.Layout;
-import com.flipkart.android.proteus.value.Value;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 
@@ -62,69 +47,10 @@ public class ProteusActivity extends BaseActivity {
     private Layout pageLayout;
     private JsonObject data;
     private ViewGroup.LayoutParams layoutParams;
-    private Styles styles;
-    private ProteusLayoutInflater.Callback callback = new ProteusLayoutInflater.Callback() {
-
-
-        @Nullable
-        @Override
-        public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, JsonObject data, int index) {
-            return null;
-        }
-
-        @Override
-        public Layout onLayoutRequired(String type, Layout include) {
-            return null;
-        }
-
-        @Override
-        public View onEvent(ProteusView view, EventType eventType, Value value) {
-            return null;
-        }
-
-        @Override
-        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
-            return null;
-        }
-
-        @Override
-        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
-            return null;
-        }
-    };
-    private ProteusLayoutInflater.ImageLoader bitmapLoader = new ProteusLayoutInflater.ImageLoader() {
-        @Override
-        public void getBitmap(final ProteusView view, final String imageUrl, final DrawableCallback callback) {
-            URL url;
-            try {
-                url = new URL(imageUrl);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return;
-            }
-            new AsyncTask<URL, Integer, Bitmap>() {
-
-                @Override
-                protected Bitmap doInBackground(URL... params) {
-                    try {
-                        return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-
-                protected void onPostExecute(Bitmap result) {
-                    callback.setBitmap(result);
-                }
-            }.execute(url);
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         gson = new Gson();
-        styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
         Map<String, Layout> layoutProvider = getProviderFromFile(R.raw.layout_provider);
         pageLayout = getPageLayout(R.raw.page_layout);
 

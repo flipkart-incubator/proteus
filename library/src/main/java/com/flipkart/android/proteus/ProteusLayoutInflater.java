@@ -50,7 +50,8 @@ public interface ProteusLayoutInflater {
      * @param dataIndex The index of this view in its parent. Pass 0 if it has no parent.
      * @return An native android view
      */
-    ProteusView inflate(Layout layout, JsonObject data, @Nullable ViewGroup parent, int dataIndex);
+    @NonNull
+    ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex);
 
     /**
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
@@ -60,7 +61,8 @@ public interface ProteusLayoutInflater {
      * @param dataIndex The index of this view in its parent. Pass 0 if it has no parent.
      * @return An native android view
      */
-    ProteusView inflate(Layout layout, JsonObject data, int dataIndex);
+    @NonNull
+    ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data, int dataIndex);
 
     /**
      * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
@@ -69,7 +71,8 @@ public interface ProteusLayoutInflater {
      * @param data   The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
      * @return An native android view
      */
-    ProteusView inflate(Layout layout, JsonObject data);
+    @NonNull
+    ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data);
 
     /**
      * Returns the {@link ViewTypeParser} for the specified view type.
@@ -78,7 +81,7 @@ public interface ProteusLayoutInflater {
      * @return The {@link ViewTypeParser} associated to the specified view type
      */
     @Nullable
-    ViewTypeParser getParser(String type);
+    ViewTypeParser getParser(@NonNull String type);
 
     /**
      * Give the View ID for this string. This will generally be given by the instance of ID Generator
@@ -87,7 +90,7 @@ public interface ProteusLayoutInflater {
      *
      * @return int value for this id. This will never be -1.
      */
-    int getUniqueViewId(String id);
+    int getUniqueViewId(@NonNull String id);
 
     /**
      * All consumers of this should ensure that they save the instance state of the ID generator along with the activity/
@@ -106,15 +109,8 @@ public interface ProteusLayoutInflater {
         /**
          * called when the builder encounters a view type which it cannot understand.
          */
-        @Nullable
+        @NonNull
         ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, JsonObject data, int index);
-
-        /**
-         * @param type
-         * @param include
-         * @return Layout
-         */
-        Layout onLayoutRequired(String type, Layout include);
 
         /**
          * called when any click occurs on views
@@ -122,6 +118,7 @@ public interface ProteusLayoutInflater {
          * @param view  The view that triggered the event
          * @param value Value set to the event attribute
          */
+        @NonNull
         View onEvent(ProteusView view, EventType eventType, Value value);
 
         /**
@@ -130,6 +127,7 @@ public interface ProteusLayoutInflater {
          * @param layout
          * @return Adapter
          */
+        @Nullable
         PagerAdapter onPagerAdapterRequired(ProteusView parent, final List<ProteusView> children, Layout layout);
 
         /**
@@ -138,6 +136,7 @@ public interface ProteusLayoutInflater {
          * @param layout
          * @return Adapter
          */
+        @Nullable
         Adapter onAdapterRequired(ProteusView parent, final List<ProteusView> children, Layout layout);
 
     }

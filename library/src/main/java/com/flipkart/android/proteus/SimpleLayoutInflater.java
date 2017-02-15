@@ -24,6 +24,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.manager.ProteusViewManager;
 import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
@@ -45,39 +46,56 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     protected final ProteusContext context;
 
     @NonNull
-    final IdGenerator idGenerator;
+    protected final IdGenerator idGenerator;
 
-    SimpleLayoutInflater(@NonNull ProteusContext context, IdGenerator idGenerator) {
+    SimpleLayoutInflater(@NonNull ProteusContext context, @NonNull IdGenerator idGenerator) {
         this.context = context;
         this.idGenerator = idGenerator;
     }
 
     @Override
     @Nullable
-    public ViewTypeParser getParser(String type) {
+    public ViewTypeParser getParser(@NonNull String type) {
         return context.getParser(type);
     }
 
+    @NonNull
     @Override
-    public ProteusView inflate(Layout layout, JsonObject data, ViewGroup parent, int dataIndex) {
-        ViewTypeParser parser = getParser(layout.type);
+    public ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+
+        /**
+         * Get the the view type parser for this layout type
+         */
+        final ViewTypeParser parser = getParser(layout.type);
         if (parser == null) {
-            return onUnknownViewEncountered(context, layout.type, layout, data, dataIndex);
+            /**
+             * If parser is not registered ask the application land for the view
+             */
+            return onUnknownViewEncountered(layout.type, layout, data, dataIndex);
         }
 
         /**
-         * View creation.
+         * Create a view of {@code layout.type}
          */
-        final ProteusView view;
+        final ProteusView view = createView(parser, layout, data, parent, dataIndex);
 
-        view = createView(parser, layout, data, parent, dataIndex);
+        /**
+         * Do post creation logic
+         */
         onAfterCreateView(parser, view, parent, dataIndex);
 
-        ProteusViewManager viewManager = createViewManager(parser, view, layout, data, parent, dataIndex);
+        /**
+         * Create View Manager for {@code layout.type}
+         */
+        final ProteusViewManager viewManager = createViewManager(parser, view, layout, data, parent, dataIndex);
+
+        /**
+         * Set the View Manager on the view.
+         */
         view.setViewManager(viewManager);
 
         /**
-         * Parsing each attribute and setting it on the view.
+         * Handle each attribute and set it on the view.
          */
         if (layout.attributes != null) {
             Iterator<Layout.Attribute> iterator = layout.attributes.iterator();
@@ -91,13 +109,15 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return view;
     }
 
+    @NonNull
     @Override
-    public ProteusView inflate(Layout layout, JsonObject data, int dataIndex) {
+    public ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data, int dataIndex) {
         return inflate(layout, data, null, dataIndex);
     }
 
+    @NonNull
     @Override
-    public ProteusView inflate(Layout layout, JsonObject data) {
+    public ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data) {
         return inflate(layout, data, null, -1);
     }
 
@@ -111,11 +131,12 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         parser.onAfterCreateView(view, parent, index);
     }
 
-    protected ProteusViewManager createViewManager(ViewTypeParser parser, ProteusView view, Layout layout, JsonObject data, ViewGroup parent, int dataIndex) {
+    protected ProteusViewManager createViewManager(@NonNull ViewTypeParser parser, @NonNull ProteusView view, @NonNull Layout layout,
+                                                   @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
         return parser.createViewManager(context, view, layout, data, parent, dataIndex);
     }
 
-    public boolean handleAttribute(ViewTypeParser parser, ProteusView view, int attribute, Value value) {
+    protected boolean handleAttribute(@NonNull ViewTypeParser parser, @NonNull ProteusView view, int attribute, @NonNull Value value) {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "Handle '" + attribute + "' : " + value);
         }
@@ -123,19 +144,23 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return parser.handleAttribute(view.getAsView(), attribute, value);
     }
 
-    @Nullable
-    protected ProteusView onUnknownViewEncountered(ProteusContext context, String type, Layout layout, JsonObject data, int dataIndex) {
+    @NonNull
+    protected ProteusView onUnknownViewEncountered(String type, Layout layout, JsonObject data, int dataIndex) {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "No ViewTypeParser for: " + type);
         }
         if (context.getCallback() != null) {
-            return context.getCallback().onUnknownViewType(context, type, layout, data, dataIndex);
+            ProteusView view = context.getCallback().onUnknownViewType(context, type, layout, data, dataIndex);
+            //noinspection ConstantConditions because we need to throw a ProteusInflateException specifically
+            if (view == null) {
+                throw new ProteusInflateException("inflater Callback#onUnknownViewType() must not return null");
+            }
         }
-        return null;
+        throw new ProteusInflateException("Layout contains type: 'include' but inflater callback is null");
     }
 
     @Override
-    public int getUniqueViewId(String id) {
+    public int getUniqueViewId(@NonNull String id) {
         return idGenerator.getUnique(id);
     }
 

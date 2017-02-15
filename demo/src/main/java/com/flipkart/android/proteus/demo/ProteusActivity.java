@@ -26,6 +26,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.PagerAdapter;
@@ -151,28 +152,28 @@ public class ProteusActivity extends AppCompatActivity {
      */
     private ProteusLayoutInflater.Callback callback = new ProteusLayoutInflater.Callback() {
 
-        @Nullable
+        @NonNull
         @Override
         public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, JsonObject data, int index) {
+            //noinspection ConstantConditions because we want to crash here
             return null;
         }
 
-        @Override
-        public Layout onLayoutRequired(String type, Layout include) {
-            return null;
-        }
-
+        @NonNull
         @Override
         public View onEvent(ProteusView view, EventType eventType, Value value) {
+            //noinspection ConstantConditions because we want to crash here
             return null;
         }
 
         @Override
+        @Nullable
         public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
             return null;
         }
 
         @Override
+        @Nullable
         public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
             return null;
         }
