@@ -76,6 +76,11 @@ public final class Proteus {
     }
 
     @NonNull
+    public ProteusContext createContext(@NonNull Context base) {
+        return createContext(base, null, null, null, null);
+    }
+
+    @NonNull
     public ProteusContext createContext(@NonNull Context base,
                                         @Nullable ProteusLayoutInflater.ImageLoader loader,
                                         @Nullable ProteusLayoutInflater.Callback callback,
