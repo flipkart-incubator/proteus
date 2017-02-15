@@ -201,7 +201,7 @@ public class ProteusActivity extends AppCompatActivity {
                 .register("CircleView", new CircleViewParser(), "View")
                 .build();
 
-        layoutInflater = proteus.getProteusContext(this, loader, callback, layoutManager, styleManager).getInflater();
+        layoutInflater = proteus.createContext(this, loader, callback, layoutManager, styleManager).getInflater();
 
         ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setProteus(proteus);
 

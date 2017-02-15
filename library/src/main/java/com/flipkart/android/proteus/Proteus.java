@@ -76,11 +76,11 @@ public final class Proteus {
     }
 
     @NonNull
-    public ProteusContext getProteusContext(@NonNull Context base,
-                                            @Nullable ProteusLayoutInflater.ImageLoader loader,
-                                            @Nullable ProteusLayoutInflater.Callback callback,
-                                            @Nullable ProteusResources.LayoutManager layoutManager,
-                                            @Nullable ProteusResources.StyleManager styleManager) {
+    public ProteusContext createContext(@NonNull Context base,
+                                        @Nullable ProteusLayoutInflater.ImageLoader loader,
+                                        @Nullable ProteusLayoutInflater.Callback callback,
+                                        @Nullable ProteusResources.LayoutManager layoutManager,
+                                        @Nullable ProteusResources.StyleManager styleManager) {
         ProteusResources resources = new ProteusResources(parsers, layoutManager, formatterManager, styleManager);
         return new ProteusContext(base, resources, loader, callback);
     }
