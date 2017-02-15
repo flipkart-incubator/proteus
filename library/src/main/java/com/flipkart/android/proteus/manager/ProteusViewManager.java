@@ -148,28 +148,4 @@ public interface ProteusViewManager {
      */
     void destroy();
 
-    /**
-     * @param listener
-     */
-    void setOnUpdateCallback(@Nullable OnUpdateCallback listener);
-
-    /**
-     *
-     */
-    void removeOnUpdateDataListener();
-
-    @Nullable
-    OnUpdateCallback getOnUpdateDataListeners();
-
-    /**
-     *
-     */
-    interface OnUpdateCallback {
-
-        JsonObject onBeforeUpdateData(@Nullable JsonObject data);
-
-        JsonObject onAfterDataContext(@Nullable JsonObject data);
-
-        void onUpdateDataComplete(@Nullable JsonObject data);
-    }
 }

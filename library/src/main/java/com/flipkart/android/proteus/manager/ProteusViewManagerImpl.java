@@ -66,7 +66,6 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     @NonNull
     private final ViewTypeParser parser;
 
-    private OnUpdateCallback onUpdateCallback;
 
     private String dataPathForChildren;
     private Layout childLayout;
@@ -91,14 +90,10 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         }
         this.isViewUpdating = true;
 
-        data = onBeforeUpdateData(data);
-
         // update the data context so all child views can refer to new data
         if (data != null) {
             updateDataContext(data);
         }
-
-        data = onAfterDataContext(scope.getData());
 
         // update the boundAttributes of this view
         if (this.boundAttributes != null) {
@@ -129,8 +124,6 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + getLayout());
         }
-
-        onUpdateDataComplete(scope.getData());
     }
 
     @NonNull
@@ -270,25 +263,8 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
     @Override
     public void destroy() {
         childLayout = null;
-        onUpdateCallback = null;
         dataPathForChildren = null;
         boundAttributes = null;
-    }
-
-    @Override
-    public void setOnUpdateCallback(@Nullable OnUpdateCallback listener) {
-        this.onUpdateCallback = listener;
-    }
-
-    @Override
-    public void removeOnUpdateDataListener() {
-        onUpdateCallback = null;
-    }
-
-    @Nullable
-    @Override
-    public OnUpdateCallback getOnUpdateDataListeners() {
-        return onUpdateCallback;
     }
 
     private void updateDataContext(JsonObject data) {
@@ -335,34 +311,6 @@ public class ProteusViewManagerImpl implements ProteusViewManager {
                 childView = context.getInflater().inflate(getLayout(), data, parent, scope.getIndex());
                 parser.addView((ProteusView) view, childView);
             }
-        }
-    }
-
-    @Nullable
-    private JsonObject onBeforeUpdateData(JsonObject data) {
-        if (onUpdateCallback != null) {
-            JsonObject override = onUpdateCallback.onBeforeUpdateData(data);
-            if (override != null) {
-                return override;
-            }
-        }
-        return data;
-    }
-
-    @Nullable
-    private JsonObject onAfterDataContext(JsonObject data) {
-        if (onUpdateCallback != null) {
-            JsonObject override = onUpdateCallback.onAfterDataContext(data);
-            if (override != null) {
-                return override;
-            }
-        }
-        return data;
-    }
-
-    private void onUpdateDataComplete(JsonObject data) {
-        if (onUpdateCallback != null) {
-            onUpdateCallback.onUpdateDataComplete(data);
         }
     }
 
