@@ -61,9 +61,14 @@ dependencies {
 
 Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON`, which can be used to inflate native android UI at runtime. The `JSON` layouts can be hosted anywhere (on the device, on servers, etc.).
 
+
 [The "Layout"](https://github.com/flipkart-incubator/proteus/wiki/Layouts) defines the the view heirarchy, just like XML. 
+
 [The "Data"](https://github.com/flipkart-incubator/proteus/wiki/Data) (optional) defines [data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings).
-You give the layout and data to LayoutBuilder, you get back a native view. Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp) to see it in action.
+
+You give the layout and data to LayoutBuilder, you get back a native view. 
+
+Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp) to see it in action.
 
 #### Sample layout
 
@@ -133,7 +138,6 @@ The demo app will let you play around with Proteus as well as help you understan
 * [FAQ](https://github.com/flipkart-incubator/proteus/wiki/Frequently-asked-questions)
 * [Detailed Guide](https://github.com/flipkart-incubator/proteus/wiki)
 * [API References]() *under construction*
-* [Demo App](https://github.com/adityasharat/proteus-demo)
 * [DroidCon Talk](https://www.youtube.com/watch?v=ue0ax2_18k8)
 * [Demo Videos](https://www.youtube.com/playlist?list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp)
 
