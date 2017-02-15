@@ -17,21 +17,24 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.toolbox;
+package com.flipkart.android.proteus;
 
-import com.flipkart.android.proteus.value.Value;
+import android.support.annotation.NonNull;
+import android.view.View;
+
+import com.flipkart.android.proteus.toolbox.Scope;
+import com.flipkart.android.proteus.value.Layout;
 
 /**
- * @author kirankumar
+ * ViewGroupManager
+ *
  * @author adityasharat
  */
-public class BoundAttribute {
 
-    public final int attributeId;
-    public final Value attributeValue;
+public class ViewGroupManager extends ViewManager {
 
-    public BoundAttribute(int attributeId, Value value) {
-        this.attributeId = attributeId;
-        this.attributeValue = value;
+    public ViewGroupManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
+                            @NonNull View view, @NonNull Layout layout, @NonNull Scope scope) {
+        super(context, parser, view, layout, scope);
     }
 }

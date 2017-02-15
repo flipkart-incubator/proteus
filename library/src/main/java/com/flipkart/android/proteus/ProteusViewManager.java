@@ -23,8 +23,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.flipkart.android.proteus.ProteusContext;
-import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.toolbox.BoundAttribute;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.value.Layout;
@@ -96,11 +94,6 @@ public interface ProteusViewManager {
      * @param dataPathForChildren
      */
     void setDataPathForChildren(@Nullable String dataPathForChildren);
-
-    /**
-     * @return
-     */
-    boolean isViewUpdating();
 
     /**
      * @param boundAttribute

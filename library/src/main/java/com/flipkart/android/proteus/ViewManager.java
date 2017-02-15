@@ -21,19 +21,15 @@ package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.toolbox.BoundAttribute;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.value.Layout;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -62,11 +58,11 @@ public class ViewManager implements ProteusViewManager {
     @NonNull
     private final ViewTypeParser parser;
 
-
+    @Nullable
     private String dataPathForChildren;
-    private Layout childLayout;
 
-    private boolean isViewUpdating;
+    @Nullable
+    private Layout childLayout;
 
     private ArrayList<BoundAttribute> boundAttributes;
 
@@ -81,11 +77,6 @@ public class ViewManager implements ProteusViewManager {
 
     @Override
     public void update(@Nullable JsonObject data) {
-        if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "START: update data " + (data != null ? "(top-level)" : "") + "for view with " + getLayout());
-        }
-        this.isViewUpdating = true;
-
         // update the data context so all child views can refer to new data
         if (data != null) {
             updateDataContext(data);
@@ -114,11 +105,6 @@ public class ViewManager implements ProteusViewManager {
                     }
                 }
             }
-        }
-
-        this.isViewUpdating = false;
-        if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "END: update data " + (data != null ? "(top-level)" : "") + "for view with " + getLayout());
         }
     }
 
@@ -172,11 +158,6 @@ public class ViewManager implements ProteusViewManager {
     @Override
     public void setDataPathForChildren(@Nullable String dataPathForChildren) {
         this.dataPathForChildren = dataPathForChildren;
-    }
-
-    @Override
-    public boolean isViewUpdating() {
-        return isViewUpdating;
     }
 
     @Override
@@ -242,12 +223,7 @@ public class ViewManager implements ProteusViewManager {
     }
 
     private void handleBinding(BoundAttribute boundAttribute) {
-        if (boundAttribute.hasRegEx()) {
-            parser.handleAttribute(view, boundAttribute.getAttributeId(), getLayout().create(boundAttribute.getAttributeValue()));
-        } else {
-            Result result = Utils.readJson(boundAttribute.getBindingName(), scope.getData(), scope.getIndex());
-            JsonElement dataValue = result.isSuccess() ? result.element : JsonNull.INSTANCE;
-            parser.handleAttribute(view, boundAttribute.getAttributeId(), getLayout().create(dataValue));
-        }
+        //noinspection unchecked
+        parser.handleAttribute(view, boundAttribute.attributeId, boundAttribute.attributeValue);
     }
 }
