@@ -22,6 +22,7 @@ package com.flipkart.android.proteus.value;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 import android.text.TextUtils;
@@ -44,9 +45,15 @@ public abstract class Color extends Value {
 
     private static HashMap<String, Integer> sAttributesMap = null;
 
-    public static Color valueOf(String value) {
-        if (null == value) {
-            return Int.BLACK;
+    @NonNull
+    public static Color valueOf(@Nullable String value) {
+        return valueOf(value, Int.BLACK);
+    }
+
+    @Nullable
+    public static Color valueOf(@Nullable String value, @Nullable Color defaultValue) {
+        if (TextUtils.isEmpty(value)) {
+            return defaultValue;
         }
         Color color = ColorCache.cache.get(value);
         if (null == color) {
@@ -54,7 +61,7 @@ public abstract class Color extends Value {
                 @ColorInt int colorInt = android.graphics.Color.parseColor(value);
                 color = new Int(colorInt);
             } else {
-                color = Int.BLACK;
+                color = defaultValue;
             }
             ColorCache.cache.put(value, color);
         }

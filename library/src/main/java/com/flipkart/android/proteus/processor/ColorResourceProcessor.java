@@ -59,7 +59,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
         if (value.isObject()) {
             return Color.valueOf(value.getAsObject(), context);
         } else if (value.isPrimitive()) {
-            return Color.valueOf(value.getAsString());
+            return Color.valueOf(value.getAsString(), Color.Int.BLACK);
         } else {
             return Color.Int.BLACK;
         }

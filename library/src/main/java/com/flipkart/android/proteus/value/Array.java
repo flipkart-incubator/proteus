@@ -19,6 +19,9 @@
 
 package com.flipkart.android.proteus.value;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
@@ -43,9 +46,16 @@ public class Array extends Value {
         values = new ArrayList<>();
     }
 
+    /**
+     * Creates an empty Array with a given capacity.
+     */
+    public Array(int capacity) {
+        values = new ArrayList<>(capacity);
+    }
+
     @Override
     public Array copy() {
-        Array result = new Array();
+        Array result = new Array(values.size());
         for (Value value : values) {
             result.add(value.copy());
         }
@@ -57,7 +67,7 @@ public class Array extends Value {
      *
      * @param bool the boolean that needs to be added to the array.
      */
-    public void add(Boolean bool) {
+    public void add(@Nullable Boolean bool) {
         values.add(bool == null ? Null.INSTANCE : new Primitive(bool));
     }
 
@@ -66,7 +76,7 @@ public class Array extends Value {
      *
      * @param character the character that needs to be added to the array.
      */
-    public void add(Character character) {
+    public void add(@Nullable Character character) {
         values.add(character == null ? Null.INSTANCE : new Primitive(character));
     }
 
@@ -75,7 +85,7 @@ public class Array extends Value {
      *
      * @param number the number that needs to be added to the array.
      */
-    public void add(Number number) {
+    public void add(@Nullable Number number) {
         values.add(number == null ? Null.INSTANCE : new Primitive(number));
     }
 
@@ -84,7 +94,7 @@ public class Array extends Value {
      *
      * @param string the string that needs to be added to the array.
      */
-    public void add(String string) {
+    public void add(@Nullable String string) {
         values.add(string == null ? Null.INSTANCE : new Primitive(string));
     }
 
@@ -93,7 +103,7 @@ public class Array extends Value {
      *
      * @param value the value that needs to be added to the array.
      */
-    public void add(Value value) {
+    public void add(@Nullable Value value) {
         if (value == null) {
             value = Null.INSTANCE;
         }
@@ -105,7 +115,7 @@ public class Array extends Value {
      *
      * @param array the array whose values need to be added to the array.
      */
-    public void addAll(Array array) {
+    public void addAll(@NonNull Array array) {
         values.addAll(array.values);
     }
 
@@ -118,7 +128,7 @@ public class Array extends Value {
      * @return the value previously at the specified position
      * @throws IndexOutOfBoundsException if the specified index is outside the array bounds
      */
-    public Value set(int index, Value value) {
+    public Value set(int index, @NonNull Value value) {
         return values.set(index, value);
     }
 
@@ -130,7 +140,7 @@ public class Array extends Value {
      * @return true if this array contained the specified value, false otherwise
      * @since 2.3
      */
-    public boolean remove(Value value) {
+    public boolean remove(@NonNull Value value) {
         return values.remove(value);
     }
 
@@ -155,7 +165,7 @@ public class Array extends Value {
      * @return true if this array contains the specified value.
      * @since 2.3
      */
-    public boolean contains(Value value) {
+    public boolean contains(@NonNull Value value) {
         return values.contains(value);
     }
 

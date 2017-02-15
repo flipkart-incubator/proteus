@@ -19,6 +19,7 @@
 
 package com.flipkart.android.proteus.value;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 
@@ -64,7 +65,7 @@ public class Binding extends Value {
      * @param value
      * @return
      */
-    public static boolean isBindingValue(final String value) {
+    public static boolean isBindingValue(@NonNull final String value) {
         return !value.isEmpty() && value.charAt(0) == BINDING_PREFIX;
     }
 
@@ -72,7 +73,7 @@ public class Binding extends Value {
      * @param value
      * @return
      */
-    public static Binding valueOf(final String value) {
+    public static Binding valueOf(@NonNull final String value) {
         Binding binding = BindingCache.cache.get(value);
         if (null == binding) {
             Matcher matcher = BINDING_PATTERN.matcher(value);

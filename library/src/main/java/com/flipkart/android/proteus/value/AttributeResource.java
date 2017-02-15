@@ -21,6 +21,7 @@ package com.flipkart.android.proteus.value;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LruCache;
 
@@ -86,6 +87,7 @@ public class AttributeResource extends Value {
         return value.startsWith(ATTR_START_LITERAL) && value.contains(ATTR_LITERAL);
     }
 
+    @Nullable
     public static AttributeResource valueOf(String value, Context context) {
         AttributeResource attribute = AttributeCache.cache.get(value);
         if (null == attribute) {
@@ -102,7 +104,7 @@ public class AttributeResource extends Value {
         return NULL == attribute ? null : attribute;
     }
 
-    public TypedArray apply(Context context) {
+    public TypedArray apply(@NonNull Context context) {
         return context.obtainStyledAttributes(new int[]{attributeId});
     }
 
