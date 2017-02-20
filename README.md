@@ -21,7 +21,7 @@ With Proteus, you can control your Apps layout from the backend (no WebViews). F
 * **[Contributing](#contributing)**
 * **[License](#license)**
 * **[Contributors](#contributors)**
-* **[StackOverflow](#StackOverflow)**
+* **[StackOverflow](#stackoverflow)**
 
 ## Getting Started
 
@@ -160,7 +160,7 @@ The demo app will let you play around with Proteus as well as help you understan
 
 ## StackOverflow
 
-Please tag questions on StackOverflow[http://stackoverflow.com] with [android-proteus](http://stackoverflow.com/unanswered/tagged/android-proteus).
+Please tag questions on [StackOverflow](http://stackoverflow.com) with [android-proteus](http://stackoverflow.com/unanswered/tagged/android-proteus).
 
 ### One click XML to JSON conversion plugin
 
