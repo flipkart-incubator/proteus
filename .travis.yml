@@ -14,5 +14,5 @@ android:
 before_install:
  - chmod +x gradlew
 script:
-   - ./gradlew library:test
+   - ./gradlew proteus-core:test
    - ./gradlew build
