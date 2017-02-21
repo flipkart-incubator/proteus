@@ -25,6 +25,9 @@ import android.support.annotation.Nullable;
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Binding;
+import com.flipkart.android.proteus.value.NestedBinding;
+import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
@@ -37,18 +40,25 @@ import com.google.gson.JsonElement;
 public abstract class AttributeProcessor<V> {
 
     @Nullable
-    public static Value staticPrecompile(Value value, Context context) {
-        if (value.isPrimitive()) {
-            String string = value.getAsString();
-            if (Binding.isBindingValue(string)) {
-                return Binding.valueOf(string);
-            } else if (Resource.isResource(string)) {
-                return Resource.valueOf(string, null, context);
-            } else if (AttributeResource.isAttributeResource(string)) {
-                return AttributeResource.valueOf(string, context);
-            } else if (StyleResource.isStyleResource(string)) {
-                return StyleResource.valueOf(string, context);
-            }
+    public static Value staticPrecompile(Primitive value, Context context) {
+        String string = value.getAsString();
+        if (Binding.isBindingValue(string)) {
+            return Binding.valueOf(string);
+        } else if (Resource.isResource(string)) {
+            return Resource.valueOf(string, null, context);
+        } else if (AttributeResource.isAttributeResource(string)) {
+            return AttributeResource.valueOf(string, context);
+        } else if (StyleResource.isStyleResource(string)) {
+            return StyleResource.valueOf(string, context);
+        }
+        return null;
+    }
+
+    @Nullable
+    static Value staticPrecompile(ObjectValue object, Context context) {
+        Value binding = object.get(NestedBinding.NESTED_BINDING_KEY);
+        if (null != binding) {
+            return NestedBinding.valueOf(binding);
         }
         return null;
     }
@@ -80,7 +90,9 @@ public abstract class AttributeProcessor<V> {
     public Value precompile(Value value, Context context) {
         Value compiled = null;
         if (value.isPrimitive()) {
-            compiled = staticPrecompile(value, context);
+            compiled = staticPrecompile(value.getAsPrimitive(), context);
+        } else if (value.isObject()) {
+            compiled = staticPrecompile(value.getAsObject(), context);
         }
         return null != compiled ? compiled : compile(value, context);
     }

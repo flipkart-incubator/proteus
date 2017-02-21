@@ -97,18 +97,20 @@
                   "text" : "ADD TO CART",
                   "textColor": "?Theme_AppCompat:actionMenuTextColor",
                   "background" : {
-                    "type" : "ripple",
-                    "content": {
-                      "type": "shape",
-                      "shape": "rectangle",
-                      "children": [
-                        {
-                          "type": "solid",
-                          "color": "#FF4081"
-                        }
-                      ]
-                    },
-                    "color": "#f0f0f0"
+                    "@": {
+                      "type" : "ripple",
+                      "content": {
+                        "type": "shape",
+                        "shape": "rectangle",
+                        "children": [
+                          {
+                            "type": "solid",
+                            "color": "@{theme.color}"
+                          }
+                        ]
+                      },
+                      "color": "#f0f0f0"
+                    }
                   }
                 }
               ]

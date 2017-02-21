@@ -56,7 +56,7 @@ public class Binding extends Value {
      * @param template
      * @param expressions
      */
-    private Binding(String template, Expression[] expressions) {
+    Binding(String template, Expression[] expressions) {
         this.template = template;
         this.expressions = expressions;
     }
