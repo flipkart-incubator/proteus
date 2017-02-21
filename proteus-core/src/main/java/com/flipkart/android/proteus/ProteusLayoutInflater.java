@@ -75,6 +75,36 @@ public interface ProteusLayoutInflater {
     ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data);
 
     /**
+     *
+     * @param name
+     * @param data
+     * @param parent
+     * @param dataIndex
+     * @return
+     */
+    @NonNull
+    ProteusView inflate(@NonNull String name, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex);
+
+    /**
+     *
+     * @param name
+     * @param data
+     * @param dataIndex
+     * @return
+     */
+    @NonNull
+    ProteusView inflate(@NonNull String name, @NonNull JsonObject data, int dataIndex);
+
+    /**
+     *
+     * @param name
+     * @param data
+     * @return
+     */
+    @NonNull
+    ProteusView inflate(@NonNull String name, @NonNull JsonObject data);
+
+    /**
      * Returns the {@link ViewTypeParser} for the specified view type.
      *
      * @param type The name of the view type.

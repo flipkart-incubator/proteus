@@ -120,6 +120,28 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return inflate(layout, data, null, -1);
     }
 
+    @NonNull
+    @Override
+    public ProteusView inflate(@NonNull String name, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+        Layout layout = context.getLayout(name);
+        if (null == layout) {
+            throw new ProteusInflateException("layout : '" + name + "' not found");
+        }
+        return inflate(layout, data, parent, dataIndex);
+    }
+
+    @NonNull
+    @Override
+    public ProteusView inflate(@NonNull String name, @NonNull JsonObject data, int dataIndex) {
+        return inflate(name, data, null, dataIndex);
+    }
+
+    @NonNull
+    @Override
+    public ProteusView inflate(@NonNull String name, @NonNull JsonObject data) {
+        return inflate(name, data, null, -1);
+    }
+
     protected ProteusView createView(@NonNull ViewTypeParser parser, @NonNull Layout layout,
                                      @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
         return parser.createView(context, layout, data, parent, dataIndex);

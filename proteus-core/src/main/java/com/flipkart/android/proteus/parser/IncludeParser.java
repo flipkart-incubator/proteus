@@ -42,8 +42,7 @@ public class IncludeParser<V extends View> extends ViewTypeParser<V> {
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout include, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
         String type = include.extras.getAsString(ProteusConstants.LAYOUT);
-        Layout layout = context.getLayout(type).merge(include);
-        return context.getInflater().inflate(layout, data, parent, dataIndex);
+        return context.getInflater().inflate(type, data, parent, dataIndex);
     }
 
     @Override
