@@ -50,8 +50,8 @@ public abstract class Color extends Value {
         return valueOf(value, Int.BLACK);
     }
 
-    @Nullable
-    public static Color valueOf(@Nullable String value, @Nullable Color defaultValue) {
+    @NonNull
+    public static Color valueOf(@Nullable String value, @NonNull Color defaultValue) {
         if (TextUtils.isEmpty(value)) {
             return defaultValue;
         }
