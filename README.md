@@ -37,7 +37,8 @@ allprojects {
 
 // Add the dependency
 dependencies {
-        compile 'com.github.flipkart-incubator:proteus:4.2.0'
+        compile 'com.github.flipkart-incubator:proteus-core:5.0.0'
+        compile 'com.github.flipkart-incubator:gson-adapter:5.0.0'
 }
 ```
 
@@ -53,7 +54,8 @@ git clone https://github.com/flipkart-incubator/proteus.git
 
 ```javascript
 dependencies {
-  compile project('proteus:library')
+  compile project('proteus:proteus-core')
+  compile project('proteus:gson-adapter')
 }
 ```
 
@@ -81,13 +83,13 @@ Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ
     "layout_width": "200dp",
     "gravity": "center",
     "type": "TextView",
-    "text": "~{{user.profile.name}} ({{user.profile.experience}}$(number))"
+    "text": "~@{user.profile.name} (@{user.profile.experience}${number})"
   }, {
     "type": "HorizontalProgressBar",
     "layout_width": "200dp",
     "layout_marginTop": "8dp",
     "max": 6000,
-    "progress": "$user.profile.experience"
+    "progress": "~@{user.profile.experience}"
   }]
 }
 ```
@@ -108,7 +110,7 @@ Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ
 ### Sample Java code
 
 ```java
-ProteusView view = layoutBuilder.build(container, <layout>, <data>, 0, styles);
+ProteusView view = proteusLayoutInflater.inflate(<layout>, <data>);
 container.addView(view.getAsView());
 ```
 
@@ -130,7 +132,7 @@ The demo app will let you play around with Proteus as well as help you understan
 
 **Ready to tinker**
 
-* Tinker around with the [layout](https://github.com/adityasharat/proteus-demo/blob/master/data/layout.json) and [data](https://github.com/adityasharat/proteus-demo/blob/master/data/user.json)
+* Tinker around with the [layout](https://github.com/adityasharat/proteus-demo/blob/layout-class/data/layout.json) and [data](https://github.com/adityasharat/proteus-demo/blob/layout-class/data/user.json)
 * Hit the FAB to refresh the app.
 
 ## Resources
