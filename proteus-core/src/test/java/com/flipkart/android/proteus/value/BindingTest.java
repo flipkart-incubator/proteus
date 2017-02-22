@@ -19,8 +19,6 @@
 
 package com.flipkart.android.proteus.value;
 
-import com.flipkart.android.proteus.value.Binding;
-import com.flipkart.android.proteus.value.Value;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -55,15 +53,15 @@ public class BindingTest {
 
     @Test
     public void valueOf_cache() throws Exception {
-        Binding binding1 = Binding.valueOf("@{a.b.c}");
-        Binding binding2 = Binding.valueOf("@{a.b.c}");
+        Binding binding1 = Binding.valueOf("~@{a.b.c}");
+        Binding binding2 = Binding.valueOf("~@{a.b.c}");
 
         assertThat(binding1, is(binding2));
     }
 
     @Test
     public void evaluate_single() throws Exception {
-        Binding binding = Binding.valueOf("@{a.b.c}");
+        Binding binding = Binding.valueOf("~@{a.b.c}");
 
         Value value = binding.evaluate(data(), 0);
 
@@ -73,7 +71,7 @@ public class BindingTest {
 
     @Test
     public void evaluate_multiple() throws Exception {
-        Binding binding = Binding.valueOf("@{a.b.c} and @{a.b.d}");
+        Binding binding = Binding.valueOf("~@{a.b.c} and @{a.b.d}");
 
         Value value = binding.evaluate(data(), 0);
 

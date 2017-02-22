@@ -107,6 +107,16 @@
               },
               {
                 "type": "TextView",
+                "id": "location",
+                "layout_width": "wrap_content",
+                "layout_height": "wrap_content",
+                "layout_below": "name",
+                "layout_marginRight": "4dp",
+                "textSize": "18dp",
+                "text": "~@{user.location.city}, @{user.location.country}"
+              },
+              {
+                "type": "TextView",
                 "text": "~(@{user.level})",
                 "textColor": "#c48866",
                 "layout_width": "wrap_content",

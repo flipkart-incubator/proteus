@@ -42,12 +42,14 @@ import java.util.regex.Pattern;
 public class Binding extends Value {
 
     public static final char BINDING_PREFIX = '~';
+    public static final String EMPTY_STRING = "";
+    public static final String EMPTY_TEMPLATE = EMPTY_STRING;
     public static final String TEMPLATE = "%s";
     public static final String DATA_PATH_DELIMITERS = ".[]";
     public static final String INDEX = "$index";
     public static final String ARRAY_DATA_LENGTH_REFERENCE = "$length";
     public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
-    public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{(\\S+?)\\}\\$\\{(\\S+?)\\}|@\\{(\\S+?)\\}");
+    public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{(\\S+)\\}\\$\\{(\\S+)\\}|@\\{(\\S+)\\}");
 
     public final String template;
     private final Expression[] expressions;
@@ -91,8 +93,11 @@ public class Binding extends Value {
                 expressions[expressions.length - 1] = expression;
             }
             matcher.appendTail(sb);
-
-            binding = new Binding(sb.toString(), expressions);
+            String template = sb.toString().substring(1);
+            if (TEMPLATE.equals(template)) {
+                template = EMPTY_TEMPLATE;
+            }
+            binding = new Binding(template, expressions);
             BindingCache.cache.put(value, binding);
         }
         return binding;
@@ -115,14 +120,26 @@ public class Binding extends Value {
     public Value evaluate(JsonElement data, int index) {
         Value empty = StringAttributeProcessor.EMPTY;
         Result result;
-        if (expressions.length == 1) {
+        // the string object compare can be safely used here,
+        // do not convert it to .equals()
+        if (expressions.length == 1 && template == EMPTY_TEMPLATE) {
             result = expressions[0].evaluate(data, index);
             return result.isSuccess() ? Value.fromJson(result.element) : empty;
         } else {
             String[] variables = new String[expressions.length];
+            String variable;
             for (int i = 0; i < expressions.length; i++) {
                 result = expressions[i].evaluate(data, index);
-                variables[i] = result.isSuccess() ? result.element.toString() : "";
+                if (result.isSuccess()) {
+                    if (result.element.isJsonPrimitive()) {
+                        variable = result.element.getAsString();
+                    } else {
+                        variable = result.element.toString();
+                    }
+                } else {
+                    variable = EMPTY_STRING;
+                }
+                variables[i] = variable;
             }
             return new Primitive(String.format(template, (Object[]) variables));
         }

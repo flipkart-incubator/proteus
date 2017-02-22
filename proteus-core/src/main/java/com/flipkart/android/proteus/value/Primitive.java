@@ -308,4 +308,8 @@ public class Primitive extends Value {
         return value.equals(other.value);
     }
 
+    @Override
+    public String toString() {
+        return getAsString();
+    }
 }
