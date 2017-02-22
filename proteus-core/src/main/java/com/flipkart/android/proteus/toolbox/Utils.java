@@ -19,10 +19,8 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
@@ -107,81 +105,6 @@ public class Utils {
         }
     }
 
-    public static JsonElement merge(JsonElement oldJson, JsonElement newJson, boolean useCopy, Gson gson) {
-
-        JsonElement newDataElement;
-        JsonArray oldArray;
-        JsonArray newArray;
-        JsonElement oldArrayItem;
-        JsonElement newArrayItem;
-        JsonObject oldObject;
-
-        if (oldJson == null || oldJson.isJsonNull()) {
-            return useCopy ? gson.fromJson(newJson, JsonElement.class) : newJson;
-        }
-
-        if (newJson == null || newJson.isJsonNull()) {
-            newJson = JsonNull.INSTANCE;
-            return newJson;
-        }
-
-        if (newJson.isJsonPrimitive()) {
-            JsonPrimitive value;
-            if (!useCopy) {
-                return newJson;
-            }
-            if (newJson.getAsJsonPrimitive().isBoolean()) {
-                value = new JsonPrimitive(newJson.getAsBoolean());
-            } else if (newJson.getAsJsonPrimitive().isNumber()) {
-                value = new JsonPrimitive(newJson.getAsNumber());
-            } else if (newJson.getAsJsonPrimitive().isString()) {
-                value = new JsonPrimitive(newJson.getAsString());
-            } else {
-                value = newJson.getAsJsonPrimitive();
-            }
-            return value;
-        }
-
-        if (newJson.isJsonArray()) {
-            if (!oldJson.isJsonArray()) {
-                return useCopy ? gson.fromJson(newJson, JsonArray.class) : newJson;
-            } else {
-                oldArray = oldJson.getAsJsonArray();
-                newArray = newJson.getAsJsonArray();
-
-                if (oldArray.size() > newArray.size()) {
-                    while (oldArray.size() > newArray.size()) {
-                        oldArray.remove(oldArray.size() - 1);
-                    }
-                }
-
-                for (int index = 0; index < newArray.size(); index++) {
-                    if (index < oldArray.size()) {
-                        oldArrayItem = oldArray.get(index);
-                        newArrayItem = newArray.get(index);
-                        oldArray.set(index, merge(oldArrayItem, newArrayItem, useCopy, gson));
-                    } else {
-                        oldArray.add(newArray.get(index));
-                    }
-                }
-            }
-        } else if (newJson.isJsonObject()) {
-            if (!oldJson.isJsonObject()) {
-                return useCopy ? gson.fromJson(newJson, JsonObject.class) : newJson;
-            } else {
-                oldObject = oldJson.getAsJsonObject();
-                for (Map.Entry<String, JsonElement> entry : newJson.getAsJsonObject().entrySet()) {
-                    newDataElement = merge(oldObject.get(entry.getKey()), entry.getValue(), useCopy, gson);
-                    oldObject.add(entry.getKey(), newDataElement);
-                }
-            }
-        } else {
-            return useCopy ? gson.fromJson(newJson, JsonElement.class) : newJson;
-        }
-
-        return oldJson;
-    }
-
     public static JsonObject addElements(JsonObject destination, JsonObject source, boolean override) {
         for (Map.Entry<String, JsonElement> entry : source.entrySet()) {
             if (!override && destination.get(entry.getKey()) != null) {
@@ -208,6 +131,6 @@ public class Utils {
     }
 
     public static String getVersion() {
-        return VERSION;
+        return LIB_NAME + ":" + VERSION;
     }
 }
