@@ -39,7 +39,7 @@ import com.flipkart.android.proteus.value.Value;
 public abstract class StringAttributeProcessor<V extends View> extends AttributeProcessor<V> {
 
     public static final String EMPTY_STRING = "";
-    public static final Primitive EMPTY = new Primitive("");
+    public static final Primitive EMPTY = new Primitive(EMPTY_STRING);
     private static final String STRING_RESOURCE_PREFIX = "@string/";
 
     public static boolean isLocalStringResource(String value) {
