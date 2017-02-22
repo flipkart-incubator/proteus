@@ -20,10 +20,13 @@
 package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.value.Layout;
+import com.google.gson.JsonObject;
 
 /**
  * ViewGroupManager
@@ -36,5 +39,23 @@ public class ViewGroupManager extends ViewManager {
     public ViewGroupManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
                             @NonNull View view, @NonNull Layout layout, @NonNull Scope scope) {
         super(context, parser, view, layout, scope);
+    }
+
+    @Override
+    public void update(@Nullable JsonObject data) {
+        super.update(data);
+        // update the child views
+        if (view instanceof ViewGroup) {
+            ViewGroup parent = (ViewGroup) view;
+            int count = parent.getChildCount();
+            View child;
+
+            for (int index = 0; index < count; index++) {
+                child = parent.getChildAt(index);
+                if (child instanceof ProteusView) {
+                    ((ProteusView) child).getViewManager().update(scope.getData());
+                }
+            }
+        }
     }
 }

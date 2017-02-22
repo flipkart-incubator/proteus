@@ -186,20 +186,22 @@
         "background": "#ffffff",
         "padding": "16dp",
         "children": {
-          "data": "~@{user.tags}",
-          "layout":{
-            "type": "TextView",
-            "scope": {
-              "tag": "user.tags[$index]"
-            },
-            "layout_marginRight": "8dp",
-            "layout_height": "32dp",
-            "textSize": "12sp",
-            "textColor": "@color/colorAccent",
-            "text": "~@{tag}",
-            "padding": "8dp",
-            "gravity": "center",
-            "onClick": "~@{tag}"
+          "@": {
+            "collection": "~@{user.tags}",
+            "layout":{
+              "type": "TextView",
+              "scope": {
+                "tag": "user.tags[$index]"
+              },
+              "layout_marginRight": "8dp",
+              "layout_height": "32dp",
+              "textSize": "12sp",
+              "textColor": "@color/colorAccent",
+              "text": "~@{tag}",
+              "padding": "8dp",
+              "gravity": "center",
+              "onClick": "~@{tag}"
+            }
           }
         }
       }

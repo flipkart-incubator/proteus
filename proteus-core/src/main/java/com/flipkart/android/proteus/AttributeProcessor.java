@@ -65,9 +65,7 @@ public abstract class AttributeProcessor<V> {
 
     public void process(V view, Value value) {
         if (value.isBinding()) {
-            Scope scope = ((ProteusView) view).getViewManager().getScope();
-            Value resolved = evaluate(value.getAsBinding(), scope.getData(), scope.getIndex());
-            handleValue(view, resolved);
+            handleBinding(view, value.getAsBinding());
         } else if (value.isResource()) {
             handleResource(view, value.getAsResource());
         } else if (value.isAttributeResource()) {
@@ -77,6 +75,12 @@ public abstract class AttributeProcessor<V> {
         } else {
             handleValue(view, value);
         }
+    }
+
+    public void handleBinding(V view, Binding value) {
+        Scope scope = ((ProteusView) view).getViewManager().getScope();
+        Value resolved = evaluate(value, scope.getData(), scope.getIndex());
+        handleValue(view, resolved);
     }
 
     public abstract void handleValue(V view, Value value);

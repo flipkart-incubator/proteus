@@ -33,7 +33,7 @@ public class ProteusConstants {
 
     public static final String STYLE_DELIMITER = "\\.";
 
-    public static final String DATA = "data";
+    public static final String COLLECTION = "collection";
     public static final String SCOPE = "scope";
     public static final String DATA_NULL = "null";
 

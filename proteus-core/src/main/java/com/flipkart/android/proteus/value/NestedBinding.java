@@ -20,6 +20,7 @@
 package com.flipkart.android.proteus.value;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.gson.JsonElement;
 
@@ -44,16 +45,36 @@ public class NestedBinding extends Binding {
     }
 
     /**
+     * @param value
+     * @return
+     */
+    @NonNull
+    private static Value compile(@NonNull final Value value) {
+        Value compiled = value;
+        if (value.isPrimitive()) {
+            String string = value.getAsString();
+            if (isBindingValue(string)) {
+                compiled = valueOf(string);
+            }
+        } else if (value.isObject()) {
+            compiled = compile(value.getAsObject());
+        } else if (value.isArray()) {
+            compiled = compile(value.getAsArray());
+        }
+        return compiled;
+    }
+
+    /**
      * @param object
      * @return
      */
     @NonNull
-    public static NestedBinding valueOf(@NonNull final ObjectValue object) {
+    private static ObjectValue compile(@NonNull final ObjectValue object) {
         ObjectValue compiled = new ObjectValue();
         for (Map.Entry<String, Value> entry : object.entrySet()) {
-            compiled.add(entry.getKey(), valueOf(entry.getValue()));
+            compiled.add(entry.getKey(), compile(entry.getValue()));
         }
-        return new NestedBinding(compiled);
+        return compiled;
     }
 
     /**
@@ -61,13 +82,13 @@ public class NestedBinding extends Binding {
      * @return
      */
     @NonNull
-    public static NestedBinding valueOf(@NonNull final Array array) {
+    private static Array compile(@NonNull final Array array) {
         Array compiled = new Array(array.size());
         Iterator<Value> iterator = array.iterator();
         while (iterator.hasNext()) {
-            compiled.add(valueOf(iterator.next()));
+            compiled.add(compile(iterator.next()));
         }
-        return new NestedBinding(compiled);
+        return compiled;
     }
 
     /**
@@ -76,15 +97,12 @@ public class NestedBinding extends Binding {
      */
     @NonNull
     public static NestedBinding valueOf(@NonNull final Value value) {
-        Value compiled = value;
-        if (value.isPrimitive()) {
-            compiled = valueOf(value.getAsString());
-        } else if (value.isObject()) {
-            compiled = valueOf(value.getAsObject());
-        } else if (value.isArray()) {
-            compiled = valueOf(value.getAsArray());
-        }
-        return new NestedBinding(compiled);
+        return new NestedBinding(compile(value));
+    }
+
+    @NonNull
+    public Value getValue() {
+        return value;
     }
 
     @Override
@@ -107,10 +125,7 @@ public class NestedBinding extends Binding {
         Value value;
         for (Map.Entry<String, Value> entry : object.entrySet()) {
             key = entry.getKey();
-            value = entry.getValue();
-            if (value.isBinding()) {
-                value = value.getAsBinding().evaluate(data, index);
-            }
+            value = evaluate(entry.getValue(), data, index);
             evaluated.add(key, value);
         }
 

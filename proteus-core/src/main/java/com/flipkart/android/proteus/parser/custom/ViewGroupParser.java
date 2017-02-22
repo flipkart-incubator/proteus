@@ -28,16 +28,20 @@ import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.ProteusViewManager;
+import com.flipkart.android.proteus.ViewGroupManager;
+import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
+import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.NestedBinding;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
@@ -56,6 +60,12 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusAspectRatioFrameLayout(context);
+    }
+
+    @Override
+    public ProteusViewManager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+        Scope scope = createScope(layout, data, parent, dataIndex);
+        return new ViewGroupManager(context, this, view.getAsView(), layout, scope);
     }
 
     @Override
@@ -97,8 +107,13 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
 
         addAttributeProcessor(Attributes.ViewGroup.Children, new AttributeProcessor<T>() {
             @Override
+            public void handleBinding(T view, Binding value) {
+                handleDataDrivenChildren(view, value);
+            }
+
+            @Override
             public void handleValue(T view, Value value) {
-                handleChildren((ProteusView) view, value);
+                handleChildren(view, value);
             }
 
             @Override
@@ -119,8 +134,9 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     }
 
     @Override
-    public boolean handleChildren(ProteusView view, Value children) {
-        ProteusViewManager viewManager = view.getViewManager();
+    public boolean handleChildren(T view, Value children) {
+        ProteusView proteusView = ((ProteusView) view);
+        ProteusViewManager viewManager = proteusView.getViewManager();
         ProteusLayoutInflater layoutInflater = viewManager.getContext().getInflater();
         JsonObject data = viewManager.getScope().getData();
         int dataIndex = viewManager.getScope().getIndex();
@@ -129,43 +145,50 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
             ProteusView child;
             Iterator<Value> iterator = children.getAsArray().iterator();
             while (iterator.hasNext()) {
-                child = layoutInflater.inflate(iterator.next().getAsLayout(), data, (ViewGroup) view, dataIndex);
-                addView(view, child);
+                child = layoutInflater.inflate(iterator.next().getAsLayout(), data, view, dataIndex);
+                addView(proteusView, child);
             }
-        } else if (children.isObject()) {
-            handleDataDrivenChildren(layoutInflater, view, viewManager, children.getAsObject(), data, dataIndex);
         }
 
         return true;
     }
 
-    private void handleDataDrivenChildren(ProteusLayoutInflater layoutInflater, ProteusView parent, ProteusViewManager viewManager,
-                                          ObjectValue children, JsonObject data, int dataIndex) {
+    private void handleDataDrivenChildren(T view, Binding value) {
+        ProteusView parent = ((ProteusView) view);
+        Scope scope = parent.getViewManager().getScope();
+        ObjectValue config = ((NestedBinding) value).getValue().getAsObject();
 
-        //noinspection ConstantConditions : We want to throw an exception (for now)
-        String binding = children.getAsString(ProteusConstants.DATA).substring(1);
-        viewManager.setDataPathForChildren(binding);
+        Value collection = config.get(ProteusConstants.COLLECTION);
+        Layout layout = config.getAsLayout(ProteusConstants.LAYOUT);
 
-        Result result = Binding.valueOf(binding).getExpression(0).evaluate(data, dataIndex);
-        JsonElement element = result.isSuccess() ? result.element : null;
-
-        Layout childLayout = children.getAsLayout(ProteusConstants.LAYOUT);
-
-        viewManager.setChildLayout(childLayout);
-
-        if (null == element || element.isJsonNull()) {
+        if (collection.isNull()) {
             return;
         }
 
-        int length = element.getAsJsonArray().size();
+        JsonElement dataset = null;
+        if (collection.isBinding()) {
+            Result result = collection.getAsBinding().getExpression(0).evaluate(scope.getData(), scope.getIndex());
+            dataset = result.isSuccess() ? result.element : null;
+        }
+
+        if (null == dataset || dataset.isJsonNull()) {
+            return;
+        }
+
+        if (!dataset.isJsonArray()) {
+            throw new ProteusInflateException("'collection' in attribute:'children' must be NULL or Array");
+        }
+
+        int length = dataset.getAsJsonArray().size();
+        ProteusLayoutInflater inflater = parent.getViewManager().getContext().getInflater();
 
         ProteusView child;
         for (int index = 0; index < length; index++) {
-            child = layoutInflater.inflate(childLayout, data, (ViewGroup) parent, index);
-            if (child != null) {
-                this.addView(parent, child);
-            }
+            //noinspection ConstantConditions : We want to throw an exception if the layout is null
+            child = inflater.inflate(layout, scope.getData(), (ViewGroup) parent, index);
+            addView(parent, child);
         }
+
     }
 
     @Override

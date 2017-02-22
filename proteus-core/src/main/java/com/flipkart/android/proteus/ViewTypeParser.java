@@ -60,7 +60,12 @@ public abstract class ViewTypeParser<V extends View> {
     public ProteusViewManager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view,
                                                 @NonNull Layout layout, @NonNull JsonObject data,
                                                 @Nullable ViewGroup parent, int dataIndex) {
+        Scope scope = createScope(layout, data, parent, dataIndex);
+        return new ViewManager(context, this, view.getAsView(), layout, scope);
+    }
 
+    protected Scope createScope(@NonNull Layout layout, @NonNull JsonObject data,
+                                @Nullable ViewGroup parent, int dataIndex) {
         Scope scope, parentScope = null;
         Map<String, String> map = layout.scope;
 
@@ -85,8 +90,7 @@ public abstract class ViewTypeParser<V extends View> {
                 scope = scope.createChildScope(map, dataIndex);
             }
         }
-
-        return new ViewManager(context, this, view.getAsView(), layout, scope);
+        return scope;
     }
 
     public void onAfterCreateView(@NonNull ProteusView view, @Nullable ViewGroup parent, int dataIndex) {
@@ -116,7 +120,8 @@ public abstract class ViewTypeParser<V extends View> {
         return true;
     }
 
-    public boolean handleChildren(ProteusView view, Value children) {
+    public boolean handleChildren(V view, Value children) {
+        //noinspection unchecked
         return null != parent && parent.handleChildren(view, children);
     }
 

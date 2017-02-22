@@ -73,28 +73,6 @@ public interface ProteusViewManager {
     View findViewById(@NonNull String id);
 
     /**
-     * @return
-     */
-    @Nullable
-    Layout getChildLayout();
-
-    /**
-     * @param layout
-     */
-    void setChildLayout(@Nullable Layout layout);
-
-    /**
-     * @return
-     */
-    @Nullable
-    String getDataPathForChildren();
-
-    /**
-     * @param dataPathForChildren
-     */
-    void setDataPathForChildren(@Nullable String dataPathForChildren);
-
-    /**
      * Free all resources held by the view manager
      */
     void destroy();

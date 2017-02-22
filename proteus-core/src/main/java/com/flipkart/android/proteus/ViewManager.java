@@ -22,14 +22,10 @@ package com.flipkart.android.proteus;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.toolbox.BoundAttribute;
-import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Scope;
-import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.value.Layout;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 /**
@@ -39,28 +35,20 @@ import com.google.gson.JsonObject;
  */
 public class ViewManager implements ProteusViewManager {
 
-    private static final String TAG = "ViewManager";
+    @NonNull
+    protected final ProteusContext context;
 
     @NonNull
-    private final ProteusContext context;
+    protected final View view;
 
     @NonNull
-    private final View view;
+    protected final Layout layout;
 
     @NonNull
-    private final Layout layout;
+    protected final Scope scope;
 
     @NonNull
-    private final Scope scope;
-
-    @NonNull
-    private final ViewTypeParser parser;
-
-    @Nullable
-    private String dataPathForChildren;
-
-    @Nullable
-    private Layout childLayout;
+    protected final ViewTypeParser parser;
 
     private BoundAttribute[] boundAttributes;
 
@@ -84,24 +72,6 @@ public class ViewManager implements ProteusViewManager {
         if (this.boundAttributes != null) {
             for (BoundAttribute boundAttribute : this.boundAttributes) {
                 this.handleBinding(boundAttribute);
-            }
-        }
-
-        // update the child views
-        if (view instanceof ViewGroup) {
-            if (dataPathForChildren != null) {
-                updateChildrenFromData();
-            } else {
-                ViewGroup parent = (ViewGroup) view;
-                View child;
-                int childCount = parent.getChildCount();
-
-                for (int index = 0; index < childCount; index++) {
-                    child = parent.getChildAt(index);
-                    if (child instanceof ProteusView) {
-                        ((ProteusView) child).getViewManager().update(scope.getData());
-                    }
-                }
             }
         }
     }
@@ -136,32 +106,8 @@ public class ViewManager implements ProteusViewManager {
         return view.findViewById(context.getInflater().getUniqueViewId(id));
     }
 
-    @Nullable
-    @Override
-    public Layout getChildLayout() {
-        return childLayout;
-    }
-
-    @Override
-    public void setChildLayout(@Nullable Layout layout) {
-        this.childLayout = layout;
-    }
-
-    @Nullable
-    @Override
-    public String getDataPathForChildren() {
-        return dataPathForChildren;
-    }
-
-    @Override
-    public void setDataPathForChildren(@Nullable String dataPathForChildren) {
-        this.dataPathForChildren = dataPathForChildren;
-    }
-
     @Override
     public void destroy() {
-        childLayout = null;
-        dataPathForChildren = null;
         boundAttributes = null;
     }
 
@@ -170,45 +116,6 @@ public class ViewManager implements ProteusViewManager {
             scope.setData(data);
         } else {
             scope.updateDataContext(data);
-        }
-    }
-
-    private void updateChildrenFromData() {
-        JsonArray dataList = new JsonArray();
-        ViewGroup parent = ((ViewGroup) view);
-        Result result = Utils.readJson(dataPathForChildren, scope.getData(), scope.getIndex());
-        if (result.isSuccess() && null != result.element && result.element.isJsonArray()) {
-            dataList = result.element.getAsJsonArray();
-        }
-
-        int childCount = parent.getChildCount();
-        View child;
-
-        if (childCount > dataList.size()) {
-            while (childCount > dataList.size()) {
-                childCount--;
-                child = parent.getChildAt(childCount);
-                if (child instanceof ProteusView) {
-                    ((ProteusView) child).getViewManager().destroy();
-                }
-                parent.removeViewAt(childCount);
-            }
-        }
-
-        JsonObject data = scope.getData();
-        ProteusView childView;
-        childCount = parent.getChildCount();
-
-        for (int index = 0; index < dataList.size(); index++) {
-            if (index < childCount) {
-                child = parent.getChildAt(index);
-                if (child instanceof ProteusView) {
-                    ((ProteusView) child).getViewManager().update(data);
-                }
-            } else if (childLayout != null) {
-                childView = context.getInflater().inflate(getLayout(), data, parent, scope.getIndex());
-                parser.addView((ProteusView) view, childView);
-            }
         }
     }
 

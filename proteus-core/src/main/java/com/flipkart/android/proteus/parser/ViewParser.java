@@ -39,8 +39,8 @@ import android.widget.RelativeLayout;
 import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.ProteusViewManager;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
@@ -521,7 +521,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
     }
 
     @Override
-    public boolean handleChildren(ProteusView view, Value children) {
+    public boolean handleChildren(V view, Value children) {
         return false;
     }
 
