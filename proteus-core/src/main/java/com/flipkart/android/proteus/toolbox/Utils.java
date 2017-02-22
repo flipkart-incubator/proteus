@@ -35,12 +35,7 @@ import java.util.StringTokenizer;
 public class Utils {
 
     public static final String LIB_NAME = "proteus";
-    public static final String VERSION = "4.1.0-SNAPSHOT";
-
-    public static final String ATTRIBUTE_BORDER_WIDTH = "width";
-    public static final String ATTRIBUTE_BORDER_COLOR = "color";
-    public static final String ATTRIBUTE_BORDER_RADIUS = "radius";
-    public static final String ATTRIBUTE_BG_COLOR = "bgColor";
+    public static final String VERSION = "5.0.0-SNAPSHOT";
 
     public static Result readJson(String path, JsonObject data, int index) {
         // replace INDEX reference with index value
@@ -206,45 +201,10 @@ public class Utils {
                 sb.append(array.get(i).toString());
             }
             if (i < array.size() - 1) {
-                sb.append(delimiter).append(" ");
+                sb.append(delimiter);
             }
         }
         return sb.toString();
-    }
-
-    public static JsonObject mergeLayouts(JsonObject destination, JsonObject include) {
-        JsonObject layout = new JsonObject();
-        for (Map.Entry<String, JsonElement> entry : destination.entrySet()) {
-            layout.add(entry.getKey(), entry.getValue());
-        }
-        for (Map.Entry<String, JsonElement> entry : include.entrySet()) {
-            if (ProteusConstants.TYPE.equals(entry.getKey()) || ProteusConstants.LAYOUT.equals(entry.getKey())) {
-                continue;
-            }
-            layout.add(entry.getKey(), entry.getValue());
-        }
-        return layout;
-    }
-
-    public static String getPropertyAsString(JsonObject object, String property) {
-        if (object == null || object.isJsonNull()) {
-            return null;
-        }
-        JsonElement element = object.get(property);
-        if (element == null) {
-            return null;
-        }
-        String string;
-        if (!element.isJsonNull() && element.isJsonPrimitive()) {
-            string = element.getAsString();
-        } else {
-            string = element.toString();
-        }
-        return string;
-    }
-
-    public static String getTagPrefix() {
-        return LIB_NAME + ":";
     }
 
     public static String getVersion() {

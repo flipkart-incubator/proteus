@@ -19,7 +19,6 @@
 
 package com.flipkart.android.proteus.parser;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -35,7 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
-import com.flipkart.android.proteus.value.Dimension;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Value;
@@ -45,8 +43,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author kiran.kumar
@@ -86,18 +82,13 @@ public class ParseHelper {
     private static final String TEXT_ALIGNMENT_VIEW_START = "viewStart";
     private static final String TEXT_ALIGNMENT_VIEW_END = "viewEnd";
 
-    private static final String COLOR_PREFIX_LITERAL = "#";
 
     private static final String ATTR_START_LITERAL = "?";
-    private static final String DRAWABLE_LOCAL_RESOURCE_STR = "@drawable/";
     private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";
 
     private static final String DRAWABLE_STR = "drawable";
     private static final String ID_STR = "id";
 
-    private static final Pattern sAttributePattern = Pattern.compile("(\\?)(\\S*)(:?)(attr\\/?)(\\S*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    private static final Map<String, Class> sHashMap = new HashMap<>();
-    private static final Map<String, Integer> sAttributeCache = new HashMap<>();
     private static final Map<Integer, Primitive> sVisibilityMap = new HashMap<>();
     private static final Map<String, Integer> sStateMap = new HashMap<>();
     private static final Map<String, Primitive> sGravityMap = new HashMap<>();
@@ -283,66 +274,6 @@ public class ParseHelper {
         return null != value ? value : sVisibilityMap.get(View.GONE);
     }
 
-    public static float parseDimension(final String dimension, Context context) {
-        return Dimension.valueOf(dimension, context).apply(context);
-    }
-
-    public static int getAttributeId(Context context, String attribute) {
-        Integer result = sAttributeCache.get(attribute);
-        if (null == result && attribute.length() > 1) {
-            try {
-                String attributeName = "";
-                String packageName = "";
-                Matcher matcher = sAttributePattern.matcher(attribute);
-                if (matcher.matches()) {
-                    attributeName = matcher.group(5);
-                    packageName = matcher.group(2);
-                } else {
-                    attributeName = attribute.substring(1);
-                }
-
-                Class clazz = null;
-                if (!TextUtils.isEmpty(packageName)) {
-                    packageName = packageName.substring(0, packageName.length() - 1);
-                } else {
-                    packageName = context.getPackageName();
-                }
-                String className = packageName + ".R$attr";
-                clazz = sHashMap.get(className);
-                if (null == clazz) {
-                    clazz = Class.forName(className);
-                    sHashMap.put(className, clazz);
-                }
-
-                if (null != clazz) {
-                    Field field = clazz.getField(attributeName);
-                    if (null != field) {
-                        result = field.getInt(null);
-                        sAttributeCache.put(attribute, result);
-                    }
-                }
-
-            } catch (ClassNotFoundException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(TAG, e.getMessage() + "");
-                }
-            } catch (NoSuchFieldException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(TAG, e.getMessage() + "");
-                }
-            } catch (IllegalAccessException e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(TAG, e.getMessage() + "");
-                }
-            }
-        }
-        return result == null ? 0 : result;
-    }
-
-    public static boolean isColor(String color) {
-        return color.startsWith(COLOR_PREFIX_LITERAL);
-    }
-
     public static int parseColor(String color) {
         try {
             return Color.parseColor(color);
@@ -400,10 +331,6 @@ public class ParseHelper {
 
     public static boolean isLocalAttribute(String value) {
         return value.startsWith(ATTR_START_LITERAL);
-    }
-
-    public static boolean isLocalDrawableResource(String attributeValue) {
-        return attributeValue.startsWith(DRAWABLE_LOCAL_RESOURCE_STR);
     }
 
     public static boolean isTweenAnimationResource(String attributeValue) {
