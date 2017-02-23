@@ -21,10 +21,8 @@ package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 
 import com.flipkart.android.proteus.toolbox.DrawableCallback;
 import com.flipkart.android.proteus.toolbox.EventType;
@@ -32,8 +30,6 @@ import com.flipkart.android.proteus.toolbox.IdGenerator;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Value;
 import com.google.gson.JsonObject;
-
-import java.util.List;
 
 /**
  * @author kirankumar
@@ -75,7 +71,6 @@ public interface ProteusLayoutInflater {
     ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data);
 
     /**
-     *
      * @param name
      * @param data
      * @param parent
@@ -86,7 +81,6 @@ public interface ProteusLayoutInflater {
     ProteusView inflate(@NonNull String name, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex);
 
     /**
-     *
      * @param name
      * @param data
      * @param dataIndex
@@ -96,7 +90,6 @@ public interface ProteusLayoutInflater {
     ProteusView inflate(@NonNull String name, @NonNull JsonObject data, int dataIndex);
 
     /**
-     *
      * @param name
      * @param data
      * @return
@@ -150,24 +143,6 @@ public interface ProteusLayoutInflater {
          */
         @NonNull
         View onEvent(ProteusView view, EventType eventType, Value value);
-
-        /**
-         * @param parent
-         * @param children
-         * @param layout
-         * @return Adapter
-         */
-        @Nullable
-        PagerAdapter onPagerAdapterRequired(ProteusView parent, final List<ProteusView> children, Layout layout);
-
-        /**
-         * @param parent
-         * @param children
-         * @param layout
-         * @return Adapter
-         */
-        @Nullable
-        Adapter onAdapterRequired(ProteusView parent, final List<ProteusView> children, Layout layout);
 
     }
 

@@ -26,7 +26,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
-import android.support.v4.util.LruCache;
+import android.util.LruCache;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

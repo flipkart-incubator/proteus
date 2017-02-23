@@ -36,7 +36,6 @@ import com.flipkart.android.proteus.parser.custom.RelativeLayoutParser;
 import com.flipkart.android.proteus.parser.custom.ScrollViewParser;
 import com.flipkart.android.proteus.parser.custom.TextViewParser;
 import com.flipkart.android.proteus.parser.custom.ViewGroupParser;
-import com.flipkart.android.proteus.parser.custom.ViewPagerParser;
 import com.flipkart.android.proteus.parser.custom.WebViewParser;
 import com.flipkart.android.proteus.toolbox.Formatter;
 
@@ -53,11 +52,47 @@ public class ProteusBuilder {
 
     private static final int ID = -1;
 
+    /**
+     *
+     */
+    public static final Collection DEFAULT_COLLECTION = new Collection() {
+
+        @Override
+        public void registerWith(ProteusBuilder builder) {
+
+            // register the default parsers
+            builder.register("View", new ViewParser());
+            builder.register("include", new IncludeParser());
+            builder.register("ViewGroup", new ViewGroupParser(), "View");
+            builder.register("RelativeLayout", new RelativeLayoutParser(), "ViewGroup");
+            builder.register("LinearLayout", new LinearLayoutParser(), "ViewGroup");
+            builder.register("FrameLayout", new FrameLayoutParser(), "ViewGroup");
+            builder.register("ScrollView", new ScrollViewParser(), "FrameLayout");
+            builder.register("HorizontalScrollView", new HorizontalScrollViewParser(), "FrameLayout");
+            builder.register("ImageView", new ImageViewParser(), "View");
+            builder.register("TextView", new TextViewParser(), "View");
+            builder.register("EditText", new EditTextParser(), "TextView");
+            builder.register("Button", new ButtonParser(), "TextView");
+            builder.register("ImageButton", new ImageButtonParser(), "ImageView");
+            builder.register("WebView", new WebViewParser(), "View");
+            builder.register("RatingBar", new RatingBarParser(), "View");
+            builder.register("CheckBox", new CheckBoxParser(), "Button");
+            builder.register("ProgressBar", new ProgressBarParser(), "View");
+            builder.register("HorizontalProgressBar", new HorizontalProgressBarParser(), "ProgressBar");
+
+            // register the default formatters
+            builder.register(Formatter.DATE);
+            builder.register(Formatter.INDEX);
+            builder.register(Formatter.JOIN);
+            builder.register(Formatter.NUMBER);
+        }
+    };
+
     private Map<String, Proteus.Type> types = new HashMap<>();
     private HashMap<String, Formatter> formatters = new HashMap<>();
 
     public ProteusBuilder() {
-        registerDefaults();
+        DEFAULT_COLLECTION.registerWith(this);
     }
 
     public ProteusBuilder register(String type, ViewTypeParser parser) {
@@ -82,36 +117,21 @@ public class ProteusBuilder {
         return this;
     }
 
+    public ProteusBuilder register(Collection collection) {
+        collection.registerWith(this);
+        return this;
+    }
+
     public Proteus build() {
         return new Proteus(types, formatters);
     }
 
-    private void registerDefaults() {
+    public interface Collection {
 
-        register("View", new ViewParser());
-        register("include", new IncludeParser());
-        register("ViewGroup", new ViewGroupParser(), "View");
-        register("RelativeLayout", new RelativeLayoutParser(), "ViewGroup");
-        register("LinearLayout", new LinearLayoutParser(), "ViewGroup");
-        register("FrameLayout", new FrameLayoutParser(), "ViewGroup");
-        register("ScrollView", new ScrollViewParser(), "FrameLayout");
-        register("HorizontalScrollView", new HorizontalScrollViewParser(), "FrameLayout");
-        register("ImageView", new ImageViewParser(), "View");
-        register("TextView", new TextViewParser(), "View");
-        register("EditText", new EditTextParser(), "TextView");
-        register("Button", new ButtonParser(), "TextView");
-        register("ImageButton", new ImageButtonParser(), "ImageView");
-        register("ViewPager", new ViewPagerParser(), "ViewGroup");
-        register("WebView", new WebViewParser(), "View");
-        register("RatingBar", new RatingBarParser(), "View");
-        register("CheckBox", new CheckBoxParser(), "Button");
-        register("ProgressBar", new ProgressBarParser(), "View");
-        register("HorizontalProgressBar", new HorizontalProgressBarParser(), "ProgressBar");
+        /**
+         * @param builder
+         */
+        void registerWith(ProteusBuilder builder);
 
-
-        register(Formatter.DATE);
-        register(Formatter.INDEX);
-        register(Formatter.JOIN);
-        register(Formatter.NUMBER);
     }
 }

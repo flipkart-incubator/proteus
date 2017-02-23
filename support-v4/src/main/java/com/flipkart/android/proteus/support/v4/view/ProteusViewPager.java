@@ -17,34 +17,40 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.parser.custom;
+package com.flipkart.android.proteus.support.v4.view;
 
-
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
-import android.view.ViewGroup;
+import android.view.View;
 
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ViewTypeParser;
-import com.flipkart.android.proteus.value.Layout;
-import com.flipkart.android.proteus.view.ProteusViewPager;
-import com.google.gson.JsonObject;
+import com.flipkart.android.proteus.ProteusViewManager;
 
 /**
- * Created by kiran.kumar on 13/05/14.
+ * ProteusViewPager
+ *
+ * @author adityasharat
  */
-public class ViewPagerParser<T extends ViewPager> extends ViewTypeParser<T> {
 
+public class ProteusViewPager extends android.support.v4.view.ViewPager implements ProteusView {
 
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusViewPager(context);
+    private ProteusViewManager viewManager;
+
+    public ProteusViewPager(ProteusContext context) {
+        super(context);
     }
 
     @Override
-    protected void addAttributeProcessors() {
+    public ProteusViewManager getViewManager() {
+        return viewManager;
+    }
 
+    @Override
+    public void setViewManager(ProteusViewManager proteusViewManager) {
+        this.viewManager = proteusViewManager;
+    }
+
+    @Override
+    public View getAsView() {
+        return this;
     }
 }

@@ -19,17 +19,6 @@
 
 package com.flipkart.android.proteus.value;
 
-import android.content.Context;
-
-import com.flipkart.android.proteus.value.StyleResource;
-
-import org.junit.Test;
-import org.mockito.Mock;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
-
 /**
  * StyleResourceTest
  *
@@ -37,8 +26,7 @@ import static org.mockito.Mockito.mock;
  */
 public class StyleResourceTest {
 
-    @Mock
-    private Context context = mock(Context.class);
+    /*private Context context = RuntimeEnvironment.application.getApplicationContext();
 
     @Test
     public void valueOf_valid() throws Exception {
@@ -54,7 +42,7 @@ public class StyleResourceTest {
 
     @Test
     public void valueOf_not_found() throws Exception {
-        StyleResource style = StyleResource.valueOf("?random:random",context);
+        StyleResource style = StyleResource.valueOf("?random:random", context);
         assert style == null;
         style = StyleResource.valueOf("?random:random", context);
         assert style == null;
@@ -71,6 +59,6 @@ public class StyleResourceTest {
         StyleResource style = StyleResource.valueOf("?Theme_AppCompat:actionBarSize", context);
         //assert style != null;
         //assertThat(style, is(style.copy()));
-    }
+    }*/
 
 }

@@ -20,7 +20,7 @@
 package com.flipkart.android.proteus.value;
 
 import android.content.Context;
-import android.support.v4.util.LruCache;
+import android.util.LruCache;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 

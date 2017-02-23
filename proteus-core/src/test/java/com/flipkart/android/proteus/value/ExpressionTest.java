@@ -19,17 +19,6 @@
 
 package com.flipkart.android.proteus.value;
 
-import com.flipkart.android.proteus.toolbox.Result;
-import com.flipkart.android.proteus.value.Binding;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
-import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 /**
  * ExpressionTest
  *
@@ -37,7 +26,7 @@ import static org.junit.Assert.assertThat;
  */
 public class ExpressionTest {
 
-    public static JsonObject data() {
+    /*public static JsonObject data() {
         JsonObject object = new JsonObject();
 
         JsonObject a = new JsonObject();
@@ -71,5 +60,5 @@ public class ExpressionTest {
         Result result = expression.evaluate(data(), 0);
         assertThat(result.isSuccess(), is(true));
 
-    }
+    }*/
 }

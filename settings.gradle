@@ -17,4 +17,4 @@
  * specific language governing permissions and limitations under the License.
  */
 
-include ':demo', ':proteus-core', ':gson-adapter'
+include ':demo', ':proteus-core', ':gson-adapter', ':support-v4'

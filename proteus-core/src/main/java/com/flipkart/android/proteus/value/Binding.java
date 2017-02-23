@@ -21,7 +21,7 @@ package com.flipkart.android.proteus.value;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.util.LruCache;
+import android.util.LruCache;
 
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Result;

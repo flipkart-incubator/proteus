@@ -29,7 +29,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,7 +36,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 
 import com.flipkart.android.proteus.LayoutManager;
 import com.flipkart.android.proteus.Proteus;
@@ -49,6 +47,7 @@ import com.flipkart.android.proteus.StyleManager;
 import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
+import com.flipkart.android.proteus.support.v4.SupportV4Collection;
 import com.flipkart.android.proteus.toolbox.DrawableCallback;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.Styles;
@@ -61,7 +60,6 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -164,18 +162,6 @@ public class ProteusActivity extends AppCompatActivity {
             //noinspection ConstantConditions because we want to crash here
             return null;
         }
-
-        @Override
-        @Nullable
-        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
-            return null;
-        }
-
-        @Override
-        @Nullable
-        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
-            return null;
-        }
     };
 
     @Override
@@ -197,6 +183,7 @@ public class ProteusActivity extends AppCompatActivity {
         }
 
         proteus = new ProteusBuilder()
+                .register(SupportV4Collection.create())
                 .register("CircleView", new CircleViewParser(), "View")
                 .build();
 

@@ -17,13 +17,28 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.processor;
+package com.flipkart.android.proteus.support.v4;
+
+import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.support.v4.view.ViewPagerParser;
 
 /**
- * DimensionAttributeProcessorTest
+ * SupportV4Collection
  *
- * @author aditya.sharat
+ * @author adityasharat
  */
-public class DimensionAttributeProcessorTest {
 
+public class SupportV4Collection implements ProteusBuilder.Collection {
+
+    private SupportV4Collection() {
+    }
+
+    public static SupportV4Collection create() {
+        return new SupportV4Collection();
+    }
+
+    @Override
+    public void registerWith(ProteusBuilder builder) {
+        builder.register("ViewPager", new ViewPagerParser(), "ViewGroup");
+    }
 }

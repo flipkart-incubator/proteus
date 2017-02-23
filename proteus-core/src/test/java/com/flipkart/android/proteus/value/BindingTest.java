@@ -19,15 +19,6 @@
 
 package com.flipkart.android.proteus.value;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
-import org.junit.Test;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 /**
  * BindingTest
  *
@@ -35,7 +26,7 @@ import static org.junit.Assert.assertThat;
  */
 public class BindingTest {
 
-    public static JsonObject data() {
+    /*public static JsonObject data() {
         JsonObject object = new JsonObject();
 
         JsonObject a = new JsonObject();
@@ -69,6 +60,6 @@ public class BindingTest {
 
         assertThat(value.getAsString(), is("10 and true"));
 
-    }
+    }*/
 
 }
