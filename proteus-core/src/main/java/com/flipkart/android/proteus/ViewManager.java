@@ -84,12 +84,6 @@ public class ViewManager implements ProteusViewManager {
 
     @NonNull
     @Override
-    public ViewTypeParser getParser() {
-        return parser;
-    }
-
-    @NonNull
-    @Override
     public Layout getLayout() {
         return this.layout;
     }

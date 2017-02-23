@@ -46,13 +46,7 @@ public interface ProteusViewManager {
      */
     @NonNull
     ProteusContext getContext();
-
-    /**
-     * @return
-     */
-    @NonNull
-    ViewTypeParser getParser();
-
+ 
     /**
      * @return
      */
