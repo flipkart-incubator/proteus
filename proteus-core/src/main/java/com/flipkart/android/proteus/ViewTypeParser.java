@@ -67,7 +67,7 @@ public abstract class ViewTypeParser<V extends View> {
     protected Scope createScope(@NonNull Layout layout, @NonNull JsonObject data,
                                 @Nullable ViewGroup parent, int dataIndex) {
         Scope scope, parentScope = null;
-        Map<String, String> map = layout.scope;
+        Map<String, String> map = layout.data;
 
         if (parent instanceof ProteusView) {
             parentScope = ((ProteusView) parent).getViewManager().getScope();

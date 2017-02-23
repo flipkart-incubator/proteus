@@ -19,28 +19,20 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import java.util.regex.Pattern;
-
 /**
  * Contains data binding constants
  */
 public class ProteusConstants {
 
     public static final String TYPE = "type";
-
-    public static final String INCLUDE = "include";
     public static final String LAYOUT = "layout";
 
-    public static final String STYLE_DELIMITER = "\\.";
-
+    public static final String DATA = "data";
     public static final String COLLECTION = "collection";
-    public static final String SCOPE = "scope";
+
     public static final String DATA_NULL = "null";
 
-    public static final char DATA_PREFIX = '$';
-    public static final char REGEX_PREFIX = '~';
-    public static final Pattern REGEX_PATTERN = Pattern.compile("\\{\\{(\\S+?)\\}\\}\\$\\((.+?)\\)|\\{\\{(\\S+?)\\}\\}");
-
+    public static final String STYLE_DELIMITER = "\\.";
     public static final String DATA_PATH_DELIMITER = "\\.|\\[|\\]";
     public static final String DATA_PATH_DELIMITERS = ".[]";
     public static final String DATA_PATH_SIMPLE_DELIMITER = "\\.";

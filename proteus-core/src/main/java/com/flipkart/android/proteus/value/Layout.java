@@ -41,15 +41,15 @@ public class Layout extends Value {
     public final List<Attribute> attributes;
 
     @Nullable
-    public final Map<String, String> scope;
+    public final Map<String, String> data;
 
     @Nullable
     public final ObjectValue extras;
 
-    public Layout(@NonNull String type, @Nullable List<Attribute> attributes, @Nullable Map<String, String> scope, ObjectValue extras) {
+    public Layout(@NonNull String type, @Nullable List<Attribute> attributes, @Nullable Map<String, String> data, ObjectValue extras) {
         this.type = type;
         this.attributes = attributes;
-        this.scope = scope;
+        this.data = data;
         this.extras = extras;
     }
 
@@ -63,7 +63,7 @@ public class Layout extends Value {
             }
         }
 
-        return new Layout(type, attributes, scope, extras);
+        return new Layout(type, attributes, data, extras);
     }
 
     public Layout merge(Layout include) {

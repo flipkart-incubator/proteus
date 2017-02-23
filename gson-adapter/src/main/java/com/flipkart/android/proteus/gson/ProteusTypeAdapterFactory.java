@@ -272,13 +272,13 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
         public Layout read(String type, Proteus proteus, JsonReader in) throws IOException {
             List<Layout.Attribute> attributes = new ArrayList<>();
-            Map<String, String> scope = null;
+            Map<String, String> data = null;
             ObjectValue extras = new ObjectValue();
             String name;
             while (in.hasNext()) {
                 name = in.nextName();
-                if (ProteusConstants.SCOPE.equals(name)) {
-                    scope = readScope(in);
+                if (ProteusConstants.DATA.equals(name)) {
+                    data = readData(in);
                 } else {
                     ViewTypeParser.AttributeSet.Attribute attribute = proteus.getAttributeId(name, type);
                     if (null != attribute) {
@@ -292,11 +292,11 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
             in.endObject();
 
-            return new Layout(type, attributes.size() > 0 ? attributes : null, scope, extras.entrySet().size() > 0 ? extras : null);
+            return new Layout(type, attributes.size() > 0 ? attributes : null, data, extras.entrySet().size() > 0 ? extras : null);
         }
 
         @Nullable
-        public Map<String, String> readScope(JsonReader in) throws IOException {
+        public Map<String, String> readData(JsonReader in) throws IOException {
             JsonToken peek = in.peek();
             if (peek == JsonToken.NULL) {
                 in.nextNull();
@@ -304,24 +304,24 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             }
 
             if (peek != JsonToken.BEGIN_OBJECT) {
-                throw new JsonSyntaxException("scope must be a Map<String, String>.");
+                throw new JsonSyntaxException("data must be a Map<String, String>.");
             }
 
-            Map<String, String> scope = new HashMap<>();
+            Map<String, String> data = new HashMap<>();
 
             in.beginObject();
             while (in.hasNext()) {
                 JsonReaderInternalAccess.INSTANCE.promoteNameToValue(in);
                 String key = in.nextString();
                 String value = in.nextString();
-                String replaced = scope.put(key, value);
+                String replaced = data.put(key, value);
                 if (replaced != null) {
                     throw new JsonSyntaxException("duplicate key: " + key);
                 }
             }
             in.endObject();
 
-            return scope;
+            return data;
         }
     }
 }

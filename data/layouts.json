@@ -177,6 +177,13 @@
                 }
               }
             ]
+          },
+          {
+            "type": "TextView",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "text": "~last login: @{user.ll}${date()}",
+            "style": "mini.blue"
           }
         ]
       }
@@ -200,7 +207,7 @@
             "collection": "~@{user.tags}",
             "layout":{
               "type": "TextView",
-              "scope": {
+              "data": {
                 "tag": "user.tags[$index]"
               },
               "layout_marginRight": "8dp",
