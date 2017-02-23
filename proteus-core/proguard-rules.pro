@@ -16,4 +16,18 @@
 #   public *;
 #}
 -dontobfuscate
--keep public class *
+-printmapping out.map
+-keepparameternames
+-renamesourcefileattribute SourceFile
+-keepattributes Exceptions,InnerClasses,Signature,Deprecated
+
+# Preserve all annotations.
+
+-keepattributes *Annotation*
+
+# Preserve all public classes, and their public and protected fields and
+# methods.
+
+-keep public class * {
+    public protected *;
+}

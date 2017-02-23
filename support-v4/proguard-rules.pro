@@ -15,3 +15,19 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontobfuscate
+-printmapping out.map
+-keepparameternames
+-renamesourcefileattribute SourceFile
+-keepattributes Exceptions,InnerClasses,Signature,Deprecated
+
+# Preserve all annotations.
+
+-keepattributes *Annotation*
+
+# Preserve all public classes, and their public and protected fields and
+# methods.
+
+-keep public class * {
+    public protected *;
+}
