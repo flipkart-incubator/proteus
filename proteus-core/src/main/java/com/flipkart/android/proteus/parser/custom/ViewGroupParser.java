@@ -24,20 +24,19 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ProteusViewManager;
+import com.flipkart.android.proteus.Scope;
 import com.flipkart.android.proteus.ViewGroupManager;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.exceptions.ProteusInflateException;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
-import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.Layout;
@@ -63,7 +62,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     }
 
     @Override
-    public ProteusViewManager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
         Scope scope = createScope(layout, data, parent, dataIndex);
         return new ViewGroupManager(context, this, view.getAsView(), layout, scope);
     }
@@ -136,7 +135,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     @Override
     public boolean handleChildren(T view, Value children) {
         ProteusView proteusView = ((ProteusView) view);
-        ProteusViewManager viewManager = proteusView.getViewManager();
+        ProteusView.Manager viewManager = proteusView.getViewManager();
         ProteusLayoutInflater layoutInflater = viewManager.getContext().getInflater();
         JsonObject data = viewManager.getScope().getData();
         int dataIndex = viewManager.getScope().getIndex();

@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.toolbox;
+package com.flipkart.android.proteus;
 
 /**
  * Contains data binding constants

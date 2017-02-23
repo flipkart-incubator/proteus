@@ -23,7 +23,6 @@ import android.view.View;
 
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ProteusViewManager;
 
 /**
  * ProteusViewPager
@@ -33,20 +32,20 @@ import com.flipkart.android.proteus.ProteusViewManager;
 
 public class ProteusViewPager extends android.support.v4.view.ViewPager implements ProteusView {
 
-    private ProteusViewManager viewManager;
+    private Manager viewManager;
 
     public ProteusViewPager(ProteusContext context) {
         super(context);
     }
 
     @Override
-    public ProteusViewManager getViewManager() {
+    public Manager getViewManager() {
         return viewManager;
     }
 
     @Override
-    public void setViewManager(ProteusViewManager proteusViewManager) {
-        this.viewManager = proteusViewManager;
+    public void setViewManager(Manager manager) {
+        this.viewManager = manager;
     }
 
     @Override

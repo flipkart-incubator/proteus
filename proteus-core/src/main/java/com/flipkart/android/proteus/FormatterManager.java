@@ -22,8 +22,6 @@ package com.flipkart.android.proteus;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.flipkart.android.proteus.toolbox.Formatter;
-
 import java.util.Map;
 
 /**

@@ -19,6 +19,7 @@
 
 package com.flipkart.android.proteus.toolbox;
 
+import com.flipkart.android.proteus.ProteusConstants;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

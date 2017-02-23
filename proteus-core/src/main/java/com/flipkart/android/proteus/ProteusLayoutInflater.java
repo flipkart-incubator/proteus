@@ -24,9 +24,8 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.toolbox.DrawableCallback;
 import com.flipkart.android.proteus.toolbox.EventType;
-import com.flipkart.android.proteus.toolbox.IdGenerator;
+import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Value;
 import com.google.gson.JsonObject;
@@ -156,6 +155,6 @@ public interface ProteusLayoutInflater {
          * @param url      the url for the drawable/bitmap/image
          * @param callback the callback to set the drawable/bitmap
          */
-        void getBitmap(ProteusView view, String url, DrawableCallback callback);
+        void getBitmap(ProteusView view, String url, DrawableValue.AsyncCallback callback);
     }
 }

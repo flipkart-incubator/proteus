@@ -30,7 +30,6 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ProteusViewManager;
 
 /**
  * CircleView
@@ -40,7 +39,7 @@ import com.flipkart.android.proteus.ProteusViewManager;
 
 public class CircleView extends View implements ProteusView {
 
-    ProteusViewManager viewManager;
+    Manager viewManager;
     private String HEX_COLOR = "#45ba8a";
     private Paint drawPaint;
     private float radius;
@@ -60,12 +59,12 @@ public class CircleView extends View implements ProteusView {
     }
 
     @Override
-    public ProteusViewManager getViewManager() {
+    public Manager getViewManager() {
         return viewManager;
     }
 
     @Override
-    public void setViewManager(ProteusViewManager viewManager) {
+    public void setViewManager(Manager viewManager) {
         this.viewManager = viewManager;
     }
 

@@ -37,7 +37,6 @@ import com.flipkart.android.proteus.parser.custom.ScrollViewParser;
 import com.flipkart.android.proteus.parser.custom.TextViewParser;
 import com.flipkart.android.proteus.parser.custom.ViewGroupParser;
 import com.flipkart.android.proteus.parser.custom.WebViewParser;
-import com.flipkart.android.proteus.toolbox.Formatter;
 
 import java.util.HashMap;
 import java.util.Map;

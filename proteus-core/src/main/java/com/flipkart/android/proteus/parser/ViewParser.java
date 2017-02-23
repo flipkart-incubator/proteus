@@ -36,11 +36,11 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ProteusViewManager;
 import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
@@ -50,7 +50,6 @@ import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.processor.TweenAnimationResourceProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.EventType;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Resource;
@@ -393,7 +392,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
         addAttributeProcessor(Attributes.View.Style, new StringAttributeProcessor<V>() {
             @Override
             public void setString(V view, String value) {
-                ProteusViewManager viewManager = ((ProteusView) view).getViewManager();
+                ProteusView.Manager viewManager = ((ProteusView) view).getViewManager();
                 ProteusContext context = viewManager.getContext();
                 Layout layout = viewManager.getLayout();
 

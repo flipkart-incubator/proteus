@@ -22,7 +22,6 @@ package com.flipkart.android.proteus.processor;
 import android.view.Gravity;
 import android.view.View;
 
-import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Value;
 

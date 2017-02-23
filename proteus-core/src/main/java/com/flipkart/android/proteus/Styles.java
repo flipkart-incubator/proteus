@@ -17,28 +17,25 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.toolbox;
+package com.flipkart.android.proteus;
 
-import android.os.Parcelable;
+import com.flipkart.android.proteus.value.Value;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * IdGeneratorImpl
- * <p>
- * Simulates the R class. Useful to given unique ID for use in {@link android.view.View#setId(int)} method.
- * An ID which doesn't conflict with aapt's ID is ensured. Please ensure that all dynamic ID call go through
- * this class to ensure uniqueness with other dynamic IDs.
- * </p>
+ * Styles
  *
- * @author aditya.sharat
+ * @author Aditya Sharat
  */
-public interface IdGenerator extends Parcelable {
-    /**
-     * Generates and returns a unique id, for the given key.
-     * If key exists, returns old value.
-     * Ensure that all
-     *
-     * @param id the value for which the ID is returns.
-     * @return a unique ID integer for use with {@link android.view.View#setId(int)}.
-     */
-    int getUnique(String id);
+public class Styles extends HashMap<String, Map<String, Value>> {
+
+    public Map<String, Value> getStyle(String name) {
+        return this.get(name);
+    }
+
+    public boolean contains(String name) {
+        return this.containsKey(name);
+    }
 }

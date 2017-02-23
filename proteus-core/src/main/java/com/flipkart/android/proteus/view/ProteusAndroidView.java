@@ -26,7 +26,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ProteusViewManager;
 
 /**
  * View
@@ -35,7 +34,7 @@ import com.flipkart.android.proteus.ProteusViewManager;
  */
 public class ProteusAndroidView extends android.view.View implements ProteusView {
 
-    ProteusViewManager viewManager;
+    Manager viewManager;
 
     public ProteusAndroidView(Context context) {
         super(context);
@@ -55,13 +54,13 @@ public class ProteusAndroidView extends android.view.View implements ProteusView
     }
 
     @Override
-    public ProteusViewManager getViewManager() {
+    public Manager getViewManager() {
         return viewManager;
     }
 
     @Override
-    public void setViewManager(ProteusViewManager proteusViewManager) {
-        this.viewManager = proteusViewManager;
+    public void setViewManager(Manager manager) {
+        this.viewManager = manager;
     }
 
     @Override

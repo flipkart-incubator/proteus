@@ -25,8 +25,6 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.exceptions.ProteusInflateException;
-import com.flipkart.android.proteus.toolbox.IdGenerator;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Value;
 import com.google.gson.JsonObject;
@@ -86,7 +84,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         /**
          * Create View Manager for {@code layout.type}
          */
-        final ProteusViewManager viewManager = createViewManager(parser, view, layout, data, parent, dataIndex);
+        final ProteusView.Manager viewManager = createViewManager(parser, view, layout, data, parent, dataIndex);
 
         /**
          * Set the View Manager on the view.
@@ -152,8 +150,8 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         parser.onAfterCreateView(view, parent, index);
     }
 
-    protected ProteusViewManager createViewManager(@NonNull ViewTypeParser parser, @NonNull ProteusView view, @NonNull Layout layout,
-                                                   @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    protected ProteusView.Manager createViewManager(@NonNull ViewTypeParser parser, @NonNull ProteusView view, @NonNull Layout layout,
+                                                    @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
         return parser.createViewManager(context, view, layout, data, parent, dataIndex);
     }
 

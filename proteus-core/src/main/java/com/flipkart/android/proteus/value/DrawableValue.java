@@ -21,6 +21,9 @@ package com.flipkart.android.proteus.value;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
@@ -31,6 +34,7 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.util.Pair;
 
 import com.flipkart.android.proteus.ProteusLayoutInflater;
@@ -39,7 +43,6 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
-import com.flipkart.android.proteus.toolbox.DrawableCallback;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -457,7 +460,7 @@ public abstract class DrawableValue extends Value {
 
         @Override
         public void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, final Callback callback) {
-            loader.getBitmap(view, url, new DrawableCallback(view.getAsView().getContext()) {
+            loader.getBitmap(view, url, new AsyncCallback(view.getAsView().getContext()) {
                 @Override
                 protected void apply(@NonNull Drawable drawable) {
                     callback.apply(drawable);
@@ -745,4 +748,44 @@ public abstract class DrawableValue extends Value {
         }
     }
 
+    /**
+     * AsyncCallback
+     *
+     * @author aditya.sharat
+     */
+    public abstract static class AsyncCallback {
+
+        @NonNull
+        private final Context context;
+
+        AsyncCallback(@NonNull Context context) {
+            this.context = context;
+        }
+
+        public void setBitmap(@NonNull Bitmap bitmap) {
+            apply(convertBitmapToDrawable(bitmap));
+        }
+
+        public void setDrawable(@NonNull Drawable drawable) {
+            apply(drawable);
+        }
+
+        private Drawable convertBitmapToDrawable(Bitmap original) {
+
+            DisplayMetrics displayMetrics = this.context.getResources().getDisplayMetrics();
+            int width = original.getWidth();
+            int height = original.getHeight();
+
+            float scaleWidth = displayMetrics.scaledDensity;
+            float scaleHeight = displayMetrics.scaledDensity;
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleWidth, scaleHeight);
+
+            Bitmap resizedBitmap = Bitmap.createBitmap(original, 0, 0, width, height, matrix, true);
+
+            return new BitmapDrawable(this.context.getResources(), resizedBitmap);
+        }
+
+        protected abstract void apply(@NonNull Drawable drawable);
+    }
 }

@@ -48,9 +48,9 @@ import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
 import com.flipkart.android.proteus.support.v4.SupportV4Collection;
-import com.flipkart.android.proteus.toolbox.DrawableCallback;
 import com.flipkart.android.proteus.toolbox.EventType;
-import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.Styles;
+import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Value;
 import com.google.gson.Gson;
@@ -107,7 +107,7 @@ public class ProteusActivity extends AppCompatActivity {
      */
     private ProteusLayoutInflater.ImageLoader loader = new ProteusLayoutInflater.ImageLoader() {
         @Override
-        public void getBitmap(ProteusView view, String url, final DrawableCallback callback) {
+        public void getBitmap(ProteusView view, String url, final DrawableValue.AsyncCallback callback) {
             URL _url;
 
             try {

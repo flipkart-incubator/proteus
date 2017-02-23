@@ -26,7 +26,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ProteusViewManager;
 
 /**
  * AspectRatioFrameLayout
@@ -35,7 +34,7 @@ import com.flipkart.android.proteus.ProteusViewManager;
  */
 public class ProteusAspectRatioFrameLayout extends com.flipkart.android.proteus.view.custom.AspectRatioFrameLayout implements ProteusView {
 
-    private ProteusViewManager viewManager;
+    private Manager viewManager;
 
     public ProteusAspectRatioFrameLayout(Context context) {
         super(context);
@@ -55,13 +54,13 @@ public class ProteusAspectRatioFrameLayout extends com.flipkart.android.proteus.
     }
 
     @Override
-    public ProteusViewManager getViewManager() {
+    public Manager getViewManager() {
         return viewManager;
     }
 
     @Override
-    public void setViewManager(ProteusViewManager proteusViewManager) {
-        this.viewManager = proteusViewManager;
+    public void setViewManager(Manager manager) {
+        this.viewManager = manager;
     }
 
     @Override

@@ -26,7 +26,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ProteusViewManager;
 
 /**
  * ImageButton
@@ -35,7 +34,7 @@ import com.flipkart.android.proteus.ProteusViewManager;
  */
 public class ProteusImageButton extends android.widget.ImageButton implements ProteusView {
 
-    private ProteusViewManager viewManager;
+    private Manager viewManager;
 
     public ProteusImageButton(Context context) {
         super(context);
@@ -55,13 +54,13 @@ public class ProteusImageButton extends android.widget.ImageButton implements Pr
     }
 
     @Override
-    public ProteusViewManager getViewManager() {
+    public Manager getViewManager() {
         return viewManager;
     }
 
     @Override
-    public void setViewManager(ProteusViewManager proteusViewManager) {
-        this.viewManager = proteusViewManager;
+    public void setViewManager(Manager manager) {
+        this.viewManager = manager;
     }
 
     @Override

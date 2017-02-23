@@ -17,24 +17,28 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.toolbox;
+package com.flipkart.android.proteus;
 
-import com.flipkart.android.proteus.value.Binding;
-import com.google.gson.JsonElement;
+import android.os.Parcelable;
 
 /**
- * @author kirankumar
- * @author adityasharat
+ * SimpleIdGenerator
+ * <p>
+ * Simulates the R class. Useful to given unique ID for use in {@link android.view.View#setId(int)} method.
+ * An ID which doesn't conflict with aapt's ID is ensured. Please ensure that all dynamic ID call go through
+ * this class to ensure uniqueness with other dynamic IDs.
+ * </p>
+ *
+ * @author aditya.sharat
  */
-public class BoundAttribute {
-
-    public final int attributeId;
-    public final Binding attributeValue;
-    public final JsonElement data;
-
-    public BoundAttribute(int attributeId, Binding value, JsonElement data) {
-        this.attributeId = attributeId;
-        this.attributeValue = value;
-        this.data = data;
-    }
+public interface IdGenerator extends Parcelable {
+    /**
+     * Generates and returns a unique id, for the given key.
+     * If key exists, returns old value.
+     * Ensure that all
+     *
+     * @param id the value for which the ID is returns.
+     * @return a unique ID integer for use with {@link android.view.View#setId(int)}.
+     */
+    int getUnique(String id);
 }

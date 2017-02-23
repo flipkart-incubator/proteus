@@ -20,7 +20,6 @@
 package com.flipkart.android.proteus.processor;
 
 
-import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.toolbox.EventType;

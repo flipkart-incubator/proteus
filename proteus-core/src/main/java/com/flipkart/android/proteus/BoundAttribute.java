@@ -17,25 +17,24 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.toolbox;
+package com.flipkart.android.proteus;
 
-import com.flipkart.android.proteus.value.Value;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.flipkart.android.proteus.value.Binding;
+import com.google.gson.JsonElement;
 
 /**
- * Styles
- *
- * @author Aditya Sharat
+ * @author kirankumar
+ * @author adityasharat
  */
-public class Styles extends HashMap<String, Map<String, Value>> {
+public class BoundAttribute {
 
-    public Map<String, Value> getStyle(String name) {
-        return this.get(name);
-    }
+    public final int attributeId;
+    public final Binding attributeValue;
+    public final JsonElement data;
 
-    public boolean contains(String name) {
-        return this.containsKey(name);
+    public BoundAttribute(int attributeId, Binding value, JsonElement data) {
+        this.attributeId = attributeId;
+        this.attributeValue = value;
+        this.data = data;
     }
 }

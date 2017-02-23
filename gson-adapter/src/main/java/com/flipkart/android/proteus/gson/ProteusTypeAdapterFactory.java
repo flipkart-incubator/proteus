@@ -30,7 +30,7 @@ import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.value.Value;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
+import com.flipkart.android.proteus.ProteusConstants;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;

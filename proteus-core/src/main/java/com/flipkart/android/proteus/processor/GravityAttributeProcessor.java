@@ -25,7 +25,6 @@ import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.flipkart.android.proteus.AttributeProcessor;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Primitive;

@@ -17,10 +17,12 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.toolbox;
+package com.flipkart.android.proteus;
 
 import android.support.annotation.Nullable;
 
+import com.flipkart.android.proteus.toolbox.Result;
+import com.flipkart.android.proteus.toolbox.Utils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;

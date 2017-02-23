@@ -17,11 +17,13 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.toolbox;
+package com.flipkart.android.proteus;
 
 import android.annotation.SuppressLint;
 import android.os.Build;
 
+import com.flipkart.android.proteus.toolbox.Utils;
+import com.flipkart.android.proteus.value.Value;
 import com.google.gson.JsonElement;
 
 import java.math.RoundingMode;
@@ -36,11 +38,11 @@ public abstract class Formatter {
 
     public static final Formatter NOOP = new Formatter() {
         @Override
-        public String format(JsonElement elementValue) {
-            if (elementValue.isJsonPrimitive()) {
-                return elementValue.getAsString();
+        public String format(JsonElement data, Value... arguments) {
+            if (data.isJsonPrimitive()) {
+                return data.getAsString();
             }
-            return elementValue.toString();
+            return data.toString();
         }
 
         @Override
@@ -54,12 +56,12 @@ public abstract class Formatter {
         private DecimalFormat formatter;
 
         @Override
-        public String format(JsonElement elementValue) {
+        public String format(JsonElement data, Value... arguments) {
             double valueAsNumber;
             try {
-                valueAsNumber = Double.parseDouble(elementValue.getAsString());
+                valueAsNumber = Double.parseDouble(data.getAsString());
             } catch (NumberFormatException e) {
-                return elementValue.toString();
+                return data.toString();
             }
             formatter = new DecimalFormat("#,###");
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
@@ -84,13 +86,13 @@ public abstract class Formatter {
         private SimpleDateFormat to = new SimpleDateFormat("d MMM, E");
 
         @Override
-        public String format(JsonElement elementValue) {
+        public String format(JsonElement data, Value... arguments) {
             try {
                 // 2015-06-18 12:01:37
-                Date date = from.parse(elementValue.getAsString());
+                Date date = from.parse(data.getAsString());
                 return to.format(date);
             } catch (Exception e) {
-                return elementValue.toString();
+                return data.toString();
             }
         }
 
@@ -102,12 +104,12 @@ public abstract class Formatter {
 
     public static final Formatter INDEX = new Formatter() {
         @Override
-        public String format(JsonElement elementValue) {
+        public String format(JsonElement data, Value... arguments) {
             int valueAsNumber;
             try {
-                valueAsNumber = Integer.parseInt(elementValue.getAsString());
+                valueAsNumber = Integer.parseInt(data.getAsString());
             } catch (NumberFormatException e) {
-                return elementValue.toString();
+                return data.toString();
             }
             return String.valueOf(valueAsNumber + 1);
         }
@@ -120,11 +122,11 @@ public abstract class Formatter {
 
     public static final Formatter JOIN = new Formatter() {
         @Override
-        public String format(JsonElement elementValue) {
-            if (elementValue.isJsonArray()) {
-                return Utils.getStringFromArray(elementValue.getAsJsonArray(), ",");
+        public String format(JsonElement data, Value... arguments) {
+            if (data.isJsonArray()) {
+                return Utils.getStringFromArray(data.getAsJsonArray(), ",");
             } else {
-                return elementValue.toString();
+                return data.toString();
             }
         }
 
@@ -134,7 +136,7 @@ public abstract class Formatter {
         }
     };
 
-    public abstract String format(JsonElement elementValue);
+    public abstract String format(JsonElement data, Value... arguments);
 
     public abstract String getName();
 }

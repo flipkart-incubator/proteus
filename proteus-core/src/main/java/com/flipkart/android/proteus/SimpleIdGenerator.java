@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.toolbox;
+package com.flipkart.android.proteus;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * IdGeneratorImpl
+ * SimpleIdGenerator
  * <p>
  * <p>
  * An built in implementation of {@link IdGenerator} interface
@@ -37,16 +37,16 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author aditya.sharat
  */
-public class IdGeneratorImpl implements IdGenerator {
-    public final static Parcelable.Creator<IdGeneratorImpl> CREATOR = new Creator<IdGeneratorImpl>() {
+public class SimpleIdGenerator implements IdGenerator {
+    public final static Parcelable.Creator<SimpleIdGenerator> CREATOR = new Creator<SimpleIdGenerator>() {
         @Override
-        public IdGeneratorImpl createFromParcel(Parcel source) {
-            return new IdGeneratorImpl(source);
+        public SimpleIdGenerator createFromParcel(Parcel source) {
+            return new SimpleIdGenerator(source);
         }
 
         @Override
-        public IdGeneratorImpl[] newArray(int size) {
-            return new IdGeneratorImpl[size];
+        public SimpleIdGenerator[] newArray(int size) {
+            return new SimpleIdGenerator[size];
         }
     };
     private static final ClassLoader ID_MAP_CLASS_LOADER = new TypeToken<Map<String, Integer>>() {
@@ -54,11 +54,11 @@ public class IdGeneratorImpl implements IdGenerator {
     private final HashMap<String, Integer> idMap = new HashMap<>();
     private final AtomicInteger sNextGeneratedId;
 
-    public IdGeneratorImpl() {
+    public SimpleIdGenerator() {
         sNextGeneratedId = new AtomicInteger(1);
     }
 
-    public IdGeneratorImpl(Parcel source) {
+    public SimpleIdGenerator(Parcel source) {
         sNextGeneratedId = new AtomicInteger(source.readInt());
         source.readMap(idMap, ID_MAP_CLASS_LOADER);
     }

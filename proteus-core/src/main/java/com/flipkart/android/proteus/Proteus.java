@@ -24,8 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.Size;
 
-import com.flipkart.android.proteus.toolbox.Formatter;
-
 import java.util.HashMap;
 import java.util.Map;
 

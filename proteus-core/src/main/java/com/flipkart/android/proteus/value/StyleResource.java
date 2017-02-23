@@ -24,8 +24,8 @@ import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.util.LruCache;
 
+import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
 
 import java.util.HashMap;
 import java.util.Map;

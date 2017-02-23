@@ -24,9 +24,6 @@ import android.content.ContextWrapper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.flipkart.android.proteus.toolbox.Formatter;
-import com.flipkart.android.proteus.toolbox.IdGenerator;
-import com.flipkart.android.proteus.toolbox.IdGeneratorImpl;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Value;
 
@@ -90,7 +87,7 @@ public class ProteusContext extends ContextWrapper {
 
     @NonNull
     public ProteusLayoutInflater getInflater() {
-        return getInflater(new IdGeneratorImpl());
+        return getInflater(new SimpleIdGenerator());
     }
 
     @Nullable

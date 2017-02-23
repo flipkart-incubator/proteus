@@ -24,7 +24,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.toolbox.Scope;
 import com.flipkart.android.proteus.value.Layout;
 import com.google.gson.JsonObject;
 

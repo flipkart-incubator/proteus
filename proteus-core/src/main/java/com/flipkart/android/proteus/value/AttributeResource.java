@@ -25,7 +25,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.LruCache;
 
-import com.flipkart.android.proteus.toolbox.ProteusConstants;
+import com.flipkart.android.proteus.ProteusConstants;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

@@ -19,17 +19,62 @@
 
 package com.flipkart.android.proteus;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
+
+import com.flipkart.android.proteus.value.Layout;
+import com.google.gson.JsonObject;
 
 /**
  *
  */
 public interface ProteusView {
 
-    ProteusViewManager getViewManager();
+    Manager getViewManager();
 
-    void setViewManager(ProteusViewManager proteusViewManager);
+    void setViewManager(Manager manager);
 
     View getAsView();
 
+    /**
+     * Manager
+     *
+     * @author aditya.sharat
+     */
+    interface Manager {
+
+        /**
+         * Update the {@link View} with new data.
+         *
+         * @param data New data for the view
+         */
+        void update(@Nullable JsonObject data);
+
+        /**
+         * @return
+         */
+        @NonNull
+        ProteusContext getContext();
+
+        /**
+         * @return
+         */
+        @NonNull
+        Layout getLayout();
+
+        /**
+         * @return
+         */
+        @NonNull
+        Scope getScope();
+
+        /**
+         * @param id
+         * @return
+         */
+        @Nullable
+        View findViewById(@NonNull String id);
+
+    }
 }

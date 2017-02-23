@@ -25,7 +25,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.toolbox.Scope;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Value;
 import com.google.gson.JsonObject;
@@ -57,9 +57,9 @@ public abstract class ViewTypeParser<V extends View> {
     public abstract ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout,
                                            @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex);
 
-    public ProteusViewManager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view,
-                                                @NonNull Layout layout, @NonNull JsonObject data,
-                                                @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view,
+                                                 @NonNull Layout layout, @NonNull JsonObject data,
+                                                 @Nullable ViewGroup parent, int dataIndex) {
         Scope scope = createScope(layout, data, parent, dataIndex);
         return new ViewManager(context, this, view.getAsView(), layout, scope);
     }
