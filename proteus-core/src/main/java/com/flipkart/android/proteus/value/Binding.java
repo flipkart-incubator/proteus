@@ -76,31 +76,26 @@ public class Binding extends Value {
      * @return
      */
     public static Binding valueOf(@NonNull final String value) {
-        Binding binding = BindingCache.cache.get(value);
-        if (null == binding) {
-            Matcher matcher = BINDING_PATTERN.matcher(value);
-            StringBuffer sb = new StringBuffer();
-            Expression expression, expressions[] = new Expression[0];
+        Matcher matcher = BINDING_PATTERN.matcher(value);
+        StringBuffer sb = new StringBuffer();
+        Expression expression, expressions[] = new Expression[0];
 
-            while (matcher.find()) {
-                if (matcher.group(3) != null) {
-                    expression = Expression.valueOf(matcher.group(3), null);
-                } else {
-                    expression = Expression.valueOf(matcher.group(1), matcher.group(2));
-                }
-                matcher.appendReplacement(sb, TEMPLATE);
-                expressions = Arrays.copyOf(expressions, expressions.length + 1);
-                expressions[expressions.length - 1] = expression;
+        while (matcher.find()) {
+            if (matcher.group(3) != null) {
+                expression = Expression.valueOf(matcher.group(3), null);
+            } else {
+                expression = Expression.valueOf(matcher.group(1), matcher.group(2));
             }
-            matcher.appendTail(sb);
-            String template = sb.toString().substring(1);
-            if (TEMPLATE.equals(template)) {
-                template = EMPTY_TEMPLATE;
-            }
-            binding = new Binding(template, expressions);
-            BindingCache.cache.put(value, binding);
+            matcher.appendReplacement(sb, TEMPLATE);
+            expressions = Arrays.copyOf(expressions, expressions.length + 1);
+            expressions[expressions.length - 1] = expression;
         }
-        return binding;
+        matcher.appendTail(sb);
+        String template = sb.toString().substring(1);
+        if (TEMPLATE.equals(template)) {
+            template = EMPTY_TEMPLATE;
+        }
+        return new Binding(template, expressions);
     }
 
     /**
@@ -148,13 +143,6 @@ public class Binding extends Value {
     @Override
     public Value copy() {
         return this;
-    }
-
-    /**
-     *
-     */
-    private static class BindingCache {
-        private static final LruCache<String, Binding> cache = new LruCache<>(64);
     }
 
     /**

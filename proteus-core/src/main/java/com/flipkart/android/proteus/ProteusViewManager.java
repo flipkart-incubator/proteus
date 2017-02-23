@@ -46,7 +46,7 @@ public interface ProteusViewManager {
      */
     @NonNull
     ProteusContext getContext();
- 
+
     /**
      * @return
      */
