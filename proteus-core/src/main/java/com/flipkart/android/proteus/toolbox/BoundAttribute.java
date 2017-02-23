@@ -19,7 +19,8 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import com.flipkart.android.proteus.value.Value;
+import com.flipkart.android.proteus.value.Binding;
+import com.google.gson.JsonElement;
 
 /**
  * @author kirankumar
@@ -28,10 +29,12 @@ import com.flipkart.android.proteus.value.Value;
 public class BoundAttribute {
 
     public final int attributeId;
-    public final Value attributeValue;
+    public final Binding attributeValue;
+    public final JsonElement data;
 
-    public BoundAttribute(int attributeId, Value value) {
+    public BoundAttribute(int attributeId, Binding value, JsonElement data) {
         this.attributeId = attributeId;
         this.attributeValue = value;
+        this.data = data;
     }
 }

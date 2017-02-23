@@ -100,11 +100,6 @@ public class ViewManager implements ProteusViewManager {
         return view.findViewById(context.getInflater().getUniqueViewId(id));
     }
 
-    @Override
-    public void destroy() {
-        boundAttributes = null;
-    }
-
     private void updateDataContext(JsonObject data) {
         if (scope.isClone()) {
             scope.setData(data);

@@ -66,9 +66,4 @@ public interface ProteusViewManager {
     @Nullable
     View findViewById(@NonNull String id);
 
-    /**
-     * Free all resources held by the view manager
-     */
-    void destroy();
-
 }
