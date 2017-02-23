@@ -52,14 +52,6 @@ public class BindingTest {
     }
 
     @Test
-    public void valueOf_cache() throws Exception {
-        Binding binding1 = Binding.valueOf("~@{a.b.c}");
-        Binding binding2 = Binding.valueOf("~@{a.b.c}");
-
-        assertThat(binding1, is(binding2));
-    }
-
-    @Test
     public void evaluate_single() throws Exception {
         Binding binding = Binding.valueOf("~@{a.b.c}");
 
