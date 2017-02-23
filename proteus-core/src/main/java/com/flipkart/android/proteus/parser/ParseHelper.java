@@ -401,7 +401,7 @@ public class ParseHelper {
     }
 
     /**
-     * Parses a single layer item (represented by {@param child}) inside a layer list and gives
+     * Parses a single layer inside a layer list and gives
      * a pair of android:id and a string for the drawable path.
      *
      * @param value
