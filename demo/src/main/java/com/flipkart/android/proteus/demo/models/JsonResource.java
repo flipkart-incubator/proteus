@@ -22,7 +22,6 @@ package com.flipkart.android.proteus.demo.models;
 import com.flipkart.android.proteus.Styles;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
-import com.google.gson.JsonObject;
 
 import java.util.Map;
 
