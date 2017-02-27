@@ -24,7 +24,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.value.Layout;
-import com.google.gson.JsonObject;
+import com.flipkart.android.proteus.value.ObjectValue;
 
 /**
  *
@@ -49,7 +49,7 @@ public interface ProteusView {
          *
          * @param data New data for the view
          */
-        void update(@Nullable JsonObject data);
+        void update(@Nullable ObjectValue data);
 
         /**
          * @return
@@ -67,7 +67,7 @@ public interface ProteusView {
          * @return
          */
         @NonNull
-        Scope getScope();
+        DataContext getDataContext();
 
         /**
          * @param id

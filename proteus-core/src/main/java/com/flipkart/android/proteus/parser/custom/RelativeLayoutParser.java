@@ -31,8 +31,8 @@ import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.GravityAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.view.ProteusRelativeLayout;
-import com.google.gson.JsonObject;
 
 /**
  * Created by kirankumar on 10/07/14.
@@ -40,7 +40,7 @@ import com.google.gson.JsonObject;
 public class RelativeLayoutParser<T extends RelativeLayout> extends ViewTypeParser<T> {
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusRelativeLayout(context);
     }
 

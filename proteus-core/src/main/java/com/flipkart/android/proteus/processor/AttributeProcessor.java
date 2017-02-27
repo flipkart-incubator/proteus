@@ -22,8 +22,8 @@ package com.flipkart.android.proteus.processor;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.Scope;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.NestedBinding;
@@ -32,7 +32,6 @@ import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
-import com.google.gson.JsonElement;
 
 /**
  * @author kirankumar
@@ -79,8 +78,8 @@ public abstract class AttributeProcessor<V> {
     }
 
     public void handleBinding(V view, Binding value) {
-        Scope scope = ((ProteusView) view).getViewManager().getScope();
-        Value resolved = evaluate(value, scope.getData(), scope.getIndex());
+        DataContext dataContext = ((ProteusView) view).getViewManager().getDataContext();
+        Value resolved = evaluate(value, dataContext.getData(), dataContext.getIndex());
         handleValue(view, resolved);
     }
 
@@ -106,7 +105,7 @@ public abstract class AttributeProcessor<V> {
         return value;
     }
 
-    protected Value evaluate(Binding binding, JsonElement data, int index) {
+    protected Value evaluate(Binding binding, Value data, int index) {
         return binding.evaluate(data, index);
     }
 

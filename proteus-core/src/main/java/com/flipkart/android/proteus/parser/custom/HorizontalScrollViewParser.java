@@ -31,8 +31,8 @@ import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.view.ProteusHorizontalScrollView;
-import com.google.gson.JsonObject;
 
 /**
  * @author kiran.kumar
@@ -42,7 +42,7 @@ public class HorizontalScrollViewParser<T extends HorizontalScrollView> extends 
 
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusHorizontalScrollView(context);
     }
 

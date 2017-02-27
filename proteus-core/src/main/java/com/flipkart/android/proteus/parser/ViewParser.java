@@ -52,11 +52,11 @@ import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.view.ProteusAndroidView;
-import com.google.gson.JsonObject;
 
 import java.util.Map;
 
@@ -72,7 +72,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
     private static final String ID_STRING_NORMALIZED_PATTERN = ":id/";
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusAndroidView(parent.getContext());
     }
 

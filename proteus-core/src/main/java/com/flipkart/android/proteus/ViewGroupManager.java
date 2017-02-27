@@ -25,7 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.value.Layout;
-import com.google.gson.JsonObject;
+import com.flipkart.android.proteus.value.ObjectValue;
 
 /**
  * ViewGroupManager
@@ -36,12 +36,12 @@ import com.google.gson.JsonObject;
 public class ViewGroupManager extends ViewManager {
 
     public ViewGroupManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
-                            @NonNull View view, @NonNull Layout layout, @NonNull Scope scope) {
-        super(context, parser, view, layout, scope);
+                            @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
+        super(context, parser, view, layout, dataContext);
     }
 
     @Override
-    public void update(@Nullable JsonObject data) {
+    public void update(@Nullable ObjectValue data) {
         super.update(data);
         // update the child views
         if (view instanceof ViewGroup) {
@@ -52,7 +52,7 @@ public class ViewGroupManager extends ViewManager {
             for (int index = 0; index < count; index++) {
                 child = parent.getChildAt(index);
                 if (child instanceof ProteusView) {
-                    ((ProteusView) child).getViewManager().update(scope.getData());
+                    ((ProteusView) child).getViewManager().update(dataContext.getData());
                 }
             }
         }

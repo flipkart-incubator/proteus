@@ -19,14 +19,11 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import com.flipkart.android.proteus.ProteusConstants;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.flipkart.android.proteus.value.Array;
+import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Value;
 
 import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  * @author Aditya Sharat
@@ -36,78 +33,8 @@ public class Utils {
     public static final String LIB_NAME = "proteus";
     public static final String VERSION = "5.0.0-SNAPSHOT";
 
-    public static Result readJson(String path, JsonObject data, int index) {
-        // replace INDEX reference with index value
-        if (ProteusConstants.INDEX.equals(path)) {
-            path = path.replace(ProteusConstants.INDEX, String.valueOf(index));
-            return Result.success(new JsonPrimitive(path));
-        } else {
-            StringTokenizer tokenizer = new StringTokenizer(path, ProteusConstants.DATA_PATH_DELIMITERS);
-            JsonElement elementToReturn = data;
-            JsonElement tempElement;
-            JsonArray tempArray;
-
-            while (tokenizer.hasMoreTokens()) {
-                String segment = tokenizer.nextToken();
-                if (elementToReturn == null) {
-                    return Result.NO_SUCH_DATA_PATH_EXCEPTION;
-                }
-                if (elementToReturn.isJsonNull()) {
-                    return Result.JSON_NULL_EXCEPTION;
-                }
-                if ("".equals(segment)) {
-                    continue;
-                }
-                if (elementToReturn.isJsonArray()) {
-                    tempArray = elementToReturn.getAsJsonArray();
-
-                    if (ProteusConstants.INDEX.equals(segment)) {
-                        if (index < tempArray.size()) {
-                            elementToReturn = tempArray.get(index);
-                        } else {
-                            return Result.NO_SUCH_DATA_PATH_EXCEPTION;
-                        }
-                    } else if (ProteusConstants.ARRAY_DATA_LENGTH_REFERENCE.equals(segment)) {
-                        elementToReturn = new JsonPrimitive(tempArray.size());
-                    } else if (ProteusConstants.ARRAY_DATA_LAST_INDEX_REFERENCE.equals(segment)) {
-                        if (tempArray.size() == 0) {
-                            return Result.NO_SUCH_DATA_PATH_EXCEPTION;
-                        }
-                        elementToReturn = tempArray.get(tempArray.size() - 1);
-                    } else {
-                        try {
-                            index = Integer.parseInt(segment);
-                        } catch (NumberFormatException e) {
-                            return Result.INVALID_DATA_PATH_EXCEPTION;
-                        }
-                        if (index < tempArray.size()) {
-                            elementToReturn = tempArray.get(index);
-                        } else {
-                            return Result.NO_SUCH_DATA_PATH_EXCEPTION;
-                        }
-                    }
-                } else if (elementToReturn.isJsonObject()) {
-                    tempElement = elementToReturn.getAsJsonObject().get(segment);
-                    if (tempElement != null) {
-                        elementToReturn = tempElement;
-                    } else {
-                        return Result.NO_SUCH_DATA_PATH_EXCEPTION;
-                    }
-                } else if (elementToReturn.isJsonPrimitive()) {
-                    return Result.INVALID_DATA_PATH_EXCEPTION;
-                } else {
-                    return Result.NO_SUCH_DATA_PATH_EXCEPTION;
-                }
-            }
-            if (elementToReturn.isJsonNull()) {
-                return Result.JSON_NULL_EXCEPTION;
-            }
-            return Result.success(elementToReturn);
-        }
-    }
-
-    public static JsonObject addElements(JsonObject destination, JsonObject source, boolean override) {
-        for (Map.Entry<String, JsonElement> entry : source.entrySet()) {
+    public static ObjectValue addElements(ObjectValue destination, ObjectValue source, boolean override) {
+        for (Map.Entry<String, Value> entry : source.entrySet()) {
             if (!override && destination.get(entry.getKey()) != null) {
                 continue;
             }
@@ -116,10 +43,10 @@ public class Utils {
         return destination;
     }
 
-    public static String getStringFromArray(JsonArray array, String delimiter) {
+    public static String getStringFromArray(Array array, String delimiter) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < array.size(); i++) {
-            if (array.get(i).isJsonPrimitive()) {
+            if (array.get(i).isPrimitive()) {
                 sb.append(array.get(i).getAsString());
             } else {
                 sb.append(array.get(i).toString());

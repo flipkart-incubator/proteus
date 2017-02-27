@@ -44,14 +44,15 @@ import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.StyleManager;
+import com.flipkart.android.proteus.Styles;
 import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
 import com.flipkart.android.proteus.support.v4.SupportV4Collection;
 import com.flipkart.android.proteus.toolbox.EventType;
-import com.flipkart.android.proteus.Styles;
 import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -78,7 +79,7 @@ public class ProteusActivity extends AppCompatActivity {
 
     private ProteusLayoutInflater layoutInflater;
 
-    private JsonObject data;
+    private ObjectValue data;
     private Layout layout;
 
     private Styles styles;
@@ -151,7 +152,7 @@ public class ProteusActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, JsonObject data, int index) {
+        public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, ObjectValue data, int index) {
             //noinspection ConstantConditions because we want to crash here
             return null;
         }
@@ -247,7 +248,7 @@ public class ProteusActivity extends AppCompatActivity {
             protected Void doInBackground(Void... params) {
                 try {
 
-                    Call<JsonObject> callData = resources.get("user.json");
+                    Call<ObjectValue> callData = resources.get("user.json");
                     data = callData.execute().body();
 
                     Call<Layout> callLayout = resources.getLayout();

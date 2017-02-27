@@ -21,6 +21,7 @@ package com.flipkart.android.proteus.demo.models;
 
 import com.flipkart.android.proteus.Styles;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
 import com.google.gson.JsonObject;
 
 import java.util.Map;
@@ -37,7 +38,7 @@ import retrofit2.http.Path;
 
 public interface JsonResource {
     @GET("{path}")
-    Call<JsonObject> get(@Path("path") String path);
+    Call<ObjectValue> get(@Path("path") String path);
 
     @GET("styles.json")
     Call<Styles> getStyles();

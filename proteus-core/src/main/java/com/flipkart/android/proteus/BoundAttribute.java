@@ -19,8 +19,9 @@
 
 package com.flipkart.android.proteus;
 
+import android.support.annotation.NonNull;
+
 import com.flipkart.android.proteus.value.Binding;
-import com.google.gson.JsonElement;
 
 /**
  * @author kirankumar
@@ -29,12 +30,12 @@ import com.google.gson.JsonElement;
 public class BoundAttribute {
 
     public final int attributeId;
-    public final Binding attributeValue;
-    public final JsonElement data;
 
-    public BoundAttribute(int attributeId, Binding value, JsonElement data) {
+    @NonNull
+    public final Binding binding;
+
+    public BoundAttribute(int attributeId, @NonNull Binding binding) {
         this.attributeId = attributeId;
-        this.attributeValue = value;
-        this.data = data;
+        this.binding = binding;
     }
 }

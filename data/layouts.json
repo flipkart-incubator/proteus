@@ -208,7 +208,7 @@
             "layout":{
               "type": "TextView",
               "data": {
-                "tag": "user.tags[$index]"
+                "tag": "~@{user.tags[$index]}"
               },
               "layout_marginRight": "8dp",
               "layout_height": "32dp",

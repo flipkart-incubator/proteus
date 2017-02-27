@@ -24,7 +24,6 @@ import android.os.Build;
 
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.value.Value;
-import com.google.gson.JsonElement;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -38,8 +37,8 @@ public abstract class Formatter {
 
     public static final Formatter NOOP = new Formatter() {
         @Override
-        public String format(JsonElement data, Value... arguments) {
-            if (data.isJsonPrimitive()) {
+        public String format(Value data, Value... arguments) {
+            if (data.isPrimitive()) {
                 return data.getAsString();
             }
             return data.toString();
@@ -56,7 +55,7 @@ public abstract class Formatter {
         private DecimalFormat formatter;
 
         @Override
-        public String format(JsonElement data, Value... arguments) {
+        public String format(Value data, Value... arguments) {
             double valueAsNumber;
             try {
                 valueAsNumber = Double.parseDouble(data.getAsString());
@@ -86,7 +85,7 @@ public abstract class Formatter {
         private SimpleDateFormat to = new SimpleDateFormat("d MMM, E");
 
         @Override
-        public String format(JsonElement data, Value... arguments) {
+        public String format(Value data, Value... arguments) {
             try {
                 // 2015-06-18 12:01:37
                 Date date = from.parse(data.getAsString());
@@ -104,7 +103,7 @@ public abstract class Formatter {
 
     public static final Formatter INDEX = new Formatter() {
         @Override
-        public String format(JsonElement data, Value... arguments) {
+        public String format(Value data, Value... arguments) {
             int valueAsNumber;
             try {
                 valueAsNumber = Integer.parseInt(data.getAsString());
@@ -122,9 +121,9 @@ public abstract class Formatter {
 
     public static final Formatter JOIN = new Formatter() {
         @Override
-        public String format(JsonElement data, Value... arguments) {
-            if (data.isJsonArray()) {
-                return Utils.getStringFromArray(data.getAsJsonArray(), ",");
+        public String format(Value data, Value... arguments) {
+            if (data.isArray()) {
+                return Utils.getStringFromArray(data.getAsArray(), ",");
             } else {
                 return data.toString();
             }
@@ -136,7 +135,7 @@ public abstract class Formatter {
         }
     };
 
-    public abstract String format(JsonElement data, Value... arguments);
+    public abstract String format(Value data, Value... arguments);
 
     public abstract String getName();
 }

@@ -41,12 +41,12 @@ public class Layout extends Value {
     public final List<Attribute> attributes;
 
     @Nullable
-    public final Map<String, String> data;
+    public final Map<String, Value> data;
 
     @Nullable
     public final ObjectValue extras;
 
-    public Layout(@NonNull String type, @Nullable List<Attribute> attributes, @Nullable Map<String, String> data, ObjectValue extras) {
+    public Layout(@NonNull String type, @Nullable List<Attribute> attributes, @Nullable Map<String, Value> data, ObjectValue extras) {
         this.type = type;
         this.attributes = attributes;
         this.data = data;

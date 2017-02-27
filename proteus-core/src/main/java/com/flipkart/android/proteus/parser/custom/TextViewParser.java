@@ -43,8 +43,8 @@ import com.flipkart.android.proteus.processor.GravityAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.view.ProteusTextView;
-import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 12/05/14.
@@ -52,7 +52,7 @@ import com.google.gson.JsonObject;
 public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusTextView(context);
     }
 

@@ -19,9 +19,7 @@
 
 package com.flipkart.android.proteus.value;
 
-import com.google.gson.JsonPrimitive;
-import com.google.gson.internal.$Gson$Preconditions;
-import com.google.gson.internal.LazilyParsedNumber;
+import com.flipkart.android.proteus.toolbox.LazilyParsedNumber;
 
 import java.math.BigInteger;
 
@@ -111,19 +109,6 @@ public class Primitive extends Value {
         return false;
     }
 
-    static Primitive fromJson(JsonPrimitive json) {
-        Primitive value;
-        if (json.isBoolean()) {
-            value = new Primitive(json.getAsBoolean());
-        } else if (json.isNumber()) {
-            value = new Primitive(json.getAsNumber());
-        } else {
-            value = new Primitive(json.getAsString());
-        }
-
-        return value;
-    }
-
     @Override
     public Primitive copy() {
         return this;
@@ -134,8 +119,9 @@ public class Primitive extends Value {
             char c = (Character) primitive;
             this.value = String.valueOf(c);
         } else {
-            $Gson$Preconditions.checkArgument(primitive instanceof Number
-                    || isPrimitiveOrString(primitive));
+            if (!(primitive instanceof Number || isPrimitiveOrString(primitive))) {
+                throw new IllegalArgumentException();
+            }
             this.value = primitive;
         }
     }

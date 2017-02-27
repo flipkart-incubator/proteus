@@ -19,8 +19,6 @@
 
 package com.flipkart.android.proteus.value;
 
-import com.google.gson.JsonElement;
-
 /**
  * Value
  *
@@ -28,23 +26,6 @@ import com.google.gson.JsonElement;
  */
 
 public abstract class Value {
-
-    public static Value fromJson(JsonElement element) {
-        Value value;
-        if (element.isJsonPrimitive()) {
-            value = Primitive.fromJson(element.getAsJsonPrimitive());
-        } else if (element.isJsonObject()) {
-            value = ObjectValue.fromJson(element.getAsJsonObject());
-        } else if (element.isJsonArray()) {
-            value = Array.fromJson(element.getAsJsonArray());
-        } else if (element.isJsonNull()) {
-            value = Null.INSTANCE;
-        } else {
-            value = new Primitive(element.toString());
-        }
-
-        return value;
-    }
 
     /**
      * Returns a deep copy of this value. Immutable elements
@@ -365,18 +346,6 @@ public abstract class Value {
      */
     public char getAsCharacter() {
         throw new UnsupportedOperationException(getClass().getSimpleName());
-    }
-
-    public Value create(java.lang.Object object) {
-        Value value;
-        if (Primitive.isPrimitiveOrString(object)) {
-            value = new Primitive(object);
-        } else if (object instanceof JsonElement) {
-            return fromJson((JsonElement) object);
-        } else {
-            throw new IllegalArgumentException("object must be primitive, string or Json");
-        }
-        return value;
     }
 
     @Override

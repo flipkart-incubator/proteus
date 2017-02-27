@@ -29,7 +29,7 @@ import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.value.Layout;
-import com.google.gson.JsonObject;
+import com.flipkart.android.proteus.value.ObjectValue;
 
 /**
  * IncludeParser
@@ -40,7 +40,7 @@ import com.google.gson.JsonObject;
 public class IncludeParser<V extends View> extends ViewTypeParser<V> {
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout include, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout include, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         String type = include.extras.getAsString(ProteusConstants.LAYOUT);
         return context.getInflater().inflate(type, data, parent, dataIndex);
     }

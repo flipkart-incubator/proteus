@@ -26,8 +26,8 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
-import com.google.gson.JsonObject;
 
 import java.util.Iterator;
 
@@ -58,7 +58,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     @NonNull
     @Override
-    public ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView inflate(@NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
 
         /**
          * Get the the view type parser for this layout type
@@ -108,19 +108,19 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     @NonNull
     @Override
-    public ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data, int dataIndex) {
+    public ProteusView inflate(@NonNull Layout layout, @NonNull ObjectValue data, int dataIndex) {
         return inflate(layout, data, null, dataIndex);
     }
 
     @NonNull
     @Override
-    public ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data) {
+    public ProteusView inflate(@NonNull Layout layout, @NonNull ObjectValue data) {
         return inflate(layout, data, null, -1);
     }
 
     @NonNull
     @Override
-    public ProteusView inflate(@NonNull String name, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView inflate(@NonNull String name, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         Layout layout = context.getLayout(name);
         if (null == layout) {
             throw new ProteusInflateException("layout : '" + name + "' not found");
@@ -130,13 +130,13 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     @NonNull
     @Override
-    public ProteusView inflate(@NonNull String name, @NonNull JsonObject data, int dataIndex) {
+    public ProteusView inflate(@NonNull String name, @NonNull ObjectValue data, int dataIndex) {
         return inflate(name, data, null, dataIndex);
     }
 
     @NonNull
     @Override
-    public ProteusView inflate(@NonNull String name, @NonNull JsonObject data) {
+    public ProteusView inflate(@NonNull String name, @NonNull ObjectValue data) {
         return inflate(name, data, null, -1);
     }
 
@@ -151,13 +151,13 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return idGenerator;
     }
 
-    protected ProteusView createView(@NonNull ViewTypeParser parser, @NonNull Layout layout, @NonNull JsonObject data,
+    protected ProteusView createView(@NonNull ViewTypeParser parser, @NonNull Layout layout, @NonNull ObjectValue data,
                                      @Nullable ViewGroup parent, int dataIndex) {
         return parser.createView(context, layout, data, parent, dataIndex);
     }
 
     protected ProteusView.Manager createViewManager(@NonNull ViewTypeParser parser, @NonNull ProteusView view, @NonNull Layout layout,
-                                                    @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+                                                    @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return parser.createViewManager(context, view, layout, data, parent, dataIndex);
     }
 
@@ -166,7 +166,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     }
 
     @NonNull
-    protected ProteusView onUnknownViewEncountered(String type, Layout layout, JsonObject data, int dataIndex) {
+    protected ProteusView onUnknownViewEncountered(String type, Layout layout, ObjectValue data, int dataIndex) {
         if (ProteusConstants.isLoggingEnabled()) {
             Log.d(TAG, "No ViewTypeParser for: " + type);
         }

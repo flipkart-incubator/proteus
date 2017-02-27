@@ -22,15 +22,16 @@ package com.flipkart.android.proteus.gson;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.flipkart.android.proteus.Proteus;
+import com.flipkart.android.proteus.ProteusConstants;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.value.Array;
+import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Null;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Primitive;
-import com.flipkart.android.proteus.Proteus;
-import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.value.Value;
-import com.flipkart.android.proteus.ProteusConstants;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.TypeAdapter;
@@ -58,6 +59,14 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
     public static final ProteusInstanceHolder PROTEUS_INSTANCE_HOLDER = new ProteusInstanceHolder();
 
+    /**
+     *
+     */
+    private Context context;
+
+    /**
+     *
+     */
     public final TypeAdapter<Value> VALUE_TYPE_ADAPTER = new TypeAdapter<Value>() {
         @Override
         public void write(JsonWriter out, Value value) throws IOException {
@@ -100,7 +109,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         public Value read(JsonReader in) throws IOException {
             switch (in.peek()) {
                 case STRING:
-                    return new Primitive(in.nextString());
+                    return replaceIfBinding(in.nextString());
                 case NUMBER:
                     String number = in.nextString();
                     return new Primitive(new LazilyParsedNumber(number));
@@ -127,7 +136,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                             if (PROTEUS_INSTANCE_HOLDER.isLayout(type)) {
                                 return LAYOUT_TYPE_ADAPTER.read(type, PROTEUS_INSTANCE_HOLDER.getProteus(), in);
                             } else {
-                                object.add(name, new Primitive(type));
+                                object.add(name, replaceIfBinding(type));
                             }
                         } else {
                             object.add(name, read(in));
@@ -146,7 +155,19 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     throw new IllegalArgumentException();
             }
         }
+
+        private Value replaceIfBinding(String string) {
+            if (Binding.isBindingValue(string)) {
+                return Binding.valueOf(string);
+            } else {
+                return new Primitive(string);
+            }
+        }
     }.nullSafe();
+
+    /**
+     *
+     */
     public final TypeAdapter<Primitive> PRIMITIVE_TYPE_ADAPTER = new TypeAdapter<Primitive>() {
 
         @Override
@@ -160,6 +181,10 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return value != null && value.isPrimitive() ? value.getAsPrimitive() : null;
         }
     }.nullSafe();
+
+    /**
+     *
+     */
     public final TypeAdapter<ObjectValue> OBJECT_TYPE_ADAPTER = new TypeAdapter<ObjectValue>() {
         @Override
         public void write(JsonWriter out, ObjectValue value) throws IOException {
@@ -172,6 +197,10 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return value != null && value.isObject() ? value.getAsObject() : null;
         }
     }.nullSafe();
+
+    /**
+     *
+     */
     public final TypeAdapter<Array> ARRAY_TYPE_ADAPTER = new TypeAdapter<Array>() {
         @Override
         public void write(JsonWriter out, Array value) throws IOException {
@@ -184,6 +213,10 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return value != null && value.isArray() ? value.getAsArray() : null;
         }
     }.nullSafe();
+
+    /**
+     *
+     */
     public final TypeAdapter<Null> NULL_TYPE_ADAPTER = new TypeAdapter<Null>() {
 
         @Override
@@ -197,9 +230,11 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return value != null && value.isNull() ? value.getAsNull() : null;
         }
     }.nullSafe();
-    public final LayoutTypeAdapter LAYOUT_TYPE_ADAPTER = new LayoutTypeAdapter();
 
-    private Context context;
+    /**
+     *
+     */
+    public final LayoutTypeAdapter LAYOUT_TYPE_ADAPTER = new LayoutTypeAdapter();
 
     public ProteusTypeAdapterFactory(Context context) {
         this.context = context;
@@ -272,7 +307,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
         public Layout read(String type, Proteus proteus, JsonReader in) throws IOException {
             List<Layout.Attribute> attributes = new ArrayList<>();
-            Map<String, String> data = null;
+            Map<String, Value> data = null;
             ObjectValue extras = new ObjectValue();
             String name;
             while (in.hasNext()) {
@@ -296,7 +331,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         }
 
         @Nullable
-        public Map<String, String> readData(JsonReader in) throws IOException {
+        public Map<String, Value> readData(JsonReader in) throws IOException {
             JsonToken peek = in.peek();
             if (peek == JsonToken.NULL) {
                 in.nextNull();
@@ -307,14 +342,14 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 throw new JsonSyntaxException("data must be a Map<String, String>.");
             }
 
-            Map<String, String> data = new HashMap<>();
+            Map<String, Value> data = new HashMap<>();
 
             in.beginObject();
             while (in.hasNext()) {
                 JsonReaderInternalAccess.INSTANCE.promoteNameToValue(in);
                 String key = in.nextString();
-                String value = in.nextString();
-                String replaced = data.put(key, value);
+                Value value = VALUE_TYPE_ADAPTER.read(in);
+                Value replaced = data.put(key, value);
                 if (replaced != null) {
                     throw new JsonSyntaxException("duplicate key: " + key);
                 }

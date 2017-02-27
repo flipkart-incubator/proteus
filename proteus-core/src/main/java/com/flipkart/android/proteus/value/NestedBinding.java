@@ -21,8 +21,6 @@ package com.flipkart.android.proteus.value;
 
 import android.support.annotation.NonNull;
 
-import com.google.gson.JsonElement;
-
 import java.util.Iterator;
 import java.util.Map;
 
@@ -38,7 +36,7 @@ public class NestedBinding extends Binding {
 
     private final Value value;
 
-    NestedBinding(Value value) {
+    private NestedBinding(Value value) {
         super("", new Expression[0]);
         this.value = value;
     }
@@ -48,55 +46,8 @@ public class NestedBinding extends Binding {
      * @return
      */
     @NonNull
-    private static Value compile(@NonNull final Value value) {
-        Value compiled = value;
-        if (value.isPrimitive()) {
-            String string = value.getAsString();
-            if (isBindingValue(string)) {
-                compiled = valueOf(string);
-            }
-        } else if (value.isObject()) {
-            compiled = compile(value.getAsObject());
-        } else if (value.isArray()) {
-            compiled = compile(value.getAsArray());
-        }
-        return compiled;
-    }
-
-    /**
-     * @param object
-     * @return
-     */
-    @NonNull
-    private static ObjectValue compile(@NonNull final ObjectValue object) {
-        ObjectValue compiled = new ObjectValue();
-        for (Map.Entry<String, Value> entry : object.entrySet()) {
-            compiled.add(entry.getKey(), compile(entry.getValue()));
-        }
-        return compiled;
-    }
-
-    /**
-     * @param array
-     * @return
-     */
-    @NonNull
-    private static Array compile(@NonNull final Array array) {
-        Array compiled = new Array(array.size());
-        Iterator<Value> iterator = array.iterator();
-        while (iterator.hasNext()) {
-            compiled.add(compile(iterator.next()));
-        }
-        return compiled;
-    }
-
-    /**
-     * @param value
-     * @return
-     */
-    @NonNull
     public static NestedBinding valueOf(@NonNull final Value value) {
-        return new NestedBinding(compile(value));
+        return new NestedBinding(value);
     }
 
     @NonNull
@@ -110,15 +61,15 @@ public class NestedBinding extends Binding {
     }
 
     @Override
-    public Value evaluate(JsonElement data, int index) {
+    public Value evaluate(Value data, int index) {
         return evaluate(value, data, index);
     }
 
-    private Value evaluate(Binding binding, JsonElement data, int index) {
+    private Value evaluate(Binding binding, Value data, int index) {
         return binding.getAsBinding().evaluate(data, index);
     }
 
-    private Value evaluate(ObjectValue object, JsonElement data, int index) {
+    private Value evaluate(ObjectValue object, Value data, int index) {
         ObjectValue evaluated = new ObjectValue();
         String key;
         Value value;
@@ -131,7 +82,7 @@ public class NestedBinding extends Binding {
         return evaluated;
     }
 
-    private Value evaluate(Array array, JsonElement data, int index) {
+    private Value evaluate(Array array, Value data, int index) {
         Array evaluated = new Array(array.size());
         Iterator<Value> iterator = array.iterator();
         while (iterator.hasNext()) {
@@ -140,7 +91,7 @@ public class NestedBinding extends Binding {
         return evaluated;
     }
 
-    private Value evaluate(Value value, JsonElement data, int index) {
+    private Value evaluate(Value value, Value data, int index) {
         Value evaluated = value;
         if (value.isBinding()) {
             evaluated = evaluate(value.getAsBinding(), data, index);

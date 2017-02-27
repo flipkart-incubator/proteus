@@ -21,9 +21,6 @@ package com.flipkart.android.proteus.value;
 
 import android.support.annotation.Nullable;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -37,19 +34,6 @@ import java.util.Set;
 public class ObjectValue extends Value {
 
     private final HashMap<String, Value> members = new HashMap<>();
-
-    static ObjectValue fromJson(JsonObject json) {
-        ObjectValue object = new ObjectValue();
-        String name;
-        JsonElement element;
-        for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
-            name = entry.getKey();
-            element = entry.getValue();
-            object.add(name, Value.fromJson(element));
-        }
-
-        return object;
-    }
 
     @Override
     public ObjectValue copy() {
@@ -203,6 +187,10 @@ public class ObjectValue extends Value {
         return has(memberName) && get(memberName).isLayout();
     }
 
+    public boolean isBinding(String memberName) {
+        return has(memberName) && get(memberName).isBinding();
+    }
+
     /**
      * Returns the member with the specified name.
      *
@@ -295,6 +283,14 @@ public class ObjectValue extends Value {
     public Layout getAsLayout(String memberName) {
         if (isLayout(memberName)) {
             return (Layout) members.get(memberName);
+        }
+        return null;
+    }
+
+    @Nullable
+    public Binding getAsBinding(String memberName) {
+        if (isBinding(memberName)) {
+            return (Binding) members.get(memberName);
         }
         return null;
     }

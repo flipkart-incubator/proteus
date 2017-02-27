@@ -22,21 +22,20 @@ package com.flipkart.android.proteus.toolbox;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
-import com.google.gson.JsonElement;
+import com.flipkart.android.proteus.value.Value;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
  * Result class hold the return status and the data
- * found using {@link Utils#readJson(String, com.google.gson.JsonObject, int)}
  *
  * @author aditya.sharat
  */
 public class Result {
 
     /**
-     * Indicates that a valid {@link JsonElement} was found at the specified data path.
+     * Indicates that a valid {@link Value} was found at the specified data path.
      */
     public static final int RESULT_SUCCESS = 0;
 
@@ -47,14 +46,14 @@ public class Result {
 
     /**
      * Indicates that the data path specified is invalid. As an example, looking for a
-     * property inside a {@link com.google.gson.JsonPrimitive} or {@link com.google.gson.JsonArray}.
+     * property inside a {@link com.flipkart.android.proteus.value.Primitive} or {@link com.flipkart.android.proteus.value.Array}.
      */
     public static final int RESULT_INVALID_DATA_PATH_EXCEPTION = -2;
 
     /**
-     * Indicates that the data path prematurely led to a {@link com.google.gson.JsonNull}
+     * Indicates that the data path prematurely led to a {@link com.flipkart.android.proteus.value.Null}
      */
-    public static final int RESULT_JSON_NULL_EXCEPTION = -3;
+    public static final int RESULT_NULL_EXCEPTION = -3;
 
     /**
      * singleton for No Such Data Path Exception.
@@ -67,40 +66,40 @@ public class Result {
     public static final Result INVALID_DATA_PATH_EXCEPTION = new Result(Result.RESULT_INVALID_DATA_PATH_EXCEPTION, null);
 
     /**
-     * singleton for JSON Null Exception.
+     * singleton for Null Exception.
      */
-    public static final Result JSON_NULL_EXCEPTION = new Result(Result.RESULT_JSON_NULL_EXCEPTION, null);
+    public static final Result NULL_EXCEPTION = new Result(Result.RESULT_NULL_EXCEPTION, null);
 
     /**
      * Indicates the return status of the method for a given data path. The return value
      * will be {@code RESULT_SUCCESS} if and only if the data path exists and contains
-     * a valid {@link JsonElement}.
+     * a valid {@link com.flipkart.android.proteus.value.Value}.
      */
 
     @ResultCode
     public final int RESULT_CODE;
     /**
      * The value at the specified data path.
-     * {@code element} will be null if {@code RESULT_CODE} != {@code RESULT_SUCCESS}
+     * {@code value} will be null if {@code RESULT_CODE} != {@code RESULT_SUCCESS}
      */
 
     @Nullable
-    public final JsonElement element;
+    public final Value value;
 
-    public Result(@ResultCode int RESULT_CODE, @Nullable JsonElement element) {
+    public Result(@ResultCode int RESULT_CODE, @Nullable Value value) {
         this.RESULT_CODE = RESULT_CODE;
-        this.element = element;
+        this.value = value;
     }
 
     /**
      * This method return a {@link Result} object with {@code RESULT_CODE} == {@code RESULT_SUCCESS}
-     * and {@code this.element} == {@code element}.
+     * and {@code Result#value} == {@code value}.
      *
-     * @param element The {@link JsonElement} to be wrapped.
+     * @param value The {@link Value} to be wrapped.
      * @return A {@link Result} object with with {@code RESULT_CODE} == {@code RESULT_SUCCESS}.
      */
-    public static Result success(JsonElement element) {
-        return new Result(RESULT_SUCCESS, element);
+    public static Result success(Value value) {
+        return new Result(RESULT_SUCCESS, value);
     }
 
     /**
@@ -110,7 +109,7 @@ public class Result {
         return this.RESULT_CODE == RESULT_SUCCESS;
     }
 
-    @IntDef({RESULT_INVALID_DATA_PATH_EXCEPTION, RESULT_NO_SUCH_DATA_PATH_EXCEPTION, RESULT_SUCCESS, RESULT_JSON_NULL_EXCEPTION})
+    @IntDef({RESULT_INVALID_DATA_PATH_EXCEPTION, RESULT_NO_SUCH_DATA_PATH_EXCEPTION, RESULT_SUCCESS, RESULT_NULL_EXCEPTION})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ResultCode {
     }

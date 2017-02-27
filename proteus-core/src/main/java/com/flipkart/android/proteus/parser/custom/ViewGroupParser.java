@@ -24,11 +24,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.Scope;
 import com.flipkart.android.proteus.ViewGroupManager;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.exceptions.ProteusInflateException;
@@ -36,7 +36,6 @@ import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
-import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.Layout;
@@ -46,8 +45,6 @@ import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.util.Iterator;
 
@@ -57,14 +54,14 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     private static final String LAYOUT_MODE_OPTICAL_BOUNDS = "opticalBounds";
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusAspectRatioFrameLayout(context);
     }
 
     @Override
-    public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        Scope scope = createScope(layout, data, parent, dataIndex);
-        return new ViewGroupManager(context, this, view.getAsView(), layout, scope);
+    public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+        DataContext dataContext = createScope(layout, data, parent, dataIndex);
+        return new ViewGroupManager(context, this, view.getAsView(), layout, dataContext);
     }
 
     @Override
@@ -137,8 +134,8 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
         ProteusView proteusView = ((ProteusView) view);
         ProteusView.Manager viewManager = proteusView.getViewManager();
         ProteusLayoutInflater layoutInflater = viewManager.getContext().getInflater();
-        JsonObject data = viewManager.getScope().getData();
-        int dataIndex = viewManager.getScope().getIndex();
+        ObjectValue data = viewManager.getDataContext().getData();
+        int dataIndex = viewManager.getDataContext().getIndex();
 
         if (children.isArray()) {
             ProteusView child;
@@ -154,40 +151,34 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
 
     private void handleDataDrivenChildren(T view, Binding value) {
         ProteusView parent = ((ProteusView) view);
-        Scope scope = parent.getViewManager().getScope();
+        DataContext dataContext = parent.getViewManager().getDataContext();
         ObjectValue config = ((NestedBinding) value).getValue().getAsObject();
 
-        Value collection = config.get(ProteusConstants.COLLECTION);
+        Binding collection = config.getAsBinding(ProteusConstants.COLLECTION);
         Layout layout = config.getAsLayout(ProteusConstants.LAYOUT);
 
-        if (collection.isNull()) {
+        if (null == layout || null == collection) {
+            throw new ProteusInflateException("'collection' and 'layout' are mandatory for attribute:'children'");
+        }
+
+        Value dataset = collection.getAsBinding().evaluate(dataContext.getData(), dataContext.getIndex());
+        if (null == dataset || dataset.isNull()) {
             return;
         }
 
-        JsonElement dataset = null;
-        if (collection.isBinding()) {
-            Result result = collection.getAsBinding().getExpression(0).evaluate(scope.getData(), scope.getIndex());
-            dataset = result.isSuccess() ? result.element : null;
-        }
-
-        if (null == dataset || dataset.isJsonNull()) {
-            return;
-        }
-
-        if (!dataset.isJsonArray()) {
+        if (!dataset.isArray()) {
             throw new ProteusInflateException("'collection' in attribute:'children' must be NULL or Array");
         }
 
-        int length = dataset.getAsJsonArray().size();
+        int length = dataset.getAsArray().size();
         ProteusLayoutInflater inflater = parent.getViewManager().getContext().getInflater();
 
         ProteusView child;
         for (int index = 0; index < length; index++) {
             //noinspection ConstantConditions : We want to throw an exception if the layout is null
-            child = inflater.inflate(layout, scope.getData(), (ViewGroup) parent, index);
+            child = inflater.inflate(layout, dataContext.getData(), (ViewGroup) parent, index);
             addView(parent, child);
         }
-
     }
 
     @Override

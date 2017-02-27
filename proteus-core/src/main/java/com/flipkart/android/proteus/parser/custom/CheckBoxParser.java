@@ -32,8 +32,8 @@ import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.view.ProteusCheckBox;
-import com.google.gson.JsonObject;
 
 /**
  * Created by prateek.dixit on 1/8/15.
@@ -41,7 +41,7 @@ import com.google.gson.JsonObject;
 public class CheckBoxParser<T extends CheckBox> extends ViewTypeParser<T> {
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusCheckBox(context);
     }
 

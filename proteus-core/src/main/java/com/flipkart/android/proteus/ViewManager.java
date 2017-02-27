@@ -24,7 +24,10 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.value.Layout;
-import com.google.gson.JsonObject;
+import com.flipkart.android.proteus.value.ObjectValue;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ViewManager
@@ -43,24 +46,40 @@ public class ViewManager implements ProteusView.Manager {
     protected final Layout layout;
 
     @NonNull
-    protected final Scope scope;
+    protected final DataContext dataContext;
 
     @NonNull
     protected final ViewTypeParser parser;
 
-    private BoundAttribute[] boundAttributes;
+    protected final List<BoundAttribute> boundAttributes;
 
     public ViewManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
-                       @NonNull View view, @NonNull Layout layout, @NonNull Scope scope) {
+                       @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
         this.context = context;
         this.parser = parser;
         this.view = view;
         this.layout = layout;
-        this.scope = scope;
+        this.dataContext = dataContext;
+
+        if (null != layout.attributes) {
+            List<BoundAttribute> boundAttributes = new ArrayList<>();
+            for (Layout.Attribute attribute : layout.attributes) {
+                if (attribute.value.isBinding()) {
+                    boundAttributes.add(new BoundAttribute(attribute.id, attribute.value.getAsBinding()));
+                }
+            }
+            if (boundAttributes.size() > 0) {
+                this.boundAttributes = boundAttributes;
+            } else {
+                this.boundAttributes = null;
+            }
+        } else {
+            this.boundAttributes = null;
+        }
     }
 
     @Override
-    public void update(@Nullable JsonObject data) {
+    public void update(@Nullable ObjectValue data) {
         // update the data context so all child views can refer to new data
         if (data != null) {
             updateDataContext(data);
@@ -87,9 +106,8 @@ public class ViewManager implements ProteusView.Manager {
     }
 
     @NonNull
-    @Override
-    public Scope getScope() {
-        return scope;
+    public DataContext getDataContext() {
+        return dataContext;
     }
 
     @Nullable
@@ -98,16 +116,16 @@ public class ViewManager implements ProteusView.Manager {
         return view.findViewById(context.getInflater().getUniqueViewId(id));
     }
 
-    private void updateDataContext(JsonObject data) {
-        if (scope.isClone()) {
-            scope.setData(data);
+    private void updateDataContext(ObjectValue data) {
+        if (dataContext.isClone()) {
+            dataContext.setData(data);
         } else {
-            scope.updateDataContext(data);
+            dataContext.updateDataContext(data);
         }
     }
 
     private void handleBinding(BoundAttribute boundAttribute) {
         //noinspection unchecked
-        parser.handleAttribute(view, boundAttribute.attributeId, boundAttribute.attributeValue);
+        parser.handleAttribute(view, boundAttribute.attributeId, boundAttribute.binding);
     }
 }

@@ -27,8 +27,8 @@ import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
-import com.google.gson.JsonObject;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -55,42 +55,42 @@ public abstract class ViewTypeParser<V extends View> {
     private AttributeSet attributeSet;
 
     public abstract ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout,
-                                           @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex);
+                                           @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex);
 
     public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view,
-                                                 @NonNull Layout layout, @NonNull JsonObject data,
+                                                 @NonNull Layout layout, @NonNull ObjectValue data,
                                                  @Nullable ViewGroup parent, int dataIndex) {
-        Scope scope = createScope(layout, data, parent, dataIndex);
-        return new ViewManager(context, this, view.getAsView(), layout, scope);
+        DataContext dataContext = createScope(layout, data, parent, dataIndex);
+        return new ViewManager(context, this, view.getAsView(), layout, dataContext);
     }
 
-    protected Scope createScope(@NonNull Layout layout, @NonNull JsonObject data,
-                                @Nullable ViewGroup parent, int dataIndex) {
-        Scope scope, parentScope = null;
-        Map<String, String> map = layout.data;
+    protected DataContext createScope(@NonNull Layout layout, @NonNull ObjectValue data,
+                                      @Nullable ViewGroup parent, int dataIndex) {
+        DataContext dataContext, parentDataContext = null;
+        Map<String, Value> map = layout.data;
 
         if (parent instanceof ProteusView) {
-            parentScope = ((ProteusView) parent).getViewManager().getScope();
+            parentDataContext = ((ProteusView) parent).getViewManager().getDataContext();
         }
 
         if (map == null) {
-            if (parentScope != null) {
-                scope = new Scope(parentScope);
+            if (parentDataContext != null) {
+                dataContext = new DataContext(parentDataContext);
             } else {
-                scope = new Scope();
-                scope.setData(data);
-                scope.setIndex(dataIndex);
+                dataContext = new DataContext();
+                dataContext.setData(data);
+                dataContext.setIndex(dataIndex);
             }
         } else {
-            if (parentScope != null) {
-                scope = parentScope.createChildScope(map, dataIndex);
+            if (parentDataContext != null) {
+                dataContext = parentDataContext.createChildScope(map, dataIndex);
             } else {
-                scope = new Scope();
-                scope.setData(data);
-                scope = scope.createChildScope(map, dataIndex);
+                dataContext = new DataContext();
+                dataContext.setData(data);
+                dataContext = dataContext.createChildScope(map, dataIndex);
             }
         }
-        return scope;
+        return dataContext;
     }
 
     public void onAfterCreateView(@NonNull ProteusView view, @Nullable ViewGroup parent, int dataIndex) {

@@ -46,7 +46,6 @@ import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.Iterator;
 
@@ -146,8 +145,7 @@ public class AnimationUtils {
      * @return The animation object reference by the specified id
      * @throws android.content.res.Resources.NotFoundException
      */
-    public static Interpolator loadInterpolator(Context context, Value value)
-            throws Resources.NotFoundException {
+    public static Interpolator loadInterpolator(Context context, Value value) throws Resources.NotFoundException {
         Interpolator interpolator = null;
         if (value.isPrimitive()) {
             interpolator = handleStringInterpolator(context, value.getAsString());
@@ -284,25 +282,15 @@ public class AnimationUtils {
         public static final String START_OFFSET = "startOffset";
         public static final String Z_ADJUSTMENT = "zAdjustment";
 
-        @SerializedName("detachWallpaper")
         Boolean detachWallpaper;
-        @SerializedName("duration")
         Long duration;
-        @SerializedName("fillAfter")
         Boolean fillAfter;
-        @SerializedName("fillBefore")
         Boolean fillBefore;
-        @SerializedName("fillEnabled")
         Boolean fillEnabled;
-        @SerializedName("interpolator")
         Value interpolator;
-        @SerializedName("repeatCount")
         Integer repeatCount;
-        @SerializedName("repeatMode")
         Integer repeatMode;
-        @SerializedName("startOffset")
         Long startOffset;
-        @SerializedName("zAdjustment")
         Integer zAdjustment;
 
         public AnimationProperties(ObjectValue value) {
@@ -375,9 +363,7 @@ public class AnimationUtils {
         public static final String SHARE_INTERPOLATOR = "shareInterpolator";
         public static final String CHILDREN = "children";
 
-        @SerializedName("shareInterpolator")
         Boolean shareInterpolator;
-        @SerializedName("children")
         Value children;
 
         public AnimationSetProperties(ObjectValue value) {
@@ -415,9 +401,7 @@ public class AnimationUtils {
         public static final String FROM_ALPHA = "fromAlpha";
         public static final String TO_ALPHA = "toAlpha";
 
-        @SerializedName("fromAlpha")
         public Float fromAlpha;
-        @SerializedName("toAlpha")
         public Float toAlpha;
 
         public AlphaAnimProperties(ObjectValue value) {
@@ -441,27 +425,21 @@ public class AnimationUtils {
         public static final String PIVOT_X = "pivotX";
         public static final String PIVOT_Y = "pivotY";
 
-        @SerializedName("fromXScale")
         public Float fromXScale;
-        @SerializedName("toXScale")
         public Float toXScale;
-        @SerializedName("fromYScale")
         public Float fromYScale;
-        @SerializedName("toYScale")
         public Float toYScale;
-        @SerializedName("pivotX")
         public Value pivotX;
-        @SerializedName("pivotY")
         public Value pivotY;
 
         public ScaleAnimProperties(ObjectValue value) {
             super(value);
             fromXScale = value.getAsFloat(FROM_X_SCALE);
-            toXScale = value.getAsFloat(FROM_X_SCALE);
-            fromYScale = value.getAsFloat(FROM_X_SCALE);
-            toYScale = value.getAsFloat(FROM_X_SCALE);
-            pivotX = value.get(FROM_X_SCALE);
-            pivotY = value.get(FROM_X_SCALE);
+            toXScale = value.getAsFloat(TO_X_SCALE);
+            fromYScale = value.getAsFloat(FROM_Y_SCALE);
+            toYScale = value.getAsFloat(TO_Y_SCALE);
+            pivotX = value.get(PIVOT_X);
+            pivotY = value.get(PIVOT_Y);
         }
 
         @Override
@@ -483,13 +461,9 @@ public class AnimationUtils {
         public static final String FROM_Y_DELTA = "fromYDelta";
         public static final String TO_Y_DELTA = "toYDelta";
 
-        @SerializedName("fromXDelta")
         public Value fromXDelta;
-        @SerializedName("toXDelta")
         public Value toXDelta;
-        @SerializedName("fromYDelta")
         public Value fromYDelta;
-        @SerializedName("toYDelta")
         public Value toYDelta;
 
         public TranslateAnimProperties(ObjectValue value) {
@@ -518,13 +492,9 @@ public class AnimationUtils {
         public static final String PIVOT_X = "pivotX";
         public static final String PIVOT_Y = "pivotY";
 
-        @SerializedName("fromDegrees")
         public Float fromDegrees;
-        @SerializedName("toDegrees")
         public Float toDegrees;
-        @SerializedName("pivotX")
         public Value pivotX;
-        @SerializedName("pivotY")
         public Value pivotY;
 
         public RotateAnimProperties(ObjectValue value) {
@@ -563,13 +533,9 @@ public class AnimationUtils {
         public static final String CONTROL_X2 = "controlX2";
         public static final String CONTROL_Y2 = "controlY2";
 
-        @SerializedName("controlX1")
         public Float controlX1;
-        @SerializedName("controlY1")
         public Float controlY1;
-        @SerializedName("controlX2")
         public Float controlX2;
-        @SerializedName("controlY2")
         public Float controlY2;
 
         public PathInterpolatorProperties(ObjectValue parser) {
@@ -594,7 +560,6 @@ public class AnimationUtils {
 
         public static final String TENSION = "tension";
 
-        @SerializedName("tension")
         public Float tension;
 
         public AnticipateInterpolatorProperties(ObjectValue parser) {
@@ -611,7 +576,6 @@ public class AnimationUtils {
 
         public static final String TENSION = "tension";
 
-        @SerializedName("tension")
         public Float tension;
 
         public OvershootInterpolatorProperties(ObjectValue parser) {
@@ -629,9 +593,7 @@ public class AnimationUtils {
         public static final String TENSION = "tension";
         public static final String EXTRA_TENSION = "extraTension";
 
-        @SerializedName("tension")
         public Float tension;
-        @SerializedName("extraTension")
         public Float extraTension;
 
         public AnticipateOvershootInterpolatorProperties(ObjectValue parser) {
@@ -649,7 +611,6 @@ public class AnimationUtils {
 
         public static final String CYCLES = "cycles";
 
-        @SerializedName("cycles")
         public Float cycles;
 
         public CycleInterpolatorProperties(ObjectValue parser) {

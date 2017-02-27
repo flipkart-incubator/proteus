@@ -50,7 +50,6 @@ import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.view.ProteusProgressBar;
-import com.google.gson.JsonObject;
 
 /**
  * @author Aditya Sharat
@@ -58,7 +57,7 @@ import com.google.gson.JsonObject;
 public class ProgressBarParser<T extends ProgressBar> extends ViewTypeParser<T> {
 
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusProgressBar(context);
     }
 

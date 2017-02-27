@@ -22,10 +22,7 @@ package com.flipkart.android.proteus;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.reflect.TypeToken;
-
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -49,8 +46,6 @@ public class SimpleIdGenerator implements IdGenerator {
             return new SimpleIdGenerator[size];
         }
     };
-    private static final ClassLoader ID_MAP_CLASS_LOADER = new TypeToken<Map<String, Integer>>() {
-    }.getClass().getClassLoader();
     private final HashMap<String, Integer> idMap = new HashMap<>();
     private final AtomicInteger sNextGeneratedId;
 
@@ -60,7 +55,7 @@ public class SimpleIdGenerator implements IdGenerator {
 
     public SimpleIdGenerator(Parcel source) {
         sNextGeneratedId = new AtomicInteger(source.readInt());
-        source.readMap(idMap, ID_MAP_CLASS_LOADER);
+        source.readMap(idMap, null);
     }
 
     /**

@@ -25,9 +25,6 @@ import android.util.LruCache;
 
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Result;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 
 import java.util.Arrays;
 import java.util.StringTokenizer;
@@ -112,24 +109,24 @@ public class Binding extends Value {
      * @param index
      * @return
      */
-    public Value evaluate(JsonElement data, int index) {
+    public Value evaluate(Value data, int index) {
         Value empty = StringAttributeProcessor.EMPTY;
         Result result;
         // the string object compare can be safely used here,
         // do not convert it to .equals()
         if (expressions.length == 1 && template == EMPTY_TEMPLATE) {
             result = expressions[0].evaluate(data, index);
-            return result.isSuccess() ? Value.fromJson(result.element) : empty;
+            return result.isSuccess() ? result.value : empty;
         } else {
             String[] variables = new String[expressions.length];
             String variable;
             for (int i = 0; i < expressions.length; i++) {
                 result = expressions[i].evaluate(data, index);
                 if (result.isSuccess()) {
-                    if (result.element.isJsonPrimitive()) {
-                        variable = result.element.getAsString();
+                    if (result.value.isPrimitive()) {
+                        variable = result.value.getAsString();
                     } else {
-                        variable = result.element.toString();
+                        variable = result.value.toString();
                     }
                 } else {
                     variable = EMPTY_STRING;
@@ -193,28 +190,28 @@ public class Binding extends Value {
          * @param index
          * @return
          */
-        public Result evaluate(JsonElement data, int index) {
+        public Result evaluate(Value data, int index) {
             // replace INDEX with index value
             if (tokens.length == 1 && INDEX.equals(tokens[0])) {
-                return Result.success(new JsonPrimitive(String.valueOf(index)));
+                return Result.success(new Primitive(String.valueOf(index)));
             } else {
-                JsonElement elementToReturn = data;
-                JsonElement tempElement;
-                JsonArray tempArray;
+                Value elementToReturn = data;
+                Value tempElement;
+                Array tempArray;
 
                 for (int i = 0; i < tokens.length; i++) {
                     String segment = tokens[i];
                     if (elementToReturn == null) {
                         return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                     }
-                    if (elementToReturn.isJsonNull()) {
-                        return Result.JSON_NULL_EXCEPTION;
+                    if (elementToReturn.isNull()) {
+                        return Result.NULL_EXCEPTION;
                     }
                     if ("".equals(segment)) {
                         continue;
                     }
-                    if (elementToReturn.isJsonArray()) {
-                        tempArray = elementToReturn.getAsJsonArray();
+                    if (elementToReturn.isArray()) {
+                        tempArray = elementToReturn.getAsArray();
 
                         if (INDEX.equals(segment)) {
                             if (index < tempArray.size()) {
@@ -223,7 +220,7 @@ public class Binding extends Value {
                                 return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                             }
                         } else if (ARRAY_DATA_LENGTH_REFERENCE.equals(segment)) {
-                            elementToReturn = new JsonPrimitive(tempArray.size());
+                            elementToReturn = new Primitive(tempArray.size());
                         } else if (ARRAY_DATA_LAST_INDEX_REFERENCE.equals(segment)) {
                             if (tempArray.size() == 0) {
                                 return Result.NO_SUCH_DATA_PATH_EXCEPTION;
@@ -241,21 +238,21 @@ public class Binding extends Value {
                                 return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                             }
                         }
-                    } else if (elementToReturn.isJsonObject()) {
-                        tempElement = elementToReturn.getAsJsonObject().get(segment);
+                    } else if (elementToReturn.isObject()) {
+                        tempElement = elementToReturn.getAsObject().get(segment);
                         if (tempElement != null) {
                             elementToReturn = tempElement;
                         } else {
                             return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                         }
-                    } else if (elementToReturn.isJsonPrimitive()) {
+                    } else if (elementToReturn.isPrimitive()) {
                         return Result.INVALID_DATA_PATH_EXCEPTION;
                     } else {
                         return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                     }
                 }
-                if (elementToReturn.isJsonNull()) {
-                    return Result.JSON_NULL_EXCEPTION;
+                if (elementToReturn.isNull()) {
+                    return Result.NULL_EXCEPTION;
                 }
                 return Result.success(elementToReturn);
             }

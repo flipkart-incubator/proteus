@@ -27,8 +27,8 @@ import android.view.ViewGroup;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
-import com.google.gson.JsonObject;
 
 /**
  * @author kirankumar
@@ -37,37 +37,37 @@ import com.google.gson.JsonObject;
 public interface ProteusLayoutInflater {
 
     /**
-     * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
+     * This methods builds a {@link ProteusView}
      *
      * @param layout    The {@link Layout} which defines the layout for the {@link View} to be built.
-     * @param data      The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
+     * @param data      The {@link ObjectValue} which will be used to replace bindings with values in the {@link View}.
      * @param parent    The intended parent view for the {@link View} that will be built.
      * @param dataIndex The index of this view in its parent. Pass 0 if it has no parent.
      * @return An native android view
      */
     @NonNull
-    ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex);
+    ProteusView inflate(@NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex);
 
     /**
-     * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
+     * This methods builds a {@link ProteusView}
      *
      * @param layout    The {@link Layout} which defines the layout for the {@link View} to be built.
-     * @param data      The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
+     * @param data      The {@link ObjectValue} which will be used to replace bindings with values in the {@link View}.
      * @param dataIndex The index of this view in its parent. Pass 0 if it has no parent.
      * @return An native android view
      */
     @NonNull
-    ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data, int dataIndex);
+    ProteusView inflate(@NonNull Layout layout, @NonNull ObjectValue data, int dataIndex);
 
     /**
-     * This methods builds a {@link ProteusView} from a layout {@link JsonObject} and data {@link JsonObject}.
+     * This methods inflates a {@link ProteusView}
      *
      * @param layout The {@link Layout} which defines the layout for the {@link View} to be built.
-     * @param data   The {@link JsonObject} which will be used to replace bindings with values in the {@link View}.
+     * @param data   The {@link ObjectValue} which will be used to replace bindings with values in the {@link View}.
      * @return An native android view
      */
     @NonNull
-    ProteusView inflate(@NonNull Layout layout, @NonNull JsonObject data);
+    ProteusView inflate(@NonNull Layout layout, @NonNull ObjectValue data);
 
     /**
      * @param name
@@ -77,7 +77,7 @@ public interface ProteusLayoutInflater {
      * @return
      */
     @NonNull
-    ProteusView inflate(@NonNull String name, @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex);
+    ProteusView inflate(@NonNull String name, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex);
 
     /**
      * @param name
@@ -86,7 +86,7 @@ public interface ProteusLayoutInflater {
      * @return
      */
     @NonNull
-    ProteusView inflate(@NonNull String name, @NonNull JsonObject data, int dataIndex);
+    ProteusView inflate(@NonNull String name, @NonNull ObjectValue data, int dataIndex);
 
     /**
      * @param name
@@ -94,7 +94,7 @@ public interface ProteusLayoutInflater {
      * @return
      */
     @NonNull
-    ProteusView inflate(@NonNull String name, @NonNull JsonObject data);
+    ProteusView inflate(@NonNull String name, @NonNull ObjectValue data);
 
     /**
      * Returns the {@link ViewTypeParser} for the specified view type.
@@ -132,7 +132,7 @@ public interface ProteusLayoutInflater {
          * called when the builder encounters a view type which it cannot understand.
          */
         @NonNull
-        ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, JsonObject data, int index);
+        ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, ObjectValue data, int index);
 
         /**
          * called when any click occurs on views

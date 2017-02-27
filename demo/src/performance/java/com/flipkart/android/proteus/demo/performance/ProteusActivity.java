@@ -27,8 +27,8 @@ import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.demo.R;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
@@ -45,7 +45,7 @@ public class ProteusActivity extends BaseActivity {
     private ProteusLayoutInflater builder;
     private FrameLayout container;
     private Layout pageLayout;
-    private JsonObject data;
+    private ObjectValue data;
     private ViewGroup.LayoutParams layoutParams;
 
     @Override
@@ -54,7 +54,7 @@ public class ProteusActivity extends BaseActivity {
         Map<String, Layout> layoutProvider = getProviderFromFile(R.raw.layout_provider);
         pageLayout = getPageLayout(R.raw.page_layout);
 
-        data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
+        data = getJsonFromFile(R.raw.data_init);
 
         Proteus proteus = new ProteusBuilder().build();
 
@@ -85,10 +85,10 @@ public class ProteusActivity extends BaseActivity {
         com.flipkart.android.proteus.demo.performance.PerformanceTracker.instance(this).updateProteusRenderTime(time);
     }
 
-    private JsonElement getJsonFromFile(int resId) {
+    private ObjectValue getJsonFromFile(int resId) {
         InputStream inputStream = getResources().openRawResource(resId);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        return gson.fromJson(reader, JsonElement.class);
+        return gson.fromJson(reader, ObjectValue.class);
     }
 
     private Layout getPageLayout(int resId) {
