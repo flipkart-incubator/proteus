@@ -224,12 +224,20 @@ public class ProteusActivity extends AppCompatActivity {
     }
 
     private void render() {
+
+        // remove the current view
         container.removeAllViews();
+
         // Inflate a new view using proteus
         long start = System.currentTimeMillis();
         ProteusView view = layoutInflater.inflate(layout, data, container, 0);
         System.out.println(System.currentTimeMillis() - start);
+
         container.addView(view.getAsView());
+
+        // lets call GC for benchmarking purposes
+        // not required for release builds
+        System.gc();
     }
 
     private void fetch() {
