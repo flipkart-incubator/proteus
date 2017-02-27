@@ -140,14 +140,20 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return inflate(name, data, null, -1);
     }
 
-    protected ProteusView createView(@NonNull ViewTypeParser parser, @NonNull Layout layout,
-                                     @NonNull JsonObject data, @Nullable ViewGroup parent, int dataIndex) {
-        return parser.createView(context, layout, data, parent, dataIndex);
+    @Override
+    public int getUniqueViewId(@NonNull String id) {
+        return idGenerator.getUnique(id);
     }
 
-    protected void onAfterCreateView(@NonNull ViewTypeParser parser, @NonNull ProteusView view,
-                                     @Nullable ViewGroup parent, int index) {
-        parser.onAfterCreateView(view, parent, index);
+    @NonNull
+    @Override
+    public IdGenerator getIdGenerator() {
+        return idGenerator;
+    }
+
+    protected ProteusView createView(@NonNull ViewTypeParser parser, @NonNull Layout layout, @NonNull JsonObject data,
+                                     @Nullable ViewGroup parent, int dataIndex) {
+        return parser.createView(context, layout, data, parent, dataIndex);
     }
 
     protected ProteusView.Manager createViewManager(@NonNull ViewTypeParser parser, @NonNull ProteusView view, @NonNull Layout layout,
@@ -155,12 +161,8 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         return parser.createViewManager(context, view, layout, data, parent, dataIndex);
     }
 
-    protected boolean handleAttribute(@NonNull ViewTypeParser parser, @NonNull ProteusView view, int attribute, @NonNull Value value) {
-        if (ProteusConstants.isLoggingEnabled()) {
-            Log.d(TAG, "Handle '" + attribute + "' : " + value);
-        }
-        //noinspection unchecked
-        return parser.handleAttribute(view.getAsView(), attribute, value);
+    protected void onAfterCreateView(@NonNull ViewTypeParser parser, @NonNull ProteusView view, @Nullable ViewGroup parent, int index) {
+        parser.onAfterCreateView(view, parent, index);
     }
 
     @NonNull
@@ -178,14 +180,11 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
         throw new ProteusInflateException("Layout contains type: 'include' but inflater callback is null");
     }
 
-    @Override
-    public int getUniqueViewId(@NonNull String id) {
-        return idGenerator.getUnique(id);
-    }
-
-    @NonNull
-    @Override
-    public IdGenerator getIdGenerator() {
-        return idGenerator;
+    protected boolean handleAttribute(@NonNull ViewTypeParser parser, @NonNull ProteusView view, int attribute, @NonNull Value value) {
+        if (ProteusConstants.isLoggingEnabled()) {
+            Log.d(TAG, "Handle '" + attribute + "' : " + value);
+        }
+        //noinspection unchecked
+        return parser.handleAttribute(view.getAsView(), attribute, value);
     }
 }
