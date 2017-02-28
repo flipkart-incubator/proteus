@@ -74,21 +74,37 @@ public abstract class Formatter {
         }
     };
 
+    @SuppressLint("SimpleDateFormat")
     public static final Formatter DATE = new Formatter() {
 
-        @SuppressLint("SimpleDateFormat")
         private SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        @SuppressLint("SimpleDateFormat")
-        private SimpleDateFormat to = new SimpleDateFormat("d MMM, E");
+        private SimpleDateFormat to = new SimpleDateFormat("E, d MMM");
 
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             try {
-                // 2015-06-18 12:01:37
-                Date date = from.parse(data.getAsString());
-                return new Primitive(to.format(date));
+                // data should for of the format : 2015-06-18 12:01:37
+                Date in = getFromFormat(arguments).parse(data.getAsString());
+                String out = getToFormat(arguments).format(in);
+                return new Primitive(out);
             } catch (Exception e) {
                 return data;
+            }
+        }
+
+        private SimpleDateFormat getFromFormat(Value[] arguments) {
+            if (arguments.length > 1) {
+                return new SimpleDateFormat(arguments[1].getAsString());
+            } else {
+                return from;
+            }
+        }
+
+        private SimpleDateFormat getToFormat(Value[] arguments) {
+            if (arguments.length > 0) {
+                return new SimpleDateFormat(arguments[0].getAsString());
+            } else {
+                return to;
             }
         }
 

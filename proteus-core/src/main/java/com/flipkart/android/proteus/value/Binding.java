@@ -41,7 +41,6 @@ import java.util.regex.Pattern;
  */
 public class Binding extends Value {
 
-    public static final char FORMATTER_ARG_PREFIX = '(';
     public static final char BINDING_PREFIX = '~';
     public static final String EMPTY_STRING = "";
     public static final String EMPTY_TEMPLATE = EMPTY_STRING;
@@ -52,6 +51,7 @@ public class Binding extends Value {
     public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
     public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{(\\S+)\\}\\$\\{(\\S+)\\}|@\\{(\\S+)\\}");
     public static final Pattern FORMATTER_PATTERN = Pattern.compile(",(?=(?:[^']*'[^']*')*[^']*$)");
+    public static final char FORMATTER_ARG_PREFIX = '(';
 
     public final String template;
     private final Expression[] expressions;
@@ -197,21 +197,30 @@ public class Binding extends Value {
         private static Pair<Formatter, Value[]> valueOf(String value, FormatterManager manager) {
             int index = value.indexOf(FORMATTER_ARG_PREFIX);
             String name = value.substring(0, index);
-            String section = value.substring(index, value.length());
-            String[] tokens = FORMATTER_PATTERN.split(section);
-            Value[] arguments = new Value[tokens.length];
-            String token;
-            Value resolved;
-            for (int i = 0; i < tokens.length; i++) {
-                token = tokens[i];
-                if (isBindingValue(tokens[i])) {
-                    resolved = Binding.valueOf(token, manager);
-                } else {
-                    resolved = new Primitive(token);
+            String section = value.substring(index + 1, value.length() - 1);
+
+            if (section.isEmpty()) {
+                return new Pair<>(manager.get(name), new Value[0]);
+            } else {
+                String[] tokens = FORMATTER_PATTERN.split(section);
+                Value[] arguments = new Value[tokens.length];
+                String token;
+                Value resolved;
+                for (int i = 0; i < tokens.length; i++) {
+                    token = tokens[i];
+                    if (isBindingValue(tokens[i])) {
+                        resolved = Binding.valueOf(token, manager);
+                    } else {
+                        if (!token.isEmpty() && token.charAt(0) == '\'') {
+                            token = token.substring(1, token.length() - 1);
+                        }
+                        resolved = new Primitive(token);
+                    }
+                    arguments[i] = resolved;
                 }
-                arguments[i] = resolved;
+
+                return new Pair<>(manager.get(name), arguments);
             }
-            return new Pair<>(manager.get(name), arguments);
         }
 
         /**
@@ -227,15 +236,16 @@ public class Binding extends Value {
          * @param index @return
          */
         public Result evaluate(Value data, int index) {
-            Result result = resolve(data, index);
+            Result result = resolveData(data, index);
             if (null == this.formatter) {
                 return result;
             } else {
-                return Result.success(this.formatter.format(result.value, index, this.arguments));
+                Value resolved = this.formatter.format(result.value, index, resolveArguments(data, index));
+                return Result.success(resolved);
             }
         }
 
-        private Result resolve(Value data, int index) {
+        private Result resolveData(Value data, int index) {
             // replace INDEX with index value
             if (tokens.length == 1 && INDEX.equals(tokens[0])) {
                 return Result.success(new Primitive(String.valueOf(index)));
@@ -301,6 +311,23 @@ public class Binding extends Value {
                 }
                 return Result.success(elementToReturn);
             }
+        }
+
+        private Value[] resolveArguments(Value data, int index) {
+            //noinspection ConstantConditions because we want it to crash, it is an illegal state anyway
+            Value[] arguments = new Value[this.arguments.length];
+            Value argument, resolved;
+            for (int i = 0; i < this.arguments.length; i++) {
+                argument = this.arguments[i];
+                if (argument.isBinding()) {
+                    resolved = argument.getAsBinding().evaluate(data, index);
+                } else {
+                    resolved = argument;
+                }
+                arguments[i] = resolved;
+            }
+
+            return arguments;
         }
 
         /**
