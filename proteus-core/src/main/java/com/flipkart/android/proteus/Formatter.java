@@ -50,7 +50,7 @@ public abstract class Formatter {
 
     public static final Formatter NUMBER = new Formatter() {
 
-        private DecimalFormat formatter;
+        private final DecimalFormat formatter = new DecimalFormat("#,###");
 
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -60,7 +60,6 @@ public abstract class Formatter {
             } catch (NumberFormatException e) {
                 return data;
             }
-            formatter = new DecimalFormat("#,###");
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
                 formatter.setRoundingMode(RoundingMode.FLOOR);
             }
