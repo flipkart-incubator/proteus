@@ -22,6 +22,7 @@ package com.flipkart.android.proteus.parser.custom;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
@@ -187,13 +188,30 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
         }
 
         int length = dataset.getAsArray().size();
+        int count = view.getChildCount();
+        ObjectValue data = dataContext.getData();
         ProteusLayoutInflater inflater = manager.getContext().getInflater();
-
         ProteusView child;
+        View temp;
+
+        if (count > length) {
+            while (count > length) {
+                count--;
+                view.removeViewAt(count);
+            }
+        }
+
         for (int index = 0; index < length; index++) {
-            //noinspection ConstantConditions : We want to throw an exception if the layout is null
-            child = inflater.inflate(layout, dataContext.getData(), (ViewGroup) parent, index);
-            addView(parent, child);
+            if (index < count) {
+                temp = view.getChildAt(index);
+                if (temp instanceof ProteusView) {
+                    ((ProteusView) temp).getViewManager().update(data);
+                }
+            } else {
+                //noinspection ConstantConditions : We want to throw an exception if the layout is null
+                child = inflater.inflate(layout, data, view, index);
+                addView(parent, child);
+            }
         }
     }
 
