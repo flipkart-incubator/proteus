@@ -51,6 +51,7 @@ public class RelativeLayoutParser<T extends RelativeLayout> extends ViewTypePars
         return "ViewGroup";
     }
 
+    @NonNull
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusRelativeLayout(context);

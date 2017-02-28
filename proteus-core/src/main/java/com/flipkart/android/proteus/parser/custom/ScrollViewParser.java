@@ -51,6 +51,7 @@ public class ScrollViewParser<T extends ScrollView> extends ViewTypeParser<T> {
         return "FrameLayout";
     }
 
+    @NonNull
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusScrollView(context);

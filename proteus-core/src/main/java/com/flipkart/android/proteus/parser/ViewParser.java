@@ -83,6 +83,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
         return null;
     }
 
+    @NonNull
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusAndroidView(parent.getContext());
