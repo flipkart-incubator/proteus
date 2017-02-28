@@ -51,6 +51,7 @@ public class CircleViewParser extends ViewTypeParser<CircleView> {
         return "View";
     }
 
+    @NonNull
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new CircleView(context);

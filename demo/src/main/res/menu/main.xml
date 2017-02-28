@@ -26,6 +26,15 @@
         android:orderInCategory="100"
         android:icon="@android:drawable/ic_dialog_info"
         app:showAsAction="always"
-        tools:ignore="HardcodedText"/>
+        tools:ignore="HardcodedText"
+        android:title="render"/>
+
+    <item
+        android:id="@+id/update"
+        android:orderInCategory="100"
+        android:icon="@android:drawable/ic_dialog_alert"
+        app:showAsAction="always"
+        tools:ignore="HardcodedText"
+        android:title="update"/>
 
 </menu>

@@ -46,12 +46,14 @@ public abstract class ViewTypeParser<V extends View> {
     private static XmlResourceParser sParser = null;
 
     @Nullable
-    private ViewTypeParser parent;
+    public ViewTypeParser parent;
+
     private AttributeProcessor[] processors = new AttributeProcessor[0];
 
     private Map<String, AttributeSet.Attribute> attributes = new HashMap<>();
 
     private int offset;
+
     private AttributeSet attributeSet;
 
     /**
@@ -66,20 +68,48 @@ public abstract class ViewTypeParser<V extends View> {
     @Nullable
     public abstract String getParentType();
 
+    /**
+     * @param context
+     * @param layout
+     * @param data
+     * @param parent
+     * @param dataIndex
+     * @return
+     */
+    @NonNull
     public abstract ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout,
                                            @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex);
 
+    /**
+     * @param context
+     * @param view
+     * @param layout
+     * @param data
+     * @param fallback
+     * @param parent
+     * @param dataIndex @return
+     */
+    @NonNull
     public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view,
                                                  @NonNull Layout layout, @NonNull ObjectValue data,
-                                                 @Nullable ViewGroup parent, int dataIndex) {
-        if (null == this.parent) {
-            DataContext dataContext = createScope(layout, data, parent, dataIndex);
-            return new ViewManager(context, this, view.getAsView(), layout, dataContext);
+                                                 @Nullable ViewTypeParser fallback, @Nullable ViewGroup parent,
+                                                 int dataIndex) {
+        if (null != this.parent && fallback == this.parent) {
+            return this.parent.createViewManager(context, view, layout, data, this, parent, dataIndex);
         } else {
-            return this.parent.createViewManager(context, view, layout, data, parent, dataIndex);
+            DataContext dataContext = createScope(layout, data, parent, dataIndex);
+            return new ViewManager(context, fallback != null ? fallback : this, view.getAsView(), layout, dataContext);
         }
     }
 
+    /**
+     * @param layout
+     * @param data
+     * @param parent
+     * @param dataIndex
+     * @return
+     */
+    @NonNull
     protected DataContext createScope(@NonNull Layout layout, @NonNull ObjectValue data,
                                       @Nullable ViewGroup parent, int dataIndex) {
         DataContext dataContext, parentDataContext = null;
@@ -109,6 +139,11 @@ public abstract class ViewTypeParser<V extends View> {
         return dataContext;
     }
 
+    /**
+     * @param view
+     * @param parent
+     * @param dataIndex
+     */
     public void onAfterCreateView(@NonNull ProteusView view, @Nullable ViewGroup parent, int dataIndex) {
         View v = view.getAsView();
         if (null == v.getLayoutParams()) {
@@ -122,8 +157,17 @@ public abstract class ViewTypeParser<V extends View> {
         }
     }
 
+    /**
+     *
+     */
     protected abstract void addAttributeProcessors();
 
+    /**
+     * @param view
+     * @param attributeId
+     * @param value
+     * @return
+     */
     public boolean handleAttribute(V view, int attributeId, Value value) {
         int position = getPosition(attributeId);
         if (position < 0) {
@@ -136,15 +180,29 @@ public abstract class ViewTypeParser<V extends View> {
         return true;
     }
 
+    /**
+     * @param view
+     * @param children
+     * @return
+     */
     public boolean handleChildren(V view, Value children) {
         //noinspection unchecked
         return null != parent && parent.handleChildren(view, children);
     }
 
+    /**
+     * @param parent
+     * @param view
+     * @return
+     */
     public boolean addView(ProteusView parent, ProteusView view) {
         return null != this.parent && this.parent.addView(parent, view);
     }
 
+    /**
+     * @param parent
+     * @return
+     */
     @NonNull
     public AttributeSet prepare(@Nullable ViewTypeParser parent) {
         this.parent = parent;
@@ -156,9 +214,30 @@ public abstract class ViewTypeParser<V extends View> {
         return attributeSet;
     }
 
+    /**
+     * @param name
+     * @param processor
+     */
     public void addAttributeProcessor(String name, AttributeProcessor<V> processor) {
         addAttributeProcessor(processor);
         attributes.put(name, new AttributeSet.Attribute(getAttributeId(processors.length - 1), processor));
+    }
+
+    /**
+     * @param name
+     * @return
+     */
+    public int getAttributeId(String name) {
+        AttributeSet.Attribute attribute = attributeSet.getAttribute(name);
+        return null != attribute ? attribute.id : -1;
+    }
+
+    /**
+     * @return
+     */
+    @NonNull
+    public AttributeSet getAttributeSet() {
+        return this.attributeSet;
     }
 
     private void addAttributeProcessor(AttributeProcessor<V> handler) {
@@ -176,15 +255,6 @@ public abstract class ViewTypeParser<V extends View> {
 
     private int getAttributeId(int position) {
         return position - getOffset();
-    }
-
-    public int getAttributeId(String name) {
-        AttributeSet.Attribute attribute = attributeSet.getAttribute(name);
-        return null != attribute ? attribute.id : -1;
-    }
-
-    public AttributeSet getAttributeSet() {
-        return this.attributeSet;
     }
 
     private ViewGroup.LayoutParams generateDefaultLayoutParams(@NonNull ViewGroup parent) {
@@ -217,6 +287,9 @@ public abstract class ViewTypeParser<V extends View> {
         }
     }
 
+    /**
+     * @author adityasharat
+     */
     public static class AttributeSet {
 
         @Nullable

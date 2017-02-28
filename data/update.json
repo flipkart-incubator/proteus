@@ -1,0 +1,30 @@
+{
+  "user": {
+    "name": "Jane Doe",
+    "location": {
+      "country": "U.S.",
+      "city": "New York",
+      "pincode": "123456"
+    },
+    "credits": 41310,
+    "level": 6,
+    "achievements": {
+      "current": 32,
+      "max": 48
+    },
+    "experience": {
+      "current": 6627,
+      "max": 9999
+    },
+    "tags": [
+      "eenie",
+      "meenie",
+      "miney",
+      "mo"
+    ],
+    "ll": "2017-02-03 16:05:03"
+  },
+  "theme": {
+    "color": "#ee8899"
+  }
+}

@@ -158,7 +158,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     protected ProteusView.Manager createViewManager(@NonNull ViewTypeParser parser, @NonNull ProteusView view, @NonNull Layout layout,
                                                     @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-        return parser.createViewManager(context, view, layout, data, parent, dataIndex);
+        return parser.createViewManager(context, view, layout, data, parser.parent, parent, dataIndex);
     }
 
     protected void onAfterCreateView(@NonNull ViewTypeParser parser, @NonNull ProteusView view, @Nullable ViewGroup parent, int index) {

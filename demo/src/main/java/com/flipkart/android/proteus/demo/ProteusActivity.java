@@ -80,6 +80,7 @@ public class ProteusActivity extends AppCompatActivity {
 
     private ObjectValue data;
     private Layout layout;
+    private ProteusView view;
 
     private Styles styles;
     private Map<String, Layout> layouts;
@@ -230,14 +231,44 @@ public class ProteusActivity extends AppCompatActivity {
 
         // Inflate a new view using proteus
         long start = System.currentTimeMillis();
-        ProteusView view = layoutInflater.inflate(layout, data, container, 0);
-        System.out.println(System.currentTimeMillis() - start);
+        view = layoutInflater.inflate(layout, data, container, 0);
+        System.out.println("render: " + (System.currentTimeMillis() - start));
 
         container.addView(view.getAsView());
 
         // lets call GC for benchmarking purposes
         // not required for release builds
         System.gc();
+    }
+
+    private void update() {
+        new AsyncTask<Void, Void, ObjectValue>() {
+
+            @Override
+            protected ObjectValue doInBackground(Void... params) {
+                try {
+
+                    Call<ObjectValue> callData = resources.get("update.json");
+                    return callData.execute().body();
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(ObjectValue data) {
+                super.onPostExecute(data);
+                try {
+                    long start = System.currentTimeMillis();
+                    view.getViewManager().update(data);
+                    System.out.println("update: " + (System.currentTimeMillis() - start));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute();
     }
 
     private void fetch() {
@@ -292,9 +323,13 @@ public class ProteusActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.render) {
-            render();
-            return true;
+        switch (id) {
+            case R.id.render:
+                render();
+                return true;
+            case R.id.update:
+                update();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
