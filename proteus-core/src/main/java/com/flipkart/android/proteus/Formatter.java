@@ -23,6 +23,7 @@ import android.annotation.SuppressLint;
 import android.os.Build;
 
 import com.flipkart.android.proteus.toolbox.Utils;
+import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Value;
 
 import java.math.RoundingMode;
@@ -37,11 +38,8 @@ public abstract class Formatter {
 
     public static final Formatter NOOP = new Formatter() {
         @Override
-        public String format(Value data, Value... arguments) {
-            if (data.isPrimitive()) {
-                return data.getAsString();
-            }
-            return data.toString();
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return data;
         }
 
         @Override
@@ -55,12 +53,12 @@ public abstract class Formatter {
         private DecimalFormat formatter;
 
         @Override
-        public String format(Value data, Value... arguments) {
+        public Value format(Value data, int dataIndex, Value... arguments) {
             double valueAsNumber;
             try {
                 valueAsNumber = Double.parseDouble(data.getAsString());
             } catch (NumberFormatException e) {
-                return data.toString();
+                return data;
             }
             formatter = new DecimalFormat("#,###");
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
@@ -68,7 +66,7 @@ public abstract class Formatter {
             }
             formatter.setMinimumFractionDigits(0);
             formatter.setMaximumFractionDigits(2);
-            return formatter.format(valueAsNumber);
+            return new Primitive(formatter.format(valueAsNumber));
         }
 
         @Override
@@ -85,13 +83,13 @@ public abstract class Formatter {
         private SimpleDateFormat to = new SimpleDateFormat("d MMM, E");
 
         @Override
-        public String format(Value data, Value... arguments) {
+        public Value format(Value data, int dataIndex, Value... arguments) {
             try {
                 // 2015-06-18 12:01:37
                 Date date = from.parse(data.getAsString());
-                return to.format(date);
+                return new Primitive(to.format(date));
             } catch (Exception e) {
-                return data.toString();
+                return data;
             }
         }
 
@@ -103,14 +101,14 @@ public abstract class Formatter {
 
     public static final Formatter INDEX = new Formatter() {
         @Override
-        public String format(Value data, Value... arguments) {
+        public Value format(Value data, int dataIndex, Value... arguments) {
             int valueAsNumber;
             try {
                 valueAsNumber = Integer.parseInt(data.getAsString());
             } catch (NumberFormatException e) {
-                return data.toString();
+                return data;
             }
-            return String.valueOf(valueAsNumber + 1);
+            return new Primitive(valueAsNumber + 1);
         }
 
         @Override
@@ -121,11 +119,11 @@ public abstract class Formatter {
 
     public static final Formatter JOIN = new Formatter() {
         @Override
-        public String format(Value data, Value... arguments) {
+        public Value format(Value data, int dataIndex, Value... arguments) {
             if (data.isArray()) {
-                return Utils.getStringFromArray(data.getAsArray(), ",");
+                return new Primitive(Utils.getStringFromArray(data.getAsArray(), ","));
             } else {
-                return data.toString();
+                return data;
             }
         }
 
@@ -135,7 +133,7 @@ public abstract class Formatter {
         }
     };
 
-    public abstract String format(Value data, Value... arguments);
+    public abstract Value format(Value data, int dataIndex, Value... arguments);
 
     public abstract String getName();
 }

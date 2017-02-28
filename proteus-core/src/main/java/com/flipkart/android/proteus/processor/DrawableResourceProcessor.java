@@ -25,6 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.value.AttributeResource;
@@ -83,7 +84,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 });
             }
         } else {
-            process(view, precompile(value, view.getContext()));
+            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFormatterManager()));
         }
     }
 

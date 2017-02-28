@@ -23,6 +23,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.flipkart.android.proteus.DataContext;
+import com.flipkart.android.proteus.FormatterManager;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Binding;
@@ -40,10 +41,10 @@ import com.flipkart.android.proteus.value.Value;
 public abstract class AttributeProcessor<V> {
 
     @Nullable
-    public static Value staticPrecompile(Primitive value, Context context) {
+    private static Value staticPrecompile(Primitive value, Context context, FormatterManager manager) {
         String string = value.getAsString();
         if (Binding.isBindingValue(string)) {
-            return Binding.valueOf(string);
+            return Binding.valueOf(string, manager);
         } else if (Resource.isResource(string)) {
             return Resource.valueOf(string, null, context);
         } else if (AttributeResource.isAttributeResource(string)) {
@@ -55,7 +56,7 @@ public abstract class AttributeProcessor<V> {
     }
 
     @Nullable
-    static Value staticPrecompile(ObjectValue object, Context context) {
+    private static Value staticPrecompile(ObjectValue object, Context context, FormatterManager manager) {
         Value binding = object.get(NestedBinding.NESTED_BINDING_KEY);
         if (null != binding) {
             return NestedBinding.valueOf(binding);
@@ -91,12 +92,12 @@ public abstract class AttributeProcessor<V> {
 
     public abstract void handleStyleResource(V view, StyleResource style);
 
-    public Value precompile(Value value, Context context) {
+    public Value precompile(Value value, Context context, FormatterManager manager) {
         Value compiled = null;
         if (value.isPrimitive()) {
-            compiled = staticPrecompile(value.getAsPrimitive(), context);
+            compiled = staticPrecompile(value.getAsPrimitive(), context, manager);
         } else if (value.isObject()) {
-            compiled = staticPrecompile(value.getAsObject(), context);
+            compiled = staticPrecompile(value.getAsObject(), context, manager);
         }
         return null != compiled ? compiled : compile(value, context);
     }

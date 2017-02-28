@@ -25,6 +25,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Dimension;
@@ -66,7 +67,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
         if (value.isDimension()) {
             setDimension(view, value.getAsDimension().apply(view.getContext()));
         } else if (value.isPrimitive()) {
-            process(view, precompile(value, view.getContext()));
+            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFormatterManager()));
         }
     }
 

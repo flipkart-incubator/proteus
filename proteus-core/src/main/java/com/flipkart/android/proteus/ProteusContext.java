@@ -63,6 +63,11 @@ public class ProteusContext extends ContextWrapper {
     }
 
     @NonNull
+    public FormatterManager getFormatterManager() {
+        return resources.getFormatterManager();
+    }
+
+    @NonNull
     public Formatter getFormatter(@NonNull String name) {
         return resources.getFormatter(name);
     }

@@ -22,6 +22,7 @@ package com.flipkart.android.proteus.gson;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import com.flipkart.android.proteus.FormatterManager;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ViewTypeParser;
@@ -158,7 +159,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
         private Value replaceIfBinding(String string) {
             if (Binding.isBindingValue(string)) {
-                return Binding.valueOf(string);
+                return Binding.valueOf(string, PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager);
             } else {
                 return new Primitive(string);
             }
@@ -278,7 +279,6 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         private ProteusInstanceHolder() {
         }
 
-        @Nullable
         public Proteus getProteus() {
             return proteus;
         }
@@ -317,7 +317,8 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 } else {
                     ViewTypeParser.AttributeSet.Attribute attribute = proteus.getAttributeId(name, type);
                     if (null != attribute) {
-                        Value value = attribute.processor.precompile(VALUE_TYPE_ADAPTER.read(in), getContext());
+                        FormatterManager manager = PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager;
+                        Value value = attribute.processor.precompile(VALUE_TYPE_ADAPTER.read(in), getContext(), manager);
                         attributes.add(new Layout.Attribute(attribute.id, value));
                     } else {
                         extras.add(name, VALUE_TYPE_ADAPTER.read(in));

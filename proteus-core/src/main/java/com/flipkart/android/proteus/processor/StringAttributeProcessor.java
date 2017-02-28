@@ -24,6 +24,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Primitive;
@@ -53,7 +54,7 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     public void handleValue(V view, Value value) {
         String string = value.getAsString();
         if (ParseHelper.isLocalAttribute(string) || isLocalStringResource(string)) {
-            process(view, precompile(value, view.getContext()));
+            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFormatterManager()));
         } else {
             setString(view, string);
         }

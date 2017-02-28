@@ -22,7 +22,10 @@ package com.flipkart.android.proteus.value;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.LruCache;
+import android.util.Pair;
 
+import com.flipkart.android.proteus.Formatter;
+import com.flipkart.android.proteus.FormatterManager;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Result;
 
@@ -38,6 +41,7 @@ import java.util.regex.Pattern;
  */
 public class Binding extends Value {
 
+    public static final char FORMATTER_ARG_PREFIX = '(';
     public static final char BINDING_PREFIX = '~';
     public static final String EMPTY_STRING = "";
     public static final String EMPTY_TEMPLATE = EMPTY_STRING;
@@ -47,6 +51,7 @@ public class Binding extends Value {
     public static final String ARRAY_DATA_LENGTH_REFERENCE = "$length";
     public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
     public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{(\\S+)\\}\\$\\{(\\S+)\\}|@\\{(\\S+)\\}");
+    public static final Pattern FORMATTER_PATTERN = Pattern.compile(",(?=(?:[^']*'[^']*')*[^']*$)");
 
     public final String template;
     private final Expression[] expressions;
@@ -70,18 +75,19 @@ public class Binding extends Value {
 
     /**
      * @param value
+     * @param manager
      * @return
      */
-    public static Binding valueOf(@NonNull final String value) {
+    public static Binding valueOf(@NonNull final String value, FormatterManager manager) {
         Matcher matcher = BINDING_PATTERN.matcher(value);
         StringBuffer sb = new StringBuffer();
         Expression expression, expressions[] = new Expression[0];
 
         while (matcher.find()) {
             if (matcher.group(3) != null) {
-                expression = Expression.valueOf(matcher.group(3), null);
+                expression = Expression.valueOf(matcher.group(3), null, manager);
             } else {
-                expression = Expression.valueOf(matcher.group(1), matcher.group(2));
+                expression = Expression.valueOf(matcher.group(1), matcher.group(2), manager);
             }
             matcher.appendReplacement(sb, TEMPLATE);
             expressions = Arrays.copyOf(expressions, expressions.length + 1);
@@ -106,8 +112,7 @@ public class Binding extends Value {
 
     /**
      * @param data
-     * @param index
-     * @return
+     * @param index @return
      */
     public Value evaluate(Value data, int index) {
         Value empty = StringAttributeProcessor.EMPTY;
@@ -148,20 +153,27 @@ public class Binding extends Value {
     public static class Expression {
 
         @Nullable
-        public final String formatter;
+        public final Formatter formatter;
+
+        @Nullable
+        public final Value[] arguments;
+
+        @NonNull
         private final String[] tokens;
 
-        private Expression(String[] tokens, @Nullable String formatter) {
+        private Expression(@NonNull String[] tokens, @Nullable Formatter formatter, @Nullable Value[] arguments) {
             this.tokens = tokens;
             this.formatter = formatter;
+            this.arguments = arguments;
         }
 
         /**
          * @param path
          * @param formatter
+         * @param manager
          * @return
          */
-        public static Expression valueOf(String path, @Nullable String formatter) {
+        public static Expression valueOf(String path, @Nullable String formatter, FormatterManager manager) {
             String key = path + (null == formatter ? "" : '$' + formatter);
             Expression expression = ExpressionCache.cache.get(key);
             if (null == expression) {
@@ -171,10 +183,35 @@ public class Binding extends Value {
                     tokens = Arrays.copyOf(tokens, tokens.length + 1);
                     tokens[tokens.length - 1] = tokenizer.nextToken();
                 }
-                expression = new Expression(tokens, formatter);
+                if (null != formatter) {
+                    Pair<Formatter, Value[]> value = valueOf(formatter, manager);
+                    expression = new Expression(tokens, value.first, value.second);
+                } else {
+                    expression = new Expression(tokens, null, null);
+                }
                 ExpressionCache.cache.put(key, expression);
             }
             return expression;
+        }
+
+        private static Pair<Formatter, Value[]> valueOf(String value, FormatterManager manager) {
+            int index = value.indexOf(FORMATTER_ARG_PREFIX);
+            String name = value.substring(0, index);
+            String section = value.substring(index, value.length());
+            String[] tokens = FORMATTER_PATTERN.split(section);
+            Value[] arguments = new Value[tokens.length];
+            String token;
+            Value resolved;
+            for (int i = 0; i < tokens.length; i++) {
+                token = tokens[i];
+                if (isBindingValue(tokens[i])) {
+                    resolved = Binding.valueOf(token, manager);
+                } else {
+                    resolved = new Primitive(token);
+                }
+                arguments[i] = resolved;
+            }
+            return new Pair<>(manager.get(name), arguments);
         }
 
         /**
@@ -187,10 +224,18 @@ public class Binding extends Value {
 
         /**
          * @param data
-         * @param index
-         * @return
+         * @param index @return
          */
         public Result evaluate(Value data, int index) {
+            Result result = resolve(data, index);
+            if (null == this.formatter) {
+                return result;
+            } else {
+                return Result.success(this.formatter.format(result.value, index, this.arguments));
+            }
+        }
+
+        private Result resolve(Value data, int index) {
             // replace INDEX with index value
             if (tokens.length == 1 && INDEX.equals(tokens[0])) {
                 return Result.success(new Primitive(String.valueOf(index)));

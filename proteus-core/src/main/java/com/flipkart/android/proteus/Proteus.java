@@ -36,10 +36,10 @@ import java.util.Map;
 public final class Proteus {
 
     @NonNull
-    private final Map<String, Type> types;
+    public final FormatterManager formatterManager;
 
     @NonNull
-    private final FormatterManager formatterManager;
+    private final Map<String, Type> types;
 
     @NonNull
     private final Map<String, ViewTypeParser> parsers;
