@@ -71,7 +71,8 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     }
 
     @Override
-    public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout,
+                                                 @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         DataContext dataContext = createScope(layout, data, parent, dataIndex);
         return new ViewGroupManager(context, this, view.getAsView(), layout, dataContext);
     }
@@ -116,7 +117,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
         addAttributeProcessor(Attributes.ViewGroup.Children, new AttributeProcessor<T>() {
             @Override
             public void handleBinding(T view, Binding value) {
-                handleDataDrivenChildren(view, value);
+                handleDataBoundChildren(view, value);
             }
 
             @Override
@@ -161,13 +162,16 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
         return true;
     }
 
-    private void handleDataDrivenChildren(T view, Binding value) {
+    protected void handleDataBoundChildren(T view, Binding value) {
         ProteusView parent = ((ProteusView) view);
-        DataContext dataContext = parent.getViewManager().getDataContext();
+        ViewGroupManager manager = (ViewGroupManager) parent.getViewManager();
+        DataContext dataContext = manager.getDataContext();
         ObjectValue config = ((NestedBinding) value).getValue().getAsObject();
 
         Binding collection = config.getAsBinding(ProteusConstants.COLLECTION);
         Layout layout = config.getAsLayout(ProteusConstants.LAYOUT);
+
+        manager.hasDataBoundChildren = true;
 
         if (null == layout || null == collection) {
             throw new ProteusInflateException("'collection' and 'layout' are mandatory for attribute:'children'");
@@ -183,7 +187,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
         }
 
         int length = dataset.getAsArray().size();
-        ProteusLayoutInflater inflater = parent.getViewManager().getContext().getInflater();
+        ProteusLayoutInflater inflater = manager.getContext().getInflater();
 
         ProteusView child;
         for (int index = 0; index < length; index++) {

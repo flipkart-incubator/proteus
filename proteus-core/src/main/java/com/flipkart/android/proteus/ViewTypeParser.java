@@ -72,8 +72,12 @@ public abstract class ViewTypeParser<V extends View> {
     public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view,
                                                  @NonNull Layout layout, @NonNull ObjectValue data,
                                                  @Nullable ViewGroup parent, int dataIndex) {
-        DataContext dataContext = createScope(layout, data, parent, dataIndex);
-        return new ViewManager(context, this, view.getAsView(), layout, dataContext);
+        if (null == this.parent) {
+            DataContext dataContext = createScope(layout, data, parent, dataIndex);
+            return new ViewManager(context, this, view.getAsView(), layout, dataContext);
+        } else {
+            return this.parent.createViewManager(context, view, layout, data, parent, dataIndex);
+        }
     }
 
     protected DataContext createScope(@NonNull Layout layout, @NonNull ObjectValue data,

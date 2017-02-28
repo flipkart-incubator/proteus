@@ -51,6 +51,7 @@ public class ViewManager implements ProteusView.Manager {
     @NonNull
     protected final ViewTypeParser parser;
 
+    @Nullable
     protected final List<BoundAttribute> boundAttributes;
 
     public ViewManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
@@ -85,7 +86,7 @@ public class ViewManager implements ProteusView.Manager {
             updateDataContext(data);
         }
 
-        // update the boundAttributes of this view
+        // update the bound attributes of this view
         if (this.boundAttributes != null) {
             for (BoundAttribute boundAttribute : this.boundAttributes) {
                 this.handleBinding(boundAttribute);

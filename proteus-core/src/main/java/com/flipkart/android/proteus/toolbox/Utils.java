@@ -33,9 +33,9 @@ public class Utils {
     public static final String LIB_NAME = "proteus";
     public static final String VERSION = "5.0.0-SNAPSHOT";
 
-    public static ObjectValue addElements(ObjectValue destination, ObjectValue source, boolean override) {
+    public static ObjectValue addAllEntries(ObjectValue destination, ObjectValue source) {
         for (Map.Entry<String, Value> entry : source.entrySet()) {
-            if (!override && destination.get(entry.getKey()) != null) {
+            if (destination.get(entry.getKey()) != null) {
                 continue;
             }
             destination.add(entry.getKey(), entry.getValue());

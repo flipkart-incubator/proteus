@@ -35,16 +35,19 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 public class ViewGroupManager extends ViewManager {
 
+    public boolean hasDataBoundChildren;
+
     public ViewGroupManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
                             @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
         super(context, parser, view, layout, dataContext);
+        hasDataBoundChildren = false;
     }
 
     @Override
     public void update(@Nullable ObjectValue data) {
         super.update(data);
         // update the child views
-        if (view instanceof ViewGroup) {
+        if (!hasDataBoundChildren && view instanceof ViewGroup) {
             ViewGroup parent = (ViewGroup) view;
             int count = parent.getChildCount();
             View child;
