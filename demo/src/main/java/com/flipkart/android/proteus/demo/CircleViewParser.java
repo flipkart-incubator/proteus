@@ -39,6 +39,18 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 public class CircleViewParser extends ViewTypeParser<CircleView> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "CircleView";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "View";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new CircleView(context);

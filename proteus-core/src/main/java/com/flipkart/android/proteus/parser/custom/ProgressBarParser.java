@@ -56,6 +56,18 @@ import com.flipkart.android.proteus.view.ProteusProgressBar;
  */
 public class ProgressBarParser<T extends ProgressBar> extends ViewTypeParser<T> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "ProgressBar";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "View";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusProgressBar(context);

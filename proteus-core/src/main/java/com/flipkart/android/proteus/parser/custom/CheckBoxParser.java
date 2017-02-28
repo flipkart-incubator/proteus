@@ -40,6 +40,18 @@ import com.flipkart.android.proteus.view.ProteusCheckBox;
  */
 public class CheckBoxParser<T extends CheckBox> extends ViewTypeParser<T> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "CheckBox";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "Button";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusCheckBox(context);

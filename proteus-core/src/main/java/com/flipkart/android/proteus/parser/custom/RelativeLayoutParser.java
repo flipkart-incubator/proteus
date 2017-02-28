@@ -39,6 +39,18 @@ import com.flipkart.android.proteus.view.ProteusRelativeLayout;
  */
 public class RelativeLayoutParser<T extends RelativeLayout> extends ViewTypeParser<T> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "RelativeLayout";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "ViewGroup";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusRelativeLayout(context);

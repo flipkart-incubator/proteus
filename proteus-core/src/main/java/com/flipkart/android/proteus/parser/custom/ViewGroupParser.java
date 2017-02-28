@@ -53,6 +53,18 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     private static final String LAYOUT_MODE_CLIP_BOUNDS = "clipBounds";
     private static final String LAYOUT_MODE_OPTICAL_BOUNDS = "opticalBounds";
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "ViewGroup";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "View";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusAspectRatioFrameLayout(context);

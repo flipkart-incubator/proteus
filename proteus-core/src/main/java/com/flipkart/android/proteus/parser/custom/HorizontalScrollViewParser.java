@@ -41,6 +41,18 @@ import com.flipkart.android.proteus.view.ProteusHorizontalScrollView;
 public class HorizontalScrollViewParser<T extends HorizontalScrollView> extends ViewTypeParser<T> {
 
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "HorizontalScrollView";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "FrameLayout";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusHorizontalScrollView(context);

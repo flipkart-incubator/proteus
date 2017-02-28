@@ -51,6 +51,18 @@ import com.flipkart.android.proteus.view.ProteusTextView;
  */
 public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "TextView";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "View";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusTextView(context);

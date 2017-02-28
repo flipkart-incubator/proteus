@@ -184,7 +184,7 @@ public class ProteusActivity extends AppCompatActivity {
 
         proteus = new ProteusBuilder()
                 .register(SupportV4Collection.create())
-                .register("CircleView", new CircleViewParser(), "View")
+                .register(new CircleViewParser())
                 .build();
 
         ProteusContext context = proteus.createContextBuilder(this)

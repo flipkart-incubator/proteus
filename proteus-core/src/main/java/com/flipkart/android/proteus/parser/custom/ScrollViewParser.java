@@ -39,6 +39,18 @@ import com.flipkart.android.proteus.view.ProteusScrollView;
  */
 public class ScrollViewParser<T extends ScrollView> extends ViewTypeParser<T> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "ScrollView";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "FrameLayout";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusScrollView(context);

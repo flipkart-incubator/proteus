@@ -39,6 +39,6 @@ public class SupportV4Collection implements ProteusBuilder.Collection {
 
     @Override
     public void registerWith(ProteusBuilder builder) {
-        builder.register("ViewPager", new ViewPagerParser(), "ViewGroup");
+        builder.register(new ViewPagerParser());
     }
 }

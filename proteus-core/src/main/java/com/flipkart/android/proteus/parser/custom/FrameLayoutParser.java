@@ -40,6 +40,18 @@ import com.flipkart.android.proteus.view.custom.AspectRatioFrameLayout;
  */
 public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends ViewTypeParser<T> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "FrameLayout";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "ViewGroup";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusAspectRatioFrameLayout(context);

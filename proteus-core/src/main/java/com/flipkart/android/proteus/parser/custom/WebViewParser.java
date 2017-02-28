@@ -38,6 +38,18 @@ import com.flipkart.android.proteus.view.ProteusWebView;
  */
 public class WebViewParser<T extends WebView> extends ViewTypeParser<T> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "WebView";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "View";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusWebView(context);

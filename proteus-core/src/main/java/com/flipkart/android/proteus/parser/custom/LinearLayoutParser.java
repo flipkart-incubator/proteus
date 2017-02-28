@@ -45,6 +45,18 @@ import com.flipkart.android.proteus.view.ProteusLinearLayout;
  */
 public class LinearLayoutParser<T extends LinearLayout> extends ViewTypeParser<T> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "LinearLayout";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "ViewGroup";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusLinearLayout(context);

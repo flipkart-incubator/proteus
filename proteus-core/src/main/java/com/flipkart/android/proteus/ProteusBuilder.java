@@ -60,24 +60,24 @@ public class ProteusBuilder {
         public void registerWith(ProteusBuilder builder) {
 
             // register the default parsers
-            builder.register("View", new ViewParser());
-            builder.register("include", new IncludeParser());
-            builder.register("ViewGroup", new ViewGroupParser(), "View");
-            builder.register("RelativeLayout", new RelativeLayoutParser(), "ViewGroup");
-            builder.register("LinearLayout", new LinearLayoutParser(), "ViewGroup");
-            builder.register("FrameLayout", new FrameLayoutParser(), "ViewGroup");
-            builder.register("ScrollView", new ScrollViewParser(), "FrameLayout");
-            builder.register("HorizontalScrollView", new HorizontalScrollViewParser(), "FrameLayout");
-            builder.register("ImageView", new ImageViewParser(), "View");
-            builder.register("TextView", new TextViewParser(), "View");
-            builder.register("EditText", new EditTextParser(), "TextView");
-            builder.register("Button", new ButtonParser(), "TextView");
-            builder.register("ImageButton", new ImageButtonParser(), "ImageView");
-            builder.register("WebView", new WebViewParser(), "View");
-            builder.register("RatingBar", new RatingBarParser(), "View");
-            builder.register("CheckBox", new CheckBoxParser(), "Button");
-            builder.register("ProgressBar", new ProgressBarParser(), "View");
-            builder.register("HorizontalProgressBar", new HorizontalProgressBarParser(), "ProgressBar");
+            builder.register(new ViewParser());
+            builder.register(new IncludeParser());
+            builder.register(new ViewGroupParser());
+            builder.register(new RelativeLayoutParser());
+            builder.register(new LinearLayoutParser());
+            builder.register(new FrameLayoutParser());
+            builder.register(new ScrollViewParser());
+            builder.register(new HorizontalScrollViewParser());
+            builder.register(new ImageViewParser());
+            builder.register(new TextViewParser());
+            builder.register(new EditTextParser());
+            builder.register(new ButtonParser());
+            builder.register(new ImageButtonParser());
+            builder.register(new WebViewParser());
+            builder.register(new RatingBarParser());
+            builder.register(new CheckBoxParser());
+            builder.register(new ProgressBarParser());
+            builder.register(new HorizontalProgressBarParser());
 
             // register the default formatters
             builder.register(Formatter.DATE);
@@ -94,20 +94,18 @@ public class ProteusBuilder {
         DEFAULT_COLLECTION.registerWith(this);
     }
 
-    public ProteusBuilder register(String type, ViewTypeParser parser) {
-        ViewTypeParser.AttributeSet attributeSet = parser.prepare(null);
-        Proteus.Type t = new Proteus.Type(ID, type, parser, attributeSet);
-        types.put(type, t);
-        return this;
-    }
-
-    public ProteusBuilder register(String type, ViewTypeParser parser, String parent) {
-        Proteus.Type p = types.get(parent);
-        if (null == p) {
-            throw new IllegalStateException(parent + " is not a registered type parser");
+    public ProteusBuilder register(ViewTypeParser parser) {
+        String parentType = parser.getParentType();
+        ViewTypeParser parentParser = null;
+        if (null != parentType) {
+            Proteus.Type p = types.get(parentType);
+            if (null == p) {
+                throw new IllegalStateException(parentType + " is not a registered type parser");
+            }
+            parentParser = p.parser;
         }
-        Proteus.Type t = new Proteus.Type(ID, type, parser, parser.prepare(p.parser));
-        types.put(type, t);
+        Proteus.Type t = new Proteus.Type(ID, parser.getType(), parser, parser.prepare(parentParser));
+        types.put(parser.getType(), t);
         return this;
     }
 

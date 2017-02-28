@@ -39,6 +39,18 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 public class IncludeParser<V extends View> extends ViewTypeParser<V> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "include";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return null;
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout include, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         String type = include.extras.getAsString(ProteusConstants.LAYOUT);

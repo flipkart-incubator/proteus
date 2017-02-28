@@ -38,6 +38,18 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 public class ViewPagerParser<T extends ViewPager> extends ViewTypeParser<T> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "ViewPager";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "ViewGroup";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusViewPager(context);

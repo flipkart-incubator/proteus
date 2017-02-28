@@ -37,6 +37,18 @@ import com.flipkart.android.proteus.view.ProteusButton;
  */
 public class ButtonParser<T extends Button> extends ViewTypeParser<T> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "Button";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "TextView";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusButton(context);

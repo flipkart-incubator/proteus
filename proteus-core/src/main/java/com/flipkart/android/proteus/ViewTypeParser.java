@@ -54,6 +54,18 @@ public abstract class ViewTypeParser<V extends View> {
     private int offset;
     private AttributeSet attributeSet;
 
+    /**
+     * @return
+     */
+    @NonNull
+    public abstract String getType();
+
+    /**
+     * @return
+     */
+    @Nullable
+    public abstract String getParentType();
+
     public abstract ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout,
                                            @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex);
 

@@ -36,6 +36,18 @@ import com.flipkart.android.proteus.view.ProteusImageButton;
  */
 public class ImageButtonParser<T extends ImageButton> extends ViewTypeParser<T> {
 
+    @NonNull
+    @Override
+    public String getType() {
+        return "ImageButton";
+    }
+
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "ImageView";
+    }
+
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusImageButton(context);
