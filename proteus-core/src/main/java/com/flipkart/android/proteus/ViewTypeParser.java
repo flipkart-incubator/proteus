@@ -85,20 +85,20 @@ public abstract class ViewTypeParser<V extends View> {
      * @param view
      * @param layout
      * @param data
-     * @param fallback
+     * @param caller
      * @param parent
      * @param dataIndex @return
      */
     @NonNull
     public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view,
                                                  @NonNull Layout layout, @NonNull ObjectValue data,
-                                                 @Nullable ViewTypeParser fallback, @Nullable ViewGroup parent,
+                                                 @Nullable ViewTypeParser caller, @Nullable ViewGroup parent,
                                                  int dataIndex) {
-        if (null != this.parent && fallback == this.parent) {
-            return this.parent.createViewManager(context, view, layout, data, this, parent, dataIndex);
+        if (null != this.parent && caller != this.parent) {
+            return this.parent.createViewManager(context, view, layout, data, caller, parent, dataIndex);
         } else {
             DataContext dataContext = createScope(layout, data, parent, dataIndex);
-            return new ViewManager(context, fallback != null ? fallback : this, view.getAsView(), layout, dataContext);
+            return new ViewManager(context, caller != null ? caller : this, view.getAsView(), layout, dataContext);
         }
     }
 

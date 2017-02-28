@@ -76,20 +76,23 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
          */
         final ProteusView view = createView(parser, layout, data, parent, dataIndex);
 
-        /**
-         * Do post creation logic
-         */
-        onAfterCreateView(parser, view, parent, dataIndex);
+        if (view.getViewManager() == null) {
 
-        /**
-         * Create View Manager for {@code layout.type}
-         */
-        final ProteusView.Manager viewManager = createViewManager(parser, view, layout, data, parent, dataIndex);
+            /**
+             * Do post creation logic
+             */
+            onAfterCreateView(parser, view, parent, dataIndex);
 
-        /**
-         * Set the View Manager on the view.
-         */
-        view.setViewManager(viewManager);
+            /**
+             * Create View Manager for {@code layout.type}
+             */
+            final ProteusView.Manager viewManager = createViewManager(parser, view, layout, data, parent, dataIndex);
+
+            /**
+             * Set the View Manager on the view.
+             */
+            view.setViewManager(viewManager);
+        }
 
         /**
          * Handle each attribute and set it on the view.
@@ -158,7 +161,7 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
 
     protected ProteusView.Manager createViewManager(@NonNull ViewTypeParser parser, @NonNull ProteusView view, @NonNull Layout layout,
                                                     @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-        return parser.createViewManager(context, view, layout, data, parser.parent, parent, dataIndex);
+        return parser.createViewManager(context, view, layout, data, parser, parent, dataIndex);
     }
 
     protected void onAfterCreateView(@NonNull ViewTypeParser parser, @NonNull ProteusView view, @Nullable ViewGroup parent, int index) {

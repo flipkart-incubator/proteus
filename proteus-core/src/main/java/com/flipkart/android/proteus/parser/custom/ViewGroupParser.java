@@ -75,9 +75,10 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     @NonNull
     @Override
     public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout,
-                                                 @NonNull ObjectValue data, @NonNull ViewTypeParser fallback, @Nullable ViewGroup parent, int dataIndex) {
+                                                 @NonNull ObjectValue data, @Nullable ViewTypeParser caller, @Nullable ViewGroup parent,
+                                                 int dataIndex) {
         DataContext dataContext = createScope(layout, data, parent, dataIndex);
-        return new ViewGroupManager(context, this, view.getAsView(), layout, dataContext);
+        return new ViewGroupManager(context, null != caller ? caller : this, view.getAsView(), layout, dataContext);
     }
 
     @Override
