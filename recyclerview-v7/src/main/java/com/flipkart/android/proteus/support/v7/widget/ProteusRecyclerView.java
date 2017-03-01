@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.recyclerview.v7.widget;
+package com.flipkart.android.proteus.support.v7.widget;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
