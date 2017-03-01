@@ -47,6 +47,7 @@ class UrlEncodedGsonRequestBodyConverter<T> implements Converter<T, RequestBody>
 
     @Override
     public RequestBody convert(T value) throws IOException {
+        //noinspection unchecked
         TypeAdapter<T> adapter = (TypeAdapter<T>) gson.getAdapter(TypeToken.get(type));
         Writer writer = new StringWriter();
         JsonWriter jsonWriter = gson.newJsonWriter(writer);

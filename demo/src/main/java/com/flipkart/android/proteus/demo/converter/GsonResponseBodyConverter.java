@@ -41,6 +41,7 @@ final class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
 
     private TypeAdapter<T> getAdapter() {
         if (null == typeAdapter) {
+            //noinspection unchecked
             typeAdapter = (TypeAdapter<T>) gson.getAdapter(TypeToken.get(type));
         }
         return typeAdapter;

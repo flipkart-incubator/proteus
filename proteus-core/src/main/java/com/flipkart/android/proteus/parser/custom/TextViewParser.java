@@ -79,6 +79,7 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     view.setText(Html.fromHtml(value, Html.FROM_HTML_MODE_LEGACY));
                 } else {
+                    //noinspection deprecation
                     view.setText(Html.fromHtml(value));
                 }
             }

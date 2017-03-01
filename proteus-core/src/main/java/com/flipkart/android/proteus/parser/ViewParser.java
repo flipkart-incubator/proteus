@@ -448,6 +448,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
 
             private void process(Map<String, Value> style, ProteusView proteusView, ViewTypeParser handler) {
                 for (Map.Entry<String, Value> entry : style.entrySet()) {
+                    //noinspection unchecked
                     handler.handleAttribute(proteusView.getAsView(), handler.getAttributeId(entry.getKey()), entry.getValue());
                 }
             }

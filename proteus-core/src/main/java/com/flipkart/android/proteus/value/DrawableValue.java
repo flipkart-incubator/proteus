@@ -84,6 +84,7 @@ public abstract class DrawableValue extends Value {
     @Nullable
     public static DrawableValue valueOf(ObjectValue value, Context context) {
         String type = value.getAsString(TYPE);
+        //noinspection ConstantConditions
         switch (type) {
             case DRAWABLE_SELECTOR:
                 return StateListValue.valueOf(value.getAsArray(CHILDREN), context);
@@ -164,6 +165,7 @@ public abstract class DrawableValue extends Value {
                     ObjectValue child = iterator.next().getAsObject();
                     String typeKey = child.getAsString(TYPE);
                     DrawableElement element = null;
+                    //noinspection ConstantConditions
                     switch (typeKey) {
                         case TYPE_CORNERS:
                             element = Corners.valueOf(child, context);
@@ -244,6 +246,7 @@ public abstract class DrawableValue extends Value {
             Iterator<Value> iterator = layers.iterator();
             while (iterator.hasNext()) {
                 pair = ParseHelper.parseLayer(iterator.next().getAsObject());
+                //noinspection ConstantConditions
                 this.ids[index] = pair.first;
                 this.layers[index] = pair.second;
                 index++;
@@ -280,6 +283,7 @@ public abstract class DrawableValue extends Value {
         private final Pair<int[], Value>[] states;
 
         private StateListValue(Array states) {
+            //noinspection unchecked
             this.states = new Pair[states.size()];
             Iterator<Value> iterator = states.iterator();
             int index = 0;

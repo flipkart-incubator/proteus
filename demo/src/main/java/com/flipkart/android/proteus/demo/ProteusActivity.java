@@ -70,7 +70,6 @@ public class ProteusActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "http://10.0.2.2:8080/data/";
 
-    private Proteus proteus;
     private Retrofit retrofit;
     private JsonResource resources;
 
@@ -137,6 +136,7 @@ public class ProteusActivity extends AppCompatActivity {
                     if (result != null) {
                         callback.setBitmap(result);
                     } else {
+                        //noinspection deprecation
                         callback.setDrawable(ProteusActivity.this.getResources().getDrawable(R.drawable.ic_launcher));
                     }
                 }
@@ -159,9 +159,8 @@ public class ProteusActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public View onEvent(ProteusView view, EventType eventType, Value value) {
-            //noinspection ConstantConditions because we want to crash here
-            return null;
+        public void onEvent(ProteusView view, EventType eventType, Value value) {
+
         }
     };
 
@@ -183,7 +182,7 @@ public class ProteusActivity extends AppCompatActivity {
             resources = retrofit.create(JsonResource.class);
         }
 
-        proteus = new ProteusBuilder()
+        Proteus proteus = new ProteusBuilder()
                 .register(SupportV4Collection.create())
                 .register(new CircleViewParser())
                 .build();

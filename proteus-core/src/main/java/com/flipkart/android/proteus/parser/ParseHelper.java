@@ -262,7 +262,8 @@ public class ParseHelper {
                     (attributeValue.isEmpty() || FALSE.equals(attributeValue) || ProteusConstants.DATA_NULL.equals(attributeValue))) {
                 returnValue = View.GONE;
             }
-        } else if (value.isNull()) {
+        } else //noinspection ConstantConditions
+            if (value.isNull()) {
             returnValue = View.GONE;
         }
         return returnValue == null ? View.VISIBLE : returnValue;

@@ -117,8 +117,7 @@ public class Binding extends Value {
     public Value evaluate(Value data, int index) {
         Value empty = StringAttributeProcessor.EMPTY;
         Result result;
-        // the string object compare can be safely used here,
-        // do not convert it to .equals()
+        //noinspection StringEquality the string object compare can be safely used here, do not convert it to .equals()
         if (expressions.length == 1 && template == EMPTY_TEMPLATE) {
             result = expressions[0].evaluate(data, index);
             return result.isSuccess() ? result.value : empty;
@@ -128,6 +127,7 @@ public class Binding extends Value {
             for (int i = 0; i < expressions.length; i++) {
                 result = expressions[i].evaluate(data, index);
                 if (result.isSuccess()) {
+                    //noinspection ConstantConditions
                     if (result.value.isPrimitive()) {
                         variable = result.value.getAsString();
                     } else {

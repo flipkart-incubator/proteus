@@ -40,7 +40,6 @@ import java.util.Map;
 public abstract class Color extends Value {
 
     private static final String COLOR_PREFIX_LITERAL = "#";
-    private static final String COLOR_RESOURCE_PREFIX = "@color/";
 
     private static HashMap<String, Integer> sAttributesMap = null;
 

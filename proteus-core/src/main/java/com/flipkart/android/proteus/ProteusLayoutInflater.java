@@ -140,8 +140,7 @@ public interface ProteusLayoutInflater {
          * @param view  The view that triggered the event
          * @param value Value set to the event attribute
          */
-        @NonNull
-        View onEvent(ProteusView view, EventType eventType, Value value);
+        void onEvent(ProteusView view, EventType eventType, Value value);
 
     }
 

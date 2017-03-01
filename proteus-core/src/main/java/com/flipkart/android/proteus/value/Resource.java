@@ -104,6 +104,7 @@ public class Resource extends Value {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 return context.getResources().getColor(resId, context.getTheme());
             } else {
+                //noinspection deprecation
                 return context.getResources().getColor(resId);
             }
         } catch (Resources.NotFoundException e) {
@@ -117,6 +118,7 @@ public class Resource extends Value {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 return context.getColorStateList(resId);
             } else {
+                //noinspection deprecation
                 return context.getResources().getColorStateList(resId);
             }
 
@@ -131,6 +133,7 @@ public class Resource extends Value {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
                 return context.getResources().getDrawable(resId, context.getTheme());
             } else {
+                //noinspection deprecation
                 return context.getResources().getDrawable(resId);
             }
         } catch (Resources.NotFoundException e) {

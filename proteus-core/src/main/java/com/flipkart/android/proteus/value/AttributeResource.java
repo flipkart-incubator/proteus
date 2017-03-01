@@ -82,7 +82,6 @@ public class AttributeResource extends Value {
         attributeId = field.getInt(null);
     }
 
-    @Nullable
     public static boolean isAttributeResource(String value) {
         return value.startsWith(ATTR_START_LITERAL) && value.contains(ATTR_LITERAL);
     }

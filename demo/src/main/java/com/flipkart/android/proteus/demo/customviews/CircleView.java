@@ -95,6 +95,7 @@ public class CircleView extends View implements ProteusView {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void removeOnGlobalLayoutListener(ViewTreeObserver.OnGlobalLayoutListener listener) {
         if (Build.VERSION.SDK_INT < 16) {
+            //noinspection deprecation
             getViewTreeObserver().removeGlobalOnLayoutListener(listener);
         } else {
             getViewTreeObserver().removeOnGlobalLayoutListener(listener);

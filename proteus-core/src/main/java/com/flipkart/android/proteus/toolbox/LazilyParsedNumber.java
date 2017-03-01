@@ -92,6 +92,7 @@ public class LazilyParsedNumber extends Number {
         }
         if (obj instanceof LazilyParsedNumber) {
             LazilyParsedNumber other = (LazilyParsedNumber) obj;
+            //noinspection StringEquality
             return value == other.value || value.equals(other.value);
         }
         return false;

@@ -62,7 +62,7 @@ public class ProteusResources {
 
     @NonNull
     public Formatter getFormatter(@NonNull String name) {
-        return null != formatterManager ? formatterManager.get(name) : Formatter.NOOP;
+        return formatterManager.get(name);
     }
 
     @Nullable
