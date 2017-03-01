@@ -74,6 +74,7 @@ android {
         compile project(':proteus-core')
         compile project(':gson-adapter')
         compile project(':support-v4')
+        compile project(':recyclerview-v7')
     }
 }
 

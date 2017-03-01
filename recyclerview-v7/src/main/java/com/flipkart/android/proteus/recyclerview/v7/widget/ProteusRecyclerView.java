@@ -17,4 +17,40 @@
  * specific language governing permissions and limitations under the License.
  */
 
-include ':demo', ':proteus-core', ':gson-adapter', ':support-v4', ':recyclerview-v7'
+package com.flipkart.android.proteus.recyclerview.v7.widget;
+
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+
+import com.flipkart.android.proteus.ProteusContext;
+import com.flipkart.android.proteus.ProteusView;
+
+/**
+ * ProteusRecyclerView
+ *
+ * @author adityasharat
+ */
+
+public class ProteusRecyclerView extends RecyclerView implements ProteusView {
+
+    Manager manager;
+
+    public ProteusRecyclerView(ProteusContext context) {
+        super(context);
+    }
+
+    @Override
+    public Manager getViewManager() {
+        return manager;
+    }
+
+    @Override
+    public void setViewManager(Manager manager) {
+        this.manager = manager;
+    }
+
+    @Override
+    public View getAsView() {
+        return this;
+    }
+}

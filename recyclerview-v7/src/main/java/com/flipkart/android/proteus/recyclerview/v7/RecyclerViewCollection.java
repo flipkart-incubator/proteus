@@ -17,4 +17,27 @@
  * specific language governing permissions and limitations under the License.
  */
 
-include ':demo', ':proteus-core', ':gson-adapter', ':support-v4', ':recyclerview-v7'
+package com.flipkart.android.proteus.recyclerview.v7;
+
+import com.flipkart.android.proteus.ProteusBuilder;
+
+/**
+ * RecyclerViewCollection
+ *
+ * @author adityasharat
+ */
+public class RecyclerViewCollection implements ProteusBuilder.Collection {
+
+    private RecyclerViewCollection() {
+
+    }
+
+    public static RecyclerViewCollection create() {
+        return new RecyclerViewCollection();
+    }
+
+    @Override
+    public void registerWith(ProteusBuilder builder) {
+        builder.register(new RecyclerViewParser());
+    }
+}
