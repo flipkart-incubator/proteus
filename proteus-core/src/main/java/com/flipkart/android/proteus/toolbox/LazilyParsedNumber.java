@@ -23,6 +23,11 @@ import java.math.BigDecimal;
 
 /**
  * LazilyParsedNumber
+ * <p>
+ * This class is copied from Google's implementation of
+ * LazilyParsedNumber which can be found at the following
+ * link @{link https://github.com/google/gson/blob/master/gson/src/main/java/com/google/gson/internal/LazilyParsedNumber.java}
+ * </p>
  *
  * @author adityasharat
  */

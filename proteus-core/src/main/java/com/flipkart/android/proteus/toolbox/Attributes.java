@@ -74,6 +74,8 @@ public class Attributes {
         public static final String ContentDescription = "contentDescription";
         public static final String Clickable = "clickable";
         public static final String OnClick = "onClick";
+        public static final String OnLongClick = "onLongClick";
+        public static final String OnTouch = "onTouch";
         public static final String TransitionName = "transitionName";
         public static final String Animation = "animation";
         public static final String RequiresFadingEdge = "requiresFadingEdge";

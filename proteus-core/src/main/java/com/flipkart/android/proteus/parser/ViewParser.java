@@ -28,6 +28,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -86,7 +87,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
     @NonNull
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusAndroidView(parent.getContext());
+        return new ProteusAndroidView(context);
     }
 
     @Override
@@ -99,6 +100,30 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                     @Override
                     public void onClick(View v) {
                         fireEvent((ProteusView) view, EventType.OnClick, value);
+                    }
+                });
+            }
+        });
+        addAttributeProcessor(Attributes.View.OnLongClick, new EventProcessor<V>() {
+            @Override
+            public void setOnEventListener(final V view, final Value value) {
+                view.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        fireEvent((ProteusView) view, EventType.OnLongClick, value);
+                        return true;
+                    }
+                });
+            }
+        });
+        addAttributeProcessor(Attributes.View.OnTouch, new EventProcessor<V>() {
+            @Override
+            public void setOnEventListener(final V view, final Value value) {
+                view.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        fireEvent((ProteusView) view, EventType.OnTouch, value);
+                        return true;
                     }
                 });
             }
