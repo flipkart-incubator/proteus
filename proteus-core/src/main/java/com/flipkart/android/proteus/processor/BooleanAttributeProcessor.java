@@ -40,14 +40,8 @@ import com.flipkart.android.proteus.value.Value;
 
 public abstract class BooleanAttributeProcessor<V extends View> extends AttributeProcessor<V> {
 
-    public static final String BOOLEAN_RESOURCE_PREFIX = "@bool/";
-
     public static final Primitive TRUE = new Primitive(true);
     public static final Primitive FALSE = new Primitive(false);
-
-    public static boolean isLocalBooleanResource(String value) {
-        return value.startsWith(BOOLEAN_RESOURCE_PREFIX);
-    }
 
     @Override
     public void handleValue(V view, Value value) {

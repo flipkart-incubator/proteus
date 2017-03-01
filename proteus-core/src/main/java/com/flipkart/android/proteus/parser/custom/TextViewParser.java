@@ -65,7 +65,8 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
 
     @NonNull
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                  @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusTextView(context);
     }
 

@@ -86,7 +86,8 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
 
     @NonNull
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                  @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusAndroidView(context);
     }
 
@@ -363,7 +364,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
             @Override
             public Value compile(@Nullable Value value, Context context) {
                 int visibility = ParseHelper.parseVisibility(value);
-                return ParseHelper.getVisibilty(visibility);
+                return ParseHelper.getVisibility(visibility);
             }
         });
         addAttributeProcessor(Attributes.View.Id, new StringAttributeProcessor<V>() {

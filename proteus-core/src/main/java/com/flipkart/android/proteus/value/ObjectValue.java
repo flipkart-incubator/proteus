@@ -275,8 +275,12 @@ public class ObjectValue extends Value {
      * @param memberName name of the member being requested.
      * @return the ObjectValue corresponding to the specified member.
      */
+    @Nullable
     public ObjectValue getAsObject(String memberName) {
-        return (ObjectValue) members.get(memberName);
+        if (isObject(memberName)) {
+            return (ObjectValue) members.get(memberName);
+        }
+        return null;
     }
 
     @Nullable

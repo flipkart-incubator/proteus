@@ -31,7 +31,12 @@ import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
 
 /**
- * Use this as the base processor for references like @anim
+ * TweenAnimationResourceProcessor
+ * <p>
+ * TODO: implement precompiling animation blocks
+ * </p>
+ *
+ * @author yasirmhd
  */
 public abstract class TweenAnimationResourceProcessor<V extends View> extends AttributeProcessor<V> {
 

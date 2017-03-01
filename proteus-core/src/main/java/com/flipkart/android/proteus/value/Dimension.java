@@ -48,8 +48,6 @@ public class Dimension extends Value {
     public static final String FILL_PARENT = "fill_parent";
     public static final String WRAP_CONTENT = "wrap_content";
 
-    public static final String PREFIX_DIMENSION = "@dimen/";
-
     public static final String SUFFIX_PX = "px";
     public static final String SUFFIX_DP = "dp";
     public static final String SUFFIX_SP = "sp";
@@ -126,10 +124,6 @@ public class Dimension extends Value {
 
     public static float apply(String dimension, Context context) {
         return Dimension.valueOf(dimension, context).apply(context);
-    }
-
-    public static boolean isLocalDimensionResource(String value) {
-        return value.startsWith(PREFIX_DIMENSION);
     }
 
     public float apply(Context context) {

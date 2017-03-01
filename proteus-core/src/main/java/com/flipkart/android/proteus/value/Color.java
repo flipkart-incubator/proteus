@@ -34,7 +34,6 @@ import java.util.Map;
 
 /**
  * ColorValue
- * TODO: fix the color state list to consume color resources and style attributes.
  *
  * @author aditya.sharat
  */
@@ -181,10 +180,6 @@ public abstract class Color extends Value {
 
     public static boolean isColor(String color) {
         return color.startsWith(COLOR_PREFIX_LITERAL);
-    }
-
-    public static boolean isLocalColorResource(String attributeValue) {
-        return attributeValue.startsWith(COLOR_RESOURCE_PREFIX);
     }
 
     private static HashMap<String, Integer> getAttributesMap() {

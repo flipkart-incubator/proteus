@@ -33,6 +33,9 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 /**
  * IncludeParser
+ * <p>
+ * TODO: merge the attributes into the included layout
+ * </p>
  *
  * @author aditya.sharat
  */

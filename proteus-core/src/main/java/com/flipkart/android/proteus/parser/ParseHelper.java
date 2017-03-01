@@ -83,7 +83,6 @@ public class ParseHelper {
     private static final String TEXT_ALIGNMENT_VIEW_END = "viewEnd";
 
 
-    private static final String ATTR_START_LITERAL = "?";
     private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";
 
     private static final String DRAWABLE_STR = "drawable";
@@ -269,7 +268,7 @@ public class ParseHelper {
         return returnValue == null ? View.VISIBLE : returnValue;
     }
 
-    public static Primitive getVisibilty(int visibility) {
+    public static Primitive getVisibility(int visibility) {
         Primitive value = sVisibilityMap.get(visibility);
         return null != value ? value : sVisibilityMap.get(View.GONE);
     }
@@ -327,10 +326,6 @@ public class ParseHelper {
             }
         }
         return typeface;
-    }
-
-    public static boolean isLocalAttribute(String value) {
-        return value.startsWith(ATTR_START_LITERAL);
     }
 
     public static boolean isTweenAnimationResource(String attributeValue) {

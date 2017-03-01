@@ -56,8 +56,6 @@ import java.util.List;
  */
 public abstract class DrawableValue extends Value {
 
-    private static final String PREFIX_DRAWABLE = "@drawable/";
-
     private static final String TYPE = "type";
     private static final String CHILDREN = "children";
 
@@ -73,10 +71,6 @@ public abstract class DrawableValue extends Value {
     private static final String TYPE_SIZE = "size";
     private static final String TYPE_SOLID = "solid";
     private static final String TYPE_STROKE = "stroke";
-
-    public static boolean isLocalDrawableResource(String value) {
-        return value.startsWith(PREFIX_DRAWABLE);
-    }
 
     @Nullable
     public static DrawableValue valueOf(String value, Context context) {

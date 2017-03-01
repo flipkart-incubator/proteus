@@ -25,7 +25,6 @@ import android.support.annotation.Nullable;
 import android.util.LruCache;
 
 import com.flipkart.android.proteus.ProteusConstants;
-import com.flipkart.android.proteus.parser.ParseHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,9 +52,6 @@ public class StyleResource extends Value {
     }
 
     private StyleResource(String value, Context context) throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
-        if (!ParseHelper.isLocalAttribute(value)) {
-            throw new IllegalArgumentException(value + " is not a valid style attribute");
-        }
         String[] tokens = value.substring(1, value.length()).split(":");
         String style = tokens[0];
         String attr = tokens[1];

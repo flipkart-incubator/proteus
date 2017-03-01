@@ -54,7 +54,8 @@ public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends ViewTyp
 
     @NonNull
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                  @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusAspectRatioFrameLayout(context);
     }
 

@@ -52,7 +52,8 @@ public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extend
 
     @NonNull
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                  @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusHorizontalProgressBar(context);
     }
 
