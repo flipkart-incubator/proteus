@@ -182,7 +182,7 @@
             "type": "TextView",
             "layout_width": "wrap_content",
             "layout_height": "wrap_content",
-            "text": "~last login: @{user.ll}${date()}",
+            "text": "~last login: @{sec.ll}${date('E, d MMM')} from @{sec.loc}",
             "style": "mini.blue"
           }
         ]

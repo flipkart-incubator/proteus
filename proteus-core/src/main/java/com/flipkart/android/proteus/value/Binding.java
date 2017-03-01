@@ -49,7 +49,7 @@ public class Binding extends Value {
     public static final String INDEX = "$index";
     public static final String ARRAY_DATA_LENGTH_REFERENCE = "$length";
     public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
-    public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{(\\S+)\\}\\$\\{(\\S+)\\}|@\\{(\\S+)\\}");
+    public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{(\\S+)\\}\\$\\{((?:\\S|(?<!\\\\)'.*?(?<!\\\\)')+)\\}|@\\{(\\S+)\\}");
     public static final Pattern FORMATTER_PATTERN = Pattern.compile(",(?=(?:[^']*'[^']*')*[^']*$)");
     public static final char FORMATTER_ARG_PREFIX = '(';
 
