@@ -17,4 +17,28 @@
  * specific language governing permissions and limitations under the License.
  */
 
-include ':demo', ':proteus-core', ':gson-adapter', ':support-v4', ':recyclerview-v7', ':cardview-v7'
+package com.flipkart.android.proteus.support.v7;
+
+import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.support.v7.widget.CardViewParser;
+
+/**
+ * CardViewCollection
+ *
+ * @author adityasharat
+ */
+
+public class CardViewCollection implements ProteusBuilder.Collection {
+
+    private CardViewCollection() {
+    }
+
+    public static CardViewCollection create() {
+        return new CardViewCollection();
+    }
+
+    @Override
+    public void registerWith(ProteusBuilder builder) {
+        builder.register(new CardViewParser());
+    }
+}

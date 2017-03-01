@@ -17,4 +17,40 @@
  * specific language governing permissions and limitations under the License.
  */
 
-include ':demo', ':proteus-core', ':gson-adapter', ':support-v4', ':recyclerview-v7', ':cardview-v7'
+package com.flipkart.android.proteus.support.v7.widget;
+
+import android.support.v7.widget.CardView;
+import android.view.View;
+
+import com.flipkart.android.proteus.ProteusContext;
+import com.flipkart.android.proteus.ProteusView;
+
+/**
+ * ProteusCardView
+ *
+ * @author adityasharat
+ */
+
+public class ProteusCardView extends CardView implements ProteusView {
+
+    private Manager manager;
+
+    public ProteusCardView(ProteusContext context) {
+        super(context);
+    }
+
+    @Override
+    public Manager getViewManager() {
+        return manager;
+    }
+
+    @Override
+    public void setViewManager(Manager manager) {
+        this.manager = manager;
+    }
+
+    @Override
+    public View getAsView() {
+        return this;
+    }
+}

@@ -50,6 +50,7 @@ import com.flipkart.android.proteus.demo.models.JsonResource;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
 import com.flipkart.android.proteus.recyclerview.v7.RecyclerViewCollection;
 import com.flipkart.android.proteus.support.v4.SupportV4Collection;
+import com.flipkart.android.proteus.support.v7.CardViewCollection;
 import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Layout;
@@ -186,6 +187,7 @@ public class ProteusActivity extends AppCompatActivity {
         Proteus proteus = new ProteusBuilder()
                 .register(SupportV4Collection.create())
                 .register(RecyclerViewCollection.create())
+                .register(CardViewCollection.create())
                 .register(new CircleViewParser())
                 .build();
 
