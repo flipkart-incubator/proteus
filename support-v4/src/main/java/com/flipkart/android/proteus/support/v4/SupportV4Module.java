@@ -17,28 +17,28 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.support.v7;
+package com.flipkart.android.proteus.support.v4;
 
 import com.flipkart.android.proteus.ProteusBuilder;
-import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
+import com.flipkart.android.proteus.support.v4.view.ViewPagerParser;
 
 /**
- * RecyclerViewCollection
+ * SupportV4Module
  *
  * @author adityasharat
  */
-public class RecyclerViewCollection implements ProteusBuilder.Collection {
 
-    private RecyclerViewCollection() {
+public class SupportV4Module implements ProteusBuilder.Module {
 
+    private SupportV4Module() {
     }
 
-    public static RecyclerViewCollection create() {
-        return new RecyclerViewCollection();
+    public static SupportV4Module create() {
+        return new SupportV4Module();
     }
 
     @Override
     public void registerWith(ProteusBuilder builder) {
-        builder.register(new RecyclerViewParser());
+        builder.register(new ViewPagerParser());
     }
 }

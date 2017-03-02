@@ -17,28 +17,28 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.support.v4;
+package com.flipkart.android.proteus.support.v7;
 
 import com.flipkart.android.proteus.ProteusBuilder;
-import com.flipkart.android.proteus.support.v4.view.ViewPagerParser;
+import com.flipkart.android.proteus.support.v7.widget.CardViewParser;
 
 /**
- * SupportV4Collection
+ * CardViewModule
  *
  * @author adityasharat
  */
 
-public class SupportV4Collection implements ProteusBuilder.Collection {
+public class CardViewModule implements ProteusBuilder.Module {
 
-    private SupportV4Collection() {
+    private CardViewModule() {
     }
 
-    public static SupportV4Collection create() {
-        return new SupportV4Collection();
+    public static CardViewModule create() {
+        return new CardViewModule();
     }
 
     @Override
     public void registerWith(ProteusBuilder builder) {
-        builder.register(new ViewPagerParser());
+        builder.register(new CardViewParser());
     }
 }

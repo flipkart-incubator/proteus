@@ -54,7 +54,7 @@ public class ProteusBuilder {
     /**
      *
      */
-    public static final Collection DEFAULT_COLLECTION = new Collection() {
+    public static final Module DEFAULT_MODULE = new Module() {
 
         @Override
         public void registerWith(ProteusBuilder builder) {
@@ -91,7 +91,7 @@ public class ProteusBuilder {
     private HashMap<String, Formatter> formatters = new HashMap<>();
 
     public ProteusBuilder() {
-        DEFAULT_COLLECTION.registerWith(this);
+        DEFAULT_MODULE.registerWith(this);
     }
 
     public ProteusBuilder register(ViewTypeParser parser) {
@@ -114,8 +114,8 @@ public class ProteusBuilder {
         return this;
     }
 
-    public ProteusBuilder register(Collection collection) {
-        collection.registerWith(this);
+    public ProteusBuilder register(Module module) {
+        module.registerWith(this);
         return this;
     }
 
@@ -123,7 +123,7 @@ public class ProteusBuilder {
         return new Proteus(types, formatters);
     }
 
-    public interface Collection {
+    public interface Module {
 
         /**
          * @param builder

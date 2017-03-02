@@ -20,25 +20,25 @@
 package com.flipkart.android.proteus.support.v7;
 
 import com.flipkart.android.proteus.ProteusBuilder;
-import com.flipkart.android.proteus.support.v7.widget.CardViewParser;
+import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
 
 /**
- * CardViewCollection
+ * RecyclerViewModule
  *
  * @author adityasharat
  */
+public class RecyclerViewModule implements ProteusBuilder.Module {
 
-public class CardViewCollection implements ProteusBuilder.Collection {
+    private RecyclerViewModule() {
 
-    private CardViewCollection() {
     }
 
-    public static CardViewCollection create() {
-        return new CardViewCollection();
+    public static RecyclerViewModule create() {
+        return new RecyclerViewModule();
     }
 
     @Override
     public void registerWith(ProteusBuilder builder) {
-        builder.register(new CardViewParser());
+        builder.register(new RecyclerViewParser());
     }
 }
