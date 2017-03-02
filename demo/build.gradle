@@ -76,8 +76,6 @@ android {
         compile project(':support-v4')
         compile project(':recyclerview-v7')
         compile project(':cardview-v7')
+        compile project(':design')
     }
 }
-
-
-
