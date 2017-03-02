@@ -19,7 +19,6 @@
 
 package com.flipkart.android.proteus.support.design.widget;
 
-import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -29,7 +28,7 @@ import android.view.ViewGroup;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
-import com.flipkart.android.proteus.processor.ColorResourceProcessor;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
@@ -70,16 +69,10 @@ public class CoordinatorLayoutParser<V extends CoordinatorLayout> extends ViewTy
             }
         });
 
-        addAttributeProcessor("statusBarBackgroundColor", new ColorResourceProcessor<V>() {
-
+        addAttributeProcessor("fitSystemWindows", new BooleanAttributeProcessor<V>() {
             @Override
-            public void setColor(V view, int color) {
-                view.setStatusBarBackgroundColor(color);
-            }
-
-            @Override
-            public void setColor(V view, ColorStateList colors) {
-                throw new IllegalArgumentException("statusBarBackgroundColor cannot be a color state list");
+            public void setBoolean(V view, boolean value) {
+                view.setFitsSystemWindows(value);
             }
         });
 
