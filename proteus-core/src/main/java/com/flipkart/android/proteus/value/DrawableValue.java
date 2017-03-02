@@ -39,6 +39,7 @@ import android.util.Pair;
 
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
@@ -99,6 +100,23 @@ public abstract class DrawableValue extends Value {
             default:
                 return null;
         }
+    }
+
+    @NonNull
+    public static Drawable convertBitmapToDrawable(Bitmap original, Context context) {
+
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int width = original.getWidth();
+        int height = original.getHeight();
+
+        float scaleWidth = displayMetrics.scaledDensity;
+        float scaleHeight = displayMetrics.scaledDensity;
+        Matrix matrix = new Matrix();
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        Bitmap resizedBitmap = Bitmap.createBitmap(original, 0, 0, width, height, matrix, true);
+
+        return new BitmapDrawable(context.getResources(), resizedBitmap);
     }
 
     public abstract void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, Callback callback);
@@ -457,11 +475,16 @@ public abstract class DrawableValue extends Value {
         }
 
         @Override
-        public void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, final Callback callback) {
-            loader.getBitmap(view, url, new AsyncCallback(view.getAsView().getContext()) {
+        public void apply(final ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, final Callback callback) {
+            loader.getBitmap(view, url, new AsyncCallback() {
                 @Override
                 protected void apply(@NonNull Drawable drawable) {
                     callback.apply(drawable);
+                }
+
+                @Override
+                protected void apply(@NonNull Bitmap bitmap) {
+                    callback.apply(convertBitmapToDrawable(bitmap, view.getAsView().getContext()));
                 }
             });
         }
@@ -753,37 +776,29 @@ public abstract class DrawableValue extends Value {
      */
     public abstract static class AsyncCallback {
 
-        @NonNull
-        private final Context context;
+        private boolean recycled;
 
-        AsyncCallback(@NonNull Context context) {
-            this.context = context;
+        AsyncCallback() {
         }
 
         public void setBitmap(@NonNull Bitmap bitmap) {
-            apply(convertBitmapToDrawable(bitmap));
+            if (recycled) {
+                throw new ProteusInflateException("Cannot make calls to a recycled instance!");
+            }
+            apply(bitmap);
+            recycled = true;
         }
 
         public void setDrawable(@NonNull Drawable drawable) {
+            if (recycled) {
+                throw new ProteusInflateException("Cannot make calls to a recycled instance!");
+            }
             apply(drawable);
-        }
-
-        private Drawable convertBitmapToDrawable(Bitmap original) {
-
-            DisplayMetrics displayMetrics = this.context.getResources().getDisplayMetrics();
-            int width = original.getWidth();
-            int height = original.getHeight();
-
-            float scaleWidth = displayMetrics.scaledDensity;
-            float scaleHeight = displayMetrics.scaledDensity;
-            Matrix matrix = new Matrix();
-            matrix.postScale(scaleWidth, scaleHeight);
-
-            Bitmap resizedBitmap = Bitmap.createBitmap(original, 0, 0, width, height, matrix, true);
-
-            return new BitmapDrawable(this.context.getResources(), resizedBitmap);
+            recycled = true;
         }
 
         protected abstract void apply(@NonNull Drawable drawable);
+
+        protected abstract void apply(@NonNull Bitmap bitmap);
     }
 }
