@@ -443,7 +443,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     StringTokenizer tokenizer = new StringTokenizer(string, STATE_DELIMITER);
                     int index = 0;
                     while (tokenizer.hasMoreTokens()) {
-                        Arrays.copyOf(states, states.length + 1);
+                        states = Arrays.copyOf(states, states.length + 1);
                         states[index] = readColors(tokenizer.nextToken());
                         index++;
                     }
@@ -455,7 +455,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     StringTokenizer tokenizer = new StringTokenizer(string, COLOR_DELIMITER);
                     int index = 0;
                     while (tokenizer.hasMoreTokens()) {
-                        Arrays.copyOf(colors, colors.length + 1);
+                        colors = Arrays.copyOf(colors, colors.length + 1);
                         colors[index] = Integer.parseInt(tokenizer.nextToken());
                         index++;
                     }

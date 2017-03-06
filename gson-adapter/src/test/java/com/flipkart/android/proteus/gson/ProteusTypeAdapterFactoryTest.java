@@ -25,7 +25,6 @@ import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.Color;
-import com.flipkart.android.proteus.value.Dimension;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Value;
@@ -81,6 +80,24 @@ public class ProteusTypeAdapterFactoryTest {
         in.add("e", nested);
 
         String json = adapter.toJson(in);
+
+        Value out = adapter.fromJson(json);
+
+        assertThat(1, is(1));
+    }
+
+    @Test
+    public void color_state_list() throws IOException {
+        int[][] states = new int[][]{
+                new int[]{1, 2, 3},
+                new int[]{4, 5, 6}
+        };
+        int[] colors = new int[]{7, 8, 9};
+
+        Value in = Color.StateList.valueOf(states, colors);
+
+        String json = adapter.toJson(in);
+
         Value out = adapter.fromJson(json);
 
         assertThat(1, is(1));

@@ -246,16 +246,16 @@ public class Binding extends Value {
          * @param index @return
          */
         public Result evaluate(Value data, int index) {
-            Result result = resolveData(data, index);
+            Result result = resolveData(tokens, data, index);
             if (null == this.formatter) {
                 return result;
             } else {
-                Value resolved = this.formatter.format(result.value, index, resolveArguments(data, index));
+                Value resolved = this.formatter.format(result.value, index, resolveArguments(arguments, data, index));
                 return Result.success(resolved);
             }
         }
 
-        private Result resolveData(Value data, int index) {
+        private static Result resolveData(String[] tokens, Value data, int index) {
             // replace INDEX with index value
             if (tokens.length == 1 && INDEX.equals(tokens[0])) {
                 return Result.success(new Primitive(String.valueOf(index)));
@@ -323,21 +323,21 @@ public class Binding extends Value {
             }
         }
 
-        private Value[] resolveArguments(Value data, int index) {
+        private static Value[] resolveArguments(Value[] in, Value data, int index) {
             //noinspection ConstantConditions because we want it to crash, it is an illegal state anyway
-            Value[] arguments = new Value[this.arguments.length];
+            Value[] out = new Value[in.length];
             Value argument, resolved;
-            for (int i = 0; i < this.arguments.length; i++) {
-                argument = this.arguments[i];
+            for (int i = 0; i < in.length; i++) {
+                argument = in[i];
                 if (argument.isBinding()) {
                     resolved = argument.getAsBinding().evaluate(data, index);
                 } else {
                     resolved = argument;
                 }
-                arguments[i] = resolved;
+                out[i] = resolved;
             }
 
-            return arguments;
+            return out;
         }
 
         @Override
