@@ -103,6 +103,11 @@ public class AttributeResource extends Value {
         return NULL == attribute ? null : attribute;
     }
 
+    @Nullable
+    public static AttributeResource valueOf(int value, Context context) {
+        return value == NULL.attributeId ? null : valueOf(String.valueOf(value), context);
+    }
+
     public TypedArray apply(@NonNull Context context) {
         return context.obtainStyledAttributes(new int[]{attributeId});
     }

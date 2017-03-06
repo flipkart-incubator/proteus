@@ -44,7 +44,7 @@ public abstract class AttributeProcessor<V> {
     private static Value staticPrecompile(Primitive value, Context context, FormatterManager manager) {
         String string = value.getAsString();
         if (Binding.isBindingValue(string)) {
-            return Binding.valueOf(string, manager);
+            return Binding.valueOf(string.substring(1), manager);
         } else if (Resource.isResource(string)) {
             return Resource.valueOf(string, null, context);
         } else if (AttributeResource.isAttributeResource(string)) {

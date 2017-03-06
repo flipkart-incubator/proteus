@@ -50,7 +50,7 @@ public abstract class Color extends Value {
 
     @NonNull
     public static Color valueOf(@Nullable String value, @NonNull Color defaultValue) {
-        if (TextUtils.isEmpty(value)) {
+        if (null == value || value.length() == 0) {
             return defaultValue;
         }
         Color color = ColorCache.cache.get(value);
@@ -67,7 +67,6 @@ public abstract class Color extends Value {
     }
 
     public static Color valueOf(ObjectValue value, Context context) {
-        ColorStateList result = null;
         if (value.isPrimitive("type")) {
             String colorType = value.getAsString("type");
             if (TextUtils.equals(colorType, "selector")) {
@@ -157,13 +156,13 @@ public abstract class Color extends Value {
                         int[][] stateSpecs = new int[listSize][];
                         System.arraycopy(colorList, 0, colors, 0, listSize);
                         System.arraycopy(stateSpecList, 0, stateSpecs, 0, listSize);
-                        result = new ColorStateList(stateSpecs, colors);
+                        return new StateList(stateSpecs, colors);
                     }
                 }
             }
         }
 
-        return null != result ? new Color.StateList(result) : Int.BLACK;
+        return Int.BLACK;
     }
 
     private static int apply(String value) {
@@ -250,6 +249,19 @@ public abstract class Color extends Value {
             this.value = value;
         }
 
+        public static Int valueOf(int number) {
+            if (number == 0) {
+                return BLACK;
+            }
+            String value = String.valueOf(number);
+            Color color = ColorCache.cache.get(value);
+            if (null == color) {
+                color = new Int(number);
+                ColorCache.cache.put(value, color);
+            }
+            return (Int) color;
+        }
+
         @Override
         public Value copy() {
             return this;
@@ -263,10 +275,16 @@ public abstract class Color extends Value {
 
     public static class StateList extends Color {
 
-        public final ColorStateList colors;
+        public final int[][] states;
+        public final int[] colors;
 
-        private StateList(ColorStateList colors) {
+        private StateList(int[][] states, int[] colors) {
+            this.states = states;
             this.colors = colors;
+        }
+
+        public static StateList valueOf(int[][] states, int[] colors) {
+            return new StateList(states, colors);
         }
 
         @Override
@@ -276,7 +294,12 @@ public abstract class Color extends Value {
 
         @Override
         public Result apply(Context context) {
-            return new Result(Int.BLACK.value, colors);
+            return new Result(Int.BLACK.value, new ColorStateList(states, colors));
+        }
+
+        @Override
+        public String toString() {
+            return super.toString();
         }
     }
 

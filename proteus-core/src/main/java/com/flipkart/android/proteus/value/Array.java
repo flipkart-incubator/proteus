@@ -23,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -41,6 +42,10 @@ public class Array extends Value {
      */
     public Array() {
         values = new ArrayList<>();
+    }
+
+    public Array(Value[] values) {
+        this.values = Arrays.asList(values);
     }
 
     /**

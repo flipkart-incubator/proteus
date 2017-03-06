@@ -56,7 +56,7 @@ public class NestedBinding extends Binding {
     }
 
     @Override
-    public Expression getExpression(int index) {
+    public Iterator<Expression> getExpressions() {
         throw new UnsupportedOperationException("Cannot call getExpression() on a NestedBinding");
     }
 

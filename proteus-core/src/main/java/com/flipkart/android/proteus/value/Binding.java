@@ -28,8 +28,11 @@ import com.flipkart.android.proteus.Formatter;
 import com.flipkart.android.proteus.FormatterManager;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Result;
+import com.flipkart.android.proteus.toolbox.SimpleArrayIterator;
+import com.flipkart.android.proteus.toolbox.Utils;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -94,7 +97,7 @@ public class Binding extends Value {
             expressions[expressions.length - 1] = expression;
         }
         matcher.appendTail(sb);
-        String template = sb.toString().substring(1);
+        String template = sb.toString();
         if (TEMPLATE.equals(template)) {
             template = EMPTY_TEMPLATE;
         }
@@ -102,12 +105,11 @@ public class Binding extends Value {
     }
 
     /**
-     * @param index
      * @return
      * @throws IndexOutOfBoundsException
      */
-    public Expression getExpression(int index) {
-        return expressions[index];
+    public Iterator<Expression> getExpressions() {
+        return new SimpleArrayIterator<>(expressions);
     }
 
     /**
@@ -145,6 +147,15 @@ public class Binding extends Value {
     @Override
     public Value copy() {
         return this;
+    }
+
+    @Override
+    public String toString() {
+        String[] strings = new String[expressions.length];
+        for (int i = 0; i < expressions.length; i++) {
+            strings[i] = expressions[i].toString();
+        }
+        return String.format(template, (Object[]) strings);
     }
 
     /**
@@ -207,7 +218,7 @@ public class Binding extends Value {
                 String token;
                 Value resolved;
                 for (int i = 0; i < tokens.length; i++) {
-                    token = tokens[i];
+                    token = tokens[i].trim();
                     if (isBindingValue(tokens[i])) {
                         resolved = Binding.valueOf(token, manager);
                     } else {
@@ -224,11 +235,10 @@ public class Binding extends Value {
         }
 
         /**
-         * @param index
          * @return
          */
-        public String getToken(int index) {
-            return tokens[index];
+        public Iterator getTokens() {
+            return new SimpleArrayIterator<>(tokens);
         }
 
         /**
@@ -328,6 +338,16 @@ public class Binding extends Value {
             }
 
             return arguments;
+        }
+
+        @Override
+        public String toString() {
+            String context = "@{" + Utils.getStringFromArray(tokens, ".") + "}";
+            String functions = "";
+            if (null != formatter) {
+                functions = "${" + Utils.getStringFromArray(arguments, ",") + "}";
+            }
+            return context + functions;
         }
 
         /**

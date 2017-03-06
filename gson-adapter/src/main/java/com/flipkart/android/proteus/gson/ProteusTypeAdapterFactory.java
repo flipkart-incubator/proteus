@@ -27,7 +27,9 @@ import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.value.Array;
+import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Binding;
+import com.flipkart.android.proteus.value.Color;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Null;
 import com.flipkart.android.proteus.value.ObjectValue;
@@ -46,10 +48,12 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * ProteusTypeAdapterFactory
@@ -60,9 +64,6 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
     public static final ProteusInstanceHolder PROTEUS_INSTANCE_HOLDER = new ProteusInstanceHolder();
 
-    /**
-     *
-     */
     private Context context;
 
     /**
@@ -71,46 +72,14 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
     public final TypeAdapter<Value> VALUE_TYPE_ADAPTER = new TypeAdapter<Value>() {
         @Override
         public void write(JsonWriter out, Value value) throws IOException {
-            if (value == null || value.isNull()) {
-                out.nullValue();
-            } else if (value.isPrimitive()) {
-                Primitive primitive = value.getAsPrimitive();
-                if (primitive.isNumber()) {
-                    out.value(primitive.getAsNumber());
-                } else if (primitive.isBoolean()) {
-                    out.value(primitive.getAsBoolean());
-                } else {
-                    out.value(primitive.getAsString());
-                }
-
-            } else if (value.isArray()) {
-                out.beginArray();
-                Iterator<Value> iterator = value.getAsArray().iterator();
-                while (iterator.hasNext()) {
-                    write(out, iterator.next());
-                }
-                out.endArray();
-
-            } else if (value.isObject()) {
-                out.beginObject();
-                for (Map.Entry<String, Value> e : value.getAsObject().entrySet()) {
-                    out.name(e.getKey());
-                    write(out, e.getValue());
-                }
-                out.endObject();
-
-            } else if (value.isDimension()) {
-                out.value(value.getAsDimension().toString());
-            } else {
-                throw new IllegalArgumentException("Couldn't write " + value.getClass());
-            }
+            throw new UnsupportedOperationException("Use ProteusTypeAdapterFactory.COMPILED_VALUE_TYPE_ADAPTER instead");
         }
 
         @Override
         public Value read(JsonReader in) throws IOException {
             switch (in.peek()) {
                 case STRING:
-                    return replaceIfBinding(in.nextString());
+                    return compileString(in.nextString());
                 case NUMBER:
                     String number = in.nextString();
                     return new Primitive(new LazilyParsedNumber(number));
@@ -137,7 +106,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                             if (PROTEUS_INSTANCE_HOLDER.isLayout(type)) {
                                 return LAYOUT_TYPE_ADAPTER.read(type, PROTEUS_INSTANCE_HOLDER.getProteus(), in);
                             } else {
-                                object.add(name, replaceIfBinding(type));
+                                object.add(name, compileString(type));
                             }
                         } else {
                             object.add(name, read(in));
@@ -154,14 +123,6 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 case END_ARRAY:
                 default:
                     throw new IllegalArgumentException();
-            }
-        }
-
-        private Value replaceIfBinding(String string) {
-            if (Binding.isBindingValue(string)) {
-                return Binding.valueOf(string, PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager);
-            } else {
-                return new Primitive(string);
             }
         }
     }.nullSafe();
@@ -237,8 +198,294 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
      */
     public final LayoutTypeAdapter LAYOUT_TYPE_ADAPTER = new LayoutTypeAdapter();
 
+    /**
+     *
+     */
+    public final TypeAdapter<Value> COMPILED_VALUE_TYPE_ADAPTER = new TypeAdapter<Value>() {
+
+        public static final String TYPE = "$t";
+        public static final String VALUE = "$v";
+
+        @Override
+        public void write(JsonWriter out, Value value) throws IOException {
+            if (value == null || value.isNull()) {
+                out.nullValue();
+            } else if (value.isPrimitive()) {
+                Primitive primitive = value.getAsPrimitive();
+                if (primitive.isNumber()) {
+                    out.value(primitive.getAsNumber());
+                } else if (primitive.isBoolean()) {
+                    out.value(primitive.getAsBoolean());
+                } else {
+                    out.value(primitive.getAsString());
+                }
+            } else if (value.isObject()) {
+                out.beginObject();
+                for (Map.Entry<String, Value> e : value.getAsObject().entrySet()) {
+                    out.name(e.getKey());
+                    write(out, e.getValue());
+                }
+                out.endObject();
+            } else if (value.isArray()) {
+                out.beginArray();
+                Iterator<Value> iterator = value.getAsArray().iterator();
+                while (iterator.hasNext()) {
+                    write(out, iterator.next());
+                }
+                out.endArray();
+            } else {
+                CustomValueTypeAdapter adapter = map.get(value.getClass());
+
+                out.beginObject();
+
+                out.name(TYPE);
+                out.value(adapter.type);
+
+                out.name(VALUE);
+                //noinspection unchecked
+                adapter.write(out, value);
+
+                out.endObject();
+            }
+        }
+
+        @Override
+        public Value read(JsonReader in) throws IOException {
+            switch (in.peek()) {
+                case STRING:
+                    return compileString(in.nextString());
+                case NUMBER:
+                    String number = in.nextString();
+                    return new Primitive(new LazilyParsedNumber(number));
+                case BOOLEAN:
+                    return new Primitive(in.nextBoolean());
+                case NULL:
+                    in.nextNull();
+                    return Null.INSTANCE;
+                case BEGIN_ARRAY:
+                    Array array = new Array();
+                    in.beginArray();
+                    while (in.hasNext()) {
+                        array.add(read(in));
+                    }
+                    in.endArray();
+                    return array;
+                case BEGIN_OBJECT:
+                    ObjectValue object = new ObjectValue();
+                    in.beginObject();
+                    if (in.hasNext()) {
+                        String name = in.nextName();
+                        if (TYPE.equals(name) && JsonToken.NUMBER.equals(in.peek())) {
+                            int type = Integer.parseInt(in.nextString());
+                            CustomValueTypeAdapter<? extends Value> adapter = map.get(type);
+                            in.nextName();
+                            Value value = adapter.read(in);
+                            in.endObject();
+                            return value;
+                        } else {
+                            object.add(name, read(in));
+                        }
+                    }
+                    while (in.hasNext()) {
+                        object.add(in.nextName(), read(in));
+                    }
+                    in.endObject();
+                    return object;
+                case END_DOCUMENT:
+                case NAME:
+                case END_OBJECT:
+                case END_ARRAY:
+                default:
+                    throw new IllegalArgumentException();
+            }
+        }
+
+    };
+
+    /**
+     *
+     */
+    public final CustomValueTypeAdapterCreator<AttributeResource> ATTRIBUTE_RESOURCE = new CustomValueTypeAdapterCreator<AttributeResource>() {
+        @Override
+        public CustomValueTypeAdapter<AttributeResource> create(int type) {
+            return new CustomValueTypeAdapter<AttributeResource>(type) {
+                @Override
+                public void write(JsonWriter out, AttributeResource value) throws IOException {
+                    out.value(value.attributeId);
+                }
+
+                @Override
+                public AttributeResource read(JsonReader in) throws IOException {
+                    switch (in.peek()) {
+                        case NUMBER:
+                        case STRING:
+                            return AttributeResource.valueOf(Integer.parseInt(in.nextString()), getContext());
+                        default:
+                            throw new IllegalArgumentException();
+                    }
+                }
+            };
+        }
+    };
+
+    /**
+     *
+     */
+    public final CustomValueTypeAdapterCreator<Binding> BINDING = new CustomValueTypeAdapterCreator<Binding>() {
+        @Override
+        public CustomValueTypeAdapter<Binding> create(int type) {
+            return new CustomValueTypeAdapter<Binding>(type) {
+
+                @Override
+                public void write(JsonWriter out, Binding value) throws IOException {
+                    out.value(value.toString());
+                }
+
+                @Override
+                public Binding read(JsonReader in) throws IOException {
+                    switch (in.peek()) {
+                        case STRING:
+                            return Binding.valueOf(in.nextString(), PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager);
+                        default:
+                            throw new IllegalArgumentException();
+                    }
+                }
+            };
+        }
+    };
+
+    /**
+     *
+     */
+    public final CustomValueTypeAdapterCreator<Color.Int> COLOR_INT = new CustomValueTypeAdapterCreator<Color.Int>() {
+        @Override
+        public CustomValueTypeAdapter<Color.Int> create(int type) {
+            return new CustomValueTypeAdapter<Color.Int>(type) {
+                @Override
+                public void write(JsonWriter out, Color.Int color) throws IOException {
+                    out.value(color.value);
+                }
+
+                @Override
+                public Color.Int read(JsonReader in) throws IOException {
+                    return Color.Int.valueOf(Integer.parseInt(in.nextString()));
+                }
+            };
+        }
+    };
+
+    /**
+     *
+     */
+    public final CustomValueTypeAdapterCreator<Color.StateList> COLOR_STATE_LIST = new CustomValueTypeAdapterCreator<Color.StateList>() {
+        @Override
+        public CustomValueTypeAdapter<Color.StateList> create(int type) {
+            return new CustomValueTypeAdapter<Color.StateList>(type) {
+
+                private final String KEY_STATES = "s";
+                private final String KEY_COLORS = "c";
+                private final String STATE_DELIMITER = "|";
+                private final String COLOR_DELIMITER = ",";
+
+                @Override
+                public void write(JsonWriter out, Color.StateList value) throws IOException {
+                    out.beginObject();
+
+                    out.name(KEY_STATES);
+                    out.value(writeStates(value.states));
+
+                    out.name(KEY_COLORS);
+                    out.value(writeColors(value.colors));
+
+                    out.endObject();
+                }
+
+                @Override
+                public Color.StateList read(JsonReader in) throws IOException {
+                    in.beginObject();
+
+                    in.nextName();
+                    int[][] states = readStates(in.nextString());
+
+                    in.nextName();
+                    int colors[] = readColors(in.nextString());
+
+                    Color.StateList color = Color.StateList.valueOf(states, colors);
+
+                    in.endObject();
+                    return color;
+                }
+
+                private String writeStates(int[][] states) {
+                    StringBuilder builder = new StringBuilder();
+                    for (int state = 0; state < states.length; state++) {
+                        builder.append(writeColors(states[state]));
+                        if (state < states.length - 1) {
+                            builder.append(STATE_DELIMITER);
+                        }
+                    }
+                    return builder.toString();
+                }
+
+                private String writeColors(int[] colors) {
+                    StringBuilder builder = new StringBuilder();
+                    for (int color = 0; color < colors.length; color++) {
+                        builder.append(colors[color]);
+                        if (color < colors.length - 1) {
+                            builder.append(COLOR_DELIMITER);
+                        }
+                    }
+                    return builder.toString();
+                }
+
+                private int[][] readStates(String string) {
+                    int[][] states = new int[0][];
+                    StringTokenizer tokenizer = new StringTokenizer(string, STATE_DELIMITER);
+                    int index = 0;
+                    while (tokenizer.hasMoreTokens()) {
+                        Arrays.copyOf(states, states.length + 1);
+                        states[index] = readColors(tokenizer.nextToken());
+                        index++;
+                    }
+                    return states;
+                }
+
+                private int[] readColors(String string) {
+                    int[] colors = new int[0];
+                    StringTokenizer tokenizer = new StringTokenizer(string, COLOR_DELIMITER);
+                    int index = 0;
+                    while (tokenizer.hasMoreTokens()) {
+                        Arrays.copyOf(colors, colors.length + 1);
+                        colors[index] = Integer.parseInt(tokenizer.nextToken());
+                        index++;
+                    }
+                    return colors;
+                }
+            };
+        }
+    };
+
+    /*public final CustomValueTypeAdapterCreator<Dimension> DIMENSION;
+    public final CustomValueTypeAdapterCreator<DrawableValue> DRAWABLE_VALUE;
+    public final CustomValueTypeAdapterCreator<Layout> LAYOUT;
+    public final CustomValueTypeAdapterCreator<NestedBinding> NESTED_BINDING;
+    public final CustomValueTypeAdapterCreator<Resource> RESOURCE;
+    public final CustomValueTypeAdapterCreator<StyleResource> STYLE_RESOURCE;*/
+
+    /**
+     *
+     */
+    private CustomValueTypeAdapterMap map = new CustomValueTypeAdapterMap();
+
+    /**
+     * @param context
+     */
     public ProteusTypeAdapterFactory(Context context) {
         this.context = context;
+        register(AttributeResource.class, ATTRIBUTE_RESOURCE);
+        register(Binding.class, BINDING);
+        register(Color.Int.class, COLOR_INT);
+        register(Color.StateList.class, COLOR_STATE_LIST);
     }
 
     @Override
@@ -268,8 +515,24 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         return null;
     }
 
+    public void register(Class<? extends Value> clazz, CustomValueTypeAdapterCreator creator) {
+        map.register(clazz, creator);
+    }
+
+    public CustomValueTypeAdapter getCustomValueTypeAdapter(Class<? extends Value> clazz) {
+        return map.get(clazz);
+    }
+
     private Context getContext() {
         return context;
+    }
+
+    private static Value compileString(String string) {
+        if (Binding.isBindingValue(string)) {
+            return Binding.valueOf(string.substring(1), PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager);
+        } else {
+            return new Primitive(string);
+        }
     }
 
     public static class ProteusInstanceHolder {
@@ -292,7 +555,23 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         }
     }
 
-    public class LayoutTypeAdapter extends TypeAdapter<Layout> {
+    public static abstract class CustomValueTypeAdapter<V extends Value> extends TypeAdapter<V> {
+
+        public final int type;
+
+        CustomValueTypeAdapter(int type) {
+            this.type = type;
+        }
+
+    }
+
+    public static abstract class CustomValueTypeAdapterCreator<V extends Value> {
+
+        public abstract CustomValueTypeAdapter<V> create(int type);
+
+    }
+
+    private class LayoutTypeAdapter extends TypeAdapter<Layout> {
 
         @Override
         public void write(JsonWriter out, Layout value) throws IOException {
@@ -358,6 +637,40 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             in.endObject();
 
             return data;
+        }
+    }
+
+    private class CustomValueTypeAdapterMap {
+
+        private final Map<Class<? extends Value>, CustomValueTypeAdapter<? extends Value>> types = new HashMap<>();
+
+        private CustomValueTypeAdapter<? extends Value>[] adapters = new CustomValueTypeAdapter[0];
+
+        public CustomValueTypeAdapter<? extends Value> register(Class<? extends Value> clazz, CustomValueTypeAdapterCreator creator) {
+            CustomValueTypeAdapter<? extends Value> adapter = types.get(clazz);
+            if (null != adapter) {
+                return adapter;
+            }
+            //noinspection unchecked
+            adapter = creator.create(adapters.length);
+            adapters = Arrays.copyOf(adapters, adapters.length + 1);
+            adapters[adapters.length - 1] = adapter;
+            return types.put(clazz, adapter);
+        }
+
+        public CustomValueTypeAdapter get(Class<? extends Value> clazz) {
+            CustomValueTypeAdapter i = types.get(clazz);
+            if (null == i) {
+                throw new IllegalArgumentException(clazz.getName() + " is not a known value type! Remember to register the class first");
+            }
+            return types.get(clazz);
+        }
+
+        public CustomValueTypeAdapter<? extends Value> get(int i) {
+            if (i < adapters.length) {
+                return adapters[i];
+            }
+            throw new IllegalArgumentException(i + " is not a known value type! Did you conjure up this int?");
         }
     }
 }

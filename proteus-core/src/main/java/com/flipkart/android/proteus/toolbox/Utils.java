@@ -43,6 +43,17 @@ public class Utils {
         return destination;
     }
 
+    public static String getStringFromArray(String[] array, String delimiter) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < array.length; i++) {
+            sb.append(array[i]);
+            if (i < array.length - 1) {
+                sb.append(delimiter);
+            }
+        }
+        return sb.toString();
+    }
+
     public static String getStringFromArray(Array array, String delimiter) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < array.size(); i++) {
@@ -56,6 +67,10 @@ public class Utils {
             }
         }
         return sb.toString();
+    }
+
+    public static String getStringFromArray(Value[] array, String delimiter) {
+        return getStringFromArray(new Array(array), delimiter);
     }
 
     public static String getVersion() {
