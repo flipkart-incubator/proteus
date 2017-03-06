@@ -73,7 +73,7 @@ public class ProteusTypeAdapterFactoryTest {
         ObjectValue in = new ObjectValue();
         in.add("a", new Primitive(1));
         in.add("b", new Primitive(2));
-        in.add("c", new Array(new Value[]{new Primitive(3), Color.valueOf("#545454")}));
+        //in.add("c", new Array(new Value[]{new Primitive(3), Color.valueOf("#545454")}));
 
         ObjectValue nested = new ObjectValue();
         //nested.add("d", Dimension.valueOf("15dp", context));
