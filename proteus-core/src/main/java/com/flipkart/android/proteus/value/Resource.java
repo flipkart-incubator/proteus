@@ -24,6 +24,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 import android.util.LruCache;
@@ -171,6 +172,17 @@ public class Resource extends Value {
             ResourceCache.cache.put(value, resource);
         }
         return NOT_FOUND == resource ? null : resource;
+    }
+
+    @NonNull
+    public static Resource valueOf(int resId) {
+        String value = String.valueOf(resId);
+        Resource resource = ResourceCache.cache.get(value);
+        if (null == resource) {
+            resource = new Resource(resId);
+            ResourceCache.cache.put(value, resource);
+        }
+        return resource;
     }
 
     @Nullable

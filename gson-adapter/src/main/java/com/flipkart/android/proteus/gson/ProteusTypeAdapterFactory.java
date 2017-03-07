@@ -32,9 +32,11 @@ import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.Color;
 import com.flipkart.android.proteus.value.Dimension;
 import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.NestedBinding;
 import com.flipkart.android.proteus.value.Null;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Primitive;
+import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.Value;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -610,9 +612,47 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         }
     };
 
-    /*public final CustomValueTypeAdapterCreator<NestedBinding> NESTED_BINDING;
-    public final CustomValueTypeAdapterCreator<Resource> RESOURCE;
-    public final CustomValueTypeAdapterCreator<StyleResource> STYLE_RESOURCE;*/
+    /**
+     *
+     */
+    public final CustomValueTypeAdapterCreator<NestedBinding> NESTED_BINDING = new CustomValueTypeAdapterCreator<NestedBinding>() {
+        @Override
+        public CustomValueTypeAdapter<NestedBinding> create(int type) {
+            return new CustomValueTypeAdapter<NestedBinding>(type) {
+                @Override
+                public void write(JsonWriter out, NestedBinding value) throws IOException {
+                    COMPILED_VALUE_TYPE_ADAPTER.write(out, value.getValue());
+                }
+
+                @Override
+                public NestedBinding read(JsonReader in) throws IOException {
+                    return NestedBinding.valueOf(COMPILED_VALUE_TYPE_ADAPTER.read(in));
+                }
+            };
+        }
+    };
+
+    /**
+     *
+     */
+    public final CustomValueTypeAdapterCreator<Resource> RESOURCE = new CustomValueTypeAdapterCreator<Resource>() {
+        @Override
+        public CustomValueTypeAdapter<Resource> create(int type) {
+            return new CustomValueTypeAdapter<Resource>(type) {
+                @Override
+                public void write(JsonWriter out, Resource value) throws IOException {
+                    out.value(value.resId);
+                }
+
+                @Override
+                public Resource read(JsonReader in) throws IOException {
+                    return Resource.valueOf(Integer.parseInt(in.nextString()));
+                }
+            };
+        }
+    };
+
+    /*public final CustomValueTypeAdapterCreator<StyleResource> STYLE_RESOURCE;*/
 
     /**
      *
@@ -629,6 +669,9 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         register(Color.Int.class, COLOR_INT);
         register(Color.StateList.class, COLOR_STATE_LIST);
         register(Dimension.class, DIMENSION);
+        register(Layout.class, LAYOUT);
+        register(NestedBinding.class, NESTED_BINDING);
+        register(Resource.class, RESOURCE);
     }
 
     @Override
