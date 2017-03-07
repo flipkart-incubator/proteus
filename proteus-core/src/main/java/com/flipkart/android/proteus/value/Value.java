@@ -350,6 +350,6 @@ public abstract class Value {
 
     @Override
     public String toString() {
-        throw new RuntimeException("Not yet implemented");
+        throw new UnsupportedOperationException(getClass().getName() + " has not implemented the toString() method");
     }
 }

@@ -59,7 +59,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
         if (null == value || !value.isPrimitive()) {
             return Dimension.ZERO;
         }
-        return Dimension.valueOf(value.getAsString(), context);
+        return Dimension.valueOf(value.getAsString());
     }
 
     @Override

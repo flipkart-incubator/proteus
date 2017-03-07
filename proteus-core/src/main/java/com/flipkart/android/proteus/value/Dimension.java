@@ -110,7 +110,7 @@ public class Dimension extends Value {
         this.unit = unit;
     }
 
-    public static Dimension valueOf(String dimension, Context context) {
+    public static Dimension valueOf(String dimension) {
         if (null == dimension) {
             return ZERO;
         }
@@ -123,7 +123,7 @@ public class Dimension extends Value {
     }
 
     public static float apply(String dimension, Context context) {
-        return Dimension.valueOf(dimension, context).apply(context);
+        return Dimension.valueOf(dimension).apply(context);
     }
 
     public float apply(Context context) {
