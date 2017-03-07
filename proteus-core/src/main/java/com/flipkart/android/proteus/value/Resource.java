@@ -176,13 +176,7 @@ public class Resource extends Value {
 
     @NonNull
     public static Resource valueOf(int resId) {
-        String value = String.valueOf(resId);
-        Resource resource = ResourceCache.cache.get(value);
-        if (null == resource) {
-            resource = new Resource(resId);
-            ResourceCache.cache.put(value, resource);
-        }
-        return resource;
+        return new Resource(resId);
     }
 
     @Nullable
