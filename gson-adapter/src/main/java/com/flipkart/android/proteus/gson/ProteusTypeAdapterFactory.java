@@ -725,7 +725,15 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         register(Color.Int.class, COLOR_INT);
         register(Color.StateList.class, COLOR_STATE_LIST);
         register(Dimension.class, DIMENSION);
-        register(DrawableValue.class, DRAWABLE_VALUE);
+
+        register(DrawableValue.ColorValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.LayerListValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.LevelListValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.RippleValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.ShapeValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.StateListValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.UrlValue.class, DRAWABLE_VALUE);
+
         register(Layout.class, LAYOUT);
         register(NestedBinding.class, NESTED_BINDING);
         register(Resource.class, RESOURCE);
