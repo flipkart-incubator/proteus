@@ -104,7 +104,9 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                         if (ProteusConstants.TYPE.equals(name) && JsonToken.STRING.equals(in.peek())) {
                             String type = in.nextString();
                             if (PROTEUS_INSTANCE_HOLDER.isLayout(type)) {
-                                return LAYOUT_TYPE_ADAPTER.read(type, PROTEUS_INSTANCE_HOLDER.getProteus(), in);
+                                Layout layout = LAYOUT_TYPE_ADAPTER.read(type, PROTEUS_INSTANCE_HOLDER.getProteus(), in);
+                                in.endObject();
+                                return layout;
                             } else {
                                 object.add(name, compileString(type));
                             }
@@ -234,7 +236,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 }
                 out.endArray();
             } else {
-                CustomValueTypeAdapter adapter = map.get(value.getClass());
+                CustomValueTypeAdapter adapter = getCustomValueTypeAdapter(value.getClass());
 
                 out.beginObject();
 
@@ -277,7 +279,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                         String name = in.nextName();
                         if (TYPE.equals(name) && JsonToken.NUMBER.equals(in.peek())) {
                             int type = Integer.parseInt(in.nextString());
-                            CustomValueTypeAdapter<? extends Value> adapter = map.get(type);
+                            CustomValueTypeAdapter<? extends Value> adapter = getCustomValueTypeAdapter(type);
                             in.nextName();
                             Value value = adapter.read(in);
                             in.endObject();
@@ -316,13 +318,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
                 @Override
                 public AttributeResource read(JsonReader in) throws IOException {
-                    switch (in.peek()) {
-                        case NUMBER:
-                        case STRING:
-                            return AttributeResource.valueOf(Integer.parseInt(in.nextString()));
-                        default:
-                            throw new IllegalArgumentException();
-                    }
+                    return AttributeResource.valueOf(Integer.parseInt(in.nextString()));
                 }
             };
         }
@@ -343,12 +339,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
                 @Override
                 public Binding read(JsonReader in) throws IOException {
-                    switch (in.peek()) {
-                        case STRING:
-                            return Binding.valueOf(in.nextString(), PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager);
-                        default:
-                            throw new IllegalArgumentException();
-                    }
+                    return Binding.valueOf(in.nextString(), PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager);
                 }
             };
         }
@@ -523,6 +514,10 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         return map.get(clazz);
     }
 
+    public CustomValueTypeAdapter getCustomValueTypeAdapter(int type) {
+        return map.get(type);
+    }
+
     private Context getContext() {
         return context;
     }
@@ -604,9 +599,6 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     }
                 }
             }
-
-            in.endObject();
-
             return new Layout(type, attributes.size() > 0 ? attributes : null, data, extras.entrySet().size() > 0 ? extras : null);
         }
 
