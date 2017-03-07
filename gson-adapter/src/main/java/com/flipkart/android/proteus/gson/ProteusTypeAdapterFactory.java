@@ -484,6 +484,26 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
     /**
      *
      */
+    public final CustomValueTypeAdapterCreator<DrawableValue.ColorValue> DRAWABLE_COLOR = new CustomValueTypeAdapterCreator<DrawableValue.ColorValue>() {
+        @Override
+        public CustomValueTypeAdapter<DrawableValue.ColorValue> create(int type) {
+            return new CustomValueTypeAdapter<DrawableValue.ColorValue>(type) {
+                @Override
+                public void write(JsonWriter out, DrawableValue.ColorValue value) throws IOException {
+                    COMPILED_VALUE_TYPE_ADAPTER.write(out, value.color);
+                }
+
+                @Override
+                public DrawableValue.ColorValue read(JsonReader in) throws IOException {
+                    return DrawableValue.ColorValue.valueOf(COMPILED_VALUE_TYPE_ADAPTER.read(in), getContext());
+                }
+            };
+        }
+    };
+
+    /**
+     *
+     */
     public final CustomValueTypeAdapterCreator<DrawableValue> DRAWABLE_VALUE = new CustomValueTypeAdapterCreator<DrawableValue>() {
         @Override
         public CustomValueTypeAdapter<DrawableValue> create(int type) {
@@ -728,7 +748,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         register(Color.StateList.class, COLOR_STATE_LIST);
         register(Dimension.class, DIMENSION);
 
-        register(DrawableValue.ColorValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.ColorValue.class, DRAWABLE_COLOR);
         register(DrawableValue.LayerListValue.class, DRAWABLE_VALUE);
         register(DrawableValue.LevelListValue.class, DRAWABLE_VALUE);
         register(DrawableValue.RippleValue.class, DRAWABLE_VALUE);
