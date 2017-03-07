@@ -487,15 +487,15 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
     public final CustomValueTypeAdapterCreator<DrawableValue> DRAWABLE_VALUE = new CustomValueTypeAdapterCreator<DrawableValue>() {
         @Override
         public CustomValueTypeAdapter<DrawableValue> create(int type) {
-            return new CustomValueTypeAdapter<DrawableValue>() {
+            return new CustomValueTypeAdapter<DrawableValue>(type) {
                 @Override
                 public void write(JsonWriter out, DrawableValue value) throws IOException {
-                    
+                    out.value("#ffff00");
                 }
 
                 @Override
                 public DrawableValue read(JsonReader in) throws IOException {
-                    return null;
+                    return DrawableValue.valueOf(in.nextString(), getContext());
                 }
             };
         }
