@@ -490,7 +490,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return new CustomValueTypeAdapter<DrawableValue>(type) {
                 @Override
                 public void write(JsonWriter out, DrawableValue value) throws IOException {
-                    out.value("#ffff00");
+                    out.value("#00000000");
                 }
 
                 @Override
@@ -912,7 +912,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return types.put(clazz, adapter);
         }
 
-        public CustomValueTypeAdapter get(Class<? extends Value> clazz) {
+        public CustomValueTypeAdapter<? extends Value> get(Class<? extends Value> clazz) {
             CustomValueTypeAdapter i = types.get(clazz);
             if (null == i) {
                 throw new IllegalArgumentException(clazz.getName() + " is not a known value type! Remember to register the class first");

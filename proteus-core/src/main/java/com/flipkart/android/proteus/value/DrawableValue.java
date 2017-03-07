@@ -134,7 +134,7 @@ public abstract class DrawableValue extends Value {
 
         public static final ColorValue BLACK = new ColorValue(Color.Int.BLACK);
 
-        private final Value color;
+        public final Value color;
 
         private ColorValue(Value color) {
             this.color = color;
