@@ -155,7 +155,11 @@ public class Binding extends Value {
         for (int i = 0; i < expressions.length; i++) {
             strings[i] = expressions[i].toString();
         }
-        return String.format(template, (Object[]) strings);
+        if (EMPTY_TEMPLATE.equals(template)) {
+            return strings[0];
+        } else {
+            return String.format(template, (Object[]) strings);
+        }
     }
 
     /**
@@ -231,27 +235,6 @@ public class Binding extends Value {
                 }
 
                 return new Pair<>(manager.get(name), arguments);
-            }
-        }
-
-        /**
-         * @return
-         */
-        public Iterator getTokens() {
-            return new SimpleArrayIterator<>(tokens);
-        }
-
-        /**
-         * @param data
-         * @param index @return
-         */
-        public Result evaluate(Value data, int index) {
-            Result result = resolveData(tokens, data, index);
-            if (null == this.formatter) {
-                return result;
-            } else {
-                Value resolved = this.formatter.format(result.value, index, resolveArguments(arguments, data, index));
-                return Result.success(resolved);
             }
         }
 
@@ -340,12 +323,33 @@ public class Binding extends Value {
             return out;
         }
 
+        /**
+         * @return
+         */
+        public Iterator getTokens() {
+            return new SimpleArrayIterator<>(tokens);
+        }
+
+        /**
+         * @param data
+         * @param index @return
+         */
+        public Result evaluate(Value data, int index) {
+            Result result = resolveData(tokens, data, index);
+            if (null == this.formatter) {
+                return result;
+            } else {
+                Value resolved = this.formatter.format(result.value, index, resolveArguments(arguments, data, index));
+                return Result.success(resolved);
+            }
+        }
+
         @Override
         public String toString() {
             String context = "@{" + Utils.getStringFromArray(tokens, ".") + "}";
             String functions = "";
             if (null != formatter) {
-                functions = "${" + Utils.getStringFromArray(arguments, ",") + "}";
+                functions = "${" + formatter.getName() + "(" + Utils.getStringFromArray(arguments, ",") + ")}";
             }
             return context + functions;
         }

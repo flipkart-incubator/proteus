@@ -104,8 +104,21 @@ public class AttributeResource extends Value {
     }
 
     @Nullable
-    public static AttributeResource valueOf(int value, Context context) {
-        return value == NULL.attributeId ? null : valueOf(String.valueOf(value), context);
+    public static AttributeResource valueOf(int value) {
+        String string = String.valueOf(value);
+        AttributeResource attribute = AttributeCache.cache.get(string);
+        if (null == attribute) {
+            try {
+                attribute = new AttributeResource(value);
+            } catch (Exception e) {
+                if (ProteusConstants.isLoggingEnabled()) {
+                    e.printStackTrace();
+                }
+                attribute = NULL;
+            }
+            AttributeCache.cache.put(string, attribute);
+        }
+        return NULL == attribute ? null : attribute;
     }
 
     public TypedArray apply(@NonNull Context context) {

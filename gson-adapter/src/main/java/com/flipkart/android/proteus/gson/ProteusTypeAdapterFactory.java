@@ -319,7 +319,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     switch (in.peek()) {
                         case NUMBER:
                         case STRING:
-                            return AttributeResource.valueOf(Integer.parseInt(in.nextString()), getContext());
+                            return AttributeResource.valueOf(Integer.parseInt(in.nextString()));
                         default:
                             throw new IllegalArgumentException();
                     }
