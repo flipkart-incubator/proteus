@@ -31,12 +31,14 @@ import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.Color;
 import com.flipkart.android.proteus.value.Dimension;
+import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.NestedBinding;
 import com.flipkart.android.proteus.value.Null;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Resource;
+import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -479,7 +481,25 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         }
     };
 
-    //public final CustomValueTypeAdapterCreator<DrawableValue> DRAWABLE_VALUE;
+    /**
+     *
+     */
+    public final CustomValueTypeAdapterCreator<DrawableValue> DRAWABLE_VALUE = new CustomValueTypeAdapterCreator<DrawableValue>() {
+        @Override
+        public CustomValueTypeAdapter<DrawableValue> create(int type) {
+            return new CustomValueTypeAdapter<DrawableValue>() {
+                @Override
+                public void write(JsonWriter out, DrawableValue value) throws IOException {
+                    
+                }
+
+                @Override
+                public DrawableValue read(JsonReader in) throws IOException {
+                    return null;
+                }
+            };
+        }
+    };
 
     /**
      *
@@ -652,7 +672,43 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         }
     };
 
-    /*public final CustomValueTypeAdapterCreator<StyleResource> STYLE_RESOURCE;*/
+    /**
+     *
+     */
+    public final CustomValueTypeAdapterCreator<StyleResource> STYLE_RESOURCE = new CustomValueTypeAdapterCreator<StyleResource>() {
+        @Override
+        public CustomValueTypeAdapter<StyleResource> create(int type) {
+            return new CustomValueTypeAdapter<StyleResource>(type) {
+
+                private static final String KEY_ATTRIBUTE_ID = "a";
+                private static final String KEY_STYLE_ID = "s";
+
+                @Override
+                public void write(JsonWriter out, StyleResource value) throws IOException {
+                    out.beginObject();
+
+                    out.name(KEY_ATTRIBUTE_ID);
+                    out.value(value.attributeId);
+
+                    out.name(KEY_STYLE_ID);
+                    out.value(value.styleId);
+
+                    out.endObject();
+                }
+
+                @Override
+                public StyleResource read(JsonReader in) throws IOException {
+                    in.beginObject();
+                    in.nextName();
+                    String attributeId = in.nextString();
+                    in.nextName();
+                    String styleId = in.nextString();
+                    in.endObject();
+                    return StyleResource.valueOf(Integer.parseInt(styleId), Integer.parseInt(attributeId));
+                }
+            };
+        }
+    };
 
     /**
      *
@@ -669,9 +725,11 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         register(Color.Int.class, COLOR_INT);
         register(Color.StateList.class, COLOR_STATE_LIST);
         register(Dimension.class, DIMENSION);
+        register(DrawableValue.class, DRAWABLE_VALUE);
         register(Layout.class, LAYOUT);
         register(NestedBinding.class, NESTED_BINDING);
         register(Resource.class, RESOURCE);
+        register(StyleResource.class, STYLE_RESOURCE);
     }
 
     @Override
@@ -701,7 +759,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         return null;
     }
 
-    public void register(Class<? extends Value> clazz, CustomValueTypeAdapterCreator creator) {
+    public void register(Class<? extends Value> clazz, CustomValueTypeAdapterCreator<? extends Value> creator) {
         map.register(clazz, creator);
     }
 

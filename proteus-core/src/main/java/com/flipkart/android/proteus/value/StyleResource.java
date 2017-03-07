@@ -21,6 +21,7 @@ package com.flipkart.android.proteus.value;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.LruCache;
 
@@ -37,7 +38,7 @@ import java.util.Map;
 
 public class StyleResource extends Value {
 
-    public static final StyleResource NULL = new StyleResource();
+    public static final StyleResource NULL = new StyleResource(-1, -1);
     private static final Map<String, Integer> styleMap = new HashMap<>();
     private static final Map<String, Integer> attributeMap = new HashMap<>();
     private static final Map<String, Class> sHashMap = new HashMap<>();
@@ -45,11 +46,6 @@ public class StyleResource extends Value {
 
     public final int styleId;
     public final int attributeId;
-
-    private StyleResource() {
-        this.styleId = -1;
-        this.attributeId = -1;
-    }
 
     private StyleResource(String value, Context context) throws IllegalArgumentException, NoSuchFieldException, IllegalAccessException, ClassNotFoundException {
         String[] tokens = value.substring(1, value.length()).split(":");
@@ -83,6 +79,11 @@ public class StyleResource extends Value {
         this.attributeId = attrId;
     }
 
+    private StyleResource(int styleId, int attributeId) {
+        this.styleId = styleId;
+        this.attributeId = attributeId;
+    }
+
     public static boolean isStyleResource(String value) {
         return value.startsWith(ATTR_START_LITERAL);
     }
@@ -102,6 +103,11 @@ public class StyleResource extends Value {
             StyleCache.cache.put(value, style);
         }
         return NULL == style ? null : style;
+    }
+
+    @NonNull
+    public static StyleResource valueOf(int styleId, int attributeId) {
+        return new StyleResource(styleId, attributeId);
     }
 
     public TypedArray apply(Context context) {
