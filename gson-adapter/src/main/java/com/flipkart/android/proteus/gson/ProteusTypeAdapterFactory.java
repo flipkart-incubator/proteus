@@ -477,9 +477,140 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         }
     };
 
-    /*public final CustomValueTypeAdapterCreator<DrawableValue> DRAWABLE_VALUE;
-    public final CustomValueTypeAdapterCreator<Layout> LAYOUT;
-    public final CustomValueTypeAdapterCreator<NestedBinding> NESTED_BINDING;
+    //public final CustomValueTypeAdapterCreator<DrawableValue> DRAWABLE_VALUE;
+
+    /**
+     *
+     */
+    public final CustomValueTypeAdapterCreator<Layout> LAYOUT = new CustomValueTypeAdapterCreator<Layout>() {
+        @Override
+        public CustomValueTypeAdapter<Layout> create(int type) {
+            return new CustomValueTypeAdapter<Layout>(type) {
+
+                private static final String KEY_TYPE = "t";
+                private static final String KEY_DATA = "d";
+                private static final String KEY_ATTRIBUTES = "a";
+                private static final String KEY_EXTRAS = "e";
+                private static final String KEY_ATTRIBUTE_ID = "i";
+                private static final String KEY_ATTRIBUTE_VALUE = "v";
+
+                @Override
+                public void write(JsonWriter out, Layout value) throws IOException {
+                    out.beginObject();
+
+                    out.name(KEY_TYPE);
+                    out.value(value.type);
+
+                    if (null != value.data) {
+                        out.name(KEY_DATA);
+                        out.beginObject();
+                        for (Map.Entry<String, Value> entry : value.data.entrySet()) {
+                            out.name(entry.getKey());
+                            COMPILED_VALUE_TYPE_ADAPTER.write(out, entry.getValue());
+                        }
+                        out.endObject();
+                    }
+
+
+                    if (null != value.attributes) {
+                        out.name(KEY_ATTRIBUTES);
+                        out.beginArray();
+                        for (Layout.Attribute attribute : value.attributes) {
+                            out.beginObject();
+
+                            out.name(KEY_ATTRIBUTE_ID);
+                            out.value(attribute.id);
+
+                            out.name(KEY_ATTRIBUTE_VALUE);
+                            COMPILED_VALUE_TYPE_ADAPTER.write(out, attribute.value);
+
+                            out.endObject();
+                        }
+                        out.endArray();
+                    }
+
+                    if (null != value.extras) {
+                        out.name(KEY_EXTRAS);
+                        COMPILED_VALUE_TYPE_ADAPTER.write(out, value.extras);
+                    }
+
+                    out.endObject();
+                }
+
+                @Override
+                public Layout read(JsonReader in) throws IOException {
+                    in.beginObject();
+
+                    String name;
+                    String type = null;
+                    Map<String, Value> data = null;
+                    List<Layout.Attribute> attributes = null;
+                    ObjectValue extras = null;
+
+                    while (in.hasNext()) {
+                        name = in.nextName();
+                        switch (name) {
+                            case KEY_TYPE:
+                                type = in.nextString();
+                                break;
+                            case KEY_DATA:
+                                data = readData(in);
+                                break;
+                            case KEY_ATTRIBUTES:
+                                attributes = readAttributes(in);
+                                break;
+                            case KEY_EXTRAS:
+                                extras = readExtras(in);
+                                break;
+                            default:
+                                throw new IllegalStateException("Bad attribute '" + name + "'");
+                        }
+                    }
+
+                    in.endObject();
+
+                    if (null == type) {
+                        throw new IllegalStateException("Layout must have type attribute!");
+                    }
+
+                    //noinspection ConstantConditions
+                    return new Layout(type, attributes, data, extras);
+                }
+
+                @Nullable
+                private Map<String, Value> readData(JsonReader in) throws IOException {
+                    Map<String, Value> data = LAYOUT_TYPE_ADAPTER.readData(in);
+                    return data;
+                }
+
+                @Nullable
+                private ObjectValue readExtras(JsonReader in) throws IOException {
+                    return COMPILED_VALUE_TYPE_ADAPTER.read(in).getAsObject();
+                }
+
+                @Nullable
+                private List<Layout.Attribute> readAttributes(JsonReader in) throws IOException {
+                    List<Layout.Attribute> attributes = new ArrayList<>();
+
+                    in.beginArray();
+                    int id;
+                    Value value;
+                    while (in.hasNext()) {
+                        in.nextName();
+                        id = Integer.parseInt(in.nextString());
+                        in.nextName();
+                        value = COMPILED_VALUE_TYPE_ADAPTER.read(in);
+                        attributes.add(new Layout.Attribute(id, value));
+                    }
+                    in.endArray();
+
+                    return attributes;
+                }
+            };
+        }
+    };
+
+    /*public final CustomValueTypeAdapterCreator<NestedBinding> NESTED_BINDING;
     public final CustomValueTypeAdapterCreator<Resource> RESOURCE;
     public final CustomValueTypeAdapterCreator<StyleResource> STYLE_RESOURCE;*/
 
@@ -531,11 +662,11 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         map.register(clazz, creator);
     }
 
-    public CustomValueTypeAdapter getCustomValueTypeAdapter(Class<? extends Value> clazz) {
+    public CustomValueTypeAdapter<? extends Value> getCustomValueTypeAdapter(Class<? extends Value> clazz) {
         return map.get(clazz);
     }
 
-    public CustomValueTypeAdapter getCustomValueTypeAdapter(int type) {
+    public CustomValueTypeAdapter<? extends Value> getCustomValueTypeAdapter(int type) {
         return map.get(type);
     }
 
@@ -623,7 +754,6 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             return new Layout(type, attributes.size() > 0 ? attributes : null, data, extras.entrySet().size() > 0 ? extras : null);
         }
 
-        @Nullable
         public Map<String, Value> readData(JsonReader in) throws IOException {
             JsonToken peek = in.peek();
             if (peek == JsonToken.NULL) {
