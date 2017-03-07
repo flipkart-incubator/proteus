@@ -269,7 +269,7 @@ public abstract class Color extends Value {
 
         @Override
         public Result apply(Context context) {
-            return new Result(value, null);
+            return Result.color(value);
         }
     }
 
@@ -294,7 +294,8 @@ public abstract class Color extends Value {
 
         @Override
         public Result apply(Context context) {
-            return new Result(Int.BLACK.value, new ColorStateList(states, colors));
+            ColorStateList colors = new ColorStateList(states, this.colors);
+            return Result.colors(colors);
         }
 
         @Override
@@ -310,9 +311,21 @@ public abstract class Color extends Value {
         @Nullable
         public final ColorStateList colors;
 
-        public Result(int color, @Nullable ColorStateList colors) {
+        private Result(int color, @Nullable ColorStateList colors) {
             this.color = color;
             this.colors = colors;
+        }
+
+        public static Result color(int color) {
+            return create(color, null);
+        }
+
+        public static Result colors(@NonNull ColorStateList colors) {
+            return create(colors.getDefaultColor(), colors);
+        }
+
+        public static Result create(int color, @Nullable ColorStateList colors) {
+            return new Result(color, colors);
         }
     }
 

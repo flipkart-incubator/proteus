@@ -40,12 +40,12 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
         ColorResourceProcessor<View> processor = new ColorResourceProcessor<View>() {
             @Override
             public void setColor(View view, int color) {
-                result[0] = new Color.Result(color, null);
+                result[0] = Color.Result.color(color);
             }
 
             @Override
             public void setColor(View view, ColorStateList colors) {
-                result[0] = new Color.Result(Color.Int.BLACK.value, colors);
+                result[0] = Color.Result.colors(colors);
             }
         };
         processor.process(view.getAsView(), value);

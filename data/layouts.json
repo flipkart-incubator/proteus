@@ -159,7 +159,7 @@
                     {
                       "type": "gradient",
                       "startColor": "#44e73827",
-                      "endColor": "@color/yellow",
+                      "endColor": "@color/green",
                       "angle": 270
                     }
                   ]
