@@ -76,6 +76,8 @@ public class ProteusActivity extends AppCompatActivity {
     private Retrofit retrofit;
     private JsonResource resources;
 
+    private ProteusTypeAdapterFactory adapter;
+
     private ViewGroup container;
 
     private ProteusLayoutInflater layoutInflater;
@@ -171,9 +173,9 @@ public class ProteusActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (null == retrofit) {
-            ProteusTypeAdapterFactory factory = new ProteusTypeAdapterFactory(this);
+            adapter = new ProteusTypeAdapterFactory(this);
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapterFactory(factory)
+                    .registerTypeAdapterFactory(adapter)
                     .create();
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -313,6 +315,25 @@ public class ProteusActivity extends AppCompatActivity {
         }.execute();
     }
 
+    private void write() {
+        try {
+
+            long start = System.currentTimeMillis();
+            String value = adapter.COMPILED_VALUE_TYPE_ADAPTER.toJson(layout);
+            System.out.println("write: " + (System.currentTimeMillis() - start));
+            System.out.println("\n\n** begin dump **\n\n");
+            System.out.println(value);
+            System.out.println("\n\n** end dump **\n\n");
+
+            start = System.currentTimeMillis();
+            layout = adapter.COMPILED_VALUE_TYPE_ADAPTER.fromJson(value).getAsLayout();
+            System.out.println("read: " + (System.currentTimeMillis() - start));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -334,6 +355,9 @@ public class ProteusActivity extends AppCompatActivity {
                 return true;
             case R.id.update:
                 update();
+                return true;
+            case R.id.compile:
+                write();
                 return true;
         }
 

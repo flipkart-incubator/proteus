@@ -618,11 +618,13 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     int id;
                     Value value;
                     while (in.hasNext()) {
+                        in.beginObject();
                         in.nextName();
                         id = Integer.parseInt(in.nextString());
                         in.nextName();
                         value = COMPILED_VALUE_TYPE_ADAPTER.read(in);
                         attributes.add(new Layout.Attribute(id, value));
+                        in.endObject();
                     }
                     in.endArray();
 

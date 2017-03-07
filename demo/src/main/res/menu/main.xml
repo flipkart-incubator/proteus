@@ -37,4 +37,10 @@
         tools:ignore="HardcodedText"
         android:title="update"/>
 
+    <item
+        android:id="@+id/compile"
+        app:showAsAction="never"
+        tools:ignore="HardcodedText"
+        android:title="write layout"/>
+
 </menu>
