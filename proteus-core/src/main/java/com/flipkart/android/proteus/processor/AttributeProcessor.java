@@ -41,7 +41,7 @@ import com.flipkart.android.proteus.value.Value;
 public abstract class AttributeProcessor<V> {
 
     @Nullable
-    private static Value staticPrecompile(Primitive value, Context context, FormatterManager manager) {
+    public static Value staticPrecompile(Primitive value, Context context, FormatterManager manager) {
         String string = value.getAsString();
         if (Binding.isBindingValue(string)) {
             return Binding.valueOf(string.substring(1), manager);
@@ -56,7 +56,7 @@ public abstract class AttributeProcessor<V> {
     }
 
     @Nullable
-    private static Value staticPrecompile(ObjectValue object, Context context, FormatterManager manager) {
+    public static Value staticPrecompile(ObjectValue object, Context context, FormatterManager manager) {
         Value binding = object.get(NestedBinding.NESTED_BINDING_KEY);
         if (null != binding) {
             return NestedBinding.valueOf(binding);

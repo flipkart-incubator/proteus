@@ -59,6 +59,10 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
         if (value.isObject()) {
             return Color.valueOf(value.getAsObject(), context);
         } else if (value.isPrimitive()) {
+            Value precompiled = AttributeProcessor.staticPrecompile(value.getAsPrimitive(), context, null);
+            if (null != precompiled) {
+                return precompiled;
+            }
             return Color.valueOf(value.getAsString(), Color.Int.BLACK);
         } else {
             return Color.Int.BLACK;

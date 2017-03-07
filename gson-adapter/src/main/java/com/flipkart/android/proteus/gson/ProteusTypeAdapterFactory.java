@@ -628,7 +628,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
             JsonToken peek = in.peek();
             if (peek == JsonToken.NULL) {
                 in.nextNull();
-                return null;
+                return new HashMap<>();
             }
 
             if (peek != JsonToken.BEGIN_OBJECT) {
