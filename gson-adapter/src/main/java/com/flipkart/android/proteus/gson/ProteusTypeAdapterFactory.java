@@ -30,6 +30,7 @@ import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.Color;
+import com.flipkart.android.proteus.value.Dimension;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.Null;
 import com.flipkart.android.proteus.value.ObjectValue;
@@ -456,8 +457,27 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         }
     };
 
-    /*public final CustomValueTypeAdapterCreator<Dimension> DIMENSION;
-    public final CustomValueTypeAdapterCreator<DrawableValue> DRAWABLE_VALUE;
+    /**
+     *
+     */
+    public final CustomValueTypeAdapterCreator<Dimension> DIMENSION = new CustomValueTypeAdapterCreator<Dimension>() {
+        @Override
+        public CustomValueTypeAdapter<Dimension> create(int type) {
+            return new CustomValueTypeAdapter<Dimension>(type) {
+                @Override
+                public void write(JsonWriter out, Dimension value) throws IOException {
+                    out.value(value.toString());
+                }
+
+                @Override
+                public Dimension read(JsonReader in) throws IOException {
+                    return Dimension.valueOf(in.nextString());
+                }
+            };
+        }
+    };
+
+    /*public final CustomValueTypeAdapterCreator<DrawableValue> DRAWABLE_VALUE;
     public final CustomValueTypeAdapterCreator<Layout> LAYOUT;
     public final CustomValueTypeAdapterCreator<NestedBinding> NESTED_BINDING;
     public final CustomValueTypeAdapterCreator<Resource> RESOURCE;
@@ -477,6 +497,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         register(Binding.class, BINDING);
         register(Color.Int.class, COLOR_INT);
         register(Color.StateList.class, COLOR_STATE_LIST);
+        register(Dimension.class, DIMENSION);
     }
 
     @Override
@@ -554,7 +575,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
         public final int type;
 
-        CustomValueTypeAdapter(int type) {
+        protected CustomValueTypeAdapter(int type) {
             this.type = type;
         }
 

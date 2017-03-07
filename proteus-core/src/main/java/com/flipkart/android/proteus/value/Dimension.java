@@ -25,9 +25,8 @@ import android.util.TypedValue;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.parser.ParseHelper;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.flipkart.android.proteus.toolbox.BiMap;
+import com.flipkart.android.proteus.toolbox.HashBiMap;
 
 /**
  * Dimension
@@ -55,13 +54,13 @@ public class Dimension extends Value {
     public static final String SUFFIX_IN = "in";
     public static final String SUFFIX_MM = "mm";
 
-    public static final Map<String, Integer> sDimensionsMap = new HashMap<>();
-    public static final Map<String, Integer> sDimensionsUnitsMap = new HashMap<>();
+    public static final BiMap<String, Integer> sDimensionsMap = new HashBiMap<>(3);
+    public static final BiMap<String, Integer> sDimensionsUnitsMap = new HashBiMap<>(6);
     public static final Dimension ZERO = new Dimension(0, DIMENSION_UNIT_PX);
 
     static {
-        sDimensionsMap.put(MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         sDimensionsMap.put(FILL_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        sDimensionsMap.put(MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         sDimensionsMap.put(WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         sDimensionsUnitsMap.put(SUFFIX_PX, DIMENSION_UNIT_PX);
@@ -81,7 +80,7 @@ public class Dimension extends Value {
     }
 
     private Dimension(String dimension) {
-        Integer parameter = sDimensionsMap.get(dimension);
+        Integer parameter = sDimensionsMap.getValue(dimension);
         double value;
         int unit;
 
@@ -94,7 +93,7 @@ public class Dimension extends Value {
                 value = 0;
                 unit = DIMENSION_UNIT_PX;
             } else { // find the units and value by splitting at the second-last character of the dimension
-                Integer u = sDimensionsUnitsMap.get(dimension.substring(length - 2));
+                Integer u = sDimensionsUnitsMap.getValue(dimension.substring(length - 2));
                 String stringValue = dimension.substring(0, length - 2);
                 if (u != null) {
                     value = ParseHelper.parseFloat(stringValue);
@@ -151,6 +150,23 @@ public class Dimension extends Value {
     @Override
     public Value copy() {
         return this;
+    }
+
+    @Override
+    public String toString() {
+        final String value;
+        if (this.value % 1 == 0) {
+            value = String.valueOf((int) this.value);
+        } else {
+            value = String.valueOf(this.value);
+        }
+        final String unit;
+        if (this.unit == DIMENSION_UNIT_ENUM) {
+            return sDimensionsMap.getKey(this.unit);
+        } else {
+            unit = sDimensionsUnitsMap.getKey(this.unit);
+            return value + unit;
+        }
     }
 
     private static class DimensionCache {
