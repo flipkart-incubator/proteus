@@ -160,7 +160,7 @@ The demo app will let you play around with Proteus as well as help you understan
 
 ## StackOverflow
 
-Please tag questions on [StackOverflow](http://stackoverflow.com) with [android-proteus](http://stackoverflow.com/unanswered/tagged/android-proteus).
+Find us on [StackOverflow](http://stackoverflow.com) at [proteus](http://stackoverflow.com/questions/tagged/proteus).
 
 ### One click XML to JSON conversion plugin
 
