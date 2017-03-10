@@ -63,6 +63,7 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -318,16 +319,33 @@ public class ProteusActivity extends AppCompatActivity {
     private void write() {
         try {
 
-            long start = System.currentTimeMillis();
+            long start;
+
+            start = System.currentTimeMillis();
+
             String value = adapter.COMPILED_VALUE_TYPE_ADAPTER.toJson(layout);
+
             System.out.println("write: " + (System.currentTimeMillis() - start));
+
             System.out.println("\n\n** begin dump **\n\n");
             System.out.println(value);
             System.out.println("\n\n** end dump **\n\n");
 
+            Map<String, String> values = new HashMap<>(layouts.size());
+
+            for (Map.Entry<String, Layout> entry : layouts.entrySet()) {
+                values.put(entry.getKey(), adapter.COMPILED_VALUE_TYPE_ADAPTER.toJson(entry.getValue()));
+            }
+
             start = System.currentTimeMillis();
+
             layout = adapter.COMPILED_VALUE_TYPE_ADAPTER.fromJson(value).getAsLayout();
+
             System.out.println("read: " + (System.currentTimeMillis() - start));
+
+            for (Map.Entry<String, String> entry : values.entrySet()) {
+                layouts.put(entry.getKey(), (Layout) adapter.COMPILED_VALUE_TYPE_ADAPTER.fromJson(entry.getValue()));
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
