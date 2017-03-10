@@ -37,6 +37,25 @@ public class SimpleArrayIterator<E> implements Iterator<E> {
         cursor = 0;
     }
 
+    public static Iterator<Integer> createIntArrayIterator(final int[] elements) {
+        return new Iterator<Integer>() {
+
+            private int cursor;
+
+            @Override
+            public boolean hasNext() {
+                return cursor < elements.length;
+            }
+
+            @Override
+            public Integer next() {
+                Integer e = elements[cursor];
+                cursor++;
+                return e;
+            }
+        };
+    }
+
     @Override
     public boolean hasNext() {
         return cursor < elements.length;
