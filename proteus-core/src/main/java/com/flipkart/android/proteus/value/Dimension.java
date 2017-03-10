@@ -162,7 +162,7 @@ public class Dimension extends Value {
         }
         final String unit;
         if (this.unit == DIMENSION_UNIT_ENUM) {
-            return sDimensionsMap.getKey(this.unit);
+            return sDimensionsMap.getKey((int) this.value);
         } else {
             unit = sDimensionsUnitsMap.getKey(this.unit);
             return value + unit;
