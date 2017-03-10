@@ -86,7 +86,6 @@ public class ParseHelper {
     private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";
 
     private static final String DRAWABLE_STR = "drawable";
-    private static final String ID_STR = "id";
 
     private static final Map<Integer, Primitive> sVisibilityMap = new HashMap<>();
     private static final Map<String, Integer> sStateMap = new HashMap<>();
@@ -264,8 +263,8 @@ public class ParseHelper {
             }
         } else //noinspection ConstantConditions
             if (value.isNull()) {
-            returnValue = View.GONE;
-        }
+                returnValue = View.GONE;
+            }
         return returnValue == null ? View.VISIBLE : returnValue;
     }
 
@@ -364,7 +363,6 @@ public class ParseHelper {
      * @return resource id
      */
     public static int getResId(String variableName, Class<?> с) {
-
         Field field;
         int resId = 0;
         try {
@@ -384,8 +382,7 @@ public class ParseHelper {
      * @param fullResIdString the string id of the view
      * @return the number id of the view
      */
-    public static int getAndroidResIdByXmlResId(String fullResIdString) {
-
+    public static int getAndroidXmlResId(String fullResIdString) {
         if (fullResIdString != null) {
             int i = fullResIdString.indexOf("/");
             if (i >= 0) {
@@ -394,26 +391,6 @@ public class ParseHelper {
             }
         }
         return View.NO_ID;
-    }
-
-    /**
-     * Parses a single layer inside a layer list and gives
-     * a pair of android:id and a string for the drawable path.
-     *
-     * @param value
-     * @return The layer info as a {@link Pair}
-     */
-    public static Pair<Integer, Value> parseLayer(ObjectValue value) {
-
-        String idAsString = value.getAsString(ID_STR);
-        int androidResIdByXmlResId = View.NO_ID;
-        if (idAsString != null) {
-            androidResIdByXmlResId = getAndroidResIdByXmlResId(idAsString);
-        }
-        if (!value.isNull(DRAWABLE_STR)) {
-            return new Pair<Integer, Value>(androidResIdByXmlResId, value);
-        }
-        return null;
     }
 
     /**

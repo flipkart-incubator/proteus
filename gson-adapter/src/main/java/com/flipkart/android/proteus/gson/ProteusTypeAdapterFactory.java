@@ -501,6 +501,69 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         }
     };
 
+    public final CustomValueTypeAdapterCreator<DrawableValue.LayerListValue> DRAWABLE_LAYER_LIST = new CustomValueTypeAdapterCreator<DrawableValue.LayerListValue>() {
+        @Override
+        public CustomValueTypeAdapter<DrawableValue.LayerListValue> create(int type) {
+            return new CustomValueTypeAdapter<DrawableValue.LayerListValue>(type) {
+
+                private static final String KEY_IDS = "i";
+                private static final String KEY_LAYERS = "l";
+
+                @Override
+                public void write(JsonWriter out, DrawableValue.LayerListValue value) throws IOException {
+
+                    out.beginObject();
+
+                    out.name(KEY_IDS);
+                    Iterator<Integer> i = value.getIds();
+                    out.beginArray();
+                    while (i.hasNext()) {
+                        out.value(i.next());
+                    }
+                    out.endArray();
+
+                    out.name(KEY_LAYERS);
+                    Iterator<Value> l = value.getLayers();
+                    out.beginArray();
+                    while (l.hasNext()) {
+                        COMPILED_VALUE_TYPE_ADAPTER.write(out, l.next());
+                    }
+                    out.endArray();
+
+                    out.endObject();
+                }
+
+                @Override
+                public DrawableValue.LayerListValue read(JsonReader in) throws IOException {
+
+                    in.beginObject();
+
+                    in.nextName();
+                    int[] ids = new int[0];
+                    in.beginArray();
+                    while (in.hasNext()) {
+                        ids = Arrays.copyOf(ids, ids.length + 1);
+                        ids[ids.length - 1] = Integer.parseInt(in.nextString());
+                    }
+                    in.endArray();
+
+                    in.nextName();
+                    Value[] layers = new Value[0];
+                    in.beginArray();
+                    while (in.hasNext()) {
+                        layers = Arrays.copyOf(layers, layers.length + 1);
+                        layers[layers.length - 1] = COMPILED_VALUE_TYPE_ADAPTER.read(in);
+                    }
+                    in.endArray();
+
+                    in.endObject();
+
+                    return DrawableValue.LayerListValue.valueOf(ids, layers);
+                }
+            };
+        }
+    };
+
     /**
      *
      */
@@ -741,7 +804,9 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
      * @param context
      */
     public ProteusTypeAdapterFactory(Context context) {
+
         this.context = context;
+
         register(AttributeResource.class, ATTRIBUTE_RESOURCE);
         register(Binding.class, BINDING);
         register(Color.Int.class, COLOR_INT);
@@ -749,7 +814,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         register(Dimension.class, DIMENSION);
 
         register(DrawableValue.ColorValue.class, DRAWABLE_COLOR);
-        register(DrawableValue.LayerListValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.LayerListValue.class, DRAWABLE_LAYER_LIST);
         register(DrawableValue.LevelListValue.class, DRAWABLE_VALUE);
         register(DrawableValue.RippleValue.class, DRAWABLE_VALUE);
         register(DrawableValue.ShapeValue.class, DRAWABLE_VALUE);

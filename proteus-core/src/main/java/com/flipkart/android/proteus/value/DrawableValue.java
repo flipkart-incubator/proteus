@@ -36,6 +36,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Pair;
+import android.view.View;
 
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
@@ -44,6 +45,7 @@ import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
+import com.flipkart.android.proteus.toolbox.SimpleArrayIterator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -253,26 +255,48 @@ public abstract class DrawableValue extends Value {
 
     public static class LayerListValue extends DrawableValue {
 
+        private static final String ID_STR = "id";
+        private static final String DRAWABLE_STR = "drawable";
+
         private final int[] ids;
         private final Value[] layers;
 
-        private LayerListValue(Array layers) {
+        private LayerListValue(Array layers, Context context) {
             this.ids = new int[layers.size()];
             this.layers = new Value[layers.size()];
             Pair<Integer, Value> pair;
             int index = 0;
             Iterator<Value> iterator = layers.iterator();
             while (iterator.hasNext()) {
-                pair = ParseHelper.parseLayer(iterator.next().getAsObject());
-                //noinspection ConstantConditions
+                pair = parseLayer(iterator.next().getAsObject(), context);
                 this.ids[index] = pair.first;
                 this.layers[index] = pair.second;
                 index++;
             }
         }
 
+        public LayerListValue(int[] ids, Value[] layers) {
+            this.ids = ids;
+            this.layers = layers;
+        }
+
         public static LayerListValue valueOf(Array layers, Context context) {
-            return new LayerListValue(layers);
+            return new LayerListValue(layers, context);
+        }
+
+        public static LayerListValue valueOf(@NonNull int[] ids, @NonNull Value[] layers) {
+            return new LayerListValue(ids, layers);
+        }
+
+        public static Pair<Integer, Value> parseLayer(ObjectValue layer, Context context) {
+            String id = layer.getAsString(ID_STR);
+            int resId = View.NO_ID;
+            if (id != null) {
+                resId = ParseHelper.getAndroidXmlResId(id);
+            }
+            Value drawable = layer.get(DRAWABLE_STR);
+            Value out = DrawableResourceProcessor.staticCompile(drawable, context);
+            return new Pair<>(resId, out);
         }
 
         @Override
@@ -293,6 +317,14 @@ public abstract class DrawableValue extends Value {
             }
 
             callback.apply(layerDrawable);
+        }
+
+        public Iterator<Integer> getIds() {
+            return SimpleArrayIterator.createIntArrayIterator(ids);
+        }
+
+        public Iterator<Value> getLayers() {
+            return new SimpleArrayIterator<>(layers);
         }
     }
 
