@@ -684,7 +684,16 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
                 @Nullable
                 private Map<String, Value> readData(JsonReader in) throws IOException {
-                    Map<String, Value> data = LAYOUT_TYPE_ADAPTER.readData(in);
+                    Map<String, Value> data = new HashMap<>();
+                    in.beginObject();
+                    String name;
+                    Value value;
+                    while (in.hasNext()) {
+                        name = in.nextName();
+                        value = COMPILED_VALUE_TYPE_ADAPTER.read(in);
+                        data.put(name, value);
+                    }
+                    in.endObject();
                     return data;
                 }
 
