@@ -22,7 +22,10 @@ package com.flipkart.android.proteus.value;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.flipkart.android.proteus.toolbox.Utils;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +70,42 @@ public class Layout extends Value {
     }
 
     public Layout merge(Layout include) {
-        return this;
+
+        List<Attribute> attributes = null;
+        if (this.attributes != null) {
+            attributes = new ArrayList<>(this.attributes.size());
+            attributes.addAll(this.attributes);
+        }
+        if (include.attributes != null) {
+            if (attributes == null) {
+                attributes = new ArrayList<>(include.attributes.size());
+            }
+            attributes.addAll(include.attributes);
+        }
+
+        Map<String, Value> data = null;
+        if (this.data != null) {
+            data = this.data;
+        }
+        if (include.data != null) {
+            if (data == null) {
+                data = new HashMap<>(include.data.size());
+            }
+            data.putAll(include.data);
+        }
+
+        ObjectValue extras = new ObjectValue();
+        if (this.extras != null) {
+            extras = Utils.addAllEntries(extras, this.extras);
+        }
+        if (include.extras != null) {
+            if (extras == null) {
+                extras = new ObjectValue();
+            }
+            Utils.addAllEntries(extras, include.extras);
+        }
+
+        return new Layout(type, attributes, data, extras);
     }
 
     /**

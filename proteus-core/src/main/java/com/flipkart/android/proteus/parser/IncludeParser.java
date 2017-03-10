@@ -28,8 +28,10 @@ import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Value;
 
 /**
  * IncludeParser
@@ -57,10 +59,22 @@ public class IncludeParser<V extends View> extends ViewTypeParser<V> {
     @NonNull
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout include, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-        //noinspection ConstantConditions
-        String type = include.extras.getAsString(ProteusConstants.LAYOUT);
-        //noinspection ConstantConditions
-        return context.getInflater().inflate(type, data, parent, dataIndex);
+
+        if (include.extras == null) {
+            throw new IllegalArgumentException("required attribute 'layout' missing.");
+        }
+
+        Value type = include.extras.get(ProteusConstants.LAYOUT);
+        if (null == type || !type.isPrimitive()) {
+            throw new ProteusInflateException("required attribute 'layout' missing or is not a string");
+        }
+
+        Layout layout = context.getLayout(type.getAsString());
+        if (null == layout) {
+            throw new ProteusInflateException("Layout '" + type + "' not found");
+        }
+
+        return context.getInflater().inflate(layout.merge(include), data, parent, dataIndex);
     }
 
     @Override

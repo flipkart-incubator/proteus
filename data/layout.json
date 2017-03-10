@@ -129,13 +129,19 @@
           "type": "include",
           "layout": "SimpleDataBindingExample",
           "padding": "16dp",
-          "paddingBottom": "0dp"
+          "paddingBottom": "0dp",
+          "data": {
+            "user": "~@{0}"
+          }
         },
         {
           "type": "include",
           "layout": "DataDrivenExample",
           "padding": "16dp",
-          "paddingBottom": "0dp"
+          "paddingBottom": "0dp",
+          "data": {
+            "user": "~@{0}"
+          }
         },
         {
           "type": "CircleView",

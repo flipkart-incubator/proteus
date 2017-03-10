@@ -19,6 +19,8 @@
 
 package com.flipkart.android.proteus.toolbox;
 
+import android.support.annotation.NonNull;
+
 import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
@@ -33,7 +35,7 @@ public class Utils {
     public static final String LIB_NAME = "proteus";
     public static final String VERSION = "5.0.0-SNAPSHOT";
 
-    public static ObjectValue addAllEntries(ObjectValue destination, ObjectValue source) {
+    public static ObjectValue addAllEntries(@NonNull ObjectValue destination, @NonNull ObjectValue source) {
         for (Map.Entry<String, Value> entry : source.entrySet()) {
             if (destination.get(entry.getKey()) != null) {
                 continue;
