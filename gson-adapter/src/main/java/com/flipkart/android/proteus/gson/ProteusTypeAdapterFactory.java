@@ -584,6 +584,23 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         }
     };
 
+    public final CustomValueTypeAdapterCreator<DrawableValue.UrlValue> DRAWABLE_URL = new CustomValueTypeAdapterCreator<DrawableValue.UrlValue>() {
+        @Override
+        public CustomValueTypeAdapter<DrawableValue.UrlValue> create(int type) {
+            return new CustomValueTypeAdapter<DrawableValue.UrlValue>(type) {
+                @Override
+                public void write(JsonWriter out, DrawableValue.UrlValue value) throws IOException {
+                    out.value(value.url);
+                }
+
+                @Override
+                public DrawableValue.UrlValue read(JsonReader in) throws IOException {
+                    return DrawableValue.UrlValue.valueOf(in.nextString());
+                }
+            };
+        }
+    };
+
     /**
      *
      */
@@ -828,7 +845,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         register(DrawableValue.RippleValue.class, DRAWABLE_VALUE);
         register(DrawableValue.ShapeValue.class, DRAWABLE_VALUE);
         register(DrawableValue.StateListValue.class, DRAWABLE_VALUE);
-        register(DrawableValue.UrlValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.UrlValue.class, DRAWABLE_URL);
 
         register(Layout.class, LAYOUT);
         register(NestedBinding.class, NESTED_BINDING);
