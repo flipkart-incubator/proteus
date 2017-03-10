@@ -19,12 +19,16 @@
 
 package com.flipkart.android.proteus.toolbox;
 
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
 
 import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Value;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Map;
 
 /**
@@ -34,6 +38,10 @@ public class Utils {
 
     public static final String LIB_NAME = "proteus";
     public static final String VERSION = "5.0.0-SNAPSHOT";
+
+    public static final int STYLE_NONE = 0;
+    public static final int STYLE_SINGLE = 1;
+    public static final int STYLE_DOUBLE = 2;
 
     public static ObjectValue addAllEntries(@NonNull ObjectValue destination, @NonNull ObjectValue source) {
         for (Map.Entry<String, Value> entry : source.entrySet()) {
@@ -56,13 +64,30 @@ public class Utils {
         return sb.toString();
     }
 
-    public static String getStringFromArray(Array array, String delimiter) {
+    public static String getStringFromArray(Array array, String delimiter, @QuoteStyle int style) {
         StringBuilder sb = new StringBuilder();
+        Value value;
         for (int i = 0; i < array.size(); i++) {
-            if (array.get(i).isPrimitive()) {
-                sb.append(array.get(i).getAsString());
+            value = array.get(i);
+            if (value.isPrimitive()) {
+                Primitive primitive = value.getAsPrimitive();
+                String string;
+                switch (style) {
+                    case STYLE_NONE:
+                        string = primitive.getAsString();
+                        break;
+                    case STYLE_SINGLE:
+                        string = primitive.getAsSingleQuotedString();
+                        break;
+                    case STYLE_DOUBLE:
+                        string = primitive.getAsDoubleQuotedString();
+                        break;
+                    default:
+                        string = primitive.getAsString();
+                }
+                sb.append(string);
             } else {
-                sb.append(array.get(i).toString());
+                sb.append(value.toString());
             }
             if (i < array.size() - 1) {
                 sb.append(delimiter);
@@ -71,11 +96,24 @@ public class Utils {
         return sb.toString();
     }
 
+    public static String getStringFromArray(Array array, String delimiter) {
+        return getStringFromArray(array, delimiter, STYLE_NONE);
+    }
+
+    public static String getStringFromArray(Value[] array, String delimiter, @QuoteStyle int style) {
+        return getStringFromArray(new Array(array), delimiter, style);
+    }
+
     public static String getStringFromArray(Value[] array, String delimiter) {
         return getStringFromArray(new Array(array), delimiter);
     }
 
     public static String getVersion() {
         return LIB_NAME + ":" + VERSION;
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({STYLE_NONE, STYLE_SINGLE, STYLE_DOUBLE})
+    public @interface QuoteStyle {
     }
 }

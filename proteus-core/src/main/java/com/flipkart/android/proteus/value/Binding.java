@@ -349,7 +349,7 @@ public class Binding extends Value {
             String context = "@{" + Utils.getStringFromArray(tokens, ".") + "}";
             String functions = "";
             if (null != formatter) {
-                functions = "${" + formatter.getName() + "(" + Utils.getStringFromArray(arguments, ",") + ")}";
+                functions = "${" + formatter.getName() + "(" + Utils.getStringFromArray(arguments, ",", Utils.STYLE_SINGLE) + ")}";
             }
             return context + functions;
         }

@@ -298,4 +298,12 @@ public class Primitive extends Value {
     public String toString() {
         return getAsString();
     }
+
+    public String getAsSingleQuotedString() {
+        return '\'' + getAsString() + '\'';
+    }
+
+    public String getAsDoubleQuotedString() {
+        return '\"' + getAsString() + '\"';
+    }
 }
