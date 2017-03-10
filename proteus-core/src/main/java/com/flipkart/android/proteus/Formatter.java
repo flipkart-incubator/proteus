@@ -60,9 +60,7 @@ public abstract class Formatter {
             } catch (NumberFormatException e) {
                 return data;
             }
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD) {
-                formatter.setRoundingMode(RoundingMode.FLOOR);
-            }
+            formatter.setRoundingMode(RoundingMode.FLOOR);
             formatter.setMinimumFractionDigits(0);
             formatter.setMaximumFractionDigits(2);
             return new Primitive(formatter.format(valueAsNumber));
