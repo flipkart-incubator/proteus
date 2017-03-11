@@ -34,6 +34,7 @@ import com.flipkart.android.proteus.value.Dimension;
 import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.DrawableValue.LevelListValue;
 import com.flipkart.android.proteus.value.DrawableValue.RippleValue;
+import com.flipkart.android.proteus.value.DrawableValue.StateListValue;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.NestedBinding;
 import com.flipkart.android.proteus.value.Null;
@@ -380,8 +381,8 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         public CustomValueTypeAdapter<Color.StateList> create(int type) {
             return new CustomValueTypeAdapter<Color.StateList>(type) {
 
-                private final String KEY_STATES = "s";
-                private final String KEY_COLORS = "c";
+                private static final String KEY_STATES = "s";
+                private static final String KEY_COLORS = "c";
 
                 @Override
                 public void write(JsonWriter out, Color.StateList value) throws IOException {
@@ -406,10 +407,9 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     in.nextName();
                     int colors[] = readArrayOfInts(in.nextString());
 
-                    Color.StateList color = Color.StateList.valueOf(states, colors);
-
                     in.endObject();
-                    return color;
+
+                    return Color.StateList.valueOf(states, colors);
                 }
             };
         }
@@ -678,6 +678,58 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     }
 
                     return RippleValue.valueOf(color, mask, content, defaultBackground);
+                }
+            };
+        }
+    };
+
+    public final CustomValueTypeAdapterCreator<StateListValue> DRAWABLE_STATE_LIST = new CustomValueTypeAdapterCreator<StateListValue>() {
+        @Override
+        public CustomValueTypeAdapter<StateListValue> create(int type) {
+            return new CustomValueTypeAdapter<StateListValue>(type) {
+
+                private static final String KEY_STATES = "s";
+                private static final String KEY_VALUES = "v";
+
+                @Override
+                public void write(JsonWriter out, StateListValue value) throws IOException {
+                    out.beginObject();
+
+                    out.name(KEY_STATES);
+                    out.value(writeArrayOfIntArrays(value.states));
+
+                    out.name(KEY_VALUES);
+                    out.beginArray();
+                    Iterator<Value> iterator = value.getValues();
+                    while (iterator.hasNext()) {
+                        COMPILED_VALUE_TYPE_ADAPTER.write(out, iterator.next());
+                    }
+                    out.endArray();
+
+                    out.endObject();
+                }
+
+                @Override
+                public StateListValue read(JsonReader in) throws IOException {
+
+                    in.beginObject();
+
+                    in.nextName();
+                    int[][] states = readArrayOfIntArrays(in.nextString());
+
+                    in.nextName();
+                    Value[] values = new Value[0];
+
+                    in.beginArray();
+                    while (in.hasNext()) {
+                        values = Arrays.copyOf(values, values.length + 1);
+                        values[values.length - 1] = COMPILED_VALUE_TYPE_ADAPTER.read(in);
+                    }
+                    in.endArray();
+
+                    in.endObject();
+
+                    return StateListValue.valueOf(states, values);
                 }
             };
         }
@@ -988,7 +1040,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         register(DrawableValue.LevelListValue.class, DRAWABLE_LEVEL_LIST);
         register(DrawableValue.RippleValue.class, DRAWABLE_RIPPLE);
         register(DrawableValue.ShapeValue.class, DRAWABLE_VALUE);
-        register(DrawableValue.StateListValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.StateListValue.class, DRAWABLE_STATE_LIST);
         register(DrawableValue.UrlValue.class, DRAWABLE_URL);
 
         register(Layout.class, LAYOUT);

@@ -351,11 +351,15 @@ public abstract class DrawableValue extends Value {
             sStateMap.put("state_window_focused", android.R.attr.state_window_focused);
         }
 
-        private final int[][] states;
+        public final int[][] states;
         private final Value[] values;
 
+        private StateListValue(int[][] states, Value[] values) {
+            this.states = states;
+            this.values = values;
+        }
+
         private StateListValue(Array states, Context context) {
-            //noinspection unchecked
             this.states = new int[states.size()][];
             this.values = new Value[states.size()];
             Iterator<Value> iterator = states.iterator();
@@ -369,12 +373,16 @@ public abstract class DrawableValue extends Value {
             }
         }
 
+        public static StateListValue valueOf(int[][] states, Value[] values) {
+            return new StateListValue(states, values);
+        }
+
         public static StateListValue valueOf(Array states, Context context) {
             return new StateListValue(states, context);
         }
 
         @NonNull
-        public static Pair<int[], Value> parseState(ObjectValue value, Context context) {
+        private static Pair<int[], Value> parseState(ObjectValue value, Context context) {
             Value drawable = DrawableResourceProcessor.staticCompile(value.get(DRAWABLE_STR), context);
             int[] states = new int[value.getAsObject().entrySet().size() - 1];
             int index = 0;
@@ -399,6 +407,10 @@ public abstract class DrawableValue extends Value {
                 stateListDrawable.addState(states[i], DrawableResourceProcessor.evaluate(values[i], view));
             }
             callback.apply(stateListDrawable);
+        }
+
+        public Iterator<Value> getValues() {
+            return new SimpleArrayIterator<>(values);
         }
     }
 
