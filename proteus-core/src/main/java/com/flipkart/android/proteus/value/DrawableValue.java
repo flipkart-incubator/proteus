@@ -47,7 +47,9 @@ import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.toolbox.SimpleArrayIterator;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * DrawableValue
@@ -334,28 +336,67 @@ public abstract class DrawableValue extends Value {
 
     public static class StateListValue extends DrawableValue {
 
-        private final Pair<int[], Value>[] states;
+        private static final String DRAWABLE_STR = "drawable";
+        private static final Map<String, Integer> sStateMap = new HashMap<>();
 
-        private StateListValue(Array states) {
+        static {
+            sStateMap.put("state_pressed", android.R.attr.state_pressed);
+            sStateMap.put("state_enabled", android.R.attr.state_enabled);
+            sStateMap.put("state_focused", android.R.attr.state_focused);
+            sStateMap.put("state_hovered", android.R.attr.state_hovered);
+            sStateMap.put("state_selected", android.R.attr.state_selected);
+            sStateMap.put("state_checkable", android.R.attr.state_checkable);
+            sStateMap.put("state_checked", android.R.attr.state_checked);
+            sStateMap.put("state_activated", android.R.attr.state_activated);
+            sStateMap.put("state_window_focused", android.R.attr.state_window_focused);
+        }
+
+        private final int[][] states;
+        private final Value[] values;
+
+        private StateListValue(Array states, Context context) {
             //noinspection unchecked
-            this.states = new Pair[states.size()];
+            this.states = new int[states.size()][];
+            this.values = new Value[states.size()];
             Iterator<Value> iterator = states.iterator();
+            Pair<int[], Value> pair;
             int index = 0;
             while (iterator.hasNext()) {
-                this.states[index] = ParseHelper.parseState(iterator.next().getAsObject());
+                pair = parseState(iterator.next().getAsObject(), context);
+                this.states[index] = pair.first;
+                this.values[index] = pair.second;
                 index++;
             }
         }
 
         public static StateListValue valueOf(Array states, Context context) {
-            return new StateListValue(states);
+            return new StateListValue(states, context);
+        }
+
+        @NonNull
+        public static Pair<int[], Value> parseState(ObjectValue value, Context context) {
+            Value drawable = DrawableResourceProcessor.staticCompile(value.get(DRAWABLE_STR), context);
+            int[] states = new int[value.getAsObject().entrySet().size() - 1];
+            int index = 0;
+            for (Map.Entry<String, Value> entry : value.getAsObject().entrySet()) {
+                Integer stateInteger = sStateMap.get(entry.getKey());
+                if (stateInteger != null) {
+                    // e.g state_pressed = true state_pressed = false
+                    states[index] = ParseHelper.parseBoolean(entry.getValue()) ? stateInteger : -stateInteger;
+                    index++;
+                } else {
+                    throw new IllegalArgumentException(entry.getKey() + " is not a valid state");
+                }
+            }
+            return new Pair<>(states, drawable);
         }
 
         @Override
         public void apply(ProteusView view, Context context, ProteusLayoutInflater.ImageLoader loader, Callback callback) {
             final StateListDrawable stateListDrawable = new StateListDrawable();
-            for (final Pair<int[], Value> layer : states) {
-                stateListDrawable.addState(layer.first, DrawableResourceProcessor.evaluate(layer.second, view));
+            int size = states.length;
+            for (int i = 0; i < size; i++) {
+                stateListDrawable.addState(states[i], DrawableResourceProcessor.evaluate(values[i], view));
             }
             callback.apply(stateListDrawable);
         }

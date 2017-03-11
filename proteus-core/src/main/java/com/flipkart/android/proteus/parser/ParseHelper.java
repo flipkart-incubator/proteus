@@ -25,7 +25,6 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Pair;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,14 +33,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.flipkart.android.proteus.ProteusConstants;
-import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Value;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -82,13 +78,9 @@ public class ParseHelper {
     private static final String TEXT_ALIGNMENT_VIEW_START = "viewStart";
     private static final String TEXT_ALIGNMENT_VIEW_END = "viewEnd";
 
-
     private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";
 
-    private static final String DRAWABLE_STR = "drawable";
-
     private static final Map<Integer, Primitive> sVisibilityMap = new HashMap<>();
-    private static final Map<String, Integer> sStateMap = new HashMap<>();
     private static final Map<String, Primitive> sGravityMap = new HashMap<>();
     private static final Map<String, Integer> sDividerMode = new HashMap<>();
     private static final Map<String, Enum> sEllipsizeMode = new HashMap<>();
@@ -101,16 +93,6 @@ public class ParseHelper {
         sVisibilityMap.put(View.VISIBLE, new Primitive(View.VISIBLE));
         sVisibilityMap.put(View.INVISIBLE, new Primitive(View.INVISIBLE));
         sVisibilityMap.put(View.GONE, new Primitive(View.GONE));
-
-        sStateMap.put("state_pressed", android.R.attr.state_pressed);
-        sStateMap.put("state_enabled", android.R.attr.state_enabled);
-        sStateMap.put("state_focused", android.R.attr.state_focused);
-        sStateMap.put("state_hovered", android.R.attr.state_hovered);
-        sStateMap.put("state_selected", android.R.attr.state_selected);
-        sStateMap.put("state_checkable", android.R.attr.state_checkable);
-        sStateMap.put("state_checked", android.R.attr.state_checked);
-        sStateMap.put("state_activated", android.R.attr.state_activated);
-        sStateMap.put("state_window_focused", android.R.attr.state_window_focused);
 
         sGravityMap.put(CENTER, new Primitive(Gravity.CENTER));
         sGravityMap.put(CENTER_HORIZONTAL, new Primitive(Gravity.CENTER_HORIZONTAL));
@@ -330,28 +312,6 @@ public class ParseHelper {
 
     public static boolean isTweenAnimationResource(String attributeValue) {
         return attributeValue.startsWith(TWEEN_LOCAL_RESOURCE_STR);
-    }
-
-    public static Pair<int[], Value> parseState(ObjectValue value) {
-
-        if (value.isObject(DRAWABLE_STR)) {
-            List<Integer> statesToReturn = new ArrayList<>();
-            for (Map.Entry<String, Value> entry : value.getAsObject().entrySet()) {
-                Integer stateInteger = sStateMap.get(entry.getKey());
-                if (stateInteger != null) {
-                    //e.g state_pressed = true state_pressed = false
-                    statesToReturn.add(ParseHelper.parseBoolean(entry.getValue()) ? stateInteger : -stateInteger);
-                }
-            }
-
-            int[] statesToReturnInteger = new int[statesToReturn.size()];
-            for (int i = 0; i < statesToReturn.size(); i++) {
-                statesToReturnInteger[i] = statesToReturn.get(i);
-            }
-
-            return new Pair<>(statesToReturnInteger, value.get(DRAWABLE_STR));
-        }
-        return null;
     }
 
     /**
