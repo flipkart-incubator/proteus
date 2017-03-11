@@ -359,9 +359,9 @@ public abstract class DrawableValue extends Value {
 
     public static class LevelListValue extends DrawableValue {
 
-        public final Level[] levels;
+        private final Level[] levels;
 
-        public LevelListValue(Array levels, Context context) {
+        private LevelListValue(Array levels, Context context) {
             this.levels = new Level[levels.size()];
             int index = 0;
             Iterator<Value> iterator = levels.iterator();
@@ -371,8 +371,16 @@ public abstract class DrawableValue extends Value {
             }
         }
 
+        private LevelListValue(Level[] levels) {
+            this.levels = levels;
+        }
+
         public static LevelListValue valueOf(Array layers, Context context) {
             return new LevelListValue(layers, context);
+        }
+
+        public static LevelListValue value(Level[] levels) {
+            return new LevelListValue(levels);
         }
 
         @Override
@@ -383,19 +391,41 @@ public abstract class DrawableValue extends Value {
             }
         }
 
+        public Iterator<Level> getLevels() {
+            return new SimpleArrayIterator<>(levels);
+        }
+
         private static class Level {
             public static final String MIN_LEVEL = "minLevel";
             public static final String MAX_LEVEL = "maxLevel";
             public static final String DRAWABLE = "drawable";
 
-            public final Integer minLevel;
-            public final Integer maxLevel;
+            public final int minLevel;
+            public final int maxLevel;
+
+            @NonNull
             public final Value drawable;
 
             private Level(ObjectValue value, Context context) {
+
+                //noinspection ConstantConditions
                 minLevel = value.getAsInteger(MIN_LEVEL);
+
+                //noinspection ConstantConditions
                 maxLevel = value.getAsInteger(MAX_LEVEL);
+
                 drawable = DrawableResourceProcessor.staticCompile(value.get(DRAWABLE), context);
+            }
+
+            private Level(int minLevel, int maxLevel, @NonNull Value drawable) {
+                this.minLevel = minLevel;
+                this.maxLevel = maxLevel;
+                this.drawable = drawable;
+            }
+
+            @NonNull
+            public static Level valueOf(int minLevel, int maxLevel, @NonNull Value drawable, Context context) {
+                return new Level(minLevel, maxLevel, DrawableResourceProcessor.staticCompile(drawable, context));
             }
 
             public void apply(ProteusView view, final LevelListDrawable levelListDrawable) {
