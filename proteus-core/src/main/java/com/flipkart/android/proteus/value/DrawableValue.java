@@ -47,9 +47,7 @@ import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
 import com.flipkart.android.proteus.toolbox.SimpleArrayIterator;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * DrawableValue
@@ -170,7 +168,7 @@ public abstract class DrawableValue extends Value {
 
         private final int shape;
         private final Gradient gradient;
-        private final List<DrawableElement> elements;
+        private final DrawableElement[] elements;
 
         private ShapeValue(ObjectValue value, Context context) {
             shape = getShape(value.getAsString(SHAPE));
@@ -180,7 +178,8 @@ public abstract class DrawableValue extends Value {
             Iterator<Value> iterator = children.iterator();
 
             if (children.size() > 0) {
-                elements = new ArrayList<>(children.size());
+                elements = new DrawableElement[children.size()];
+                int index = 0;
                 while (iterator.hasNext()) {
                     ObjectValue child = iterator.next().getAsObject();
                     String typeKey = child.getAsString(TYPE);
@@ -208,7 +207,8 @@ public abstract class DrawableValue extends Value {
                     }
 
                     if (null != element) {
-                        elements.add(element);
+                        elements[index] = element;
+                        index++;
                     }
                 }
                 this.gradient = gradient;
