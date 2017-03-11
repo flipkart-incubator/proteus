@@ -382,18 +382,16 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
                 private final String KEY_STATES = "s";
                 private final String KEY_COLORS = "c";
-                private final String STATE_DELIMITER = "|";
-                private final String COLOR_DELIMITER = ",";
 
                 @Override
                 public void write(JsonWriter out, Color.StateList value) throws IOException {
                     out.beginObject();
 
                     out.name(KEY_STATES);
-                    out.value(writeStates(value.states));
+                    out.value(writeArrayOfIntArrays(value.states));
 
                     out.name(KEY_COLORS);
-                    out.value(writeColors(value.colors));
+                    out.value(writeArrayOfInts(value.colors));
 
                     out.endObject();
                 }
@@ -403,57 +401,15 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     in.beginObject();
 
                     in.nextName();
-                    int[][] states = readStates(in.nextString());
+                    int[][] states = readArrayOfIntArrays(in.nextString());
 
                     in.nextName();
-                    int colors[] = readColors(in.nextString());
+                    int colors[] = readArrayOfInts(in.nextString());
 
                     Color.StateList color = Color.StateList.valueOf(states, colors);
 
                     in.endObject();
                     return color;
-                }
-
-                private String writeStates(int[][] states) {
-                    StringBuilder builder = new StringBuilder();
-                    for (int state = 0; state < states.length; state++) {
-                        builder.append(writeColors(states[state]));
-                        if (state < states.length - 1) {
-                            builder.append(STATE_DELIMITER);
-                        }
-                    }
-                    return builder.toString();
-                }
-
-                private String writeColors(int[] colors) {
-                    StringBuilder builder = new StringBuilder();
-                    for (int color = 0; color < colors.length; color++) {
-                        builder.append(colors[color]);
-                        if (color < colors.length - 1) {
-                            builder.append(COLOR_DELIMITER);
-                        }
-                    }
-                    return builder.toString();
-                }
-
-                private int[][] readStates(String string) {
-                    int[][] states = new int[0][];
-                    StringTokenizer tokenizer = new StringTokenizer(string, STATE_DELIMITER);
-                    while (tokenizer.hasMoreTokens()) {
-                        states = Arrays.copyOf(states, states.length + 1);
-                        states[states.length - 1] = readColors(tokenizer.nextToken());
-                    }
-                    return states;
-                }
-
-                private int[] readColors(String string) {
-                    int[] colors = new int[0];
-                    StringTokenizer tokenizer = new StringTokenizer(string, COLOR_DELIMITER);
-                    while (tokenizer.hasMoreTokens()) {
-                        colors = Arrays.copyOf(colors, colors.length + 1);
-                        colors[colors.length - 1] = Integer.parseInt(tokenizer.nextToken());
-                    }
-                    return colors;
                 }
             };
         }
@@ -968,6 +924,51 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
      *
      */
     private CustomValueTypeAdapterMap map = new CustomValueTypeAdapterMap();
+
+    private static final String ARRAYS_DELIMITER = "|";
+    private static final String ARRAY_DELIMITER = ",";
+
+    public static String writeArrayOfInts(int[] array) {
+        StringBuilder builder = new StringBuilder();
+        for (int index = 0; index < array.length; index++) {
+            builder.append(array[index]);
+            if (index < array.length - 1) {
+                builder.append(ARRAY_DELIMITER);
+            }
+        }
+        return builder.toString();
+    }
+
+    public static String writeArrayOfIntArrays(int[][] arrays) {
+        StringBuilder builder = new StringBuilder();
+        for (int index = 0; index < arrays.length; index++) {
+            builder.append(writeArrayOfInts(arrays[index]));
+            if (index < arrays.length - 1) {
+                builder.append(ARRAYS_DELIMITER);
+            }
+        }
+        return builder.toString();
+    }
+
+    public static int[] readArrayOfInts(String string) {
+        int[] array = new int[0];
+        StringTokenizer tokenizer = new StringTokenizer(string, ARRAY_DELIMITER);
+        while (tokenizer.hasMoreTokens()) {
+            array = Arrays.copyOf(array, array.length + 1);
+            array[array.length - 1] = Integer.parseInt(tokenizer.nextToken());
+        }
+        return array;
+    }
+
+    public static int[][] readArrayOfIntArrays(String string) {
+        int[][] arrays = new int[0][];
+        StringTokenizer tokenizer = new StringTokenizer(string, ARRAYS_DELIMITER);
+        while (tokenizer.hasMoreTokens()) {
+            arrays = Arrays.copyOf(arrays, arrays.length + 1);
+            arrays[arrays.length - 1] = readArrayOfInts(tokenizer.nextToken());
+        }
+        return arrays;
+    }
 
     /**
      * @param context
