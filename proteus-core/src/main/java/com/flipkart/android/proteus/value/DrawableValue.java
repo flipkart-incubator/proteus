@@ -441,33 +441,23 @@ public abstract class DrawableValue extends Value {
         public static final String CONTENT = "content";
         public static final String DEFAULT_BACKGROUND = "defaultBackground";
 
+        @NonNull
         public final Value color;
+
+        @Nullable
         public final Value mask;
+
+        @Nullable
         public final Value content;
+
+        @Nullable
         public final Value defaultBackground;
 
         private RippleValue(ObjectValue object, Context context) {
             color = object.get(COLOR);
-            Value value;
-
-            value = object.get(MASK);
-            if (null != value) {
-                mask = DrawableResourceProcessor.staticCompile(value, context);
-            } else {
-                mask = null;
-            }
-            value = object.get(CONTENT);
-            if (null != value) {
-                content = DrawableResourceProcessor.staticCompile(value, context);
-            } else {
-                content = null;
-            }
-            value = object.get(DEFAULT_BACKGROUND);
-            if (null != value) {
-                defaultBackground = DrawableResourceProcessor.staticCompile(value, context);
-            } else {
-                defaultBackground = null;
-            }
+            mask = DrawableResourceProcessor.staticCompile(object.get(MASK), context);
+            content = DrawableResourceProcessor.staticCompile(object.get(CONTENT), context);
+            defaultBackground = DrawableResourceProcessor.staticCompile(object.get(DEFAULT_BACKGROUND), context);
         }
 
         public static RippleValue valueOf(ObjectValue value, Context context) {
