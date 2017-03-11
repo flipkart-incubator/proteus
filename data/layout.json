@@ -101,6 +101,8 @@
                   "background" : {
                     "@": {
                       "type" : "ripple",
+                      "mask": "#aaaa99",
+                      "defaultBackground": "#aaaa99",
                       "content": {
                         "type": "shape",
                         "shape": "rectangle",
@@ -111,7 +113,7 @@
                           }
                         ]
                       },
-                      "color": "#f0f0f0"
+                      "color": "#ff0000"
                     }
                   }
                 }
