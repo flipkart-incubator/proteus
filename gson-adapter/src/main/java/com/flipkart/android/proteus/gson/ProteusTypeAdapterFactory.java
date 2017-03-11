@@ -33,6 +33,7 @@ import com.flipkart.android.proteus.value.Color;
 import com.flipkart.android.proteus.value.Dimension;
 import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.DrawableValue.LevelListValue;
+import com.flipkart.android.proteus.value.DrawableValue.RippleValue;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.NestedBinding;
 import com.flipkart.android.proteus.value.Null;
@@ -651,6 +652,81 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         }
     };
 
+    public final CustomValueTypeAdapterCreator<RippleValue> DRAWABLE_RIPPLE = new CustomValueTypeAdapterCreator<RippleValue>() {
+        @Override
+        public CustomValueTypeAdapter<RippleValue> create(int type) {
+            return new CustomValueTypeAdapter<RippleValue>(type) {
+
+                private static final String KEY_COLOR = "c";
+                private static final String KEY_MASK = "m";
+                private static final String KEY_CONTENT = "t";
+                private static final String KEY_DEFAULT_BACKGROUND = "d";
+
+                @Override
+                public void write(JsonWriter out, RippleValue value) throws IOException {
+                    out.beginObject();
+
+                    out.name(KEY_COLOR);
+                    COMPILED_VALUE_TYPE_ADAPTER.write(out, value.color);
+
+                    if (value.mask != null) {
+                        out.name(KEY_MASK);
+                        COMPILED_VALUE_TYPE_ADAPTER.write(out, value.mask);
+                    }
+
+                    if (value.content != null) {
+                        out.name(KEY_CONTENT);
+                        COMPILED_VALUE_TYPE_ADAPTER.write(out, value.content);
+                    }
+
+                    if (value.defaultBackground != null) {
+                        out.name(KEY_DEFAULT_BACKGROUND);
+                        COMPILED_VALUE_TYPE_ADAPTER.write(out, value.defaultBackground);
+                    }
+
+                    out.endObject();
+                }
+
+                @Override
+                public RippleValue read(JsonReader in) throws IOException {
+
+                    in.beginObject();
+
+                    String name;
+                    Value color = null, mask = null, content = null, defaultBackground = null;
+
+                    while (in.hasNext()) {
+                        name = in.nextName();
+                        switch (name) {
+                            case KEY_COLOR:
+                                color = COMPILED_VALUE_TYPE_ADAPTER.read(in);
+                                break;
+                            case KEY_MASK:
+                                mask = COMPILED_VALUE_TYPE_ADAPTER.read(in);
+                                break;
+                            case KEY_CONTENT:
+                                content = COMPILED_VALUE_TYPE_ADAPTER.read(in);
+                                break;
+                            case KEY_DEFAULT_BACKGROUND:
+                                defaultBackground = COMPILED_VALUE_TYPE_ADAPTER.read(in);
+                                break;
+                            default:
+                                throw new IllegalStateException("Bad attribute '" + name + "'");
+                        }
+                    }
+
+                    in.endObject();
+
+                    if (color == null) {
+                        throw new IllegalStateException("color is a required attribute in Ripple Drawable");
+                    }
+
+                    return RippleValue.valueOf(color, mask, content, defaultBackground);
+                }
+            };
+        }
+    };
+
     public final CustomValueTypeAdapterCreator<DrawableValue.UrlValue> DRAWABLE_URL = new CustomValueTypeAdapterCreator<DrawableValue.UrlValue>() {
         @Override
         public CustomValueTypeAdapter<DrawableValue.UrlValue> create(int type) {
@@ -909,7 +985,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         register(DrawableValue.ColorValue.class, DRAWABLE_COLOR);
         register(DrawableValue.LayerListValue.class, DRAWABLE_LAYER_LIST);
         register(DrawableValue.LevelListValue.class, DRAWABLE_LEVEL_LIST);
-        register(DrawableValue.RippleValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.RippleValue.class, DRAWABLE_RIPPLE);
         register(DrawableValue.ShapeValue.class, DRAWABLE_VALUE);
         register(DrawableValue.StateListValue.class, DRAWABLE_VALUE);
         register(DrawableValue.UrlValue.class, DRAWABLE_URL);

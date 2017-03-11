@@ -453,11 +453,22 @@ public abstract class DrawableValue extends Value {
         @Nullable
         public final Value defaultBackground;
 
+        public RippleValue(@NonNull Value color, @Nullable Value mask, @Nullable Value content, @Nullable Value defaultBackground) {
+            this.color = color;
+            this.mask = mask;
+            this.content = content;
+            this.defaultBackground = defaultBackground;
+        }
+
         private RippleValue(ObjectValue object, Context context) {
             color = object.get(COLOR);
             mask = DrawableResourceProcessor.staticCompile(object.get(MASK), context);
             content = DrawableResourceProcessor.staticCompile(object.get(CONTENT), context);
             defaultBackground = DrawableResourceProcessor.staticCompile(object.get(DEFAULT_BACKGROUND), context);
+        }
+
+        public static RippleValue valueOf(@NonNull Value color, @Nullable Value mask, @Nullable Value content, @Nullable Value defaultBackground) {
+            return new RippleValue(color, mask, content, defaultBackground);
         }
 
         public static RippleValue valueOf(ObjectValue value, Context context) {
