@@ -167,18 +167,22 @@ public abstract class DrawableValue extends Value {
         private static final String SHAPE = "shape";
 
         private final int shape;
+
+        @Nullable
         private final Gradient gradient;
+
+        @Nullable
         private final DrawableElement[] elements;
 
         private ShapeValue(ObjectValue value, Context context) {
-            shape = getShape(value.getAsString(SHAPE));
+            this.shape = getShape(value.getAsString(SHAPE));
 
             Gradient gradient = null;
             Array children = value.getAsArray(CHILDREN);
             Iterator<Value> iterator = children.iterator();
 
             if (children.size() > 0) {
-                elements = new DrawableElement[children.size()];
+                this.elements = new DrawableElement[children.size()];
                 int index = 0;
                 while (iterator.hasNext()) {
                     ObjectValue child = iterator.next().getAsObject();
@@ -207,13 +211,13 @@ public abstract class DrawableValue extends Value {
                     }
 
                     if (null != element) {
-                        elements[index] = element;
+                        this.elements[index] = element;
                         index++;
                     }
                 }
                 this.gradient = gradient;
             } else {
-                elements = null;
+                this.elements = null;
                 this.gradient = null;
             }
         }
