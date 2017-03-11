@@ -395,7 +395,7 @@ public abstract class DrawableValue extends Value {
             return new SimpleArrayIterator<>(levels);
         }
 
-        private static class Level {
+        public static class Level {
             public static final String MIN_LEVEL = "minLevel";
             public static final String MAX_LEVEL = "maxLevel";
             public static final String DRAWABLE = "drawable";

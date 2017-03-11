@@ -32,6 +32,7 @@ import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.Color;
 import com.flipkart.android.proteus.value.Dimension;
 import com.flipkart.android.proteus.value.DrawableValue;
+import com.flipkart.android.proteus.value.DrawableValue.LevelListValue;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.NestedBinding;
 import com.flipkart.android.proteus.value.Null;
@@ -437,11 +438,9 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 private int[][] readStates(String string) {
                     int[][] states = new int[0][];
                     StringTokenizer tokenizer = new StringTokenizer(string, STATE_DELIMITER);
-                    int index = 0;
                     while (tokenizer.hasMoreTokens()) {
                         states = Arrays.copyOf(states, states.length + 1);
-                        states[index] = readColors(tokenizer.nextToken());
-                        index++;
+                        states[states.length - 1] = readColors(tokenizer.nextToken());
                     }
                     return states;
                 }
@@ -449,11 +448,9 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 private int[] readColors(String string) {
                     int[] colors = new int[0];
                     StringTokenizer tokenizer = new StringTokenizer(string, COLOR_DELIMITER);
-                    int index = 0;
                     while (tokenizer.hasMoreTokens()) {
                         colors = Arrays.copyOf(colors, colors.length + 1);
-                        colors[index] = Integer.parseInt(tokenizer.nextToken());
-                        index++;
+                        colors[colors.length - 1] = Integer.parseInt(tokenizer.nextToken());
                     }
                     return colors;
                 }
@@ -559,6 +556,76 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                     in.endObject();
 
                     return DrawableValue.LayerListValue.valueOf(ids, layers);
+                }
+            };
+        }
+    };
+
+    public final CustomValueTypeAdapterCreator<DrawableValue.LevelListValue> DRAWABLE_LEVEL_LIST = new CustomValueTypeAdapterCreator<DrawableValue.LevelListValue>() {
+        @Override
+        public CustomValueTypeAdapter<DrawableValue.LevelListValue> create(int type) {
+            return new CustomValueTypeAdapter<DrawableValue.LevelListValue>(type) {
+
+                private static final String KEY_MIN_LEVEL = "i";
+                private static final String KEY_MAX_LEVEL = "a";
+                private static final String KEY_DRAWABLE = "d";
+
+                @Override
+                public void write(JsonWriter out, DrawableValue.LevelListValue value) throws IOException {
+                    out.beginArray();
+                    Iterator<LevelListValue.Level> iterator = value.getLevels();
+                    LevelListValue.Level level;
+                    while (iterator.hasNext()) {
+                        level = iterator.next();
+
+                        out.beginObject();
+
+                        out.name(KEY_MIN_LEVEL);
+                        out.value(level.minLevel);
+
+                        out.name(KEY_MAX_LEVEL);
+                        out.value(level.maxLevel);
+
+                        out.name(KEY_DRAWABLE);
+                        COMPILED_VALUE_TYPE_ADAPTER.write(out, level.drawable);
+
+                        out.endObject();
+                    }
+                    out.endArray();
+                }
+
+                @Override
+                public DrawableValue.LevelListValue read(JsonReader in) throws IOException {
+                    LevelListValue.Level[] levels = new LevelListValue.Level[0];
+
+                    in.beginArray();
+                    int minLevel, maxLevel;
+                    Value drawable;
+                    LevelListValue.Level level;
+
+                    while (in.hasNext()) {
+                        in.beginObject();
+
+                        in.nextName();
+                        minLevel = Integer.parseInt(in.nextString());
+
+                        in.nextName();
+                        maxLevel = Integer.parseInt(in.nextString());
+
+                        in.nextName();
+                        drawable = COMPILED_VALUE_TYPE_ADAPTER.read(in);
+
+                        level = LevelListValue.Level.valueOf(minLevel, maxLevel, drawable, getContext());
+
+                        levels = Arrays.copyOf(levels, levels.length + 1);
+                        levels[levels.length - 1] = level;
+
+                        in.endObject();
+                    }
+
+                    in.endArray();
+
+                    return LevelListValue.value(levels);
                 }
             };
         }
@@ -841,7 +908,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
         register(DrawableValue.ColorValue.class, DRAWABLE_COLOR);
         register(DrawableValue.LayerListValue.class, DRAWABLE_LAYER_LIST);
-        register(DrawableValue.LevelListValue.class, DRAWABLE_VALUE);
+        register(DrawableValue.LevelListValue.class, DRAWABLE_LEVEL_LIST);
         register(DrawableValue.RippleValue.class, DRAWABLE_VALUE);
         register(DrawableValue.ShapeValue.class, DRAWABLE_VALUE);
         register(DrawableValue.StateListValue.class, DRAWABLE_VALUE);
