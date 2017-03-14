@@ -194,6 +194,9 @@ public class DefaultModule implements ProteusTypeAdapterFactory.Module {
         }
     };
 
+    /**
+     *
+     */
     public final CustomValueTypeAdapterCreator<DrawableValue.LayerListValue> DRAWABLE_LAYER_LIST = new CustomValueTypeAdapterCreator<DrawableValue.LayerListValue>() {
         @Override
         public CustomValueTypeAdapter<DrawableValue.LayerListValue> create(int type, final ProteusTypeAdapterFactory factory) {
@@ -257,6 +260,9 @@ public class DefaultModule implements ProteusTypeAdapterFactory.Module {
         }
     };
 
+    /**
+     *
+     */
     public final CustomValueTypeAdapterCreator<DrawableValue.LevelListValue> DRAWABLE_LEVEL_LIST = new CustomValueTypeAdapterCreator<DrawableValue.LevelListValue>() {
         @Override
         public CustomValueTypeAdapter<DrawableValue.LevelListValue> create(int type, final ProteusTypeAdapterFactory factory) {
@@ -347,6 +353,9 @@ public class DefaultModule implements ProteusTypeAdapterFactory.Module {
         }
     };
 
+    /**
+     *
+     */
     public final CustomValueTypeAdapterCreator<DrawableValue.RippleValue> DRAWABLE_RIPPLE = new CustomValueTypeAdapterCreator<DrawableValue.RippleValue>() {
         @Override
         public CustomValueTypeAdapter<DrawableValue.RippleValue> create(int type, final ProteusTypeAdapterFactory factory) {
@@ -422,6 +431,9 @@ public class DefaultModule implements ProteusTypeAdapterFactory.Module {
         }
     };
 
+    /**
+     *
+     */
     public final CustomValueTypeAdapterCreator<DrawableValue.StateListValue> DRAWABLE_STATE_LIST = new CustomValueTypeAdapterCreator<DrawableValue.StateListValue>() {
         @Override
         public CustomValueTypeAdapter<DrawableValue.StateListValue> create(int type, final ProteusTypeAdapterFactory factory) {
@@ -474,6 +486,9 @@ public class DefaultModule implements ProteusTypeAdapterFactory.Module {
         }
     };
 
+    /**
+     *
+     */
     public final CustomValueTypeAdapterCreator<DrawableValue.UrlValue> DRAWABLE_URL = new CustomValueTypeAdapterCreator<DrawableValue.UrlValue>() {
         @Override
         public CustomValueTypeAdapter<DrawableValue.UrlValue> create(int type, ProteusTypeAdapterFactory factory) {
