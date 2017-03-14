@@ -48,7 +48,6 @@ import java.util.Map;
  *
  * @author adityasharat
  */
-
 public class DefaultModule implements ProteusTypeAdapterFactory.Module {
 
     /**
@@ -336,18 +335,21 @@ public class DefaultModule implements ProteusTypeAdapterFactory.Module {
     /**
      *
      */
-    public final CustomValueTypeAdapterCreator<DrawableValue> DRAWABLE_VALUE = new CustomValueTypeAdapterCreator<DrawableValue>() {
+    public final CustomValueTypeAdapterCreator<DrawableValue.ShapeValue> DRAWABLE_SHAPE = new CustomValueTypeAdapterCreator<DrawableValue.ShapeValue>() {
         @Override
-        public CustomValueTypeAdapter<DrawableValue> create(int type, final ProteusTypeAdapterFactory factory) {
-            return new CustomValueTypeAdapter<DrawableValue>(type) {
+        public CustomValueTypeAdapter<DrawableValue.ShapeValue> create(int type, final ProteusTypeAdapterFactory factory) {
+            return new CustomValueTypeAdapter<DrawableValue.ShapeValue>(type) {
                 @Override
-                public void write(JsonWriter out, DrawableValue value) throws IOException {
+                public void write(JsonWriter out, DrawableValue.ShapeValue value) throws IOException {
+                    // TODO: remove mock
                     out.value("#00000000");
                 }
 
                 @Override
-                public DrawableValue read(JsonReader in) throws IOException {
-                    return DrawableValue.valueOf(in.nextString(), factory.getContext());
+                public DrawableValue.ShapeValue read(JsonReader in) throws IOException {
+                    // TODO: remove mock
+                    in.skipValue();
+                    return DrawableValue.ShapeValue.valueOf(0, null, null);
                 }
             };
         }
@@ -741,11 +743,17 @@ public class DefaultModule implements ProteusTypeAdapterFactory.Module {
         factory.register(Color.StateList.class, COLOR_STATE_LIST);
         factory.register(Dimension.class, DIMENSION);
 
+        /*factory.register(DrawableValue.Gradient.class, DRAWABLE_VALUE);
+        factory.register(DrawableValue.Corners.class, DRAWABLE_VALUE);
+        factory.register(DrawableValue.Solid.class, DRAWABLE_VALUE);
+        factory.register(DrawableValue.Size.class, DRAWABLE_VALUE);
+        factory.register(DrawableValue.Stroke.class, DRAWABLE_VALUE);*/
+
         factory.register(DrawableValue.ColorValue.class, DRAWABLE_COLOR);
         factory.register(DrawableValue.LayerListValue.class, DRAWABLE_LAYER_LIST);
         factory.register(DrawableValue.LevelListValue.class, DRAWABLE_LEVEL_LIST);
         factory.register(DrawableValue.RippleValue.class, DRAWABLE_RIPPLE);
-        factory.register(DrawableValue.ShapeValue.class, DRAWABLE_VALUE);
+        factory.register(DrawableValue.ShapeValue.class, DRAWABLE_SHAPE);
         factory.register(DrawableValue.StateListValue.class, DRAWABLE_STATE_LIST);
         factory.register(DrawableValue.UrlValue.class, DRAWABLE_URL);
 

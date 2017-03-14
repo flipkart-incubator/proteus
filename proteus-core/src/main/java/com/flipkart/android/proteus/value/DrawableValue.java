@@ -168,10 +168,10 @@ public abstract class DrawableValue extends Value {
 
         private static final String SHAPE = "shape";
 
-        private final int shape;
+        public final int shape;
 
         @Nullable
-        private final Gradient gradient;
+        public final Gradient gradient;
 
         @Nullable
         private final DrawableElement[] elements;
@@ -224,8 +224,18 @@ public abstract class DrawableValue extends Value {
             }
         }
 
+        private ShapeValue(int shape, @Nullable Gradient gradient, @Nullable DrawableElement[] elements) {
+            this.shape = shape;
+            this.gradient = gradient;
+            this.elements = elements;
+        }
+
         public static ShapeValue valueOf(ObjectValue value, Context context) {
             return new ShapeValue(value, context);
+        }
+
+        public static ShapeValue valueOf(int shape, @Nullable Gradient gradient, @Nullable DrawableElement[] elements) {
+            return new ShapeValue(shape, gradient, elements);
         }
 
         private static int getShape(String shape) {
@@ -613,13 +623,17 @@ public abstract class DrawableValue extends Value {
     /**
      *
      */
-    private static abstract class DrawableElement {
+    private static abstract class DrawableElement extends Value {
 
         public abstract void apply(ProteusView view, GradientDrawable drawable);
 
+        @Override
+        public Value copy() {
+            return this;
+        }
     }
 
-    private static class Gradient extends DrawableElement {
+    public static class Gradient extends DrawableElement {
 
         public static final String ANGLE = "angle";
         public static final String CENTER_X = "centerX";
@@ -795,7 +809,7 @@ public abstract class DrawableValue extends Value {
         }
     }
 
-    private static class Corners extends DrawableElement {
+    public static class Corners extends DrawableElement {
 
         public static final String RADIUS = "radius";
         public static final String TOP_LEFT_RADIUS = "topLeftRadius";
@@ -849,7 +863,7 @@ public abstract class DrawableValue extends Value {
         }
     }
 
-    private static class Solid extends DrawableElement {
+    public static class Solid extends DrawableElement {
 
         public static final String COLOR = "color";
 
@@ -874,7 +888,7 @@ public abstract class DrawableValue extends Value {
         }
     }
 
-    private static class Size extends DrawableElement {
+    public static class Size extends DrawableElement {
 
         private static final String WIDTH = "width";
         private static final String HEIGHT = "height";
@@ -897,7 +911,7 @@ public abstract class DrawableValue extends Value {
         }
     }
 
-    private static class Stroke extends DrawableElement {
+    public static class Stroke extends DrawableElement {
 
         public static final String WIDTH = "width";
         public static final String COLOR = "color";

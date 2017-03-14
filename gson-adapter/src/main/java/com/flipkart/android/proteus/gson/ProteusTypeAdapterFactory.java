@@ -241,6 +241,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 out.value(adapter.type);
 
                 out.name(VALUE);
+
                 //noinspection unchecked
                 adapter.write(out, value);
 
