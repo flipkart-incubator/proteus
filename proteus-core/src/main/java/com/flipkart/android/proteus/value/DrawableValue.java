@@ -637,25 +637,69 @@ public abstract class DrawableValue extends Value {
         private static final String RADIAL_GRADIENT = "radial";
         private static final String SWEEP_GRADIENT = "sweep";
 
+        @Nullable
         public final Integer angle;
+
+        @Nullable
         public final Float centerX;
+
+        @Nullable
         public final Float centerY;
+
+        @Nullable
         public final Value centerColor;
+
+        @Nullable
         public final Value endColor;
+
+        @Nullable
         public final Value gradientRadius;
+
+        @Nullable
         public final Value startColor;
+
         public final int gradientType;
+
+        @Nullable
         public final Boolean useLevel;
 
         private Gradient(ObjectValue gradient, Context context) {
             angle = gradient.getAsInteger(ANGLE);
             centerX = gradient.getAsFloat(CENTER_X);
             centerY = gradient.getAsFloat(CENTER_Y);
-            centerColor = ColorResourceProcessor.staticCompile(gradient.get(CENTER_COLOR), context);
-            endColor = ColorResourceProcessor.staticCompile(gradient.get(END_COLOR), context);
-            gradientRadius = DimensionAttributeProcessor.staticCompile(gradient.get(GRADIENT_RADIUS), context);
-            startColor = ColorResourceProcessor.staticCompile(gradient.get(START_COLOR), context);
+
+            Value value;
+
+            value = gradient.get(START_COLOR);
+            if (value != null) {
+                startColor = ColorResourceProcessor.staticCompile(value, context);
+            } else {
+                startColor = null;
+            }
+
+            value = gradient.get(CENTER_COLOR);
+            if (value != null) {
+                centerColor = ColorResourceProcessor.staticCompile(value, context);
+            } else {
+                centerColor = null;
+            }
+
+            value = gradient.get(END_COLOR);
+            if (value != null) {
+                endColor = ColorResourceProcessor.staticCompile(value, context);
+            } else {
+                endColor = null;
+            }
+
+            value = gradient.get(GRADIENT_RADIUS);
+            if (value != null) {
+                gradientRadius = DimensionAttributeProcessor.staticCompile(value, context);
+            } else {
+                gradientRadius = null;
+            }
+
             gradientType = getGradientType(gradient.getAsString(GRADIENT_TYPE));
+
             useLevel = gradient.getAsBoolean(USE_LEVEL);
         }
 
@@ -663,7 +707,7 @@ public abstract class DrawableValue extends Value {
             return new Gradient(value, context);
         }
 
-        public static GradientDrawable.Orientation getOrientation(Integer angle) {
+        public static GradientDrawable.Orientation getOrientation(@Nullable Integer angle) {
             GradientDrawable.Orientation orientation = GradientDrawable.Orientation.LEFT_RIGHT;
             if (null != angle) {
                 angle %= 360;
