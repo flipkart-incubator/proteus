@@ -146,6 +146,67 @@ public abstract class Formatter {
         }
     };
 
+    // Mathematical
+    public static final Formatter ADD = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    public static final Formatter SUBTRACT = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    public static final Formatter MULTIPLY = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    public static final Formatter DIVIDE = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    public static final Formatter MODULO = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
     public abstract Value format(Value data, int dataIndex, Value... arguments);
 
     public abstract String getName();
