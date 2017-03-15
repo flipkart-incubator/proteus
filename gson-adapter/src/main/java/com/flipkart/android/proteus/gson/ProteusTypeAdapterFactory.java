@@ -441,7 +441,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         }
     }
 
-    private class LayoutTypeAdapter extends TypeAdapter<Layout> {
+    public class LayoutTypeAdapter extends TypeAdapter<Layout> {
 
         @Override
         public void write(JsonWriter out, Layout value) throws IOException {
