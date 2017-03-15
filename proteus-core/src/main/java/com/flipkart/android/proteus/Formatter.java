@@ -152,60 +152,89 @@ public abstract class Formatter {
     public static final Formatter ADD = new Formatter() {
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            double sum = 0;
+
+            for (Value argument : arguments) {
+                sum = sum + argument.getAsDouble();
+            }
+
+            return new Primitive(sum);
         }
 
         @Override
         public String getName() {
-            return null;
+            return "add";
         }
     };
 
     public static final Formatter SUBTRACT = new Formatter() {
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            double sum = arguments[0].getAsDouble();
+
+            for (int i = 1; i < arguments.length; i++) {
+                sum = sum - arguments[i].getAsDouble();
+            }
+
+            return new Primitive(sum);
         }
 
         @Override
         public String getName() {
-            return null;
+            return "sub";
         }
     };
 
     public static final Formatter MULTIPLY = new Formatter() {
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            double product = 1;
+
+            for (Value argument : arguments) {
+                product = product * argument.getAsDouble();
+            }
+
+            return new Primitive(product);
         }
 
         @Override
         public String getName() {
-            return null;
+            return "mul";
         }
     };
 
     public static final Formatter DIVIDE = new Formatter() {
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            double quotient = arguments[0].getAsDouble();
+
+            for (int i = 1; i < arguments.length; i++) {
+                quotient = quotient / arguments[i].getAsDouble();
+            }
+
+            return new Primitive(quotient);
         }
 
         @Override
         public String getName() {
-            return null;
+            return "div";
         }
     };
 
     public static final Formatter MODULO = new Formatter() {
-        @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            double remainder = arguments[0].getAsDouble();
+
+            for (int i = 1; i < arguments.length; i++) {
+                remainder = remainder % arguments[i].getAsDouble();
+            }
+
+            return new Primitive(remainder);
         }
 
         @Override
         public String getName() {
-            return null;
+            return "mod";
         }
     };
 
@@ -249,7 +278,7 @@ public abstract class Formatter {
         }
     };
 
-    // Comparison == > < >= <=
+    // Comparison
 
     public static final Formatter EQUALS = new Formatter() {
         @Override

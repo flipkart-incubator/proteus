@@ -84,6 +84,11 @@ public class ProteusBuilder {
             builder.register(Formatter.INDEX);
             builder.register(Formatter.JOIN);
             builder.register(Formatter.NUMBER);
+            builder.register(Formatter.ADD);
+            builder.register(Formatter.SUBTRACT);
+            builder.register(Formatter.MULTIPLY);
+            builder.register(Formatter.DIVIDE);
+            builder.register(Formatter.MODULO);
         }
     };
 
