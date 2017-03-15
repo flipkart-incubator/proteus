@@ -20,7 +20,6 @@
 package com.flipkart.android.proteus;
 
 import android.annotation.SuppressLint;
-import android.os.Build;
 
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.value.Primitive;
@@ -35,6 +34,8 @@ import java.util.Date;
  * @author Aditya Sharat on 18-05-2015.
  */
 public abstract class Formatter {
+
+    // SPECIAL
 
     public static final Formatter NOOP = new Formatter() {
         @Override
@@ -147,6 +148,7 @@ public abstract class Formatter {
     };
 
     // Mathematical
+
     public static final Formatter ADD = new Formatter() {
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -196,6 +198,122 @@ public abstract class Formatter {
     };
 
     public static final Formatter MODULO = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    // Logical
+
+    public static final Formatter AND = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    public static final Formatter OR = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    // Unary
+
+    public static final Formatter NOT = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    // Comparison == > < >= <=
+
+    public static final Formatter EQUALS = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    public static final Formatter LESS_THAN = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    public static final Formatter GREATER_THAN = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    public static final Formatter LESS_THAN_OR_EQUALS = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    public static final Formatter GREATER_THAN_OR_EQUALS = new Formatter() {
+        @Override
+        public Value format(Value data, int dataIndex, Value... arguments) {
+            return null;
+        }
+
+        @Override
+        public String getName() {
+            return null;
+        }
+    };
+
+    // Conditional
+
+    public static final Formatter IF_THEN = new Formatter() {
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             return null;
