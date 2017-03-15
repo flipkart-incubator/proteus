@@ -313,7 +313,7 @@ public abstract class Formatter {
 
     // Conditional
 
-    public static final Formatter IF_THEN = new Formatter() {
+    public static final Formatter IF_THEN_ELSE = new Formatter() {
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             return null;
