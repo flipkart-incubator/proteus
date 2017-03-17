@@ -84,19 +84,25 @@ public class ProteusBuilder {
             builder.register(Formatter.INDEX);
             builder.register(Formatter.JOIN);
             builder.register(Formatter.NUMBER);
+
             builder.register(Formatter.ADD);
             builder.register(Formatter.SUBTRACT);
             builder.register(Formatter.MULTIPLY);
             builder.register(Formatter.DIVIDE);
             builder.register(Formatter.MODULO);
+
             builder.register(Formatter.AND);
             builder.register(Formatter.OR);
+
             builder.register(Formatter.NOT);
+
             builder.register(Formatter.EQUALS);
             builder.register(Formatter.LESS_THAN);
             builder.register(Formatter.GREATER_THAN);
             builder.register(Formatter.LESS_THAN_OR_EQUALS);
             builder.register(Formatter.GREATER_THAN_OR_EQUALS);
+
+            builder.register(Formatter.IF_THEN_ELSE);
         }
     };
 

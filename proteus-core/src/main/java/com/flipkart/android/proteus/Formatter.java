@@ -24,6 +24,7 @@ import android.support.annotation.NonNull;
 
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.Utils;
+import com.flipkart.android.proteus.value.Null;
 import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Value;
 
@@ -446,12 +447,20 @@ public abstract class Formatter {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            if (arguments.length < 3) {
+                return Null.INSTANCE;
+            }
+
+            Value i = arguments[0];
+            Value t = arguments[1];
+            Value e = arguments[2];
+
+            return ParseHelper.parseBoolean(i) ? t : e;
         }
 
         @Override
         public String getName() {
-            return null;
+            return "IF_THEN_ELSE";
         }
     };
 
