@@ -464,6 +464,38 @@ public abstract class Formatter {
         }
     };
 
+    // String
+
+    //String.charAt()
+    //String.contains()
+    //String.endsWith()
+    //String.indexOf()
+    //String.isEmpty()
+    //String.lastIndexOf()
+    //String.length()
+    //String.matches()
+    //String.replace()
+    //String.replaceAll()
+    //String.replaceFirst()
+    //String.split()
+    //String.startsWith()
+    //String.substring()
+    //String.toLowerCase()
+    //String.toUpperCase()
+    //String.trim()
+    //String.subSequence()
+
+    // Math
+
+    //Math.abs
+    //Math.ceil
+    //Math.floor
+    //Math.pow
+    //Math.round
+    //Math.random
+    //Math.max
+    //Math.min
+
     @NonNull
     public abstract Value format(Value data, int dataIndex, Value... arguments);
 
