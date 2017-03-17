@@ -330,7 +330,7 @@ public abstract class Formatter {
 
             Value x = arguments[0];
             Value y = arguments[1];
-            boolean bool = false
+            boolean bool = false;
             if (x.isPrimitive() && y.isPrimitive()) {
                 bool = x.getAsPrimitive().equals(y.getAsPrimitive());
             }

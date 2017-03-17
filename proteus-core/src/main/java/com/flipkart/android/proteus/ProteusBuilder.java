@@ -89,6 +89,10 @@ public class ProteusBuilder {
             builder.register(Formatter.MULTIPLY);
             builder.register(Formatter.DIVIDE);
             builder.register(Formatter.MODULO);
+            builder.register(Formatter.AND);
+            builder.register(Formatter.OR);
+            builder.register(Formatter.NOT);
+            builder.register(Formatter.EQUALS);
         }
     };
 
