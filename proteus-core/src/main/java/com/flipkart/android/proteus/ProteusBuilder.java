@@ -93,6 +93,10 @@ public class ProteusBuilder {
             builder.register(Formatter.OR);
             builder.register(Formatter.NOT);
             builder.register(Formatter.EQUALS);
+            builder.register(Formatter.LESS_THAN);
+            builder.register(Formatter.GREATER_THAN);
+            builder.register(Formatter.LESS_THAN_OR_EQUALS);
+            builder.register(Formatter.GREATER_THAN_OR_EQUALS);
         }
     };
 

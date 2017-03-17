@@ -348,12 +348,23 @@ public abstract class Formatter {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            if (arguments.length < 2) {
+                return ProteusConstants.FALSE;
+            }
+
+            Value x = arguments[0];
+            Value y = arguments[1];
+            boolean bool = false;
+            if (x.isPrimitive() && y.isPrimitive()) {
+                bool = x.getAsPrimitive().getAsDouble() < y.getAsPrimitive().getAsDouble();
+            }
+
+            return bool ? ProteusConstants.TRUE : ProteusConstants.FALSE;
         }
 
         @Override
         public String getName() {
-            return null;
+            return "LESS_THAN";
         }
     };
 
@@ -361,12 +372,23 @@ public abstract class Formatter {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            if (arguments.length < 2) {
+                return ProteusConstants.FALSE;
+            }
+
+            Value x = arguments[0];
+            Value y = arguments[1];
+            boolean bool = false;
+            if (x.isPrimitive() && y.isPrimitive()) {
+                bool = x.getAsPrimitive().getAsDouble() > y.getAsPrimitive().getAsDouble();
+            }
+
+            return bool ? ProteusConstants.TRUE : ProteusConstants.FALSE;
         }
 
         @Override
         public String getName() {
-            return null;
+            return "GREATER_THAN";
         }
     };
 
@@ -374,12 +396,23 @@ public abstract class Formatter {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            if (arguments.length < 2) {
+                return ProteusConstants.FALSE;
+            }
+
+            Value x = arguments[0];
+            Value y = arguments[1];
+            boolean bool = false;
+            if (x.isPrimitive() && y.isPrimitive()) {
+                bool = x.getAsPrimitive().getAsDouble() <= y.getAsPrimitive().getAsDouble();
+            }
+
+            return bool ? ProteusConstants.TRUE : ProteusConstants.FALSE;
         }
 
         @Override
         public String getName() {
-            return null;
+            return "LESS_THAN_OR_EQUALS";
         }
     };
 
@@ -387,12 +420,23 @@ public abstract class Formatter {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            if (arguments.length < 2) {
+                return ProteusConstants.FALSE;
+            }
+
+            Value x = arguments[0];
+            Value y = arguments[1];
+            boolean bool = false;
+            if (x.isPrimitive() && y.isPrimitive()) {
+                bool = x.getAsPrimitive().getAsDouble() >= y.getAsPrimitive().getAsDouble();
+            }
+
+            return bool ? ProteusConstants.TRUE : ProteusConstants.FALSE;
         }
 
         @Override
         public String getName() {
-            return null;
+            return "GREATER_THAN_OR_EQUALS";
         }
     };
 
