@@ -24,6 +24,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.value.AttributeResource;
@@ -39,9 +40,6 @@ import com.flipkart.android.proteus.value.Value;
  */
 
 public abstract class BooleanAttributeProcessor<V extends View> extends AttributeProcessor<V> {
-
-    public static final Primitive TRUE = new Primitive(true);
-    public static final Primitive FALSE = new Primitive(false);
 
     @Override
     public void handleValue(V view, Value value) {
@@ -74,6 +72,6 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
 
     @Override
     public Value compile(@Nullable Value value, Context context) {
-        return ParseHelper.parseBoolean(value) ? TRUE : FALSE;
+        return ParseHelper.parseBoolean(value) ? ProteusConstants.TRUE : ProteusConstants.FALSE;
     }
 }

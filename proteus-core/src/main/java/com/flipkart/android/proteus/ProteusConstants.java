@@ -19,6 +19,8 @@
 
 package com.flipkart.android.proteus;
 
+import com.flipkart.android.proteus.value.Primitive;
+
 /**
  * Contains data binding constants
  */
@@ -33,13 +35,9 @@ public class ProteusConstants {
     public static final String DATA_NULL = "null";
 
     public static final String STYLE_DELIMITER = "\\.";
-    public static final String DATA_PATH_DELIMITER = "\\.|\\[|\\]";
-    public static final String DATA_PATH_DELIMITERS = ".[]";
-    public static final String DATA_PATH_SIMPLE_DELIMITER = "\\.";
 
-    public static final String INDEX = "$index";
-    public static final String ARRAY_DATA_LENGTH_REFERENCE = "$length";
-    public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
+    public static final Primitive TRUE = new Primitive(true);
+    public static final Primitive FALSE = new Primitive(false);
 
     private static boolean isLoggingEnabled = false;
 

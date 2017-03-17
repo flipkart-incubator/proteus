@@ -22,7 +22,6 @@ package com.flipkart.android.proteus;
 import android.annotation.SuppressLint;
 
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Value;
@@ -246,7 +245,7 @@ public abstract class Formatter {
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 1) {
-                return BooleanAttributeProcessor.FALSE;
+                return ProteusConstants.FALSE;
             }
             boolean bool = true;
             for (Value argument : arguments) {
@@ -256,7 +255,7 @@ public abstract class Formatter {
                 }
             }
 
-            return bool ? BooleanAttributeProcessor.TRUE : BooleanAttributeProcessor.FALSE;
+            return bool ? ProteusConstants.TRUE : ProteusConstants.FALSE;
         }
 
         @Override
@@ -269,7 +268,7 @@ public abstract class Formatter {
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 1) {
-                return BooleanAttributeProcessor.FALSE;
+                return ProteusConstants.FALSE;
             }
             boolean bool = false;
             for (Value argument : arguments) {
@@ -279,7 +278,7 @@ public abstract class Formatter {
                 }
             }
 
-            return bool ? BooleanAttributeProcessor.TRUE : BooleanAttributeProcessor.FALSE;
+            return bool ? ProteusConstants.TRUE : ProteusConstants.FALSE;
         }
 
         @Override
@@ -293,12 +292,15 @@ public abstract class Formatter {
     public static final Formatter NOT = new Formatter() {
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            if (arguments.length < 1) {
+                return ProteusConstants.TRUE;
+            }
+            return ParseHelper.parseBoolean(arguments[0]) ? ProteusConstants.FALSE : ProteusConstants.TRUE;
         }
 
         @Override
         public String getName() {
-            return null;
+            return "NOT";
         }
     };
 
