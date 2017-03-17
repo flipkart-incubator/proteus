@@ -20,6 +20,7 @@
 package com.flipkart.android.proteus;
 
 import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
 
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.Utils;
@@ -39,6 +40,7 @@ public abstract class Formatter {
     // SPECIAL
 
     public static final Formatter NOOP = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             return data;
@@ -54,6 +56,7 @@ public abstract class Formatter {
 
         private final DecimalFormat formatter = new DecimalFormat("#,###");
 
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             double valueAsNumber;
@@ -80,6 +83,7 @@ public abstract class Formatter {
         private SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         private SimpleDateFormat to = new SimpleDateFormat("E, d MMM");
 
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             try {
@@ -115,6 +119,7 @@ public abstract class Formatter {
     };
 
     public static final Formatter INDEX = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             int valueAsNumber;
@@ -133,6 +138,7 @@ public abstract class Formatter {
     };
 
     public static final Formatter JOIN = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             if (data.isArray()) {
@@ -151,6 +157,7 @@ public abstract class Formatter {
     // Mathematical
 
     public static final Formatter ADD = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             double sum = 0;
@@ -169,6 +176,7 @@ public abstract class Formatter {
     };
 
     public static final Formatter SUBTRACT = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             double sum = arguments[0].getAsDouble();
@@ -187,6 +195,7 @@ public abstract class Formatter {
     };
 
     public static final Formatter MULTIPLY = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             double product = 1;
@@ -205,6 +214,7 @@ public abstract class Formatter {
     };
 
     public static final Formatter DIVIDE = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             double quotient = arguments[0].getAsDouble();
@@ -223,6 +233,7 @@ public abstract class Formatter {
     };
 
     public static final Formatter MODULO = new Formatter() {
+        @NonNull
         public Value format(Value data, int dataIndex, Value... arguments) {
             double remainder = arguments[0].getAsDouble();
 
@@ -242,6 +253,7 @@ public abstract class Formatter {
     // Logical
 
     public static final Formatter AND = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 1) {
@@ -265,6 +277,7 @@ public abstract class Formatter {
     };
 
     public static final Formatter OR = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 1) {
@@ -290,6 +303,7 @@ public abstract class Formatter {
     // Unary
 
     public static final Formatter NOT = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 1) {
@@ -319,6 +333,7 @@ public abstract class Formatter {
     };
 
     public static final Formatter LESS_THAN = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             return null;
@@ -331,6 +346,7 @@ public abstract class Formatter {
     };
 
     public static final Formatter GREATER_THAN = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             return null;
@@ -343,6 +359,7 @@ public abstract class Formatter {
     };
 
     public static final Formatter LESS_THAN_OR_EQUALS = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             return null;
@@ -355,6 +372,7 @@ public abstract class Formatter {
     };
 
     public static final Formatter GREATER_THAN_OR_EQUALS = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             return null;
@@ -369,6 +387,7 @@ public abstract class Formatter {
     // Conditional
 
     public static final Formatter IF_THEN_ELSE = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
             return null;
@@ -380,6 +399,7 @@ public abstract class Formatter {
         }
     };
 
+    @NonNull
     public abstract Value format(Value data, int dataIndex, Value... arguments);
 
     public abstract String getName();
