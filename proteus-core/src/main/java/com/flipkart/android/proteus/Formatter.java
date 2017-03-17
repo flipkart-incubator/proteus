@@ -321,14 +321,26 @@ public abstract class Formatter {
     // Comparison
 
     public static final Formatter EQUALS = new Formatter() {
+        @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
-            return null;
+            if (arguments.length < 2) {
+                return ProteusConstants.FALSE;
+            }
+
+            Value x = arguments[0];
+            Value y = arguments[1];
+            boolean bool = false
+            if (x.isPrimitive() && y.isPrimitive()) {
+                bool = x.getAsPrimitive().equals(y.getAsPrimitive());
+            }
+
+            return bool ? ProteusConstants.TRUE : ProteusConstants.FALSE;
         }
 
         @Override
         public String getName() {
-            return null;
+            return "EQUALS";
         }
     };
 
