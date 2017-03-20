@@ -28,6 +28,7 @@
               "children": [
                 {
                   "type": "TextView",
+                  "singleLine": "@bool/True",
                   "text": "TextView",
                   "textColor": "#000000",
                   "textSize": "12sp"
@@ -41,8 +42,8 @@
                 },
                 {
                   "type": "ImageView",
-                  "layout_width": "60dp",
-                  "layout_height": "60dp",
+                  "layout_width": "@dimen/sixty",
+                  "layout_height": "@dimen/sixty",
                   "src": "@drawable/github_icon",
                   "onClick": {
                     "someKey": "someValue"
@@ -63,12 +64,7 @@
                       "textColor": "#2cdb81",
                       "text": "1",
                       "layout_weight": "1",
-                      "gravity": "center",
-                      "border": {
-                        "width": "2dp",
-                        "color": "#cccccc",
-                        "bgColor": "#efefef"
-                      }
+                      "gravity": "center"
                     },
                     {
                       "type": "TextView",
@@ -78,12 +74,7 @@
                       "textColor": "#2cdb81",
                       "text": "2",
                       "layout_weight": "2",
-                      "gravity": "center",
-                      "border": {
-                        "width": "2dp",
-                        "color": "#cccccc",
-                        "bgColor": "#efefef"
-                      }
+                      "gravity": "center"
                     },
                     {
                       "type": "TextView",
@@ -93,22 +84,18 @@
                       "textColor": "#2cdb81",
                       "text": "3",
                       "layout_weight": "3",
-                      "gravity": "center",
-                      "border": {
-                        "width": "2dp",
-                        "color": "#cccccc",
-                        "bgColor": "#efefef"
-                      }
+                      "gravity": "center"
                     }
                   ]
                 },
                 {
                   "type": "Button",
-                  "layout_height": "50dp",
+                  "layout_height": "?Theme_AppCompat:actionBarSize",
                   "layout_width": "150dp",
                   "gravity": "center",
                   "layout_marginTop" : "10dp",
                   "text" : "ADD TO CART",
+                  "textColor": "?Theme_AppCompat:actionMenuTextColor",
                   "background" : {
                     "type" : "ripple",
                     "content": {
@@ -117,7 +104,7 @@
                       "children": [
                         {
                           "type": "solid",
-                          "color": "#F2575B"
+                          "color": "#FF4081"
                         }
                       ]
                     },
@@ -129,17 +116,20 @@
           ]
         },
         {
-          "type": "RelativeLayoutExample",
+          "type": "include",
+          "layout": "RelativeLayoutExample",
           "padding": "16dp",
           "paddingBottom": "0dp"
         },
         {
-          "type": "SimpleDataBindingExample",
+          "type": "include",
+          "layout": "SimpleDataBindingExample",
           "padding": "16dp",
           "paddingBottom": "0dp"
         },
         {
-          "type": "DataDrivenExample",
+          "type": "include",
+          "layout": "DataDrivenExample",
           "padding": "16dp",
           "paddingBottom": "0dp"
         },

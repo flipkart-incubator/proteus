@@ -22,21 +22,22 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.FrameLayout;
 
-import com.flipkart.android.proteus.EventType;
-import com.flipkart.android.proteus.ImageLoaderCallback;
-import com.flipkart.android.proteus.builder.DataAndViewParsingLayoutBuilder;
-import com.flipkart.android.proteus.builder.LayoutBuilderCallback;
-import com.flipkart.android.proteus.builder.LayoutBuilderFactory;
+import com.flipkart.android.proteus.Proteus;
+import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.ProteusContext;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.demo.R;
-import com.flipkart.android.proteus.toolbox.BitmapLoader;
+import com.flipkart.android.proteus.toolbox.DrawableCallback;
+import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.view.ProteusView;
+import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.Value;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -50,27 +51,50 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 
 public class ProteusActivity extends BaseActivity {
 
     private ProteusView proteusView;
     private Gson gson;
-    private DataAndViewParsingLayoutBuilder builder;
+    private ProteusLayoutInflater builder;
     private FrameLayout container;
-    private JsonObject pageLayout;
+    private Layout pageLayout;
     private JsonObject data;
     private ViewGroup.LayoutParams layoutParams;
     private Styles styles;
-    private BitmapLoader bitmapLoader = new BitmapLoader() {
+    private ProteusLayoutInflater.Callback callback = new ProteusLayoutInflater.Callback() {
+
+
+        @Nullable
         @Override
-        public Future<Bitmap> getBitmap(String imageUrl, View view) {
+        public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, JsonObject data, int index) {
             return null;
         }
 
         @Override
-        public void getBitmap(String imageUrl, final ImageLoaderCallback callback, View view, JsonObject layout) {
+        public Layout onLayoutRequired(String type, Layout include) {
+            return null;
+        }
+
+        @Override
+        public View onEvent(ProteusView view, EventType eventType, Value value) {
+            return null;
+        }
+
+        @Override
+        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
+            return null;
+        }
+
+        @Override
+        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, Layout layout) {
+            return null;
+        }
+    };
+    private ProteusLayoutInflater.ImageLoader bitmapLoader = new ProteusLayoutInflater.ImageLoader() {
+        @Override
+        public void getBitmap(final ProteusView view, final String imageUrl, final DrawableCallback callback) {
             URL url;
             try {
                 url = new URL(imageUrl);
@@ -91,48 +115,9 @@ public class ProteusActivity extends BaseActivity {
                 }
 
                 protected void onPostExecute(Bitmap result) {
-                    callback.onResponse(result);
+                    callback.setBitmap(result);
                 }
             }.execute(url);
-        }
-    };
-    private LayoutBuilderCallback callback = new LayoutBuilderCallback() {
-
-        @Override
-        public void onUnknownAttribute(String attribute, JsonElement value, ProteusView view) {
-            Log.i("unknown-attribute", attribute + " in " + view.getViewManager().getLayout().toString());
-        }
-
-        @Nullable
-        @Override
-        public ProteusView onUnknownViewType(String type, View parent, JsonObject layout, JsonObject data, int index, Styles styles) {
-            return null;
-        }
-
-        @Override
-        public JsonObject onLayoutRequired(String type, ProteusView parent) {
-            return null;
-        }
-
-        @Override
-        public void onViewBuiltFromViewProvider(ProteusView view, View parent, String type, int index) {
-
-        }
-
-        @Override
-        public View onEvent(ProteusView view, JsonElement value, EventType eventType) {
-            Log.d("event", value.toString());
-            return (View) view;
-        }
-
-        @Override
-        public PagerAdapter onPagerAdapterRequired(ProteusView parent, List<ProteusView> children, JsonObject layout) {
-            return null;
-        }
-
-        @Override
-        public Adapter onAdapterRequired(ProteusView parent, List<ProteusView> children, JsonObject layout) {
-            return null;
         }
     };
 
@@ -140,14 +125,14 @@ public class ProteusActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         gson = new Gson();
         styles = gson.fromJson(getJsonFromFile(R.raw.styles).getAsJsonObject(), Styles.class);
-        Map<String, JsonObject> layoutProvider = getProviderFromFile(R.raw.layout_provider);
-        pageLayout = getJsonFromFile(R.raw.page_layout).getAsJsonObject();
+        Map<String, Layout> layoutProvider = getProviderFromFile(R.raw.layout_provider);
+        pageLayout = getPageLayout(R.raw.page_layout);
 
         data = getJsonFromFile(R.raw.data_init).getAsJsonObject();
 
-        builder = new LayoutBuilderFactory().getDataAndViewParsingLayoutBuilder(layoutProvider);
-        builder.setListener(callback);
-        builder.setBitmapLoader(bitmapLoader);
+        Proteus proteus = new ProteusBuilder().build();
+
+        builder = proteus.getProteusContext(this, null, null, null, null).getInflater();
 
         container = new FrameLayout(ProteusActivity.this);
         layoutParams = new ViewGroup.LayoutParams(
@@ -159,7 +144,7 @@ public class ProteusActivity extends BaseActivity {
 
     @Override
     View createAndBindView() {
-        proteusView = builder.build(container, pageLayout, data, 0, styles);
+        proteusView = builder.inflate(pageLayout, data, container, -1);
         return (View) proteusView;
     }
 
@@ -180,7 +165,13 @@ public class ProteusActivity extends BaseActivity {
         return gson.fromJson(reader, JsonElement.class);
     }
 
-    private Map<String, JsonObject> getProviderFromFile(int resId) {
+    private Layout getPageLayout(int resId) {
+        InputStream inputStream = getResources().openRawResource(resId);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        return gson.fromJson(reader, Layout.class);
+    }
+
+    private Map<String, Layout> getProviderFromFile(int resId) {
         InputStream inputStream = getResources().openRawResource(resId);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         return gson.fromJson(reader, (new TypeToken<Map<String, JsonObject>>() {

@@ -1,17 +1,20 @@
 /*
- * Copyright 2016 Flipkart Internet Pvt. Ltd.
+ * Apache License
+ * Version 2.0, January 2004
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
  *
- *          http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the
+ * License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed
+ * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 package com.flipkart.android.proteus.toolbox;
@@ -39,12 +42,12 @@ import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 
+import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.Iterator;
 
 /**
  * Defines common utilities for working with animations.
@@ -75,8 +78,6 @@ public class AnimationUtils {
     private static final String PERCENT_SELF = "%";
     private static final String PERCENT_RELATIVE_PARENT = "%p";
 
-    private static Gson sGson = new Gson();
-
     /**
      * Loads an {@link Animation} object from a resource
      *
@@ -85,12 +86,12 @@ public class AnimationUtils {
      * @return The animation object reference by the specified id
      * @throws android.content.res.Resources.NotFoundException when the animation cannot be loaded
      */
-    public static Animation loadAnimation(Context context, JsonElement value) throws Resources.NotFoundException {
+    public static Animation loadAnimation(Context context, Value value) throws Resources.NotFoundException {
         Animation anim = null;
-        if (value.isJsonPrimitive()) {
-            anim = handleString(context, value.getAsString());
-        } else if (value.isJsonObject()) {
-            anim = handleElement(context, value.getAsJsonObject());
+        if (value.isPrimitive()) {
+            anim = handleString(context, value.getAsPrimitive().getAsString());
+        } else if (value.isObject()) {
+            anim = handleElement(context, value.getAsObject());
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
                 Log.e(TAG, "Could not load animation for : " + value.toString());
@@ -113,25 +114,24 @@ public class AnimationUtils {
         return anim;
     }
 
-    private static Animation handleElement(Context c, JsonObject value) {
+    private static Animation handleElement(Context context, ObjectValue value) {
         Animation anim = null;
-        JsonElement type = value.get(TYPE);
-        String animationType = type.getAsString();
+        String type = value.getAsString(TYPE);
         AnimationProperties animationProperties = null;
-        if (SET.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, AnimationSetProperties.class);
-        } else if (ALPHA.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, AlphaAnimProperties.class);
-        } else if (SCALE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, ScaleAnimProperties.class);
-        } else if (ROTATE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, RotateAnimProperties.class);
-        } else if (TRANSLATE.equalsIgnoreCase(animationType)) {
-            animationProperties = sGson.fromJson(value, TranslateAnimProperties.class);
+        if (SET.equalsIgnoreCase(type)) {
+            animationProperties = new AnimationSetProperties(value);
+        } else if (ALPHA.equalsIgnoreCase(type)) {
+            animationProperties = new AlphaAnimProperties(value);
+        } else if (SCALE.equalsIgnoreCase(type)) {
+            animationProperties = new ScaleAnimProperties(value);
+        } else if (ROTATE.equalsIgnoreCase(type)) {
+            animationProperties = new RotateAnimProperties(value);
+        } else if (TRANSLATE.equalsIgnoreCase(type)) {
+            animationProperties = new TranslateAnimProperties(value);
         }
 
         if (null != animationProperties) {
-            anim = animationProperties.instantiate(c);
+            anim = animationProperties.instantiate(context);
         }
 
         return anim;
@@ -145,13 +145,13 @@ public class AnimationUtils {
      * @return The animation object reference by the specified id
      * @throws android.content.res.Resources.NotFoundException
      */
-    public static Interpolator loadInterpolator(Context context, JsonElement value)
+    public static Interpolator loadInterpolator(Context context, Value value)
             throws Resources.NotFoundException {
         Interpolator interpolator = null;
-        if (value.isJsonPrimitive()) {
+        if (value.isPrimitive()) {
             interpolator = handleStringInterpolator(context, value.getAsString());
-        } else if (value.isJsonObject()) {
-            interpolator = handleElementInterpolator(context, value.getAsJsonObject());
+        } else if (value.isObject()) {
+            interpolator = handleElementInterpolator(context, value.getAsObject());
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
                 Log.e(TAG, "Could not load interpolator for : " + value.toString());
@@ -174,37 +174,36 @@ public class AnimationUtils {
         return interpolator;
     }
 
-    private static Interpolator handleElementInterpolator(Context c, JsonObject value) {
+    private static Interpolator handleElementInterpolator(Context c, ObjectValue value) {
 
         Interpolator interpolator = null;
-        JsonElement type = value.get("type");
-        String interpolatorType = type.getAsString();
+        String type = value.getAsString("type");
         InterpolatorProperties interpolatorProperties = null;
-        if (LINEAR_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+        if (LINEAR_INTERPOLATOR.equalsIgnoreCase(type)) {
             interpolator = new LinearInterpolator();
-        } else if (ACCELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+        } else if (ACCELERATE_INTERPOLATOR.equalsIgnoreCase(type)) {
             interpolator = new AccelerateInterpolator();
-        } else if (DECELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+        } else if (DECELERATE_INTERPOLATOR.equalsIgnoreCase(type)) {
             interpolator = new DecelerateInterpolator();
-        } else if (ACCELERATE_DECELERATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+        } else if (ACCELERATE_DECELERATE_INTERPOLATOR.equalsIgnoreCase(type)) {
             interpolator = new AccelerateDecelerateInterpolator();
-        } else if (CYCLE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value, CycleInterpolatorProperties.class);
-        } else if (ANTICIPATE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value, AnticipateInterpolatorProperties.class);
-        } else if (OVERSHOOT_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value, OvershootInterpolatorProperties.class);
-        } else if (ANTICIPATE_OVERSHOOT_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value, AnticipateOvershootInterpolatorProperties.class);
-        } else if (BOUNCE_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
+        } else if (CYCLE_INTERPOLATOR.equalsIgnoreCase(type)) {
+            interpolatorProperties = new CycleInterpolatorProperties(value);
+        } else if (ANTICIPATE_INTERPOLATOR.equalsIgnoreCase(type)) {
+            interpolatorProperties = new AnticipateInterpolatorProperties(value);
+        } else if (OVERSHOOT_INTERPOLATOR.equalsIgnoreCase(type)) {
+            interpolatorProperties = new OvershootInterpolatorProperties(value);
+        } else if (ANTICIPATE_OVERSHOOT_INTERPOLATOR.equalsIgnoreCase(type)) {
+            interpolatorProperties = new AnticipateOvershootInterpolatorProperties(value);
+        } else if (BOUNCE_INTERPOLATOR.equalsIgnoreCase(type)) {
             interpolator = new BounceInterpolator();
-        } else if (PATH_INTERPOLATOR.equalsIgnoreCase(interpolatorType)) {
-            interpolatorProperties = sGson.fromJson(value, PathInterpolatorProperties.class);
+        } else if (PATH_INTERPOLATOR.equalsIgnoreCase(type)) {
+            interpolatorProperties = new PathInterpolatorProperties(value);
         } else {
             if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Unknown interpolator name: " + interpolatorType);
+                Log.e(TAG, "Unknown interpolator name: " + type);
             }
-            throw new RuntimeException("Unknown interpolator name: " + interpolatorType);
+            throw new RuntimeException("Unknown interpolator name: " + type);
         }
 
         if (null != interpolatorProperties) {
@@ -242,16 +241,16 @@ public class AnimationUtils {
          * @param value The Json value to parse
          * @return The parsed version of the description
          */
-        static Description parseValue(JsonPrimitive value) {
+        static Description parseValue(Value value) {
             Description d = new Description();
             d.type = Animation.ABSOLUTE;
             d.value = 0;
-            if (value != null && (value.isNumber() || value.isString())) {
-                if (value.isNumber()) {
+            if (value != null && value.isPrimitive()) {
+                if (value.getAsPrimitive().isNumber()) {
                     d.type = Animation.ABSOLUTE;
-                    d.value = value.getAsNumber().floatValue();
+                    d.value = value.getAsPrimitive().getAsFloat();
                 } else {
-                    String stringValue = value.getAsString();
+                    String stringValue = value.getAsPrimitive().getAsString();
                     if (stringValue.endsWith(PERCENT_SELF)) {
                         stringValue = stringValue.substring(0, stringValue.length() - PERCENT_SELF.length());
                         d.value = Float.parseFloat(stringValue) / 100;
@@ -262,7 +261,7 @@ public class AnimationUtils {
                         d.type = Animation.RELATIVE_TO_PARENT;
                     } else {
                         d.type = Animation.ABSOLUTE;
-                        d.value = value.getAsNumber().floatValue();
+                        d.value = value.getAsPrimitive().getAsFloat();
                     }
                 }
             }
@@ -272,6 +271,17 @@ public class AnimationUtils {
     }
 
     private abstract static class AnimationProperties {
+
+        public static final String DETACH_WALLPAPER = "detachWallpaper";
+        public static final String DURATION = "duration";
+        public static final String FILL_AFTER = "fillAfter";
+        public static final String FILL_BEFORE = "fillBefore";
+        public static final String FILL_ENABLED = "fillEnabled";
+        public static final String INTERPOLATOR = "interpolator";
+        public static final String REPEAT_COUNT = "repeatCount";
+        public static final String REPEAT_MODE = "repeatMode";
+        public static final String START_OFFSET = "startOffset";
+        public static final String Z_ADJUSTMENT = "zAdjustment";
 
         @SerializedName("detachWallpaper")
         Boolean detachWallpaper;
@@ -284,7 +294,7 @@ public class AnimationUtils {
         @SerializedName("fillEnabled")
         Boolean fillEnabled;
         @SerializedName("interpolator")
-        JsonElement interpolator;
+        Value interpolator;
         @SerializedName("repeatCount")
         Integer repeatCount;
         @SerializedName("repeatMode")
@@ -293,6 +303,19 @@ public class AnimationUtils {
         Long startOffset;
         @SerializedName("zAdjustment")
         Integer zAdjustment;
+
+        public AnimationProperties(ObjectValue value) {
+            detachWallpaper = value.getAsBoolean(DETACH_WALLPAPER);
+            duration = value.getAsLong(DURATION);
+            fillAfter = value.getAsBoolean(FILL_AFTER);
+            fillBefore = value.getAsBoolean(FILL_BEFORE);
+            fillEnabled = value.getAsBoolean(FILL_ENABLED);
+            interpolator = value.get(INTERPOLATOR);
+            repeatCount = value.getAsInteger(REPEAT_COUNT);
+            repeatMode = value.getAsInteger(REPEAT_MODE);
+            startOffset = value.getAsLong(START_OFFSET);
+            zAdjustment = value.getAsInteger(Z_ADJUSTMENT);
+        }
 
         public Animation instantiate(Context c) {
             Animation anim = createAnimation(c);
@@ -348,25 +371,34 @@ public class AnimationUtils {
 
     private static class AnimationSetProperties extends AnimationProperties {
 
+        public static final String SHARE_INTERPOLATOR = "shareInterpolator";
+        public static final String CHILDREN = "children";
+
         @SerializedName("shareInterpolator")
         Boolean shareInterpolator;
         @SerializedName("children")
-        JsonElement children;
+        Value children;
+
+        public AnimationSetProperties(ObjectValue value) {
+            super(value);
+            shareInterpolator = value.getAsBoolean(SHARE_INTERPOLATOR);
+            children = value.get(CHILDREN);
+        }
 
         @Override
         Animation createAnimation(Context c) {
             AnimationSet animationSet = new AnimationSet(shareInterpolator == null ? true : shareInterpolator);
 
-
             if (null != children) {
-                if (children.isJsonArray()) {
-                    for (JsonElement element : children.getAsJsonArray()) {
-                        Animation animation = loadAnimation(c, element);
+                if (children.isArray()) {
+                    Iterator<Value> iterator = children.getAsArray().iterator();
+                    while (iterator.hasNext()) {
+                        Animation animation = loadAnimation(c, iterator.next());
                         if (null != animation) {
                             animationSet.addAnimation(animation);
                         }
                     }
-                } else if (children.isJsonObject() || children.isJsonPrimitive()) {
+                } else if (children.isObject() || children.isPrimitive()) {
                     Animation animation = loadAnimation(c, children);
                     if (null != animation) {
                         animationSet.addAnimation(animation);
@@ -379,10 +411,19 @@ public class AnimationUtils {
 
     private static class AlphaAnimProperties extends AnimationProperties {
 
+        public static final String FROM_ALPHA = "fromAlpha";
+        public static final String TO_ALPHA = "toAlpha";
+
         @SerializedName("fromAlpha")
         public Float fromAlpha;
         @SerializedName("toAlpha")
         public Float toAlpha;
+
+        public AlphaAnimProperties(ObjectValue value) {
+            super(value);
+            fromAlpha = value.getAsFloat(FROM_ALPHA);
+            toAlpha = value.getAsFloat(TO_ALPHA);
+        }
 
         @Override
         Animation createAnimation(Context c) {
@@ -391,6 +432,13 @@ public class AnimationUtils {
     }
 
     private static class ScaleAnimProperties extends AnimationProperties {
+
+        public static final String FROM_X_SCALE = "fromXScale";
+        public static final String TO_X_SCALE = "toXScale";
+        public static final String FROM_Y_SCALE = "fromYScale";
+        public static final String TO_Y_SCALE = "toYScale";
+        public static final String PIVOT_X = "pivotX";
+        public static final String PIVOT_Y = "pivotY";
 
         @SerializedName("fromXScale")
         public Float fromXScale;
@@ -401,9 +449,19 @@ public class AnimationUtils {
         @SerializedName("toYScale")
         public Float toYScale;
         @SerializedName("pivotX")
-        public JsonPrimitive pivotX;
+        public Value pivotX;
         @SerializedName("pivotY")
-        public JsonPrimitive pivotY;
+        public Value pivotY;
+
+        public ScaleAnimProperties(ObjectValue value) {
+            super(value);
+            fromXScale = value.getAsFloat(FROM_X_SCALE);
+            toXScale = value.getAsFloat(FROM_X_SCALE);
+            fromYScale = value.getAsFloat(FROM_X_SCALE);
+            toYScale = value.getAsFloat(FROM_X_SCALE);
+            pivotX = value.get(FROM_X_SCALE);
+            pivotY = value.get(FROM_X_SCALE);
+        }
 
         @Override
         Animation createAnimation(Context c) {
@@ -419,14 +477,27 @@ public class AnimationUtils {
 
     private static class TranslateAnimProperties extends AnimationProperties {
 
+        public static final String FROM_X_DELTA = "fromXDelta";
+        public static final String TO_X_DELTA = "toXDelta";
+        public static final String FROM_Y_DELTA = "fromYDelta";
+        public static final String TO_Y_DELTA = "toYDelta";
+
         @SerializedName("fromXDelta")
-        public JsonPrimitive fromXDelta;
+        public Value fromXDelta;
         @SerializedName("toXDelta")
-        public JsonPrimitive toXDelta;
+        public Value toXDelta;
         @SerializedName("fromYDelta")
-        public JsonPrimitive fromYDelta;
+        public Value fromYDelta;
         @SerializedName("toYDelta")
-        public JsonPrimitive toYDelta;
+        public Value toYDelta;
+
+        public TranslateAnimProperties(ObjectValue value) {
+            super(value);
+            fromXDelta = value.get(FROM_X_DELTA);
+            toXDelta = value.get(TO_X_DELTA);
+            fromXDelta = value.get(FROM_Y_DELTA);
+            toYDelta = value.get(TO_Y_DELTA);
+        }
 
         @Override
         Animation createAnimation(Context c) {
@@ -441,14 +512,27 @@ public class AnimationUtils {
 
     private static class RotateAnimProperties extends AnimationProperties {
 
+        public static final String FROM_DEGREES = "fromDegrees";
+        public static final String TO_DEGREES = "toDegrees";
+        public static final String PIVOT_X = "pivotX";
+        public static final String PIVOT_Y = "pivotY";
+
         @SerializedName("fromDegrees")
         public Float fromDegrees;
         @SerializedName("toDegrees")
         public Float toDegrees;
         @SerializedName("pivotX")
-        public JsonPrimitive pivotX;
+        public Value pivotX;
         @SerializedName("pivotY")
-        public JsonPrimitive pivotY;
+        public Value pivotY;
+
+        public RotateAnimProperties(ObjectValue value) {
+            super(value);
+            fromDegrees = value.getAsFloat(FROM_DEGREES);
+            toDegrees = value.getAsFloat(TO_DEGREES);
+            pivotX = value.get(PIVOT_X);
+            pivotY = value.get(PIVOT_Y);
+        }
 
         @Override
         Animation createAnimation(Context c) {
@@ -463,10 +547,20 @@ public class AnimationUtils {
     }
 
     private abstract static class InterpolatorProperties {
+
+        public InterpolatorProperties(Value value) {
+        }
+
         abstract Interpolator createInterpolator(Context c);
+
     }
 
     private static class PathInterpolatorProperties extends InterpolatorProperties {
+
+        public static final String CONTROL_X1 = "controlX1";
+        public static final String CONTROL_Y1 = "controlY1";
+        public static final String CONTROL_X2 = "controlX2";
+        public static final String CONTROL_Y2 = "controlY2";
 
         @SerializedName("controlX1")
         public Float controlX1;
@@ -476,6 +570,14 @@ public class AnimationUtils {
         public Float controlX2;
         @SerializedName("controlY2")
         public Float controlY2;
+
+        public PathInterpolatorProperties(ObjectValue parser) {
+            super(parser);
+            controlX1 = parser.getAsFloat(CONTROL_X1);
+            controlY1 = parser.getAsFloat(CONTROL_Y1);
+            controlX2 = parser.getAsFloat(CONTROL_X2);
+            controlY2 = parser.getAsFloat(CONTROL_Y2);
+        }
 
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         Interpolator createInterpolator(Context c) {
@@ -489,8 +591,15 @@ public class AnimationUtils {
 
     private static class AnticipateInterpolatorProperties extends InterpolatorProperties {
 
+        public static final String TENSION = "tension";
+
         @SerializedName("tension")
         public Float tension;
+
+        public AnticipateInterpolatorProperties(ObjectValue parser) {
+            super(parser);
+            tension = parser.getAsFloat(TENSION);
+        }
 
         Interpolator createInterpolator(Context c) {
             return new AnticipateInterpolator(tension);
@@ -499,8 +608,15 @@ public class AnimationUtils {
 
     private static class OvershootInterpolatorProperties extends InterpolatorProperties {
 
+        public static final String TENSION = "tension";
+
         @SerializedName("tension")
         public Float tension;
+
+        public OvershootInterpolatorProperties(ObjectValue parser) {
+            super(parser);
+            tension = parser.getAsFloat(TENSION);
+        }
 
         Interpolator createInterpolator(Context c) {
             return tension == null ? new OvershootInterpolator() : new OvershootInterpolator(tension);
@@ -509,10 +625,19 @@ public class AnimationUtils {
 
     private static class AnticipateOvershootInterpolatorProperties extends InterpolatorProperties {
 
+        public static final String TENSION = "tension";
+        public static final String EXTRA_TENSION = "extraTension";
+
         @SerializedName("tension")
         public Float tension;
         @SerializedName("extraTension")
         public Float extraTension;
+
+        public AnticipateOvershootInterpolatorProperties(ObjectValue parser) {
+            super(parser);
+            tension = parser.getAsFloat(TENSION);
+            extraTension = parser.getAsFloat(EXTRA_TENSION);
+        }
 
         Interpolator createInterpolator(Context c) {
             return null == tension ? new AnticipateOvershootInterpolator() : (null == extraTension ? new AnticipateOvershootInterpolator(tension) : new AnticipateOvershootInterpolator(tension, extraTension));
@@ -521,8 +646,15 @@ public class AnimationUtils {
 
     private static class CycleInterpolatorProperties extends InterpolatorProperties {
 
+        public static final String CYCLES = "cycles";
+
         @SerializedName("cycles")
         public Float cycles;
+
+        public CycleInterpolatorProperties(ObjectValue parser) {
+            super(parser);
+            cycles = parser.getAsFloat(CYCLES);
+        }
 
         Interpolator createInterpolator(Context c) {
             return new CycleInterpolator(cycles);

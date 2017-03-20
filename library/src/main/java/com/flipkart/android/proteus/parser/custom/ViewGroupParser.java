@@ -1,138 +1,155 @@
 /*
- * Copyright 2016 Flipkart Internet Pvt. Ltd.
+ * Apache License
+ * Version 2.0, January 2004
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
  *
- *          http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the
+ * License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed
+ * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 package com.flipkart.android.proteus.parser.custom;
 
 import android.os.Build;
-import android.view.View;
+import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.builder.LayoutBuilder;
-import com.flipkart.android.proteus.parser.Attributes;
-import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.parser.Parser;
-import com.flipkart.android.proteus.parser.WrappableParser;
-import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.ProteusContext;
+import com.flipkart.android.proteus.ProteusLayoutInflater;
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.manager.ProteusViewManager;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.Styles;
-import com.flipkart.android.proteus.toolbox.Utils;
+import com.flipkart.android.proteus.value.AttributeResource;
+import com.flipkart.android.proteus.value.Binding;
+import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Resource;
+import com.flipkart.android.proteus.value.StyleResource;
+import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
-import com.flipkart.android.proteus.view.ProteusView;
-import com.flipkart.android.proteus.view.manager.ProteusViewManager;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
+import java.util.Iterator;
+
+public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
 
     private static final String LAYOUT_MODE_CLIP_BOUNDS = "clipBounds";
     private static final String LAYOUT_MODE_OPTICAL_BOUNDS = "opticalBounds";
 
-    public ViewGroupParser(Parser<T> wrappedParser) {
-        super(wrappedParser);
-    }
-
     @Override
-    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, ViewGroup parent, int dataIndex) {
         return new ProteusAspectRatioFrameLayout(parent.getContext());
     }
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
-        addHandler(Attributes.ViewGroup.ClipChildren, new StringAttributeProcessor<T>() {
+    protected void addAttributeProcessors() {
+
+        addAttributeProcessor(Attributes.ViewGroup.ClipChildren, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                boolean clipChildren = ParseHelper.parseBoolean(attributeValue);
-                view.setClipChildren(clipChildren);
+            public void setBoolean(T view, boolean value) {
+                view.setClipChildren(value);
             }
         });
 
-        addHandler(Attributes.ViewGroup.ClipToPadding, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.ViewGroup.ClipToPadding, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                boolean clipToPadding = ParseHelper.parseBoolean(attributeValue);
-                view.setClipToPadding(clipToPadding);
+            public void setBoolean(T view, boolean value) {
+                view.setClipToPadding(value);
             }
         });
 
-        addHandler(Attributes.ViewGroup.LayoutMode, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.ViewGroup.LayoutMode, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
+            public void setString(T view, String value) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    if (LAYOUT_MODE_CLIP_BOUNDS.equals(attributeValue)) {
+                    if (LAYOUT_MODE_CLIP_BOUNDS.equals(value)) {
                         view.setLayoutMode(ViewGroup.LAYOUT_MODE_CLIP_BOUNDS);
-                    } else if (LAYOUT_MODE_OPTICAL_BOUNDS.equals(attributeValue)) {
+                    } else if (LAYOUT_MODE_OPTICAL_BOUNDS.equals(value)) {
                         view.setLayoutMode(ViewGroup.LAYOUT_MODE_OPTICAL_BOUNDS);
                     }
                 }
             }
         });
 
-        addHandler(Attributes.ViewGroup.SplitMotionEvents, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.ViewGroup.SplitMotionEvents, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                boolean splitMotionEvents = ParseHelper.parseBoolean(attributeValue);
-                view.setMotionEventSplittingEnabled(splitMotionEvents);
+            public void setBoolean(T view, boolean value) {
+                view.setMotionEventSplittingEnabled(value);
             }
         });
 
-        addHandler(Attributes.ViewGroup.Children, new AttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.ViewGroup.Children, new AttributeProcessor<T>() {
             @Override
-            public void handle(String key, JsonElement value, T view) {
-                handleChildren((ProteusView) view);
+            public void handleValue(T view, Value value) {
+                handleChildren((ProteusView) view, value);
+            }
+
+            @Override
+            public void handleResource(T view, Resource resource) {
+                throw new IllegalArgumentException("children cannot be a resource");
+            }
+
+            @Override
+            public void handleAttributeResource(T view, AttributeResource attribute) {
+                throw new IllegalArgumentException("children cannot be a resource");
+            }
+
+            @Override
+            public void handleStyleResource(T view, StyleResource style) {
+                throw new IllegalArgumentException("children cannot be a style attribute");
             }
         });
     }
 
     @Override
-    public boolean handleChildren(ProteusView view) {
+    public boolean handleChildren(ProteusView view, Value children) {
         ProteusViewManager viewManager = view.getViewManager();
-        LayoutBuilder builder = viewManager.getLayoutBuilder();
-        JsonObject layout = viewManager.getLayout();
-        JsonElement children = layout.get(ProteusConstants.CHILDREN);
-        JsonObject data = viewManager.getDataContext().getData();
-        int dataIndex = viewManager.getDataContext().getIndex();
-        Styles styles = view.getViewManager().getStyles();
+        ProteusLayoutInflater layoutInflater = viewManager.getContext().getInflater();
+        JsonObject data = viewManager.getScope().getData();
+        int dataIndex = viewManager.getScope().getIndex();
 
-        if (null != children && !children.isJsonNull()) {
-            if (children.isJsonArray()) {
-                ProteusView child;
-                for (JsonElement jsonElement : children.getAsJsonArray()) {
-                    child = builder.build((ViewGroup) view, jsonElement.getAsJsonObject(), data, dataIndex, styles);
-                    addView(view, child);
-                }
-            } else if (children.isJsonObject()) {
-                handleDataDrivenChildren(builder, view, viewManager, children.getAsJsonObject(), data, styles, dataIndex);
+        if (children.isArray()) {
+            ProteusView child;
+            Iterator<Value> iterator = children.getAsArray().iterator();
+            while (iterator.hasNext()) {
+                child = layoutInflater.inflate(iterator.next().getAsLayout(), data, (ViewGroup) view, dataIndex);
+                addView(view, child);
             }
+        } else if (children.isObject()) {
+            handleDataDrivenChildren(layoutInflater, view, viewManager, children.getAsObject(), data, dataIndex);
         }
 
         return true;
     }
 
-    private void handleDataDrivenChildren(LayoutBuilder builder, ProteusView parent, ProteusViewManager viewManager, JsonObject children, JsonObject data, Styles styles, int dataIndex) {
+    private void handleDataDrivenChildren(ProteusLayoutInflater layoutInflater, ProteusView parent, ProteusViewManager viewManager,
+                                          ObjectValue children, JsonObject data, int dataIndex) {
 
-        String dataPath = children.get(ProteusConstants.DATA).getAsString().substring(1);
-        viewManager.setDataPathForChildren(dataPath);
+        //noinspection ConstantConditions : We want to throw an exception (for now)
+        String binding = children.getAsString(ProteusConstants.DATA).substring(1);
+        viewManager.setDataPathForChildren(binding);
 
-        Result result = Utils.readJson(dataPath, data, dataIndex);
+        Result result = Binding.valueOf(binding).getExpression(0).evaluate(data, dataIndex);
         JsonElement element = result.isSuccess() ? result.element : null;
 
-        JsonObject childLayout = children.getAsJsonObject(ProteusConstants.LAYOUT);
+        Layout childLayout = children.getAsLayout(ProteusConstants.LAYOUT);
 
         viewManager.setChildLayout(childLayout);
 
@@ -144,7 +161,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
 
         ProteusView child;
         for (int index = 0; index < length; index++) {
-            child = builder.build((ViewGroup) parent, childLayout, data, index, styles);
+            child = layoutInflater.inflate(childLayout, data, (ViewGroup) parent, index);
             if (child != null) {
                 this.addView(parent, child);
             }
@@ -154,7 +171,7 @@ public class ViewGroupParser<T extends ViewGroup> extends WrappableParser<T> {
     @Override
     public boolean addView(ProteusView parent, ProteusView view) {
         if (parent instanceof ViewGroup) {
-            ((ViewGroup) parent).addView((View) view);
+            ((ViewGroup) parent).addView(view.getAsView());
             return true;
         }
         return false;

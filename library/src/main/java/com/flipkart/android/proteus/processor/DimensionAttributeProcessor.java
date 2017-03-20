@@ -1,44 +1,102 @@
 /*
- * Copyright 2016 Flipkart Internet Pvt. Ltd.
+ * Apache License
+ * Version 2.0, January 2004
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
  *
- *          http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the
+ * License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed
+ * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 package com.flipkart.android.proteus.processor;
 
 
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.flipkart.android.proteus.parser.ParseHelper;
-import com.google.gson.JsonElement;
+import com.flipkart.android.proteus.AttributeProcessor;
+import com.flipkart.android.proteus.value.AttributeResource;
+import com.flipkart.android.proteus.value.Dimension;
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.value.Resource;
+import com.flipkart.android.proteus.value.StyleResource;
+import com.flipkart.android.proteus.value.Value;
 
+/**
+ *
+ */
 public abstract class DimensionAttributeProcessor<T extends View> extends AttributeProcessor<T> {
+
+    public static float evaluate(Value value, ProteusView view) {
+        if (value == null) {
+            return Dimension.ZERO.apply(((View) view).getContext());
+        }
+
+        final float[] result = new float[1];
+        DimensionAttributeProcessor<View> processor = new DimensionAttributeProcessor<View>() {
+            @Override
+            public void setDimension(View view, float dimension) {
+                result[0] = dimension;
+            }
+        };
+        processor.process((View) view, value);
+
+        return result[0];
+    }
+
+    public static Value staticCompile(@Nullable Value value, Context context) {
+        if (null == value || !value.isPrimitive()) {
+            return Dimension.ZERO;
+        }
+        return Dimension.valueOf(value.getAsString(), context);
+    }
+
+    @Override
+    public final void handleValue(T view, Value value) {
+        if (value.isDimension()) {
+            setDimension(view, value.getAsDimension().apply(view.getContext()));
+        } else if (value.isPrimitive()) {
+            process(view, precompile(value, view.getContext()));
+        }
+    }
+
+    @Override
+    public void handleResource(T view, Resource resource) {
+        Float dimension = resource.getDimension(view.getContext());
+        setDimension(view, null == dimension ? 0 : dimension);
+    }
+
+    @Override
+    public void handleAttributeResource(T view, AttributeResource attribute) {
+        TypedArray a = attribute.apply(view.getContext());
+        setDimension(view, a.getDimensionPixelSize(0, 0));
+    }
+
+    @Override
+    public void handleStyleResource(T view, StyleResource style) {
+        TypedArray a = style.apply(view.getContext());
+        setDimension(view, a.getDimensionPixelSize(0, 0));
+    }
 
     /**
      * @param view View
      */
+    public abstract void setDimension(T view, float dimension);
+
     @Override
-    public final void handle(String key, JsonElement value, T view) {
-        if (value != null && value.isJsonPrimitive()) {
-            float dimension = ParseHelper.parseDimension(value.getAsString(), view.getContext());
-            setDimension(dimension, view, key, value);
-        }
+    public Value compile(@Nullable Value value, Context context) {
+        return staticCompile(value, context);
     }
 
-    /**
-     * @param view  View
-     * @param key   Attribute Key
-     * @param value Attribute Value
-     */
-    public abstract void setDimension(float dimension, T view, String key, JsonElement value);
 }

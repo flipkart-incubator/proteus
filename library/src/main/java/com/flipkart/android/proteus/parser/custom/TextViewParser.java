@@ -1,17 +1,20 @@
 /*
- * Copyright 2016 Flipkart Internet Pvt. Ltd.
+ * Apache License
+ * Version 2.0, January 2004
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
  *
- *          http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the
+ * License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed
+ * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 package com.flipkart.android.proteus.parser.custom;
@@ -21,76 +24,78 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.flipkart.android.proteus.parser.Attributes;
+import com.flipkart.android.proteus.ProteusContext;
+import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
-import com.flipkart.android.proteus.parser.Parser;
-import com.flipkart.android.proteus.parser.WrappableParser;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
+import com.flipkart.android.proteus.processor.GravityAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
-import com.flipkart.android.proteus.toolbox.Styles;
+import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.view.ProteusTextView;
-import com.flipkart.android.proteus.view.ProteusView;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 /**
  * Created by kiran.kumar on 12/05/14.
  */
-public class TextViewParser<T extends TextView> extends WrappableParser<T> {
-
-    public TextViewParser(Parser<T> wrappedParser) {
-        super(wrappedParser);
-    }
+public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
 
     @Override
-    public ProteusView createView(ViewGroup parent, JsonObject layout, JsonObject data, Styles styles, int index) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull JsonObject data, ViewGroup parent, int dataIndex) {
         return new ProteusTextView(parent.getContext());
     }
 
     @Override
-    protected void prepareHandlers() {
-        super.prepareHandlers();
-        addHandler(Attributes.TextView.HTML, new StringAttributeProcessor<T>() {
+    protected void addAttributeProcessors() {
+
+        addAttributeProcessor(Attributes.TextView.HTML, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setText(Html.fromHtml(attributeValue));
+            public void setString(T view, String value) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    view.setText(Html.fromHtml(value, Html.FROM_HTML_MODE_LEGACY));
+                } else {
+                    view.setText(Html.fromHtml(value));
+                }
             }
         });
-        addHandler(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setText(attributeValue);
+            public void setString(T view, String value) {
+                view.setText(value);
             }
         });
 
-        addHandler(Attributes.TextView.DrawablePadding, new DimensionAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawablePadding, new DimensionAttributeProcessor<T>() {
             @Override
-            public void setDimension(float dimension, T view, String key, JsonElement value) {
+            public void setDimension(T view, float dimension) {
                 view.setCompoundDrawablePadding((int) dimension);
             }
         });
 
-        addHandler(Attributes.TextView.TextSize, new DimensionAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextSize, new DimensionAttributeProcessor<T>() {
             @Override
-            public void setDimension(float dimension, T view, String key, JsonElement value) {
+            public void setDimension(T view, float dimension) {
                 view.setTextSize(TypedValue.COMPLEX_UNIT_PX, dimension);
             }
         });
-        addHandler(Attributes.TextView.Gravity, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Gravity, new GravityAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setGravity(ParseHelper.parseGravity(attributeValue));
+            public void setGravity(T view, @Gravity int gravity) {
+                view.setGravity(gravity);
             }
         });
 
-        addHandler(Attributes.TextView.TextColor, new ColorResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextColor, new ColorResourceProcessor<T>() {
 
             @Override
             public void setColor(T view, int color) {
@@ -103,7 +108,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.TextColorHint, new ColorResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextColorHint, new ColorResourceProcessor<T>() {
 
             @Override
             public void setColor(T view, int color) {
@@ -116,7 +121,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.TextColorLink, new ColorResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextColorLink, new ColorResourceProcessor<T>() {
 
             @Override
             public void setColor(T view, int color) {
@@ -129,7 +134,7 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.TextColorHighLight, new ColorResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextColorHighLight, new ColorResourceProcessor<T>() {
 
             @Override
             public void setColor(T view, int color) {
@@ -142,28 +147,28 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.DrawableLeft, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawableLeft, new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(drawable, compoundDrawables[1], compoundDrawables[2], compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableTop, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawableTop, new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(compoundDrawables[0], drawable, compoundDrawables[2], compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableRight, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawableRight, new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(drawable, compoundDrawables[1], drawable, compoundDrawables[3]);
             }
         });
-        addHandler(Attributes.TextView.DrawableBottom, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawableBottom, new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
@@ -171,70 +176,68 @@ public class TextViewParser<T extends TextView> extends WrappableParser<T> {
             }
         });
 
-        addHandler(Attributes.TextView.MaxLines, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.MaxLines, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setMaxLines(ParseHelper.parseInt(attributeValue));
+            public void setString(T view, String value) {
+                view.setMaxLines(ParseHelper.parseInt(value));
             }
         });
 
-        addHandler(Attributes.TextView.Ellipsize, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Ellipsize, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                Enum ellipsize = ParseHelper.parseEllipsize(attributeValue);
+            public void setString(T view, String value) {
+                Enum ellipsize = ParseHelper.parseEllipsize(value);
                 view.setEllipsize((android.text.TextUtils.TruncateAt) ellipsize);
             }
         });
 
-        addHandler(Attributes.TextView.PaintFlags, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.PaintFlags, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                if (attributeValue.equals("strike"))
+            public void setString(T view, String value) {
+                if (value.equals("strike"))
                     view.setPaintFlags(view.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
         });
 
-        addHandler(Attributes.TextView.Prefix, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Prefix, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setText(attributeValue + view.getText());
+            public void setString(T view, String value) {
+                view.setText(value + view.getText());
             }
         });
 
-        addHandler(Attributes.TextView.Suffix, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Suffix, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setText(view.getText() + attributeValue);
+            public void setString(T view, String value) {
+                view.setText(view.getText() + value);
             }
         });
 
-        addHandler(Attributes.TextView.TextStyle, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextStyle, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                int typeface = ParseHelper.parseTextStyle(attributeValue);
+            public void setString(T view, String value) {
+                int typeface = ParseHelper.parseTextStyle(value);
                 view.setTypeface(Typeface.defaultFromStyle(typeface));
             }
         });
 
-        addHandler(Attributes.TextView.SingleLine, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.SingleLine, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setSingleLine(ParseHelper.parseBoolean(attributeValue));
+            public void setBoolean(T view, boolean value) {
+                view.setSingleLine(value);
             }
         });
 
-        addHandler(Attributes.TextView.TextAllCaps, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextAllCaps, new BooleanAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                    view.setAllCaps(ParseHelper.parseBoolean(attributeValue));
-                }
+            public void setBoolean(T view, boolean value) {
+                view.setAllCaps(value);
             }
         });
-        addHandler(Attributes.TextView.Hint, new StringAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.Hint, new StringAttributeProcessor<T>() {
             @Override
-            public void handle(String attributeKey, String attributeValue, T view) {
-                view.setHint(attributeValue);
+            public void setString(T view, String value) {
+                view.setHint(value);
             }
         });
     }

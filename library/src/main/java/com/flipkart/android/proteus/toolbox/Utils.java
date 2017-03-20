@@ -1,28 +1,24 @@
 /*
- * Copyright 2016 Flipkart Internet Pvt. Ltd.
+ * Apache License
+ * Version 2.0, January 2004
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
  *
- *          http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the
+ * License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed
+ * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 package com.flipkart.android.proteus.toolbox;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.NonNull;
-
-import com.flipkart.android.proteus.parser.ParseHelper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -216,17 +212,13 @@ public class Utils {
         return sb.toString();
     }
 
-    public static JsonObject mergeLayouts(JsonObject destination, JsonObject source) {
+    public static JsonObject mergeLayouts(JsonObject destination, JsonObject include) {
         JsonObject layout = new JsonObject();
         for (Map.Entry<String, JsonElement> entry : destination.entrySet()) {
             layout.add(entry.getKey(), entry.getValue());
         }
-        boolean hasType = layout.has(ProteusConstants.TYPE);
-        for (Map.Entry<String, JsonElement> entry : source.entrySet()) {
-            if (ProteusConstants.TYPE.equals(entry.getKey()) && hasType) {
-                continue;
-            }
-            if (ProteusConstants.DATA_CONTEXT.equals(entry.getKey())) {
+        for (Map.Entry<String, JsonElement> entry : include.entrySet()) {
+            if (ProteusConstants.TYPE.equals(entry.getKey()) || ProteusConstants.LAYOUT.equals(entry.getKey())) {
                 continue;
             }
             layout.add(entry.getKey(), entry.getValue());
@@ -249,62 +241,6 @@ public class Utils {
             string = element.toString();
         }
         return string;
-    }
-
-    @NonNull
-    public static String getLayoutIdentifier(JsonObject layout) {
-        String noLayoutId = "no ID or TAG.";
-        if (layout == null) {
-            return noLayoutId;
-        }
-        String value = Utils.getPropertyAsString(layout, ProteusConstants.ID);
-        if (value != null) {
-            return "ID: " + value + ".";
-        }
-        value = Utils.getPropertyAsString(layout, ProteusConstants.TAG);
-        if (value != null) {
-            return "TAG: " + value + ".";
-        }
-        return noLayoutId;
-    }
-
-    public static Drawable getBorderDrawable(JsonElement attributeValue, Context context) {
-
-        if (!attributeValue.isJsonObject() || attributeValue.isJsonNull()) {
-            return null;
-        }
-
-        float cornerRadius = 0;
-        int borderWidth = 0, borderColor = Color.TRANSPARENT, bgColor = Color.TRANSPARENT;
-        JsonObject data = attributeValue.getAsJsonObject();
-
-        String value = Utils.getPropertyAsString(data, ATTRIBUTE_BG_COLOR);
-        if (value != null && !value.equals("-1")) {
-            bgColor = ParseHelper.parseColor(value);
-        }
-
-        value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_COLOR);
-        if (value != null) {
-            borderColor = ParseHelper.parseColor(value);
-        }
-
-        value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_RADIUS);
-        if (value != null) {
-            cornerRadius = ParseHelper.parseDimension(value, context);
-        }
-
-        value = Utils.getPropertyAsString(data, ATTRIBUTE_BORDER_WIDTH);
-        if (value != null) {
-            borderWidth = (int) ParseHelper.parseDimension(value, context);
-        }
-
-        GradientDrawable border = new GradientDrawable();
-        border.setCornerRadius(cornerRadius);
-        border.setShape(GradientDrawable.RECTANGLE);
-        border.setStroke(borderWidth, borderColor);
-        border.setColor(bgColor);
-
-        return border;
     }
 
     public static String getTagPrefix() {

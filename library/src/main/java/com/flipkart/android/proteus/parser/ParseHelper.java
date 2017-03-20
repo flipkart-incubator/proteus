@@ -1,32 +1,32 @@
 /*
- * Copyright 2016 Flipkart Internet Pvt. Ltd.
+ * Apache License
+ * Version 2.0, January 2004
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
  *
- *          http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
+ * this file except in compliance with the License. You may obtain a copy of the
+ * License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed
+ * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+ * CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 package com.flipkart.android.proteus.parser;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,17 +34,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.flipkart.android.proteus.R;
+import com.flipkart.android.proteus.value.Dimension;
+import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Primitive;
+import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.toolbox.ProteusConstants;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,7 +55,6 @@ public class ParseHelper {
 
     private static final String TAG = "ParseHelper";
 
-    private static final String TRUE = "true";
     private static final String FALSE = "false";
 
     private static final String VISIBLE = "visible";
@@ -75,11 +74,6 @@ public class ParseHelper {
     private static final String BEGINNING = "beginning";
     private static final String MARQUEE = "marquee";
 
-
-    private static final String MATCH_PARENT = "match_parent";
-    private static final String FILL_PARENT = "fill_parent";
-    private static final String WRAP_CONTENT = "wrap_content";
-
     private static final String BOLD = "bold";
     private static final String ITALIC = "italic";
     private static final String BOLD_ITALIC = "bold|italic";
@@ -92,21 +86,11 @@ public class ParseHelper {
     private static final String TEXT_ALIGNMENT_VIEW_START = "viewStart";
     private static final String TEXT_ALIGNMENT_VIEW_END = "viewEnd";
 
-    private static final String SUFFIX_PX = "px";
-    private static final String SUFFIX_DP = "dp";
-    private static final String SUFFIX_SP = "sp";
-    private static final String SUFFIX_PT = "pt";
-    private static final String SUFFIX_IN = "in";
-    private static final String SUFFIX_MM = "mm";
-
-    private static final String ATTR_START_LITERAL = "?";
     private static final String COLOR_PREFIX_LITERAL = "#";
 
+    private static final String ATTR_START_LITERAL = "?";
     private static final String DRAWABLE_LOCAL_RESOURCE_STR = "@drawable/";
-    private static final String STRING_LOCAL_RESOURCE_STR = "@string/";
     private static final String TWEEN_LOCAL_RESOURCE_STR = "@anim/";
-    private static final String COLOR_LOCAL_RESOURCE_STR = "@color/";
-    private static final String DIMENSION_LOCAL_RESOURCE_STR = "@dimen/";
 
     private static final String DRAWABLE_STR = "drawable";
     private static final String ID_STR = "id";
@@ -114,19 +98,21 @@ public class ParseHelper {
     private static final Pattern sAttributePattern = Pattern.compile("(\\?)(\\S*)(:?)(attr\\/?)(\\S*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
     private static final Map<String, Class> sHashMap = new HashMap<>();
     private static final Map<String, Integer> sAttributeCache = new HashMap<>();
+    private static final Map<Integer, Primitive> sVisibilityMap = new HashMap<>();
     private static final Map<String, Integer> sStateMap = new HashMap<>();
-    private static final Map<String, Integer> sGravityMap = new HashMap<>();
+    private static final Map<String, Primitive> sGravityMap = new HashMap<>();
     private static final Map<String, Integer> sDividerMode = new HashMap<>();
     private static final Map<String, Enum> sEllipsizeMode = new HashMap<>();
     private static final Map<String, Integer> sVisibilityMode = new HashMap<>();
     private static final Map<String, Integer> sTextAlignment = new HashMap<>();
-    private static final Map<String, Integer> sDimensionsMap = new HashMap<>();
-    private static final Map<String, Integer> sDimensionsUnitsMap = new HashMap<>();
     private static final Map<String, ImageView.ScaleType> sImageScaleType = new HashMap<>();
-    private static Map<String, Integer> styleMap = new HashMap<>();
-    private static Map<String, Integer> attributeMap = new HashMap<>();
 
     static {
+
+        sVisibilityMap.put(View.VISIBLE, new Primitive(View.VISIBLE));
+        sVisibilityMap.put(View.INVISIBLE, new Primitive(View.INVISIBLE));
+        sVisibilityMap.put(View.GONE, new Primitive(View.GONE));
+
         sStateMap.put("state_pressed", android.R.attr.state_pressed);
         sStateMap.put("state_enabled", android.R.attr.state_enabled);
         sStateMap.put("state_focused", android.R.attr.state_focused);
@@ -137,15 +123,15 @@ public class ParseHelper {
         sStateMap.put("state_activated", android.R.attr.state_activated);
         sStateMap.put("state_window_focused", android.R.attr.state_window_focused);
 
-        sGravityMap.put(CENTER, Gravity.CENTER);
-        sGravityMap.put(CENTER_HORIZONTAL, Gravity.CENTER_HORIZONTAL);
-        sGravityMap.put(CENTER_VERTICAL, Gravity.CENTER_VERTICAL);
-        sGravityMap.put(LEFT, Gravity.LEFT);
-        sGravityMap.put(RIGHT, Gravity.RIGHT);
-        sGravityMap.put(TOP, Gravity.TOP);
-        sGravityMap.put(BOTTOM, Gravity.BOTTOM);
-        sGravityMap.put(START, Gravity.START);
-        sGravityMap.put(END, Gravity.END);
+        sGravityMap.put(CENTER, new Primitive(Gravity.CENTER));
+        sGravityMap.put(CENTER_HORIZONTAL, new Primitive(Gravity.CENTER_HORIZONTAL));
+        sGravityMap.put(CENTER_VERTICAL, new Primitive(Gravity.CENTER_VERTICAL));
+        sGravityMap.put(LEFT, new Primitive(Gravity.LEFT));
+        sGravityMap.put(RIGHT, new Primitive(Gravity.RIGHT));
+        sGravityMap.put(TOP, new Primitive(Gravity.TOP));
+        sGravityMap.put(BOTTOM, new Primitive(Gravity.BOTTOM));
+        sGravityMap.put(START, new Primitive(Gravity.START));
+        sGravityMap.put(END, new Primitive(Gravity.END));
 
         sDividerMode.put(END, LinearLayout.SHOW_DIVIDER_END);
         sDividerMode.put(MIDDLE, LinearLayout.SHOW_DIVIDER_MIDDLE);
@@ -159,17 +145,6 @@ public class ParseHelper {
         sVisibilityMode.put(VISIBLE, View.VISIBLE);
         sVisibilityMode.put(INVISIBLE, View.INVISIBLE);
         sVisibilityMode.put(GONE, View.GONE);
-
-        sDimensionsMap.put(MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        sDimensionsMap.put(FILL_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        sDimensionsMap.put(WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        sDimensionsUnitsMap.put(SUFFIX_PX, TypedValue.COMPLEX_UNIT_PX);
-        sDimensionsUnitsMap.put(SUFFIX_DP, TypedValue.COMPLEX_UNIT_DIP);
-        sDimensionsUnitsMap.put(SUFFIX_SP, TypedValue.COMPLEX_UNIT_SP);
-        sDimensionsUnitsMap.put(SUFFIX_PT, TypedValue.COMPLEX_UNIT_PT);
-        sDimensionsUnitsMap.put(SUFFIX_IN, TypedValue.COMPLEX_UNIT_IN);
-        sDimensionsUnitsMap.put(SUFFIX_MM, TypedValue.COMPLEX_UNIT_MM);
 
         sImageScaleType.put(CENTER, ImageView.ScaleType.CENTER);
         sImageScaleType.put("center_crop", ImageView.ScaleType.CENTER_CROP);
@@ -207,18 +182,41 @@ public class ParseHelper {
         return number;
     }
 
-    public static float parseFloat(String attributeValue) {
-        float number;
-        if (ProteusConstants.DATA_NULL.equals(attributeValue)) {
-            return 0;
+    public static IntResult parseIntUnsafe(String s) {
+        if (s == null) {
+            return new IntResult("null string");
         }
-        try {
-            number = Float.parseFloat(attributeValue);
-        } catch (NumberFormatException e) {
-            if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, attributeValue + " is NAN. Error: " + e.getMessage());
+
+        int num;
+        final int len = s.length();
+        final char ch = s.charAt(0);
+        int d = ch - '0';
+        if (d < 0 || d > 9) {
+            return new IntResult("Malformed:  " + s);
+        }
+        num = d;
+
+        int i = 1;
+        while (i < len) {
+            d = s.charAt(i++) - '0';
+            if (d < 0 || d > 9) {
+                return new IntResult("Malformed:  " + s);
             }
-            number = 0;
+            num *= 10;
+            num += d;
+        }
+
+        return new IntResult(null, num);
+    }
+
+    public static float parseFloat(String value) {
+        float number = 0;
+        if (null != value && value.length() > 0) {
+            try {
+                number = Float.parseFloat(value);
+            } catch (NumberFormatException e) {
+                number = 0;
+            }
         }
         return number;
     }
@@ -239,17 +237,20 @@ public class ParseHelper {
         return number;
     }
 
-
-    public static int parseGravity(String attributeValue) {
-        String[] gravities = attributeValue.split("\\|");
+    public static int parseGravity(String value) {
+        String[] gravities = value.split("\\|");
         int returnGravity = Gravity.NO_GRAVITY;
         for (String gravity : gravities) {
-            Integer gravityValue = sGravityMap.get(gravity.trim().toLowerCase());
+            Primitive gravityValue = sGravityMap.get(gravity);
             if (null != gravityValue) {
-                returnGravity |= gravityValue;
+                returnGravity |= gravityValue.getAsInt();
             }
         }
         return returnGravity;
+    }
+
+    public static Primitive getGravity(String value) {
+        return new Primitive(parseGravity(value));
     }
 
     public static int parseDividerMode(String attributeValue) {
@@ -262,104 +263,28 @@ public class ParseHelper {
         return returnValue == null ? TextUtils.TruncateAt.END : returnValue;
     }
 
-    public static int parseVisibility(JsonElement element) {
+    public static int parseVisibility(@Nullable Value value) {
         Integer returnValue = null;
-        if (element.isJsonPrimitive()) {
-            String attributeValue = element.getAsString();
+        if (null != value && value.isPrimitive()) {
+            String attributeValue = value.getAsString();
             returnValue = sVisibilityMode.get(attributeValue);
-            if (null == returnValue && (attributeValue.isEmpty() ||
-                    FALSE.equals(attributeValue) ||
-                    ProteusConstants.DATA_NULL.equals(attributeValue))) {
+            if (null == returnValue &&
+                    (attributeValue.isEmpty() || FALSE.equals(attributeValue) || ProteusConstants.DATA_NULL.equals(attributeValue))) {
                 returnValue = View.GONE;
             }
-        } else if (element.isJsonNull()) {
+        } else if (value.isNull()) {
             returnValue = View.GONE;
         }
         return returnValue == null ? View.VISIBLE : returnValue;
     }
 
-    public static int parseInvisibility(JsonElement element) {
-        Integer returnValue = null;
-        if (element.isJsonPrimitive()) {
-            String attributeValue = element.getAsString();
-            returnValue = sVisibilityMode.get(attributeValue);
-            if (null == returnValue && (attributeValue.isEmpty() ||
-                    FALSE.equals(attributeValue) ||
-                    ProteusConstants.DATA_NULL.equals(attributeValue))) {
-                returnValue = View.VISIBLE;
-            }
-        } else if (element.isJsonNull()) {
-            returnValue = View.VISIBLE;
-        }
-
-        return returnValue == null ? View.GONE : returnValue;
+    public static Primitive getVisibilty(int visibility) {
+        Primitive value = sVisibilityMap.get(visibility);
+        return null != value ? value : sVisibilityMap.get(View.GONE);
     }
 
     public static float parseDimension(final String dimension, Context context) {
-        Integer parameter = sDimensionsMap.get(dimension);
-        if (parameter != null) {
-            return parameter;
-        }
-
-        int length = dimension.length();
-        if (length < 2) {
-            return 0;
-        }
-
-        // find the units and value by splitting at the second-last character of the dimension
-        Integer units = sDimensionsUnitsMap.get(dimension.substring(length - 2));
-        String stringValue = dimension.substring(0, length - 2);
-        if (units != null) {
-            float value = parseFloat(stringValue);
-            DisplayMetrics displayMetric = context.getResources().getDisplayMetrics();
-            return TypedValue.applyDimension(units, value, displayMetric);
-        }
-
-        // check if dimension is a local resource
-        if (dimension.startsWith(DIMENSION_LOCAL_RESOURCE_STR)) {
-            float value;
-            try {
-                int resourceId = context.getResources().getIdentifier(dimension, "dimen", context.getPackageName());
-                value = (int) context.getResources().getDimension(resourceId);
-            } catch (Exception e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(TAG, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
-                }
-                value = 0;
-            }
-            return value;
-        }
-
-        // check if dimension is an attribute value
-        if (dimension.startsWith(ATTR_START_LITERAL)) {
-            float value;
-            try {
-                String[] dimenArr = dimension.substring(1, length).split(":");
-                String style = dimenArr[0];
-                String attr = dimenArr[1];
-                Integer styleId = styleMap.get(style);
-                if (styleId == null) {
-                    styleId = R.style.class.getField(style).getInt(null);
-                    styleMap.put(style, styleId);
-                }
-                Integer attrId = attributeMap.get(attr);
-                if (attrId == null) {
-                    attrId = R.attr.class.getField(attr).getInt(null);
-                    attributeMap.put(attr, attrId);
-                }
-                TypedArray a = context.getTheme().obtainStyledAttributes(styleId, new int[]{attrId});
-                value = a.getDimensionPixelSize(0, 0);
-                a.recycle();
-            } catch (Exception e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    Log.e(TAG, "could not find a dimension with name " + dimension + ". Error: " + e.getMessage());
-                }
-                value = 0;
-            }
-            return value;
-        }
-
-        return 0;
+        return Dimension.valueOf(dimension, context).apply(context);
     }
 
     public static int getAttributeId(Context context, String attribute) {
@@ -429,26 +354,13 @@ public class ParseHelper {
         }
     }
 
-    public static Integer parseId(String id) {
-        if (ProteusConstants.DATA_NULL.equals(id)) {
-            return null;
-        }
-        try {
-            return Integer.valueOf(id);
-        } catch (NumberFormatException ex) {
-            if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, id + " is not a valid resource ID.");
-            }
-        }
-        return null;
+    public static boolean parseBoolean(@Nullable Value value) {
+        // TODO: we should consider 0 as false too.
+        return null != value && value.isPrimitive() && value.getAsPrimitive().isBoolean() ? value.getAsBoolean() : null != value && !value.isNull();
     }
 
-    public static boolean parseBoolean(String trueOrFalse) {
-        return TRUE.equalsIgnoreCase(trueOrFalse);
-    }
-
-    public static int parseRelativeLayoutBoolean(String trueOrFalse) {
-        return TRUE.equalsIgnoreCase(trueOrFalse) ? RelativeLayout.TRUE : 0;
+    public static int parseRelativeLayoutBoolean(boolean value) {
+        return value ? RelativeLayout.TRUE : 0;
     }
 
     public static void addRelativeLayoutRule(View view, int verb, int anchor) {
@@ -462,14 +374,6 @@ public class ParseHelper {
                 Log.e(TAG, "cannot add relative layout rules when container is not relative");
             }
         }
-    }
-
-    public static int dpToPx(float dp) {
-        return (int) (dp * Resources.getSystem().getDisplayMetrics().density);
-    }
-
-    public static float pxToDp(int px) {
-        return (px / Resources.getSystem().getDisplayMetrics().density);
     }
 
     public static int parseTextStyle(String attributeValue) {
@@ -494,14 +398,9 @@ public class ParseHelper {
         return typeface;
     }
 
-    public static boolean isLocalResourceAttribute(String attributeValue) {
-        return attributeValue.startsWith(ATTR_START_LITERAL);
+    public static boolean isLocalAttribute(String value) {
+        return value.startsWith(ATTR_START_LITERAL);
     }
-
-    public static boolean isLocalStringResource(String attributeValue) {
-        return attributeValue.startsWith(STRING_LOCAL_RESOURCE_STR);
-    }
-
 
     public static boolean isLocalDrawableResource(String attributeValue) {
         return attributeValue.startsWith(DRAWABLE_LOCAL_RESOURCE_STR);
@@ -511,28 +410,15 @@ public class ParseHelper {
         return attributeValue.startsWith(TWEEN_LOCAL_RESOURCE_STR);
     }
 
-    public static boolean isLocalColorResource(String attributeValue) {
-        return attributeValue.startsWith(COLOR_LOCAL_RESOURCE_STR);
-    }
+    public static Pair<int[], Value> parseState(ObjectValue value) {
 
-
-    public static Pair<int[], JsonElement> parseState(JsonObject stateObject) {
-
-        //drawable
-        JsonElement drawableJson = stateObject.get(DRAWABLE_STR);
-        if (null != drawableJson) {
-
-            //states
-            Set<Map.Entry<String, JsonElement>> entries = stateObject.entrySet();
+        if (value.isObject(DRAWABLE_STR)) {
             List<Integer> statesToReturn = new ArrayList<>();
-            for (Map.Entry<String, JsonElement> entry : entries) {
-                JsonElement value = entry.getValue();
-                String state = entry.getKey();
-                Integer stateInteger = sStateMap.get(state);
+            for (Map.Entry<String, Value> entry : value.getAsObject().entrySet()) {
+                Integer stateInteger = sStateMap.get(entry.getKey());
                 if (stateInteger != null) {
-                    String stateValue = value.getAsString();
                     //e.g state_pressed = true state_pressed = false
-                    statesToReturn.add(ParseHelper.parseBoolean(stateValue) ? stateInteger : -stateInteger);
+                    statesToReturn.add(ParseHelper.parseBoolean(entry.getValue()) ? stateInteger : -stateInteger);
                 }
             }
 
@@ -541,7 +427,7 @@ public class ParseHelper {
                 statesToReturnInteger[i] = statesToReturn.get(i);
             }
 
-            return new Pair<>(statesToReturnInteger, drawableJson);
+            return new Pair<>(statesToReturnInteger, value.get(DRAWABLE_STR));
         }
         return null;
     }
@@ -591,22 +477,20 @@ public class ParseHelper {
      * Parses a single layer item (represented by {@param child}) inside a layer list and gives
      * a pair of android:id and a string for the drawable path.
      *
-     * @param child
+     * @param value
      * @return The layer info as a {@link Pair}
      */
-    public static Pair<Integer, JsonElement> parseLayer(JsonObject child) {
+    public static Pair<Integer, Value> parseLayer(ObjectValue value) {
 
-        JsonElement id = child.get(ID_STR);
+        String idAsString = value.getAsString(ID_STR);
         int androidResIdByXmlResId = View.NO_ID;
-        String idAsString = null;
-        if (id != null) {
-            idAsString = id.getAsString();
-        }
         if (idAsString != null) {
             androidResIdByXmlResId = getAndroidResIdByXmlResId(idAsString);
         }
-        JsonElement drawableElement = child.get(DRAWABLE_STR);
-        return (drawableElement != null) ? new Pair<>(androidResIdByXmlResId, drawableElement) : null;
+        if (!value.isNull(DRAWABLE_STR)) {
+            return new Pair<Integer, Value>(androidResIdByXmlResId, value);
+        }
+        return null;
     }
 
     /**
@@ -627,5 +511,21 @@ public class ParseHelper {
      */
     public static Integer parseTextAlignment(String attributeValue) {
         return !TextUtils.isEmpty(attributeValue) ? sTextAlignment.get(attributeValue) : null;
+    }
+
+    public static class IntResult {
+        @Nullable
+        public final String error;
+        public final int result;
+
+        public IntResult(@Nullable String error, int result) {
+            this.error = error;
+            this.result = result;
+        }
+
+        public IntResult(@Nullable String error) {
+            this.error = error;
+            this.result = -1;
+        }
     }
 }
