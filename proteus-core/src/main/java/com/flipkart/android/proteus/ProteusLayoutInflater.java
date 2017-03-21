@@ -24,7 +24,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
@@ -137,10 +136,11 @@ public interface ProteusLayoutInflater {
         /**
          * called when any click occurs on views
          *
-         * @param view  The view that triggered the event
+         * @param event The Event type
          * @param value Value set to the event attribute
+         * @param view  The view that triggered the event
          */
-        void onEvent(ProteusView view, EventType eventType, Value value);
+        void onEvent(String event, Value value, ProteusView view);
 
     }
 

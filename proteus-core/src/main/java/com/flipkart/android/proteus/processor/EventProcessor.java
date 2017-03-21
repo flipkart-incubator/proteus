@@ -22,7 +22,6 @@ package com.flipkart.android.proteus.processor;
 
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
@@ -60,10 +59,10 @@ public abstract class EventProcessor<T> extends AttributeProcessor<T> {
     /**
      * This delegates Event with required attributes to client
      */
-    public void fireEvent(ProteusView view, EventType eventType, Value parser) {
+    public void trigger(String event, Value value, ProteusView view) {
         ProteusLayoutInflater.Callback callback = view.getViewManager().getContext().getCallback();
         if (null != callback) {
-            callback.onEvent(view, eventType, parser);
+            callback.onEvent(event, value, view);
         }
     }
 }

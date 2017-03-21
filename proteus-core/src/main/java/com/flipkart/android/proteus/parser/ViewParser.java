@@ -50,7 +50,6 @@ import com.flipkart.android.proteus.processor.GravityAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.processor.TweenAnimationResourceProcessor;
 import com.flipkart.android.proteus.toolbox.Attributes;
-import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
@@ -100,7 +99,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        fireEvent((ProteusView) view, EventType.OnClick, value);
+                        trigger(Attributes.View.OnClick, value, (ProteusView) view);
                     }
                 });
             }
@@ -111,7 +110,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 view.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        fireEvent((ProteusView) view, EventType.OnLongClick, value);
+                        trigger(Attributes.View.OnLongClick, value, (ProteusView) view);
                         return true;
                     }
                 });
@@ -123,7 +122,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 view.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        fireEvent((ProteusView) view, EventType.OnTouch, value);
+                        trigger(Attributes.View.OnTouch, value, (ProteusView) view);
                         return true;
                     }
                 });

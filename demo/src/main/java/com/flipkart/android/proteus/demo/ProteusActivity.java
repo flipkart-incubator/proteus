@@ -52,7 +52,6 @@ import com.flipkart.android.proteus.support.design.DesignModule;
 import com.flipkart.android.proteus.support.v4.SupportV4Module;
 import com.flipkart.android.proteus.support.v7.CardViewModule;
 import com.flipkart.android.proteus.support.v7.RecyclerViewModule;
-import com.flipkart.android.proteus.toolbox.EventType;
 import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
@@ -165,7 +164,7 @@ public class ProteusActivity extends AppCompatActivity {
 
         @NonNull
         @Override
-        public void onEvent(ProteusView view, EventType eventType, Value value) {
+        public void onEvent(String event, Value value, ProteusView view) {
 
         }
     };

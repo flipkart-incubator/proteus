@@ -28,7 +28,6 @@ import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.value.AttributeResource;
-import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
