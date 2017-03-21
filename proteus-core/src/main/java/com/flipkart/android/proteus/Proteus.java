@@ -83,7 +83,7 @@ public final class Proteus {
         return new ProteusContext.Builder(base, parsers, formatterManager);
     }
 
-    static class Type {
+    public static class Type {
 
         public final int id;
         public final String type;

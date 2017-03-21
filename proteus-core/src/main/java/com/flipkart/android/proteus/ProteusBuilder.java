@@ -19,6 +19,9 @@
 
 package com.flipkart.android.proteus;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.flipkart.android.proteus.parser.IncludeParser;
 import com.flipkart.android.proteus.parser.ViewParser;
 import com.flipkart.android.proteus.parser.custom.ButtonParser;
@@ -136,6 +139,11 @@ public class ProteusBuilder {
     public ProteusBuilder register(Module module) {
         module.registerWith(this);
         return this;
+    }
+
+    @Nullable
+    public Proteus.Type get(@NonNull String type) {
+        return types.get(type);
     }
 
     public Proteus build() {
