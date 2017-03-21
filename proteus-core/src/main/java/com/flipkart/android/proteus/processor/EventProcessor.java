@@ -28,8 +28,14 @@ import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
 
 /**
- * Use this as the base processor for handling events like OnClick , OnLongClick , OnTouch etc.
- * Created by prateek.dixit on 20/11/14.
+ * EventProcessor
+ * <p>
+ * <p>
+ * Use this Attribute Processor to get event callbacks
+ * on the {@link com.flipkart.android.proteus.ProteusLayoutInflater.Callback#onEvent(String, Value, ProteusView)}
+ * </p>
+ *
+ * @author adityasharat
  */
 
 public abstract class EventProcessor<T> extends AttributeProcessor<T> {
@@ -57,7 +63,9 @@ public abstract class EventProcessor<T> extends AttributeProcessor<T> {
     public abstract void setOnEventListener(T view, Value value);
 
     /**
-     * This delegates Event with required attributes to client
+     * @param event
+     * @param value
+     * @param view
      */
     public void trigger(String event, Value value, ProteusView view) {
         ProteusLayoutInflater.Callback callback = view.getViewManager().getContext().getCallback();
