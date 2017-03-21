@@ -158,8 +158,13 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
         if (children.isArray()) {
             ProteusView child;
             Iterator<Value> iterator = children.getAsArray().iterator();
+            Value element;
             while (iterator.hasNext()) {
-                child = layoutInflater.inflate(iterator.next().getAsLayout(), data, view, dataIndex);
+                element = iterator.next();
+                if (!element.isLayout()) {
+                    throw new ProteusInflateException("attribute  'children' must be an array of 'Layout' objects");
+                }
+                child = layoutInflater.inflate(element.getAsLayout(), data, view, dataIndex);
                 addView(proteusView, child);
             }
         }

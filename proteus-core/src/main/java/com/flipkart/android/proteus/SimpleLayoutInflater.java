@@ -60,41 +60,41 @@ public class SimpleLayoutInflater implements ProteusLayoutInflater {
     @Override
     public ProteusView inflate(@NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
 
-        /**
+        /*
          * Get the the view type parser for this layout type
          */
         final ViewTypeParser parser = getParser(layout.type);
         if (parser == null) {
-            /**
+            /*
              * If parser is not registered ask the application land for the view
              */
             return onUnknownViewEncountered(layout.type, layout, data, dataIndex);
         }
 
-        /**
+        /*
          * Create a view of {@code layout.type}
          */
         final ProteusView view = createView(parser, layout, data, parent, dataIndex);
 
         if (view.getViewManager() == null) {
 
-            /**
+            /*
              * Do post creation logic
              */
             onAfterCreateView(parser, view, parent, dataIndex);
 
-            /**
+            /*
              * Create View Manager for {@code layout.type}
              */
             final ProteusView.Manager viewManager = createViewManager(parser, view, layout, data, parent, dataIndex);
 
-            /**
+            /*
              * Set the View Manager on the view.
              */
             view.setViewManager(viewManager);
         }
 
-        /**
+        /*
          * Handle each attribute and set it on the view.
          */
         if (layout.attributes != null) {
