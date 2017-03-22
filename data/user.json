@@ -1,5 +1,5 @@
 {
-  "user": {
+  "0": {
     "name": "John Doe",
     "location": {
       "country": "India",
@@ -21,5 +21,12 @@
       "beta",
       "gamma"
     ]
+  },
+  "theme": {
+    "color": "#88ee99"
+  },
+  "sec": {
+    "ll": "2017-01-01 12:01:37",
+    "loc": "BLR, IND"
   }
 }
