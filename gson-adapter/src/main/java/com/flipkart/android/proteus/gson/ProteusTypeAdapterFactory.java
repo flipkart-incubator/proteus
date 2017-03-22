@@ -21,7 +21,7 @@ package com.flipkart.android.proteus.gson;
 
 import android.content.Context;
 
-import com.flipkart.android.proteus.FormatterManager;
+import com.flipkart.android.proteus.FunctionManager;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ViewTypeParser;
@@ -406,7 +406,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
     private static Value compileString(String string) {
         if (Binding.isBindingValue(string)) {
-            return Binding.valueOf(string.substring(1), PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager);
+            return Binding.valueOf(string.substring(1), PROTEUS_INSTANCE_HOLDER.getProteus().functions);
         } else {
             return new Primitive(string);
         }
@@ -466,7 +466,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 } else {
                     ViewTypeParser.AttributeSet.Attribute attribute = proteus.getAttributeId(name, type);
                     if (null != attribute) {
-                        FormatterManager manager = PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager;
+                        FunctionManager manager = PROTEUS_INSTANCE_HOLDER.getProteus().functions;
                         Value value = attribute.processor.precompile(VALUE_TYPE_ADAPTER.read(in), getContext(), manager);
                         attributes.add(new Layout.Attribute(attribute.id, value));
                     } else {

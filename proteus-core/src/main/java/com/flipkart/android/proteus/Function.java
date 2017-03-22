@@ -36,11 +36,11 @@ import java.util.Date;
 /**
  * @author Aditya Sharat on 18-05-2015.
  */
-public abstract class Formatter {
+public abstract class Function {
 
     // SPECIAL
 
-    public static final Formatter NOOP = new Formatter() {
+    public static final Function NOOP = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -53,7 +53,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter NUMBER = new Formatter() {
+    public static final Function NUMBER = new Function() {
 
         private final DecimalFormat formatter = new DecimalFormat("#,###");
 
@@ -79,7 +79,7 @@ public abstract class Formatter {
     };
 
     @SuppressLint("SimpleDateFormat")
-    public static final Formatter DATE = new Formatter() {
+    public static final Function DATE = new Function() {
 
         private SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         private SimpleDateFormat to = new SimpleDateFormat("E, d MMM");
@@ -119,7 +119,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter INDEX = new Formatter() {
+    public static final Function INDEX = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -138,7 +138,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter JOIN = new Formatter() {
+    public static final Function JOIN = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -157,7 +157,7 @@ public abstract class Formatter {
 
     // Mathematical
 
-    public static final Formatter ADD = new Formatter() {
+    public static final Function ADD = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -176,7 +176,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter SUBTRACT = new Formatter() {
+    public static final Function SUBTRACT = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -195,7 +195,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter MULTIPLY = new Formatter() {
+    public static final Function MULTIPLY = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -214,7 +214,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter DIVIDE = new Formatter() {
+    public static final Function DIVIDE = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -233,7 +233,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter MODULO = new Formatter() {
+    public static final Function MODULO = new Function() {
         @NonNull
         public Value format(Value data, int dataIndex, Value... arguments) {
             double remainder = arguments[0].getAsDouble();
@@ -253,7 +253,7 @@ public abstract class Formatter {
 
     // Logical
 
-    public static final Formatter AND = new Formatter() {
+    public static final Function AND = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -277,7 +277,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter OR = new Formatter() {
+    public static final Function OR = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -303,7 +303,7 @@ public abstract class Formatter {
 
     // Unary
 
-    public static final Formatter NOT = new Formatter() {
+    public static final Function NOT = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -321,7 +321,7 @@ public abstract class Formatter {
 
     // Comparison
 
-    public static final Formatter EQUALS = new Formatter() {
+    public static final Function EQUALS = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -345,7 +345,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter LESS_THAN = new Formatter() {
+    public static final Function LESS_THAN = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -369,7 +369,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter GREATER_THAN = new Formatter() {
+    public static final Function GREATER_THAN = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -393,7 +393,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter LESS_THAN_OR_EQUALS = new Formatter() {
+    public static final Function LESS_THAN_OR_EQUALS = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -417,7 +417,7 @@ public abstract class Formatter {
         }
     };
 
-    public static final Formatter GREATER_THAN_OR_EQUALS = new Formatter() {
+    public static final Function GREATER_THAN_OR_EQUALS = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {
@@ -443,7 +443,7 @@ public abstract class Formatter {
 
     // Conditional
 
-    public static final Formatter IF_THEN_ELSE = new Formatter() {
+    public static final Function IF_THEN_ELSE = new Function() {
         @NonNull
         @Override
         public Value format(Value data, int dataIndex, Value... arguments) {

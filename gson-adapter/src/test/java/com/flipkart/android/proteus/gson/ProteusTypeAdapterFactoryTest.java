@@ -21,13 +21,8 @@ package com.flipkart.android.proteus.gson;
 
 import android.content.Context;
 
-import com.flipkart.android.proteus.Formatter;
-import com.flipkart.android.proteus.FormatterManager;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusBuilder;
-import com.flipkart.android.proteus.value.Array;
-import com.flipkart.android.proteus.value.AttributeResource;
-import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.Color;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Primitive;
@@ -42,9 +37,7 @@ import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * ProteusTypeAdapterFactoryTest
@@ -85,9 +78,9 @@ public class ProteusTypeAdapterFactoryTest {
 
         ObjectValue nested = new ObjectValue();
         //nested.add("d", AttributeResource.valueOf(123));
-        //nested.add("e", Binding.valueOf("@{a.b.c}", proteus.formatterManager));
-        //nested.add("f", Binding.valueOf("@{x.y.z}${number()}", proteus.formatterManager));
-        //nested.add("g", Binding.valueOf("date is @{a.b.c}${date('E, MM yyyy')}", proteus.formatterManager));
+        //nested.add("e", Binding.valueOf("@{a.b.c}", proteus.functions));
+        //nested.add("f", Binding.valueOf("@{x.y.z}${number()}", proteus.functions));
+        //nested.add("g", Binding.valueOf("date is @{a.b.c}${date('E, MM yyyy')}", proteus.functions));
         in.add("z", nested);
 
         String json = adapter.toJson(in);

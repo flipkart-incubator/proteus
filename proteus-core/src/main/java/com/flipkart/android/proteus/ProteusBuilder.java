@@ -83,34 +83,34 @@ public class ProteusBuilder {
             builder.register(new HorizontalProgressBarParser());
 
             // register the default formatters
-            builder.register(Formatter.DATE);
-            builder.register(Formatter.INDEX);
-            builder.register(Formatter.JOIN);
-            builder.register(Formatter.NUMBER);
+            builder.register(Function.DATE);
+            builder.register(Function.INDEX);
+            builder.register(Function.JOIN);
+            builder.register(Function.NUMBER);
 
-            builder.register(Formatter.ADD);
-            builder.register(Formatter.SUBTRACT);
-            builder.register(Formatter.MULTIPLY);
-            builder.register(Formatter.DIVIDE);
-            builder.register(Formatter.MODULO);
+            builder.register(Function.ADD);
+            builder.register(Function.SUBTRACT);
+            builder.register(Function.MULTIPLY);
+            builder.register(Function.DIVIDE);
+            builder.register(Function.MODULO);
 
-            builder.register(Formatter.AND);
-            builder.register(Formatter.OR);
+            builder.register(Function.AND);
+            builder.register(Function.OR);
 
-            builder.register(Formatter.NOT);
+            builder.register(Function.NOT);
 
-            builder.register(Formatter.EQUALS);
-            builder.register(Formatter.LESS_THAN);
-            builder.register(Formatter.GREATER_THAN);
-            builder.register(Formatter.LESS_THAN_OR_EQUALS);
-            builder.register(Formatter.GREATER_THAN_OR_EQUALS);
+            builder.register(Function.EQUALS);
+            builder.register(Function.LESS_THAN);
+            builder.register(Function.GREATER_THAN);
+            builder.register(Function.LESS_THAN_OR_EQUALS);
+            builder.register(Function.GREATER_THAN_OR_EQUALS);
 
-            builder.register(Formatter.IF_THEN_ELSE);
+            builder.register(Function.IF_THEN_ELSE);
         }
     };
 
     private Map<String, Proteus.Type> types = new HashMap<>();
-    private HashMap<String, Formatter> formatters = new HashMap<>();
+    private HashMap<String, Function> formatters = new HashMap<>();
 
     public ProteusBuilder() {
         DEFAULT_MODULE.registerWith(this);
@@ -131,8 +131,8 @@ public class ProteusBuilder {
         return this;
     }
 
-    public ProteusBuilder register(Formatter formatter) {
-        formatters.put(formatter.getName(), formatter);
+    public ProteusBuilder register(Function function) {
+        formatters.put(function.getName(), function);
         return this;
     }
 

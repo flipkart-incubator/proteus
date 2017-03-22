@@ -42,27 +42,27 @@ public class ProteusResources {
     private final LayoutManager layoutManager;
 
     @NonNull
-    private final FormatterManager formatterManager;
+    private final FunctionManager functionManager;
 
     @Nullable
     private final StyleManager styleManager;
 
     ProteusResources(@NonNull Map<String, ViewTypeParser> parsers, @Nullable LayoutManager layoutManager,
-                     @NonNull FormatterManager formatterManager, @Nullable StyleManager styleManager) {
+                     @NonNull FunctionManager functionManager, @Nullable StyleManager styleManager) {
         this.parsers = parsers;
         this.layoutManager = layoutManager;
-        this.formatterManager = formatterManager;
+        this.functionManager = functionManager;
         this.styleManager = styleManager;
     }
 
     @NonNull
-    public FormatterManager getFormatterManager() {
-        return this.formatterManager;
+    public FunctionManager getFunctionManager() {
+        return this.functionManager;
     }
 
     @NonNull
-    public Formatter getFormatter(@NonNull String name) {
-        return formatterManager.get(name);
+    public Function getFormatter(@NonNull String name) {
+        return functionManager.get(name);
     }
 
     @Nullable

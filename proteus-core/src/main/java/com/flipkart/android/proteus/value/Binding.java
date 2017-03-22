@@ -24,8 +24,8 @@ import android.support.annotation.Nullable;
 import android.util.LruCache;
 import android.util.Pair;
 
-import com.flipkart.android.proteus.Formatter;
-import com.flipkart.android.proteus.FormatterManager;
+import com.flipkart.android.proteus.Function;
+import com.flipkart.android.proteus.FunctionManager;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.SimpleArrayIterator;
@@ -81,7 +81,7 @@ public class Binding extends Value {
      * @param manager
      * @return
      */
-    public static Binding valueOf(@NonNull final String value, FormatterManager manager) {
+    public static Binding valueOf(@NonNull final String value, FunctionManager manager) {
         Matcher matcher = BINDING_PATTERN.matcher(value);
         StringBuffer sb = new StringBuffer();
         Expression expression, expressions[] = new Expression[0];
@@ -168,7 +168,7 @@ public class Binding extends Value {
     public static class Expression {
 
         @Nullable
-        public final Formatter formatter;
+        public final Function function;
 
         @Nullable
         public final Value[] arguments;
@@ -176,9 +176,9 @@ public class Binding extends Value {
         @NonNull
         private final String[] tokens;
 
-        private Expression(@NonNull String[] tokens, @Nullable Formatter formatter, @Nullable Value[] arguments) {
+        private Expression(@NonNull String[] tokens, @Nullable Function function, @Nullable Value[] arguments) {
             this.tokens = tokens;
-            this.formatter = formatter;
+            this.function = function;
             this.arguments = arguments;
         }
 
@@ -188,7 +188,7 @@ public class Binding extends Value {
          * @param manager
          * @return
          */
-        public static Expression valueOf(String path, @Nullable String formatter, FormatterManager manager) {
+        public static Expression valueOf(String path, @Nullable String formatter, FunctionManager manager) {
             String key = path + (null == formatter ? "" : '$' + formatter);
             Expression expression = ExpressionCache.cache.get(key);
             if (null == expression) {
@@ -199,7 +199,7 @@ public class Binding extends Value {
                     tokens[tokens.length - 1] = tokenizer.nextToken();
                 }
                 if (null != formatter) {
-                    Pair<Formatter, Value[]> value = valueOf(formatter, manager);
+                    Pair<Function, Value[]> value = valueOf(formatter, manager);
                     expression = new Expression(tokens, value.first, value.second);
                 } else {
                     expression = new Expression(tokens, null, null);
@@ -209,7 +209,7 @@ public class Binding extends Value {
             return expression;
         }
 
-        private static Pair<Formatter, Value[]> valueOf(String value, FormatterManager manager) {
+        private static Pair<Function, Value[]> valueOf(String value, FunctionManager manager) {
             int index = value.indexOf(FORMATTER_ARG_PREFIX);
             String name = value.substring(0, index);
             String section = value.substring(index + 1, value.length() - 1);
@@ -336,10 +336,10 @@ public class Binding extends Value {
          */
         public Result evaluate(Value data, int index) {
             Result result = resolveData(tokens, data, index);
-            if (null == this.formatter) {
+            if (null == this.function) {
                 return result;
             } else {
-                Value resolved = this.formatter.format(result.value, index, resolveArguments(arguments, data, index));
+                Value resolved = this.function.format(result.value, index, resolveArguments(arguments, data, index));
                 return Result.success(resolved);
             }
         }
@@ -348,8 +348,8 @@ public class Binding extends Value {
         public String toString() {
             String context = "@{" + Utils.getStringFromArray(tokens, ".") + "}";
             String functions = "";
-            if (null != formatter) {
-                functions = "${" + formatter.getName() + "(" + Utils.getStringFromArray(arguments, ",", Utils.STYLE_SINGLE) + ")}";
+            if (null != function) {
+                functions = "${" + function.getName() + "(" + Utils.getStringFromArray(arguments, ",", Utils.STYLE_SINGLE) + ")}";
             }
             return context + functions;
         }

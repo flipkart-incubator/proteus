@@ -36,7 +36,7 @@ import java.util.Map;
 public final class Proteus {
 
     @NonNull
-    public final FormatterManager formatterManager;
+    public final FunctionManager functions;
 
     @NonNull
     private final Map<String, Type> types;
@@ -44,15 +44,9 @@ public final class Proteus {
     @NonNull
     private final Map<String, ViewTypeParser> parsers;
 
-    Proteus(@NonNull Map<String, Type> types, @NonNull final Map<String, Formatter> formatters) {
+    Proteus(@NonNull Map<String, Type> types, @NonNull final Map<String, Function> formatters) {
         this.types = types;
-        this.formatterManager = new FormatterManager() {
-            @Nullable
-            @Override
-            protected Map<String, Formatter> getFormatters() {
-                return formatters;
-            }
-        };
+        this.functions = new FunctionManager(formatters);
         this.parsers = map(types);
     }
 
@@ -80,7 +74,7 @@ public final class Proteus {
 
     @NonNull
     public ProteusContext.Builder createContextBuilder(@NonNull Context base) {
-        return new ProteusContext.Builder(base, parsers, formatterManager);
+        return new ProteusContext.Builder(base, parsers, functions);
     }
 
     public static class Type {

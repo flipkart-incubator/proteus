@@ -20,22 +20,29 @@
 package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import java.util.Map;
 
 /**
- * FormatterManager
+ * FunctionManager
  *
  * @author adityasharat
  */
-public abstract class FormatterManager {
-
-    @Nullable
-    protected abstract Map<String, Formatter> getFormatters();
+public class FunctionManager {
 
     @NonNull
-    public Formatter get(@NonNull String name) {
-        return null != getFormatters() ? getFormatters().get(name) : Formatter.NOOP;
+    private final Map<String, Function> functions;
+
+    public FunctionManager(@NonNull Map<String, Function> functions) {
+        this.functions = functions;
+    }
+
+    @NonNull
+    public Function get(@NonNull String name) {
+        Function function = functions.get(name);
+        if (function == null) {
+            function = Function.NOOP;
+        }
+        return function;
     }
 }

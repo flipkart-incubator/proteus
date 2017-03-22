@@ -85,7 +85,7 @@ public class DefaultModule implements ProteusTypeAdapterFactory.Module {
 
                 @Override
                 public Binding read(JsonReader in) throws IOException {
-                    return Binding.valueOf(in.nextString(), ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager);
+                    return Binding.valueOf(in.nextString(), ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.getProteus().functions);
                 }
             };
         }
