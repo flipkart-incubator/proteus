@@ -19,6 +19,7 @@
 
 package com.flipkart.android.proteus;
 
+import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.flipkart.android.proteus.toolbox.Utils;
@@ -53,11 +54,11 @@ public class DataContext {
         this.isClone = true;
     }
 
-    public static DataContext updateDataContext(DataContext context, ObjectValue in, Map<String, Value> scope, int dataIndex) {
+    public static DataContext updateDataContext(Context context, DataContext data, ObjectValue in, Map<String, Value> scope, int dataIndex) {
 
         ObjectValue out = new ObjectValue();
 
-        context.setIndex(dataIndex);
+        data.setIndex(dataIndex);
 
         if (in == null) {
             in = new ObjectValue();
@@ -68,7 +69,7 @@ public class DataContext {
             Value value = entry.getValue();
             Value resolved;
             if (value.isBinding()) {
-                resolved = value.getAsBinding().evaluate(in, dataIndex);
+                resolved = value.getAsBinding().evaluate(context, in, dataIndex);
             } else {
                 resolved = value;
             }
@@ -77,15 +78,15 @@ public class DataContext {
 
         Utils.addAllEntries(out, in);
 
-        if (context.getData() == null) {
-            context.setData(new ObjectValue());
+        if (data.getData() == null) {
+            data.setData(new ObjectValue());
         } else {
-            context.setData(out);
+            data.setData(out);
         }
 
-        context.setScope(scope);
+        data.setScope(scope);
 
-        return context;
+        return data;
     }
 
     public ObjectValue getData() {
@@ -117,11 +118,11 @@ public class DataContext {
         this.index = index;
     }
 
-    public DataContext createChildScope(Map<String, Value> scope, int dataIndex) {
-        return updateDataContext(new DataContext(), data, scope, dataIndex);
+    public DataContext createChildScope(Context context, Map<String, Value> scope, int dataIndex) {
+        return updateDataContext(context, new DataContext(), data, scope, dataIndex);
     }
 
-    public void updateDataContext(ObjectValue data) {
-        updateDataContext(this, data, scope, index);
+    public void updateDataContext(Context context, ObjectValue data) {
+        updateDataContext(context, this, data, scope, index);
     }
 }

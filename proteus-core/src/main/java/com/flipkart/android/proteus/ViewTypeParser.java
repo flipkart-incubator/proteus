@@ -19,6 +19,7 @@
 
 package com.flipkart.android.proteus;
 
+import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -97,12 +98,14 @@ public abstract class ViewTypeParser<V extends View> {
         if (null != this.parent && caller != this.parent) {
             return this.parent.createViewManager(context, view, layout, data, caller, parent, dataIndex);
         } else {
-            DataContext dataContext = createScope(layout, data, parent, dataIndex);
+            DataContext dataContext = createDataContext(context, layout, data, parent, dataIndex);
             return new ViewManager(context, caller != null ? caller : this, view.getAsView(), layout, dataContext);
         }
     }
 
     /**
+     *
+     * @param context
      * @param layout
      * @param data
      * @param parent
@@ -110,8 +113,8 @@ public abstract class ViewTypeParser<V extends View> {
      * @return
      */
     @NonNull
-    protected DataContext createScope(@NonNull Layout layout, @NonNull ObjectValue data,
-                                      @Nullable ViewGroup parent, int dataIndex) {
+    protected DataContext createDataContext(Context context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                            @Nullable ViewGroup parent, int dataIndex) {
         DataContext dataContext, parentDataContext = null;
         Map<String, Value> map = layout.data;
 
@@ -129,11 +132,11 @@ public abstract class ViewTypeParser<V extends View> {
             }
         } else {
             if (parentDataContext != null) {
-                dataContext = parentDataContext.createChildScope(map, dataIndex);
+                dataContext = parentDataContext.createChildScope(context, map, dataIndex);
             } else {
                 dataContext = new DataContext();
                 dataContext.setData(data);
-                dataContext = dataContext.createChildScope(map, dataIndex);
+                dataContext = dataContext.createChildScope(context, map, dataIndex);
             }
         }
         return dataContext;

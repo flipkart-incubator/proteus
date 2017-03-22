@@ -84,6 +84,7 @@ public class ProteusBuilder {
 
             // register the default formatters
             builder.register(Function.DATE);
+            builder.register(Function.FORMAT);
             builder.register(Function.INDEX);
             builder.register(Function.JOIN);
             builder.register(Function.NUMBER);

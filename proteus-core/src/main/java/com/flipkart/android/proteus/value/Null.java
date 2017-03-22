@@ -19,6 +19,8 @@
 
 package com.flipkart.android.proteus.value;
 
+import com.flipkart.android.proteus.ProteusConstants;
+
 /**
  * Null
  *
@@ -33,9 +35,21 @@ public class Null extends Value {
      */
     public static final Null INSTANCE = new Null();
 
+    private static final String NULL_STRING = "NULL";
+
     @Override
     public Null copy() {
         return INSTANCE;
+    }
+
+    @Override
+    public String toString() {
+        return NULL_STRING;
+    }
+
+    @Override
+    public String getAsString() {
+        return ProteusConstants.EMPTY;
     }
 
     /**

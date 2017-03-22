@@ -121,7 +121,7 @@ public class ViewManager implements ProteusView.Manager {
         if (dataContext.isClone()) {
             dataContext.setData(data);
         } else {
-            dataContext.updateDataContext(data);
+            dataContext.updateDataContext(context, data);
         }
     }
 

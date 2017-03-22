@@ -103,7 +103,7 @@
                 "layout_height": "wrap_content",
                 "layout_marginRight": "4dp",
                 "textSize": "18dp",
-                "text": "~@{user.name}"
+                "text": "@{user.name}"
               },
               {
                 "type": "TextView",
@@ -113,11 +113,11 @@
                 "layout_below": "name",
                 "layout_marginRight": "4dp",
                 "textSize": "18dp",
-                "text": "~@{user.location.city}, @{user.location.country}"
+                "text": "@{fn:format('%s, %s', @{user.location.city}, @{user.location.country})}"
               },
               {
                 "type": "TextView",
-                "text": "~(@{user.level})",
+                "text": "@{fn:format('(%s)',@{user.level})}",
                 "textColor": "#c48866",
                 "layout_width": "wrap_content",
                 "layout_height": "wrap_content",
@@ -138,8 +138,8 @@
                 "layout_width": "match_parent",
                 "layout_height": "wrap_content",
                 "layout_marginTop": "8dp",
-                "max": "~@{user.experience.max}",
-                "progress": "~@{user.experience.current}"
+                "max": "@{user.experience.max}",
+                "progress": "@{user.experience.current}"
               },
               {
                 "type": "TextView",
@@ -150,7 +150,7 @@
                 "padding": "8dp",
                 "paddingTop": "16dp",
                 "paddingBottom": "16dp",
-                "text": "~Credits : @{user.credits}${number()}",
+                "text": "@{fn:number(@{user.credits})}",
                 "style": "money.center",
                 "background": {
                   "type": "shape",
@@ -182,7 +182,10 @@
             "type": "TextView",
             "layout_width": "wrap_content",
             "layout_height": "wrap_content",
-            "text": "~last login: @{sec.ll}${date('E, d MMM')} from @{sec.loc}",
+            "data": {
+              "date": "@{fn:date(@{sec.ll}, 'E, d MMM')}"
+            },
+            "text": "@{fn:format('last login: %s from %s', @{date}, @{sec.loc})}",
             "style": "mini.blue"
           }
         ]
@@ -204,20 +207,20 @@
         "padding": "16dp",
         "children": {
           "@": {
-            "collection": "~@{user.tags}",
+            "collection": "@{user.tags}",
             "layout":{
               "type": "TextView",
               "data": {
-                "tag": "~@{user.tags[$index]}"
+                "tag": "@{user.tags[$index]}"
               },
               "layout_marginRight": "8dp",
               "layout_height": "32dp",
               "textSize": "12sp",
               "textColor": "@color/colorAccent",
-              "text": "~@{tag}",
+              "text": "@{tag}",
               "padding": "8dp",
               "gravity": "center",
-              "onClick": "~@{tag}"
+              "onClick": "@{tag}"
             }
           }
         }

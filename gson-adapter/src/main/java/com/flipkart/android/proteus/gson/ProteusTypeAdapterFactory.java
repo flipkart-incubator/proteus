@@ -76,7 +76,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         public Value read(JsonReader in) throws IOException {
             switch (in.peek()) {
                 case STRING:
-                    return compileString(in.nextString());
+                    return compileString(getContext(), in.nextString());
                 case NUMBER:
                     String number = in.nextString();
                     return new Primitive(new LazilyParsedNumber(number));
@@ -105,7 +105,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                                 in.endObject();
                                 return layout;
                             } else {
-                                object.add(name, compileString(type));
+                                object.add(name, compileString(getContext(), type));
                             }
                         } else {
                             object.add(name, read(in));
@@ -253,7 +253,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         public Value read(JsonReader in) throws IOException {
             switch (in.peek()) {
                 case STRING:
-                    return compileString(in.nextString());
+                    return compileString(getContext(), in.nextString());
                 case NUMBER:
                     String number = in.nextString();
                     return new Primitive(new LazilyParsedNumber(number));
@@ -404,9 +404,9 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         return context;
     }
 
-    private static Value compileString(String string) {
+    private static Value compileString(Context context, String string) {
         if (Binding.isBindingValue(string)) {
-            return Binding.valueOf(string.substring(1), PROTEUS_INSTANCE_HOLDER.getProteus().functions);
+            return Binding.valueOf(string, context, PROTEUS_INSTANCE_HOLDER.getProteus().functions);
         } else {
             return new Primitive(string);
         }

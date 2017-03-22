@@ -43,38 +43,13 @@ public abstract class Function {
     public static final Function NOOP = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
-            return data;
+        public Value call(Value data, int dataIndex, Value... arguments) {
+            return ProteusConstants.EMPTY_STRING;
         }
 
         @Override
         public String getName() {
             return "noop";
-        }
-    };
-
-    public static final Function NUMBER = new Function() {
-
-        private final DecimalFormat formatter = new DecimalFormat("#,###");
-
-        @NonNull
-        @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
-            double valueAsNumber;
-            try {
-                valueAsNumber = Double.parseDouble(data.getAsString());
-            } catch (NumberFormatException e) {
-                return data;
-            }
-            formatter.setRoundingMode(RoundingMode.FLOOR);
-            formatter.setMinimumFractionDigits(0);
-            formatter.setMaximumFractionDigits(2);
-            return new Primitive(formatter.format(valueAsNumber));
-        }
-
-        @Override
-        public String getName() {
-            return "number";
         }
     };
 
@@ -86,10 +61,10 @@ public abstract class Function {
 
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             try {
                 // data should for of the format : 2015-06-18 12:01:37
-                Date in = getFromFormat(arguments).parse(data.getAsString());
+                Date in = getFromFormat(arguments).parse(arguments[0].getAsString());
                 String out = getToFormat(arguments).format(in);
                 return new Primitive(out);
             } catch (Exception e) {
@@ -98,16 +73,16 @@ public abstract class Function {
         }
 
         private SimpleDateFormat getFromFormat(Value[] arguments) {
-            if (arguments.length > 1) {
-                return new SimpleDateFormat(arguments[1].getAsString());
+            if (arguments.length > 2) {
+                return new SimpleDateFormat(arguments[2].getAsString());
             } else {
                 return from;
             }
         }
 
         private SimpleDateFormat getToFormat(Value[] arguments) {
-            if (arguments.length > 0) {
-                return new SimpleDateFormat(arguments[0].getAsString());
+            if (arguments.length > 1) {
+                return new SimpleDateFormat(arguments[1].getAsString());
             } else {
                 return to;
             }
@@ -119,13 +94,31 @@ public abstract class Function {
         }
     };
 
+    public static final Function FORMAT = new Function() {
+        @NonNull
+        @Override
+        public Value call(Value data, int dataIndex, Value... arguments) {
+            String template = arguments[0].getAsString();
+            String[] values = new String[arguments.length - 1];
+            for (int i = 1; i < arguments.length; i++) {
+                values[i - 1] = arguments[i].getAsString();
+            }
+            return new Primitive(String.format(template, (Object[]) values));
+        }
+
+        @Override
+        public String getName() {
+            return "format";
+        }
+    };
+
     public static final Function INDEX = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             int valueAsNumber;
             try {
-                valueAsNumber = Integer.parseInt(data.getAsString());
+                valueAsNumber = Integer.parseInt(arguments[0].getAsString());
             } catch (NumberFormatException e) {
                 return data;
             }
@@ -139,14 +132,20 @@ public abstract class Function {
     };
 
     public static final Function JOIN = new Function() {
+
+        private static final String DEFAULT_DELIMITER = ", ";
+
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
-            if (data.isArray()) {
-                return new Primitive(Utils.getStringFromArray(data.getAsArray(), ","));
-            } else {
-                return data;
+        public Value call(Value data, int dataIndex, Value... arguments) {
+            return new Primitive(Utils.join(arguments[0].getAsArray(), getDelimiter(arguments)));
+        }
+
+        private String getDelimiter(Value[] arguments) {
+            if (arguments.length > 1) {
+                return arguments[1].getAsString();
             }
+            return DEFAULT_DELIMITER;
         }
 
         @Override
@@ -155,12 +154,45 @@ public abstract class Function {
         }
     };
 
+    public static final Function NUMBER = new Function() {
+
+        private final DecimalFormat DEFAULT_FORMATTER = new DecimalFormat("#,###");
+
+        @NonNull
+        @Override
+        public Value call(Value data, int dataIndex, Value... arguments) {
+            double number;
+            try {
+                number = Double.parseDouble(arguments[0].getAsString());
+            } catch (NumberFormatException e) {
+                return data;
+            }
+            DecimalFormat formatter = getFormatter(arguments);
+            formatter.setRoundingMode(RoundingMode.FLOOR);
+            formatter.setMinimumFractionDigits(0);
+            formatter.setMaximumFractionDigits(2);
+            return new Primitive(formatter.format(number));
+        }
+
+        private DecimalFormat getFormatter(Value[] arguments) {
+            if (arguments.length > 1) {
+                return new DecimalFormat(arguments[1].getAsString());
+            }
+            return DEFAULT_FORMATTER;
+        }
+
+        @Override
+        public String getName() {
+            return "number";
+        }
+    };
+
     // Mathematical
 
     public static final Function ADD = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             double sum = 0;
 
             for (Value argument : arguments) {
@@ -179,7 +211,7 @@ public abstract class Function {
     public static final Function SUBTRACT = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             double sum = arguments[0].getAsDouble();
 
             for (int i = 1; i < arguments.length; i++) {
@@ -198,7 +230,7 @@ public abstract class Function {
     public static final Function MULTIPLY = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             double product = 1;
 
             for (Value argument : arguments) {
@@ -217,7 +249,7 @@ public abstract class Function {
     public static final Function DIVIDE = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             double quotient = arguments[0].getAsDouble();
 
             for (int i = 1; i < arguments.length; i++) {
@@ -235,7 +267,7 @@ public abstract class Function {
 
     public static final Function MODULO = new Function() {
         @NonNull
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             double remainder = arguments[0].getAsDouble();
 
             for (int i = 1; i < arguments.length; i++) {
@@ -256,7 +288,7 @@ public abstract class Function {
     public static final Function AND = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 1) {
                 return ProteusConstants.FALSE;
             }
@@ -280,7 +312,7 @@ public abstract class Function {
     public static final Function OR = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 1) {
                 return ProteusConstants.FALSE;
             }
@@ -306,7 +338,7 @@ public abstract class Function {
     public static final Function NOT = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 1) {
                 return ProteusConstants.TRUE;
             }
@@ -324,7 +356,7 @@ public abstract class Function {
     public static final Function EQUALS = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 2) {
                 return ProteusConstants.FALSE;
             }
@@ -348,7 +380,7 @@ public abstract class Function {
     public static final Function LESS_THAN = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 2) {
                 return ProteusConstants.FALSE;
             }
@@ -372,7 +404,7 @@ public abstract class Function {
     public static final Function GREATER_THAN = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 2) {
                 return ProteusConstants.FALSE;
             }
@@ -396,7 +428,7 @@ public abstract class Function {
     public static final Function LESS_THAN_OR_EQUALS = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 2) {
                 return ProteusConstants.FALSE;
             }
@@ -420,7 +452,7 @@ public abstract class Function {
     public static final Function GREATER_THAN_OR_EQUALS = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 2) {
                 return ProteusConstants.FALSE;
             }
@@ -446,7 +478,7 @@ public abstract class Function {
     public static final Function IF_THEN_ELSE = new Function() {
         @NonNull
         @Override
-        public Value format(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) {
             if (arguments.length < 3) {
                 return Null.INSTANCE;
             }
@@ -497,7 +529,7 @@ public abstract class Function {
     //Math.min
 
     @NonNull
-    public abstract Value format(Value data, int dataIndex, Value... arguments);
+    public abstract Value call(Value data, int dataIndex, Value... arguments);
 
     public abstract String getName();
 }

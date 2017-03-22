@@ -78,7 +78,7 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
     public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout,
                                                  @NonNull ObjectValue data, @Nullable ViewTypeParser caller, @Nullable ViewGroup parent,
                                                  int dataIndex) {
-        DataContext dataContext = createScope(layout, data, parent, dataIndex);
+        DataContext dataContext = createDataContext(context, layout, data, parent, dataIndex);
         return new ViewGroupManager(context, null != caller ? caller : this, view.getAsView(), layout, dataContext);
     }
 
@@ -187,8 +187,8 @@ public class ViewGroupParser<T extends ViewGroup> extends ViewTypeParser<T> {
             throw new ProteusInflateException("'collection' and 'layout' are mandatory for attribute:'children'");
         }
 
-        Value dataset = collection.getAsBinding().evaluate(dataContext.getData(), dataContext.getIndex());
-        if (null == dataset || dataset.isNull()) {
+        Value dataset = collection.getAsBinding().evaluate(view.getContext(), dataContext.getData(), dataContext.getIndex());
+        if (dataset.isNull()) {
             return;
         }
 

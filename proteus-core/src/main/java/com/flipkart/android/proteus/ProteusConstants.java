@@ -36,6 +36,9 @@ public class ProteusConstants {
 
     public static final String STYLE_DELIMITER = "\\.";
 
+    public static final String EMPTY = "";
+
+    public static final Primitive EMPTY_STRING = new Primitive(EMPTY);
     public static final Primitive TRUE = new Primitive(true);
     public static final Primitive FALSE = new Primitive(false);
 

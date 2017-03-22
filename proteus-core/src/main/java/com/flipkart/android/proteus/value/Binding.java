@@ -19,14 +19,14 @@
 
 package com.flipkart.android.proteus.value;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.LruCache;
-import android.util.Pair;
 
 import com.flipkart.android.proteus.Function;
 import com.flipkart.android.proteus.FunctionManager;
-import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.SimpleArrayIterator;
 import com.flipkart.android.proteus.toolbox.Utils;
@@ -42,203 +42,85 @@ import java.util.regex.Pattern;
  *
  * @author adityasharat
  */
-public class Binding extends Value {
+public abstract class Binding extends Value {
 
-    public static final char BINDING_PREFIX = '~';
-    public static final String EMPTY_STRING = "";
-    public static final String EMPTY_TEMPLATE = EMPTY_STRING;
-    public static final String TEMPLATE = "%s";
-    public static final String DATA_PATH_DELIMITERS = ".[]";
+    public static final char BINDING_PREFIX_0 = '@';
+    public static final char BINDING_PREFIX_1 = '{';
+    public static final char BINDING_SUFFIX = '}';
+
     public static final String INDEX = "$index";
+
     public static final String ARRAY_DATA_LENGTH_REFERENCE = "$length";
     public static final String ARRAY_DATA_LAST_INDEX_REFERENCE = "$last";
-    public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{(\\S+)\\}\\$\\{((?:\\S|(?<!\\\\)'.*?(?<!\\\\)')+)\\}|@\\{(\\S+)\\}");
-    public static final Pattern FORMATTER_PATTERN = Pattern.compile(",(?=(?:[^']*'[^']*')*[^']*$)");
-    public static final char FORMATTER_ARG_PREFIX = '(';
 
-    public final String template;
-    private final Expression[] expressions;
-
-    /**
-     * @param template
-     * @param expressions
-     */
-    Binding(String template, Expression[] expressions) {
-        this.template = template;
-        this.expressions = expressions;
-    }
+    public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{fn:(\\S+?)\\(((?:(?<!\\\\)'.*?(?<!\\\\)'|.?)+)\\)\\}|@\\{(.+)\\}");
+    public static final Pattern FUNCTION_ARGS_DELIMITER = Pattern.compile(",(?=(?:[^']*'[^']*')*[^']*$)");
+    public static final String DATA_PATH_DELIMITERS = ".[]";
+    public static final String SIMPLE_DATA_PATH_DELIMITER = ".";
 
     /**
      * @param value
      * @return
      */
     public static boolean isBindingValue(@NonNull final String value) {
-        return !value.isEmpty() && value.charAt(0) == BINDING_PREFIX;
+        return value.length() > 3
+                && value.charAt(0) == BINDING_PREFIX_0
+                && value.charAt(1) == BINDING_PREFIX_1
+                && value.charAt(value.length() - 1) == BINDING_SUFFIX;
     }
 
     /**
      * @param value
-     * @param manager
-     * @return
+     * @param context
+     * @param manager @return
      */
-    public static Binding valueOf(@NonNull final String value, FunctionManager manager) {
+    public static Binding valueOf(@NonNull final String value, Context context, FunctionManager manager) {
         Matcher matcher = BINDING_PATTERN.matcher(value);
-        StringBuffer sb = new StringBuffer();
-        Expression expression, expressions[] = new Expression[0];
-
-        while (matcher.find()) {
+        if (matcher.find()) {
             if (matcher.group(3) != null) {
-                expression = Expression.valueOf(matcher.group(3), null, manager);
+                return DataBinding.valueOf(matcher.group(3));
             } else {
-                expression = Expression.valueOf(matcher.group(1), matcher.group(2), manager);
+                return FunctionBinding.valueOf(matcher.group(1), matcher.group(2), context, manager);
             }
-            matcher.appendReplacement(sb, TEMPLATE);
-            expressions = Arrays.copyOf(expressions, expressions.length + 1);
-            expressions[expressions.length - 1] = expression;
-        }
-        matcher.appendTail(sb);
-        String template = sb.toString();
-        if (TEMPLATE.equals(template)) {
-            template = EMPTY_TEMPLATE;
-        }
-        return new Binding(template, expressions);
-    }
-
-    /**
-     * @return
-     * @throws IndexOutOfBoundsException
-     */
-    public Iterator<Expression> getExpressions() {
-        return new SimpleArrayIterator<>(expressions);
-    }
-
-    /**
-     * @param data
-     * @param index @return
-     */
-    public Value evaluate(Value data, int index) {
-        Value empty = StringAttributeProcessor.EMPTY;
-        Result result;
-        //noinspection StringEquality the string object compare can be safely used here, do not convert it to .equals()
-        if (expressions.length == 1 && template == EMPTY_TEMPLATE) {
-            result = expressions[0].evaluate(data, index);
-            return result.isSuccess() ? result.value : empty;
         } else {
-            String[] variables = new String[expressions.length];
-            String variable;
-            for (int i = 0; i < expressions.length; i++) {
-                result = expressions[i].evaluate(data, index);
-                if (result.isSuccess()) {
-                    //noinspection ConstantConditions
-                    if (result.value.isPrimitive()) {
-                        variable = result.value.getAsString();
-                    } else {
-                        variable = result.value.toString();
-                    }
-                } else {
-                    variable = EMPTY_STRING;
-                }
-                variables[i] = variable;
-            }
-            return new Primitive(String.format(template, (Object[]) variables));
+            throw new IllegalArgumentException(value + " is not a binding");
         }
     }
 
-    @Override
-    public Value copy() {
-        return this;
-    }
+    @NonNull
+    public abstract Value evaluate(Context context, Value data, int index);
 
-    @Override
-    public String toString() {
-        String[] strings = new String[expressions.length];
-        for (int i = 0; i < expressions.length; i++) {
-            strings[i] = expressions[i].toString();
-        }
-        if (EMPTY_TEMPLATE.equals(template)) {
-            return strings[0];
-        } else {
-            return String.format(template, (Object[]) strings);
-        }
-    }
+    @NonNull
+    public abstract String toString();
 
-    /**
-     *
-     */
-    public static class Expression {
+    public static class DataBinding extends Binding {
 
-        @Nullable
-        public final Function function;
-
-        @Nullable
-        public final Value[] arguments;
+        private static final LruCache<String, DataBinding> DATA_BINDING_CACHE = new LruCache<>(64);
 
         @NonNull
         private final String[] tokens;
 
-        private Expression(@NonNull String[] tokens, @Nullable Function function, @Nullable Value[] arguments) {
+        private DataBinding(@NonNull String[] tokens) {
             this.tokens = tokens;
-            this.function = function;
-            this.arguments = arguments;
         }
 
-        /**
-         * @param path
-         * @param formatter
-         * @param manager
-         * @return
-         */
-        public static Expression valueOf(String path, @Nullable String formatter, FunctionManager manager) {
-            String key = path + (null == formatter ? "" : '$' + formatter);
-            Expression expression = ExpressionCache.cache.get(key);
-            if (null == expression) {
+        @NonNull
+        public static DataBinding valueOf(@NonNull String path) {
+            DataBinding binding = DATA_BINDING_CACHE.get(path);
+            if (null == binding) {
                 StringTokenizer tokenizer = new StringTokenizer(path, DATA_PATH_DELIMITERS);
                 String[] tokens = new String[0];
                 while (tokenizer.hasMoreTokens()) {
                     tokens = Arrays.copyOf(tokens, tokens.length + 1);
                     tokens[tokens.length - 1] = tokenizer.nextToken();
                 }
-                if (null != formatter) {
-                    Pair<Function, Value[]> value = valueOf(formatter, manager);
-                    expression = new Expression(tokens, value.first, value.second);
-                } else {
-                    expression = new Expression(tokens, null, null);
-                }
-                ExpressionCache.cache.put(key, expression);
+                binding = new DataBinding(tokens);
+                DATA_BINDING_CACHE.put(path, binding);
             }
-            return expression;
+            return binding;
         }
 
-        private static Pair<Function, Value[]> valueOf(String value, FunctionManager manager) {
-            int index = value.indexOf(FORMATTER_ARG_PREFIX);
-            String name = value.substring(0, index);
-            String section = value.substring(index + 1, value.length() - 1);
-
-            if (section.isEmpty()) {
-                return new Pair<>(manager.get(name), new Value[0]);
-            } else {
-                String[] tokens = FORMATTER_PATTERN.split(section);
-                Value[] arguments = new Value[tokens.length];
-                String token;
-                Value resolved;
-                for (int i = 0; i < tokens.length; i++) {
-                    token = tokens[i].trim();
-                    if (isBindingValue(tokens[i])) {
-                        resolved = Binding.valueOf(token, manager);
-                    } else {
-                        if (!token.isEmpty() && token.charAt(0) == '\'') {
-                            token = token.substring(1, token.length() - 1);
-                        }
-                        resolved = new Primitive(token);
-                    }
-                    arguments[i] = resolved;
-                }
-
-                return new Pair<>(manager.get(name), arguments);
-            }
-        }
-
-        private static Result resolveData(String[] tokens, Value data, int index) {
+        private static Result resolve(String[] tokens, Value data, int index) {
             // replace INDEX with index value
             if (tokens.length == 1 && INDEX.equals(tokens[0])) {
                 return Result.success(new Primitive(String.valueOf(index)));
@@ -306,59 +188,102 @@ public class Binding extends Value {
             }
         }
 
-        private static Value[] resolveArguments(Value[] in, Value data, int index) {
+        public Iterator<String> getTokens() {
+            return new SimpleArrayIterator<>(this.tokens);
+        }
+
+        @Override
+        public Value copy() {
+            return this;
+        }
+
+        @NonNull
+        @Override
+        public Value evaluate(Context context, Value data, int index) {
+            Result result = resolve(tokens, data, index);
+            return result.isSuccess() ? result.value : Null.INSTANCE;
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+
+            //noinspection StringBufferReplaceableByString
+            return new StringBuilder()
+                    .append(BINDING_PREFIX_0)
+                    .append(BINDING_PREFIX_1)
+                    .append(Utils.join(tokens, SIMPLE_DATA_PATH_DELIMITER))
+                    .append(BINDING_SUFFIX).toString();
+        }
+    }
+
+    public static class FunctionBinding extends Binding {
+
+        @NonNull
+        public final Function function;
+
+        @Nullable
+        private final Value[] arguments;
+
+        public FunctionBinding(@NonNull Function function, @Nullable Value[] arguments) {
+            this.arguments = arguments;
+            this.function = function;
+        }
+
+        public static FunctionBinding valueOf(@NonNull String name, @NonNull String args, Context context, @NonNull FunctionManager manager) {
+            Function function = manager.get(name);
+            String[] tokens = FUNCTION_ARGS_DELIMITER.split(args);
+            Value[] arguments = new Value[tokens.length];
+            String token;
+            Value resolved;
+            for (int i = 0; i < tokens.length; i++) {
+                token = tokens[i].trim();
+                if (!token.isEmpty() && token.charAt(0) == '\'') {
+                    token = token.substring(1, token.length() - 1);
+                    resolved = new Primitive(token);
+                } else {
+                    resolved = AttributeProcessor.staticPrecompile(new Primitive(token), context, manager);
+                }
+                arguments[i] = resolved != null ? resolved : new Primitive(token);
+            }
+            return new FunctionBinding(function, arguments);
+        }
+
+        private static Value[] resolve(Context context, Value[] in, Value data, int index) {
+
             //noinspection ConstantConditions because we want it to crash, it is an illegal state anyway
             Value[] out = new Value[in.length];
-            Value argument, resolved;
             for (int i = 0; i < in.length; i++) {
-                argument = in[i];
-                if (argument.isBinding()) {
-                    resolved = argument.getAsBinding().evaluate(data, index);
-                } else {
-                    resolved = argument;
-                }
-                out[i] = resolved;
+                out[i] = AttributeProcessor.evaluate(context, in[i], data, index);
             }
 
             return out;
         }
 
-        /**
-         * @return
-         */
-        public Iterator getTokens() {
-            return new SimpleArrayIterator<>(tokens);
-        }
-
-        /**
-         * @param data
-         * @param index @return
-         */
-        public Result evaluate(Value data, int index) {
-            Result result = resolveData(tokens, data, index);
-            if (null == this.function) {
-                return result;
-            } else {
-                Value resolved = this.function.format(result.value, index, resolveArguments(arguments, data, index));
-                return Result.success(resolved);
-            }
+        public Iterator<Value> getTokens() {
+            return new SimpleArrayIterator<>(this.arguments);
         }
 
         @Override
-        public String toString() {
-            String context = "@{" + Utils.getStringFromArray(tokens, ".") + "}";
-            String functions = "";
-            if (null != function) {
-                functions = "${" + function.getName() + "(" + Utils.getStringFromArray(arguments, ",", Utils.STYLE_SINGLE) + ")}";
-            }
-            return context + functions;
+        public Value copy() {
+            return this;
         }
 
-        /**
-         *
-         */
-        private static class ExpressionCache {
-            private static final LruCache<String, Expression> cache = new LruCache<>(64);
+        @NonNull
+        @Override
+        public Value evaluate(Context context, Value data, int index) {
+            Value[] arguments = resolve(context, this.arguments, data, index);
+            return this.function.call(data, index, arguments);
+        }
+
+        @NonNull
+        @Override
+        public String toString() {
+            /*String context = "@{" + Utils.join(arguments, ".") + "}";
+            String functions = "";
+            functions = "${" + function.getName() + "(" + Utils.join(arguments, ",", Utils.STYLE_SINGLE) + ")}";*/
+
+            return "crap";
         }
     }
 }

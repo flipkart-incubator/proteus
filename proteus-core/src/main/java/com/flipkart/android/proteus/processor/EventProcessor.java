@@ -20,6 +20,8 @@
 package com.flipkart.android.proteus.processor;
 
 
+import android.view.View;
+
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.value.AttributeResource;
@@ -38,7 +40,7 @@ import com.flipkart.android.proteus.value.Value;
  * @author adityasharat
  */
 
-public abstract class EventProcessor<T> extends AttributeProcessor<T> {
+public abstract class EventProcessor<T extends View> extends AttributeProcessor<T> {
 
     @Override
     public void handleValue(T view, Value value) {

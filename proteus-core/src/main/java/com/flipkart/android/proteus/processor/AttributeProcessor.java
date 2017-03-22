@@ -21,6 +21,7 @@ package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.FunctionManager;
@@ -38,13 +39,50 @@ import com.flipkart.android.proteus.value.Value;
  * @author kirankumar
  * @author adityasharat
  */
-public abstract class AttributeProcessor<V> {
+public abstract class AttributeProcessor<V extends View> {
+
+    public static Value evaluate(final Context context, final Value input, final Value data, final int index) {
+        final Value[] output = new Value[1];
+
+        AttributeProcessor processor = new AttributeProcessor<View>() {
+
+            @Override
+            public void handleBinding(View view, Binding binding) {
+                output[0] = binding.evaluate(context, data, index);
+            }
+
+            @Override
+            public void handleValue(View view, Value value) {
+                output[0] = value;
+            }
+
+            @Override
+            public void handleResource(View view, Resource resource) {
+                output[0] = new Primitive(resource.getString(context));
+            }
+
+            @Override
+            public void handleAttributeResource(View view, AttributeResource attribute) {
+                output[0] = new Primitive(attribute.apply(context).getString(0));
+            }
+
+            @Override
+            public void handleStyleResource(View view, StyleResource style) {
+                output[0] = new Primitive(style.apply(context).getString(0));
+            }
+        };
+
+        //noinspection unchecked
+        processor.process(null, input);
+
+        return output[0];
+    }
 
     @Nullable
     public static Value staticPrecompile(Primitive value, Context context, FunctionManager manager) {
         String string = value.getAsString();
         if (Binding.isBindingValue(string)) {
-            return Binding.valueOf(string.substring(1), manager);
+            return Binding.valueOf(string, context, manager);
         } else if (Resource.isResource(string)) {
             return Resource.valueOf(string, null, context);
         } else if (AttributeResource.isAttributeResource(string)) {
@@ -80,7 +118,7 @@ public abstract class AttributeProcessor<V> {
 
     public void handleBinding(V view, Binding value) {
         DataContext dataContext = ((ProteusView) view).getViewManager().getDataContext();
-        Value resolved = evaluate(value, dataContext.getData(), dataContext.getIndex());
+        Value resolved = evaluate(value, view.getContext(), dataContext.getData(), dataContext.getIndex());
         handleValue(view, resolved);
     }
 
@@ -106,8 +144,7 @@ public abstract class AttributeProcessor<V> {
         return value;
     }
 
-    protected Value evaluate(Binding binding, Value data, int index) {
-        return binding.evaluate(data, index);
+    protected Value evaluate(Binding binding, Context context, Value data, int index) {
+        return binding.evaluate(context, data, index);
     }
-
 }
