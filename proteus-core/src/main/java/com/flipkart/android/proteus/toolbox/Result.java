@@ -20,8 +20,9 @@
 package com.flipkart.android.proteus.toolbox;
 
 import android.support.annotation.IntDef;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
+import com.flipkart.android.proteus.value.Null;
 import com.flipkart.android.proteus.value.Value;
 
 import java.lang.annotation.Retention;
@@ -58,17 +59,17 @@ public class Result {
     /**
      * singleton for No Such Data Path Exception.
      */
-    public static final Result NO_SUCH_DATA_PATH_EXCEPTION = new Result(Result.RESULT_NO_SUCH_DATA_PATH_EXCEPTION, null);
+    public static final Result NO_SUCH_DATA_PATH_EXCEPTION = new Result(Result.RESULT_NO_SUCH_DATA_PATH_EXCEPTION, Null.INSTANCE);
 
     /**
      * singleton for Invalid Data Path Exception.
      */
-    public static final Result INVALID_DATA_PATH_EXCEPTION = new Result(Result.RESULT_INVALID_DATA_PATH_EXCEPTION, null);
+    public static final Result INVALID_DATA_PATH_EXCEPTION = new Result(Result.RESULT_INVALID_DATA_PATH_EXCEPTION, Null.INSTANCE);
 
     /**
      * singleton for Null Exception.
      */
-    public static final Result NULL_EXCEPTION = new Result(Result.RESULT_NULL_EXCEPTION, null);
+    public static final Result NULL_EXCEPTION = new Result(Result.RESULT_NULL_EXCEPTION, Null.INSTANCE);
 
     /**
      * Indicates the return status of the method for a given data path. The return value
@@ -83,10 +84,10 @@ public class Result {
      * {@code value} will be null if {@code RESULT_CODE} != {@code RESULT_SUCCESS}
      */
 
-    @Nullable
+    @NonNull
     public final Value value;
 
-    public Result(@ResultCode int RESULT_CODE, @Nullable Value value) {
+    public Result(@ResultCode int RESULT_CODE, @NonNull Value value) {
         this.RESULT_CODE = RESULT_CODE;
         this.value = value;
     }

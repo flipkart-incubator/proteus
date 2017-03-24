@@ -63,12 +63,12 @@ public class ProteusContext extends ContextWrapper {
     }
 
     @NonNull
-    public FormatterManager getFormatterManager() {
-        return resources.getFormatterManager();
+    public FunctionManager getFormatterManager() {
+        return resources.getFunctionManager();
     }
 
     @NonNull
-    public Formatter getFormatter(@NonNull String name) {
+    public Function getFormatter(@NonNull String name) {
         return resources.getFormatter(name);
     }
 
@@ -121,7 +121,7 @@ public class ProteusContext extends ContextWrapper {
         private final Context base;
 
         @NonNull
-        private final FormatterManager formatterManager;
+        private final FunctionManager functionManager;
 
         @NonNull
         private final Map<String, ViewTypeParser> parsers;
@@ -138,10 +138,10 @@ public class ProteusContext extends ContextWrapper {
         @Nullable
         private StyleManager styleManager;
 
-        Builder(@NonNull Context context, @NonNull Map<String, ViewTypeParser> parsers, @NonNull FormatterManager formatterManager) {
+        Builder(@NonNull Context context, @NonNull Map<String, ViewTypeParser> parsers, @NonNull FunctionManager functionManager) {
             this.base = context;
             this.parsers = parsers;
-            this.formatterManager = formatterManager;
+            this.functionManager = functionManager;
         }
 
         public Builder setImageLoader(@Nullable ProteusLayoutInflater.ImageLoader loader) {
@@ -165,7 +165,7 @@ public class ProteusContext extends ContextWrapper {
         }
 
         public ProteusContext build() {
-            ProteusResources resources = new ProteusResources(parsers, layoutManager, formatterManager, styleManager);
+            ProteusResources resources = new ProteusResources(parsers, layoutManager, functionManager, styleManager);
             return new ProteusContext(base, resources, loader, callback);
         }
 

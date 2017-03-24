@@ -19,23 +19,20 @@
 
 package com.flipkart.android.proteus;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import java.util.Map;
-
 /**
- * FormatterManager
+ * ProteusContextWrapper
+ * <p>
+ * A wrapper for {@link ProteusContext} that simply delegates all of its calls to
+ * another ProteusContext. Can be subclassed to modify or to add new behavior
+ * without changing the original ProteusContext.
+ * </p>
  *
  * @author adityasharat
  */
-public abstract class FormatterManager {
 
-    @Nullable
-    protected abstract Map<String, Formatter> getFormatters();
+public class ProteusContextWrapper extends ProteusContext {
 
-    @NonNull
-    public Formatter get(@NonNull String name) {
-        return null != getFormatters() ? getFormatters().get(name) : Formatter.NOOP;
+    public ProteusContextWrapper(ProteusContext context) {
+        super(context, context.getProteusResources(), context.getLoader(), context.getCallback());
     }
 }

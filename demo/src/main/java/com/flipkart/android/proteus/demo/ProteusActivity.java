@@ -165,7 +165,11 @@ public class ProteusActivity extends AppCompatActivity {
         @NonNull
         @Override
         public void onEvent(String event, Value value, ProteusView view) {
-
+            try {
+                Log.i("ProteusEvent", value.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     };
 

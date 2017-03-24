@@ -24,6 +24,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Resource;
@@ -35,9 +36,6 @@ import com.flipkart.android.proteus.value.Value;
  * @author aditya.sharat
  */
 public abstract class StringAttributeProcessor<V extends View> extends AttributeProcessor<V> {
-
-    public static final String EMPTY_STRING = "";
-    public static final Primitive EMPTY = new Primitive(EMPTY_STRING);
 
     /**
      * @param view  View
@@ -51,7 +49,7 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     @Override
     public void handleResource(V view, Resource resource) {
         String string = resource.getString(view.getContext());
-        setString(view, null == string ? EMPTY_STRING : string);
+        setString(view, null == string ? ProteusConstants.EMPTY : string);
     }
 
     @Override
@@ -74,7 +72,7 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
     @Override
     public Value compile(@Nullable Value value, Context context) {
         if (null == value || value.isNull()) {
-            return EMPTY;
+            return ProteusConstants.EMPTY_STRING;
         }
         return value;
     }

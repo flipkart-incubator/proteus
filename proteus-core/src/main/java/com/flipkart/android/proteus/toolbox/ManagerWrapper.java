@@ -30,16 +30,21 @@ import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 
 /**
- * WrappedManager
+ * ManagerWrapper
+ * <p>
+ * Proxies the implementation of {@link ProteusView.Manager} that simply delegates
+ * all of its calls to another Manager. Can be subclassed to modify or to add new behavior
+ * without changing the original Manager.
+ * </p>
  *
  * @author adityasharat
  */
 
-public class WrappedManager implements ProteusView.Manager {
+public class ManagerWrapper implements ProteusView.Manager {
 
     private final ProteusView.Manager base;
 
-    public WrappedManager(ProteusView.Manager base) {
+    public ManagerWrapper(ProteusView.Manager base) {
         this.base = base;
     }
 

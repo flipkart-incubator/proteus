@@ -53,7 +53,7 @@ public class Utils {
         return destination;
     }
 
-    public static String getStringFromArray(String[] array, String delimiter) {
+    public static String join(String[] array, String delimiter) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < array.length; i++) {
             sb.append(array[i]);
@@ -64,7 +64,7 @@ public class Utils {
         return sb.toString();
     }
 
-    public static String getStringFromArray(Array array, String delimiter, @QuoteStyle int style) {
+    public static String join(Array array, String delimiter, @QuoteStyle int style) {
         StringBuilder sb = new StringBuilder();
         Value value;
         for (int i = 0; i < array.size(); i++) {
@@ -96,16 +96,16 @@ public class Utils {
         return sb.toString();
     }
 
-    public static String getStringFromArray(Array array, String delimiter) {
-        return getStringFromArray(array, delimiter, STYLE_NONE);
+    public static String join(Array array, String delimiter) {
+        return join(array, delimiter, STYLE_NONE);
     }
 
-    public static String getStringFromArray(Value[] array, String delimiter, @QuoteStyle int style) {
-        return getStringFromArray(new Array(array), delimiter, style);
+    public static String join(Value[] array, String delimiter, @QuoteStyle int style) {
+        return join(new Array(array), delimiter, style);
     }
 
-    public static String getStringFromArray(Value[] array, String delimiter) {
-        return getStringFromArray(new Array(array), delimiter);
+    public static String join(Value[] array, String delimiter) {
+        return join(new Array(array), delimiter);
     }
 
     public static String getVersion() {

@@ -21,7 +21,7 @@ package com.flipkart.android.proteus.gson;
 
 import android.content.Context;
 
-import com.flipkart.android.proteus.FormatterManager;
+import com.flipkart.android.proteus.FunctionManager;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ViewTypeParser;
@@ -76,7 +76,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         public Value read(JsonReader in) throws IOException {
             switch (in.peek()) {
                 case STRING:
-                    return compileString(in.nextString());
+                    return compileString(getContext(), in.nextString());
                 case NUMBER:
                     String number = in.nextString();
                     return new Primitive(new LazilyParsedNumber(number));
@@ -105,7 +105,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                                 in.endObject();
                                 return layout;
                             } else {
-                                object.add(name, compileString(type));
+                                object.add(name, compileString(getContext(), type));
                             }
                         } else {
                             object.add(name, read(in));
@@ -253,7 +253,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         public Value read(JsonReader in) throws IOException {
             switch (in.peek()) {
                 case STRING:
-                    return compileString(in.nextString());
+                    return compileString(getContext(), in.nextString());
                 case NUMBER:
                     String number = in.nextString();
                     return new Primitive(new LazilyParsedNumber(number));
@@ -404,9 +404,9 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         return context;
     }
 
-    private static Value compileString(String string) {
+    private static Value compileString(Context context, String string) {
         if (Binding.isBindingValue(string)) {
-            return Binding.valueOf(string.substring(1), PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager);
+            return Binding.valueOf(string, context, PROTEUS_INSTANCE_HOLDER.getProteus().functions);
         } else {
             return new Primitive(string);
         }
@@ -466,7 +466,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 } else {
                     ViewTypeParser.AttributeSet.Attribute attribute = proteus.getAttributeId(name, type);
                     if (null != attribute) {
-                        FormatterManager manager = PROTEUS_INSTANCE_HOLDER.getProteus().formatterManager;
+                        FunctionManager manager = PROTEUS_INSTANCE_HOLDER.getProteus().functions;
                         Value value = attribute.processor.precompile(VALUE_TYPE_ADAPTER.read(in), getContext(), manager);
                         attributes.add(new Layout.Attribute(attribute.id, value));
                     } else {
