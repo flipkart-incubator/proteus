@@ -22,10 +22,12 @@ package com.flipkart.android.proteus.value;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.util.LruCache;
 
 import com.flipkart.android.proteus.Function;
 import com.flipkart.android.proteus.FunctionManager;
+import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.toolbox.Result;
 import com.flipkart.android.proteus.toolbox.SimpleArrayIterator;
@@ -273,7 +275,14 @@ public abstract class Binding extends Value {
         @Override
         public Value evaluate(Context context, Value data, int index) {
             Value[] arguments = resolve(context, this.arguments, data, index);
-            return this.function.call(data, index, arguments);
+            try {
+                return this.function.call(data, index, arguments);
+            } catch (Exception e) {
+                if (ProteusConstants.isLoggingEnabled()) {
+                    Log.e(Utils.LIB_NAME, e.getMessage(), e);
+                }
+                return data;
+            }
         }
 
         @NonNull

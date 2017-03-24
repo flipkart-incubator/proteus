@@ -207,7 +207,7 @@
         "padding": "16dp",
         "children": {
           "@": {
-            "collection": "@{user.tags}",
+            "collection": "@{fn:slice(@{user.tags},0,4)}",
             "layout":{
               "type": "TextView",
               "data": {

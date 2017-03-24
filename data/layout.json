@@ -64,7 +64,7 @@
                       "layout_height": "32dp",
                       "textSize": "12sp",
                       "textColor": "#2cdb81",
-                      "text": "1",
+                      "text": "2",
                       "layout_weight": "1",
                       "gravity": "center"
                     },
@@ -74,7 +74,7 @@
                       "layout_marginRight": "8dp",
                       "textSize": "12sp",
                       "textColor": "#2cdb81",
-                      "text": "2",
+                      "text": "@{fn:add(2,2)}",
                       "layout_weight": "2",
                       "gravity": "center"
                     },
@@ -84,7 +84,10 @@
                       "layout_marginRight": "8dp",
                       "textSize": "12sp",
                       "textColor": "#2cdb81",
-                      "text": "3",
+                      "data": {
+                        "value": "@{fn:mul(2,2,2)}"
+                      },
+                      "text": "@{fn:number(@{value})}",
                       "layout_weight": "3",
                       "gravity": "center"
                     }

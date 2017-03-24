@@ -85,7 +85,6 @@ public class ProteusBuilder {
             // register the default formatters
             builder.register(Function.DATE);
             builder.register(Function.FORMAT);
-            builder.register(Function.INDEX);
             builder.register(Function.JOIN);
             builder.register(Function.NUMBER);
 
@@ -106,7 +105,18 @@ public class ProteusBuilder {
             builder.register(Function.LESS_THAN_OR_EQUALS);
             builder.register(Function.GREATER_THAN_OR_EQUALS);
 
-            builder.register(Function.IF_THEN_ELSE);
+            builder.register(Function.TERNARY);
+
+            builder.register(Function.CHAR_AT);
+            builder.register(Function.CONTAINS);
+            builder.register(Function.IS_EMPTY);
+            builder.register(Function.LENGTH);
+            builder.register(Function.TRIM);
+
+            builder.register(Function.MAX);
+            builder.register(Function.MIN);
+
+            builder.register(Function.SLICE);
         }
     };
 

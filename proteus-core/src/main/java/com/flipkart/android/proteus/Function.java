@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.toolbox.Utils;
-import com.flipkart.android.proteus.value.Null;
+import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Value;
 
@@ -43,7 +43,7 @@ public abstract class Function {
     public static final Function NOOP = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             return ProteusConstants.EMPTY_STRING;
         }
 
@@ -61,15 +61,10 @@ public abstract class Function {
 
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
-            try {
-                // data should for of the format : 2015-06-18 12:01:37
-                Date in = getFromFormat(arguments).parse(arguments[0].getAsString());
-                String out = getToFormat(arguments).format(in);
-                return new Primitive(out);
-            } catch (Exception e) {
-                return data;
-            }
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
+            Date in = getFromFormat(arguments).parse(arguments[0].getAsString());
+            String out = getToFormat(arguments).format(in);
+            return new Primitive(out);
         }
 
         private SimpleDateFormat getFromFormat(Value[] arguments) {
@@ -97,7 +92,7 @@ public abstract class Function {
     public static final Function FORMAT = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             String template = arguments[0].getAsString();
             String[] values = new String[arguments.length - 1];
             for (int i = 1; i < arguments.length; i++) {
@@ -112,32 +107,13 @@ public abstract class Function {
         }
     };
 
-    public static final Function INDEX = new Function() {
-        @NonNull
-        @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
-            int valueAsNumber;
-            try {
-                valueAsNumber = Integer.parseInt(arguments[0].getAsString());
-            } catch (NumberFormatException e) {
-                return data;
-            }
-            return new Primitive(valueAsNumber + 1);
-        }
-
-        @Override
-        public String getName() {
-            return "index";
-        }
-    };
-
     public static final Function JOIN = new Function() {
 
         private static final String DEFAULT_DELIMITER = ", ";
 
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             return new Primitive(Utils.join(arguments[0].getAsArray(), getDelimiter(arguments)));
         }
 
@@ -160,13 +136,8 @@ public abstract class Function {
 
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
-            double number;
-            try {
-                number = Double.parseDouble(arguments[0].getAsString());
-            } catch (NumberFormatException e) {
-                return data;
-            }
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
+            double number = Double.parseDouble(arguments[0].getAsString());
             DecimalFormat formatter = getFormatter(arguments);
             formatter.setRoundingMode(RoundingMode.FLOOR);
             formatter.setMinimumFractionDigits(0);
@@ -192,7 +163,7 @@ public abstract class Function {
     public static final Function ADD = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             double sum = 0;
 
             for (Value argument : arguments) {
@@ -211,7 +182,7 @@ public abstract class Function {
     public static final Function SUBTRACT = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             double sum = arguments[0].getAsDouble();
 
             for (int i = 1; i < arguments.length; i++) {
@@ -230,7 +201,7 @@ public abstract class Function {
     public static final Function MULTIPLY = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             double product = 1;
 
             for (Value argument : arguments) {
@@ -249,7 +220,7 @@ public abstract class Function {
     public static final Function DIVIDE = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             double quotient = arguments[0].getAsDouble();
 
             for (int i = 1; i < arguments.length; i++) {
@@ -267,7 +238,7 @@ public abstract class Function {
 
     public static final Function MODULO = new Function() {
         @NonNull
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             double remainder = arguments[0].getAsDouble();
 
             for (int i = 1; i < arguments.length; i++) {
@@ -288,7 +259,7 @@ public abstract class Function {
     public static final Function AND = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             if (arguments.length < 1) {
                 return ProteusConstants.FALSE;
             }
@@ -305,14 +276,14 @@ public abstract class Function {
 
         @Override
         public String getName() {
-            return "AND";
+            return "and";
         }
     };
 
     public static final Function OR = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             if (arguments.length < 1) {
                 return ProteusConstants.FALSE;
             }
@@ -329,7 +300,7 @@ public abstract class Function {
 
         @Override
         public String getName() {
-            return "OR";
+            return "or";
         }
     };
 
@@ -338,7 +309,7 @@ public abstract class Function {
     public static final Function NOT = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             if (arguments.length < 1) {
                 return ProteusConstants.TRUE;
             }
@@ -347,7 +318,7 @@ public abstract class Function {
 
         @Override
         public String getName() {
-            return "NOT";
+            return "not";
         }
     };
 
@@ -356,7 +327,7 @@ public abstract class Function {
     public static final Function EQUALS = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             if (arguments.length < 2) {
                 return ProteusConstants.FALSE;
             }
@@ -373,14 +344,14 @@ public abstract class Function {
 
         @Override
         public String getName() {
-            return "EQUALS";
+            return "eq";
         }
     };
 
     public static final Function LESS_THAN = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             if (arguments.length < 2) {
                 return ProteusConstants.FALSE;
             }
@@ -397,14 +368,14 @@ public abstract class Function {
 
         @Override
         public String getName() {
-            return "LESS_THAN";
+            return "lt";
         }
     };
 
     public static final Function GREATER_THAN = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             if (arguments.length < 2) {
                 return ProteusConstants.FALSE;
             }
@@ -421,14 +392,14 @@ public abstract class Function {
 
         @Override
         public String getName() {
-            return "GREATER_THAN";
+            return "gt";
         }
     };
 
     public static final Function LESS_THAN_OR_EQUALS = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             if (arguments.length < 2) {
                 return ProteusConstants.FALSE;
             }
@@ -445,14 +416,14 @@ public abstract class Function {
 
         @Override
         public String getName() {
-            return "LESS_THAN_OR_EQUALS";
+            return "lte";
         }
     };
 
     public static final Function GREATER_THAN_OR_EQUALS = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             if (arguments.length < 2) {
                 return ProteusConstants.FALSE;
             }
@@ -469,20 +440,16 @@ public abstract class Function {
 
         @Override
         public String getName() {
-            return "GREATER_THAN_OR_EQUALS";
+            return "gte";
         }
     };
 
     // Conditional
 
-    public static final Function IF_THEN_ELSE = new Function() {
+    public static final Function TERNARY = new Function() {
         @NonNull
         @Override
-        public Value call(Value data, int dataIndex, Value... arguments) {
-            if (arguments.length < 3) {
-                return Null.INSTANCE;
-            }
-
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
             Value i = arguments[0];
             Value t = arguments[1];
             Value e = arguments[2];
@@ -492,19 +459,87 @@ public abstract class Function {
 
         @Override
         public String getName() {
-            return "IF_THEN_ELSE";
+            return "ternary";
         }
     };
 
     // String
 
     //String.charAt()
+    public static final Function CHAR_AT = new Function() {
+        @NonNull
+        @Override
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
+            String string = arguments[0].getAsString();
+            int index = arguments[1].getAsInt();
+            char charAtIndex = string.charAt(index);
+            return new Primitive(charAtIndex);
+        }
+
+        @Override
+        public String getName() {
+            return "charAt";
+        }
+    };
+
     //String.contains()
+    public static final Function CONTAINS = new Function() {
+        @NonNull
+        @Override
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
+            String string = arguments[0].getAsString();
+            String substring = arguments[1].getAsString();
+            boolean bool = string.contains(substring);
+            return new Primitive(bool);
+        }
+
+        @Override
+        public String getName() {
+            return "contains";
+        }
+    };
+
     //String.endsWith()
     //String.indexOf()
+
     //String.isEmpty()
+    public static final Function IS_EMPTY = new Function() {
+        @NonNull
+        @Override
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
+            String string = arguments[0].getAsString();
+            return new Primitive(ProteusConstants.EMPTY.equals(string));
+        }
+
+        @Override
+        public String getName() {
+            return "isEmpty";
+        }
+    };
+
     //String.lastIndexOf()
+
     //String.length()
+    public static final Function LENGTH = new Function() {
+        @NonNull
+        @Override
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
+            Value value = arguments[0];
+            int length = 0;
+            if (value.isPrimitive()) {
+                length = value.getAsString().length();
+            } else if (value.isArray()) {
+                length = value.getAsArray().size();
+            }
+            return new Primitive(length);
+        }
+
+        @Override
+        public String getName() {
+            return "length";
+        }
+    };
+
     //String.matches()
     //String.replace()
     //String.replaceAll()
@@ -514,7 +549,22 @@ public abstract class Function {
     //String.substring()
     //String.toLowerCase()
     //String.toUpperCase()
+
     //String.trim()
+    public static final Function TRIM = new Function() {
+        @NonNull
+        @Override
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
+            String string = arguments[0].getAsString().trim();
+            return new Primitive(string);
+        }
+
+        @Override
+        public String getName() {
+            return "trim";
+        }
+    };
+
     //String.subSequence()
 
     // Math
@@ -525,11 +575,107 @@ public abstract class Function {
     //Math.pow
     //Math.round
     //Math.random
+
     //Math.max
+    public static final Function MAX = new Function() {
+        @NonNull
+        @Override
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
+            double max = arguments[0].getAsDouble();
+            double current;
+            for (int i = 1; i < arguments.length; i++) {
+                current = arguments[i].getAsDouble();
+                if (current > max) {
+                    max = current;
+                }
+            }
+            return new Primitive(max);
+        }
+
+        @Override
+        public String getName() {
+            return "max";
+        }
+    };
+
     //Math.min
+    public static final Function MIN = new Function() {
+        @NonNull
+        @Override
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
+            double min = arguments[0].getAsDouble();
+            double current;
+            for (int i = 1; i < arguments.length; i++) {
+                current = arguments[i].getAsDouble();
+                if (current < min) {
+                    min = current;
+                }
+            }
+            return new Primitive(min);
+        }
+
+        @Override
+        public String getName() {
+            return "min";
+        }
+    };
+
+    // Array
+
+    public static final Function SLICE = new Function() {
+        @NonNull
+        @Override
+        public Value call(Value data, int dataIndex, Value... arguments) throws Exception {
+            Array in = arguments[0].getAsArray();
+            int start = getStart(in, arguments);
+            int end = getEnd(in, arguments);
+            Array out = new Array();
+            for (int i = start; i < end; i++) {
+                out.add(in.get(i));
+            }
+            return out;
+        }
+
+        private int getStart(Array in, Value[] arguments) {
+            if (arguments.length > 1) {
+                int index = arguments[1].getAsInt();
+                if (index < 0) {
+                    index = in.size() - index;
+                    if (index < 0) {
+                        return 0;
+                    }
+                } else if (index > in.size()) {
+                    index = in.size();
+                }
+                return index;
+            }
+            return 0;
+        }
+
+        private int getEnd(Array in, Value[] arguments) {
+            if (arguments.length > 2) {
+                int index = arguments[2].getAsInt();
+                if (index < 0) {
+                    index = in.size() - index;
+                    if (index < 0) {
+                        return 0;
+                    }
+                } else if (index > in.size()) {
+                    index = in.size();
+                }
+                return index;
+            }
+            return in.size();
+        }
+
+        @Override
+        public String getName() {
+            return "slice";
+        }
+    };
 
     @NonNull
-    public abstract Value call(Value data, int dataIndex, Value... arguments);
+    public abstract Value call(Value data, int dataIndex, Value... arguments) throws Exception;
 
     public abstract String getName();
 }
