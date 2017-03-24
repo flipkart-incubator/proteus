@@ -12,6 +12,122 @@
       "background": "#efefef",
       "children": [
         {
+          "type": "CardView",
+          "layout_width": "match_parent",
+          "layout_height": "wrap_content",
+          "layout_marginTop": "16dp",
+          "layout_marginRight": "16dp",
+          "layout_marginLeft": "16dp",
+          "layout_marginBottom": "0dp",
+          "padding": "16dp",
+          "cardBackgroundColor": "#ffffff",
+          "cardElevation": "6dp",
+          "contentPadding": "8dp",
+          "cardCornerRadius": "4dp",
+          "children": [
+            {
+              "type": "LinearLayout",
+              "layout_width": "match_parent",
+              "layout_height": "wrap_content",
+              "orientation": "vertical",
+              "children": [
+                {
+                  "type": "TextView",
+                  "layout_width": "wrap_content",
+                  "layout_height": "wrap_content",
+                  "textSize": "18sp",
+                  "text": "~Hello {{user.name}}"
+                },
+                {
+                  "type": "TextView",
+                  "layout_width": "wrap_content",
+                  "layout_height": "wrap_content",
+                  "textSize": "18sp",
+                  "text": "~{{user.location.city}}, {{user.location.country}}"
+                },
+                {
+                  "type": "LinearLayout",
+                  "orientation": "vertical",
+                  "layout_height": "wrap_content",
+                  "layout_width": "match_parent",
+                  "gravity": "center_vertical",
+                  "children": [
+                    {
+                      "type": "TextView",
+                      "layout_width": "wrap_content",
+                      "layout_height": "wrap_content",
+                      "textSize": "18sp",
+                      "text": "Exp:"
+                    },
+                    {
+                      "type": "HorizontalProgressBar",
+                      "layout_width": "match_parent",
+                      "layout_height": "wrap_content",
+                      "layout_margin": "8dp",
+                      "layout_marginTop": "10dp",
+                      "max": "$user.experience.max",
+                      "progress": "$user.experience.current"
+                    },
+                    {
+                      "type": "LinearLayout",
+                      "orientation": "horizontal",
+                      "layout_height": "wrap_content",
+                      "layout_width": "match_parent",
+                      "gravity": "center_vertical",
+                      "children": [
+                        {
+                          "type": "TextView",
+                          "layout_weight": "1",
+                          "layout_width": "0dp",
+                          "layout_height": "wrap_content",
+                          "textSize": "16sp",
+                          "text": "0"
+                        },
+                        {
+                          "type": "View",
+                          "layout_weight": "1",
+                          "layout_width": "0dp",
+                          "layout_height": "wrap_content"
+                        },
+                        {
+                          "type": "TextView",
+                          "layout_weight": "1",
+                          "layout_width": "0dp",
+                          "layout_height": "wrap_content",
+                          "textSize": "16sp",
+                          "gravity": "right",
+                          "text": "$user.experience.max"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "CardView",
+          "layout_width": "match_parent",
+          "layout_height": "wrap_content",
+          "layout_marginLeft": "16dp",
+          "layout_marginRight": "16dp",
+          "layout_marginTop": "16dp",
+          "cardBackgroundColor": "#ffffff",
+          "cardElevation": "6dp",
+          "contentPadding": "8dp",
+          "cardCornerRadius": "4dp",
+          "children": [
+            {
+              "type": "CalendarView",
+              "layout_width": "match_parent",
+              "layout_height": "match_parent",
+              "minDate": "01/01/2017",
+              "maxDate": "12/31/2017"
+            }
+          ]
+        },
+        {
           "type": "FrameLayout",
           "layout_width": "match_parent",
           "layout_height": "wrap_content",
@@ -107,10 +223,10 @@
                   "layout_height": "50dp",
                   "layout_width": "150dp",
                   "gravity": "center",
-                  "layout_marginTop" : "10dp",
-                  "text" : "ADD TO CART",
-                  "background" : {
-                    "type" : "ripple",
+                  "layout_marginTop": "10dp",
+                  "text": "ADD TO CART",
+                  "background": {
+                    "type": "ripple",
                     "content": {
                       "type": "shape",
                       "shape": "rectangle",
