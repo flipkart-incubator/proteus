@@ -146,6 +146,36 @@ public class Attributes {
         public static Attribute MinHeight = new Attribute("minHeight");
     }
 
+    public static class CardView {
+        public static Attribute CardBackgroundColor = new Attribute("cardBackgroundColor");
+        public static Attribute CardElevation = new Attribute("cardElevation");
+        public static Attribute CardContentPadding = new Attribute("contentPadding");
+        public static Attribute CardCornerRadius = new Attribute("cardCornerRadius");
+        public static Attribute CardMaxElevation = new Attribute("cardMaxElevation");
+        public static Attribute CardPreventCornerOverlap = new Attribute("cardPreventCornerOverlap");
+        public static Attribute CardUseCompatPadding = new Attribute("cardUseCompatPadding");
+        public static Attribute CardContentPaddingBottom = new Attribute("contentPaddingBottom");
+        public static Attribute CardContentPaddingTop = new Attribute("contentPaddingTop");
+        public static Attribute CardContentPaddingRight = new Attribute("contentPaddingRight");
+        public static Attribute CardContentPaddingLeft = new Attribute("contentPaddingLeft");
+    }
+
+    public static class CalendarView {
+        public static Attribute DateTextAppearance = new Attribute("datetTexAppearance");
+        public static Attribute FirstDayOfWeek = new Attribute("firstDayOfWeek");
+        public static Attribute FocusedMonthDateColor = new Attribute("focusedMonthDateColor");
+        public static Attribute MaxDate = new Attribute("maxDate");
+        public static Attribute MinDate = new Attribute("minDate");
+        public static Attribute SelectedDateVerticalBar = new Attribute("selectedDateVerticalBar");
+        public static Attribute SelectedWeekBackgroundColor = new Attribute("selectedWeekBackgroundColor");
+        public static Attribute ShowWeekNumber = new Attribute("showWeekNumber");
+        public static Attribute ShownWeekCount = new Attribute("shownWeekCount");
+        public static Attribute UnfocusedMonthDateColor = new Attribute("unfocusedMonthDateColor");
+        public static Attribute WeekDayTextAppearance = new Attribute("weekDayTextAppearance");
+        public static Attribute WeekNumberColor = new Attribute("weekNumberColor");
+        public static Attribute WeekSeparatorLineColor = new Attribute("weekSeparatorLineColor");
+    }
+
     public static class TextView {
         public static Attribute Gravity = new Attribute("gravity");
         public static Attribute Text = new Attribute("text");

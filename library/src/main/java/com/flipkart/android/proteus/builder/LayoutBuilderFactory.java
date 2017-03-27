@@ -22,6 +22,8 @@ import android.support.annotation.NonNull;
 
 import com.flipkart.android.proteus.parser.ViewParser;
 import com.flipkart.android.proteus.parser.custom.ButtonParser;
+import com.flipkart.android.proteus.parser.custom.CalendarViewParser;
+import com.flipkart.android.proteus.parser.custom.CardViewParser;
 import com.flipkart.android.proteus.parser.custom.CheckBoxParser;
 import com.flipkart.android.proteus.parser.custom.EditTextParser;
 import com.flipkart.android.proteus.parser.custom.FrameLayoutParser;
@@ -156,6 +158,8 @@ public class LayoutBuilderFactory {
         CheckBoxParser checkBoxParser = new CheckBoxParser(buttonParser);
         ProgressBarParser progressBarParser = new ProgressBarParser(viewParser);
         HorizontalProgressBarParser horizontalProgressBarParser = new HorizontalProgressBarParser(progressBarParser);
+        CardViewParser cardViewParser = new CardViewParser(viewGroupParser);
+        CalendarViewParser calendarViewParser = new CalendarViewParser(viewParser);
 
         layoutBuilder.registerHandler("View", viewParser);
         layoutBuilder.registerHandler("ViewGroup", viewGroupParser);
@@ -175,6 +179,8 @@ public class LayoutBuilderFactory {
         layoutBuilder.registerHandler("CheckBox", checkBoxParser);
         layoutBuilder.registerHandler("ProgressBar", progressBarParser);
         layoutBuilder.registerHandler("HorizontalProgressBar", horizontalProgressBarParser);
+        layoutBuilder.registerHandler("CardView", cardViewParser);
+        layoutBuilder.registerHandler("CalendarView", calendarViewParser);
     }
 
     protected void registerFormatter(DataParsingLayoutBuilder layoutBuilder) {

@@ -43,6 +43,6 @@ dependencies {
     compile 'com.android.support:support-annotations:24.1.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.code.gson:gson:2.7'
-
+    compile 'com.android.support:cardview-v7:24.1.0'
     testCompile 'junit:junit:4.12'
 }
