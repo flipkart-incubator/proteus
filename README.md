@@ -13,7 +13,7 @@
 </a>
 
 **Proteus** is meant to be a drop-in replacement for Android’s `LayoutInflater`; but unlike the compiled XML layouts bundled in the APK, Proteus inflates layouts at runtime.
-With Proteus, you can control your Apps layout from the backend (no WebViews). Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. Proteus has runtime data bindings and formatters. Plugin in your own custom views and attributes and formatters.
+With Proteus, you can control your Apps layout from the backend (no WebViews). Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. Proteus has runtime data bindings and formatters. Plugin in your own custom views and attributes and functions.
 
 * **[Getting started](#getting-started)**
 * **[How it Works](#how-it-works)**
@@ -37,12 +37,12 @@ allprojects {
 
 // Add the dependency
 dependencies {
-        compile 'com.github.flipkart-incubator:proteus-core:5.0.0'
-        compile 'com.github.flipkart-incubator:gson-adapter:5.0.0'
+        compile 'com.github.flipkart-incubator:proteus-core:5.0.0-rc6'
+        compile 'com.github.flipkart-incubator:gson-adapter:5.0.0-rc6'
 }
 ```
 
-#### Include as a module
+#### include as a module
 
 * Clone the **proteus** in the project folder
 
@@ -61,12 +61,12 @@ dependencies {
 
 ## How it works
 
-Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON`, which can be used to inflate native android UI at runtime. The `JSON` layouts can be hosted anywhere (on the device, on servers, etc.).
+Instead of writing layouts in `XML`, in **proteus** layouts are described in `JSON`, which can be used to inflate native Android UI at runtime. The `JSON` layouts can be hosted anywhere (on the device, on servers, etc.).
 
 
-[The "Layout"](https://github.com/flipkart-incubator/proteus/wiki/Layouts) defines the the view heirarchy, just like XML. 
+The [**Layout**](https://github.com/flipkart-incubator/proteus/wiki/Layouts) defines the the view heirarchy, just like XML. 
 
-[The "Data"](https://github.com/flipkart-incubator/proteus/wiki/Data) (optional) defines [data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings).
+The [**Data**](https://github.com/flipkart-incubator/proteus/wiki/Data) (optional) defines [data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings).
 
 You give the layout and data to LayoutBuilder, you get back a native view. 
 
@@ -83,13 +83,13 @@ Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ
     "layout_width": "200dp",
     "gravity": "center",
     "type": "TextView",
-    "text": "~@{user.profile.name} (@{user.profile.experience}${number})"
+    "text": "@{user.profile.name}"
   }, {
     "type": "HorizontalProgressBar",
     "layout_width": "200dp",
     "layout_marginTop": "8dp",
     "max": 6000,
-    "progress": "~@{user.profile.experience}"
+    "progress": "@{user.profile.experience}"
   }]
 }
 ```
@@ -132,7 +132,7 @@ The demo app will let you play around with Proteus as well as help you understan
 
 **Ready to tinker**
 
-* Tinker around with the [layout](https://github.com/adityasharat/proteus-demo/blob/layout-class/data/layout.json) and [data](https://github.com/adityasharat/proteus-demo/blob/layout-class/data/user.json)
+* Tinker around with the [layout](https://github.com/adityasharat/proteus-demo/blob/develop/data/layout.json) and [data](https://github.com/adityasharat/proteus-demo/blob/develop/data/user.json)
 * Hit the FAB to refresh the app.
 
 ## Resources
