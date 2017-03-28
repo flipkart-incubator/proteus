@@ -66,13 +66,13 @@ Instead of writing layouts in `XML`, in **proteus** layouts are described in `JS
 
 The [**Layout**](https://github.com/flipkart-incubator/proteus/wiki/Layouts) defines the the view heirarchy, just like XML. 
 
-The [**Data**](https://github.com/flipkart-incubator/proteus/wiki/Data) (optional) defines [data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings).
+The [**Data**](https://github.com/flipkart-incubator/proteus/wiki/Data) (optional) defines [data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings). These data bindings are similar to Android's [Data Binding](https://developer.android.com/topic/libraries/data-binding/index.html) library.
 
-You give the layout and data to LayoutBuilder, you get back a native view. 
+Give the `layout` and `data` to `ProteusLayoutInflater` and get back a native view hierarchy.
 
 Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp) to see it in action.
 
-#### Sample layout
+#### Some sample layout
 
 ```javascript
 {
@@ -94,7 +94,7 @@ Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ
 }
 ```
 
-#### Sample data
+#### Some sample data
 
 ```javascript
 {
@@ -121,7 +121,7 @@ container.addView(view.getAsView());
 
 ### Setting up the Demo App
 
-The demo app will let you play around with Proteus as well as help you understand the internals better.
+The demo app will let you play around with proteus as well as help you understand the internals better.
 
 * Install NodeJS [here](https://nodejs.org/en/download/)
 * open a terminal
@@ -154,10 +154,11 @@ The easiest way to contribute is by [forking the repo](https://help.github.com/a
 * Adding new Views and Attribute Proccessors.
 * Adding new Functions.
 * Adding JavaDoc and Wiki.
+* Completing TODOs
 * Writing unit tests.
 * Finding bugs and issues. (submit [here](https://github.com/flipkart-incubator/proteus/issues))
 * Fixing bugs and issues.
-* Implement performance/brenchmarking tools.
+* Implement performance/benchmarking tools.
 
 ## License
 
@@ -167,7 +168,7 @@ If you are using proteus check out the [can, cannot and must](https://tldrlegal.
 
 ## Contributors
 
-You can check out the [contributors](https://github.com/flipkart-incubator/proteus/graphs/contributors), but if you wish to contact us; just drop in a mail.
+You can check out the [contributors here](https://github.com/flipkart-incubator/proteus/graphs/contributors), but if you wish to contact us; just drop in a mail.
 
 * [adityasharat](mailto:adityasharat@gmail.com)
 * [thekirankumar](mailto:kiran.kumar@flipkart.com)
