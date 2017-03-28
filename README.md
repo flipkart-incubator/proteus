@@ -145,19 +145,35 @@ The demo app will let you play around with Proteus as well as help you understan
 
 ## Contributing
 
-1. Fork the repo
-2. Apply your changes
-3. Submit your pull request
+### How?
+
+The easiest way to contribute is by [forking the repo](https://help.github.com/articles/fork-a-repo/), making your changes and [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
+
+### What?
+
+* Adding new Views and Attribute Proccessors.
+* Adding new Functions.
+* Adding JavaDoc and Wiki.
+* Writing unit tests.
+* Finding bugs and issues. (submit [here](https://github.com/flipkart-incubator/proteus/issues))
+* Fixing bugs and issues.
+* Implement performance/brenchmarking tools.
 
 ## License
 
 [Apache v2.0](LICENSE)
 
+If you are using proteus check out the [can, cannot and must](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
+
 ## Contributors
+
+You can check out the [contributors](https://github.com/flipkart-incubator/proteus/graphs/contributors), but if you wish to contact us; just drop in a mail.
 
 * [adityasharat](mailto:adityasharat@gmail.com)
 * [thekirankumar](mailto:kiran.kumar@flipkart.com)
 * [yasirmhd](mailto:mohammad.yasir@flipkart.com)
+
+## Plugins
 
 ### One click XML to JSON conversion plugin
 
