@@ -79,7 +79,7 @@ public class DesignModuleAttributeHelper {
             }
         });
 
-        builder.register("view", processors);
+        builder.register("View", processors);
 
     }
 
