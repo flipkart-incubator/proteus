@@ -203,24 +203,24 @@ public abstract class ViewTypeParser<V extends View> {
 
     /**
      * @param parent
+     * @param extras
      * @return
      */
     @NonNull
-    public AttributeSet prepare(@Nullable ViewTypeParser parent) {
+    public AttributeSet prepare(@Nullable ViewTypeParser parent, @Nullable Map<String, AttributeProcessor<V>> extras) {
         this.parent = parent;
+        this.processors = new AttributeProcessor[0];
+        this.attributes = new HashMap<>();
         this.offset = null != parent ? parent.getAttributeSet().getOffset() : 0;
+
         addAttributeProcessors();
+
+        if (extras != null) {
+            addAttributeProcessors(extras);
+        }
+
         this.attributeSet = new AttributeSet(attributes.size() > 0 ? attributes : null, null != parent ? parent.getAttributeSet() : null);
         return attributeSet;
-    }
-
-    /**
-     * @param name
-     * @param processor
-     */
-    public void addAttributeProcessor(String name, AttributeProcessor<V> processor) {
-        addAttributeProcessor(processor);
-        attributes.put(name, new AttributeSet.Attribute(getAttributeId(processors.length - 1), processor));
     }
 
     /**
@@ -238,6 +238,21 @@ public abstract class ViewTypeParser<V extends View> {
     @NonNull
     public AttributeSet getAttributeSet() {
         return this.attributeSet;
+    }
+
+    protected void addAttributeProcessors(@NonNull Map<String, AttributeProcessor<V>> processors) {
+        for (Map.Entry<String, AttributeProcessor<V>> entry : processors.entrySet()) {
+            addAttributeProcessor(entry.getKey(), entry.getValue());
+        }
+    }
+
+    /**
+     * @param name
+     * @param processor
+     */
+    protected void addAttributeProcessor(String name, AttributeProcessor<V> processor) {
+        addAttributeProcessor(processor);
+        attributes.put(name, new AttributeSet.Attribute(getAttributeId(processors.length - 1), processor));
     }
 
     private void addAttributeProcessor(AttributeProcessor<V> handler) {

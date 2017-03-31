@@ -40,6 +40,7 @@ import com.flipkart.android.proteus.parser.custom.ScrollViewParser;
 import com.flipkart.android.proteus.parser.custom.TextViewParser;
 import com.flipkart.android.proteus.parser.custom.ViewGroupParser;
 import com.flipkart.android.proteus.parser.custom.WebViewParser;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -121,6 +122,7 @@ public class ProteusBuilder {
         }
     };
 
+    private Map<String, Map<String, AttributeProcessor>> processors = new LinkedHashMap<>();
     private Map<String, ViewTypeParser> parsers = new LinkedHashMap<>();
     private HashMap<String, Function> formatters = new HashMap<>();
 
@@ -128,7 +130,19 @@ public class ProteusBuilder {
         DEFAULT_MODULE.registerWith(this);
     }
 
-    public ProteusBuilder register(ViewTypeParser parser) {
+    public ProteusBuilder register(@NonNull String type, @NonNull Map<String, AttributeProcessor> processors) {
+        Map<String, AttributeProcessor> map = getExtraAttributeProcessors(type);
+        map.putAll(processors);
+        return this;
+    }
+
+    public ProteusBuilder register(@NonNull String type, @NonNull String name, @NonNull AttributeProcessor processor) {
+        Map<String, AttributeProcessor> map = getExtraAttributeProcessors(type);
+        map.put(name, processor);
+        return this;
+    }
+
+    public ProteusBuilder register(@NonNull ViewTypeParser parser) {
         String parentType = parser.getParentType();
         if (parentType != null && !parsers.containsKey(parentType)) {
             throw new IllegalStateException(parentType + " is not a registered type parser");
@@ -137,12 +151,12 @@ public class ProteusBuilder {
         return this;
     }
 
-    public ProteusBuilder register(Function function) {
+    public ProteusBuilder register(@NonNull Function function) {
         formatters.put(function.getName(), function);
         return this;
     }
 
-    public ProteusBuilder register(Module module) {
+    public ProteusBuilder register(@NonNull Module module) {
         module.registerWith(this);
         return this;
     }
@@ -163,7 +177,19 @@ public class ProteusBuilder {
     protected Proteus.Type prepare(ViewTypeParser parser) {
         String name = parser.getType();
         ViewTypeParser parent = parsers.get(parser.getParentType());
-        return new Proteus.Type(ID, name, parser, parser.prepare(parent));
+        Map<String, AttributeProcessor> extras = this.processors.get(name);
+
+        //noinspection unchecked
+        return new Proteus.Type(ID, name, parser, parser.prepare(parent, extras));
+    }
+
+    protected Map<String, AttributeProcessor> getExtraAttributeProcessors(String type) {
+        Map<String, AttributeProcessor> map = this.processors.get(type);
+        if (map == null) {
+            map = new LinkedHashMap<>();
+            this.processors.put(type, map);
+        }
+        return map;
     }
 
     public interface Module {

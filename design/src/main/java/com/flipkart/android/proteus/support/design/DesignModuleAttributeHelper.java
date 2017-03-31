@@ -27,12 +27,15 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.ProteusConstants;
-import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.parser.ParseHelper;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 /**
@@ -44,37 +47,40 @@ import java.util.HashMap;
 public class DesignModuleAttributeHelper {
 
 
-    public static <V extends View> void register(ViewTypeParser<V> parser) {
+    public static <V extends View> void register(ProteusBuilder builder) {
 
-        parser.addAttributeProcessor("layout_scrollFlags", new StringAttributeProcessor<V>() {
+        Map<String, AttributeProcessor> processors = new LinkedHashMap<>(4);
+
+        processors.put("layout_scrollFlags", new StringAttributeProcessor<V>() {
             @Override
             public void setString(V view, String value) {
                 AppBarLayoutParamsHelper.setLayoutScrollFlags(view, value);
             }
         });
 
-
-        parser.addAttributeProcessor("layout_collapseMode", new StringAttributeProcessor<V>() {
+        processors.put("layout_collapseMode", new StringAttributeProcessor<V>() {
             @Override
             public void setString(V view, String value) {
                 CollapsingToolbarLayoutParamsHelper.setCollapseMode(view, value);
             }
         });
 
-        parser.addAttributeProcessor("layout_parallaxMultiplier", new StringAttributeProcessor<V>() {
+        processors.put("layout_parallaxMultiplier", new StringAttributeProcessor<V>() {
             @Override
             public void setString(V view, String value) {
                 CollapsingToolbarLayoutParamsHelper.setParallaxMultiplier(view, value);
             }
         });
 
-
-        parser.addAttributeProcessor("layout_behavior", new StringAttributeProcessor<V>() {
+        processors.put("layout_behavior", new StringAttributeProcessor<V>() {
             @Override
             public void setString(V view, String value) {
                 CoordinatorLayoutParamsHelper.setLayoutBehavior(view, value);
             }
         });
+
+        builder.register("view", processors);
+
     }
 
     private static class AppBarLayoutParamsHelper {

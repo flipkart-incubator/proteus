@@ -20,7 +20,6 @@
 package com.flipkart.android.proteus.support.design;
 
 import com.flipkart.android.proteus.ProteusBuilder;
-import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.support.design.widget.AppBarLayoutParser;
 import com.flipkart.android.proteus.support.design.widget.BottomNavigationViewParser;
 import com.flipkart.android.proteus.support.design.widget.CollapsingToolbarLayoutParser;
@@ -49,11 +48,7 @@ public class DesignModule implements ProteusBuilder.Module {
         builder.register(new CollapsingToolbarLayoutParser());
         builder.register(new CoordinatorLayoutParser());
         builder.register(new FloatingActionButtonParser());
-
-        ViewTypeParser parser = builder.get("View");
-        if (parser != null) {
-            DesignModuleAttributeHelper.register(parser);
-        }
+        DesignModuleAttributeHelper.register(builder);
     }
 
 }
