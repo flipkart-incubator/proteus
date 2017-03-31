@@ -25,6 +25,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -43,6 +45,9 @@ public class CircleView extends View implements ProteusView {
     private String HEX_COLOR = "#45ba8a";
     private Paint drawPaint;
     private float radius;
+
+    @Nullable
+    private Object extras;
 
     public CircleView(Context context) {
         super(context);
@@ -64,8 +69,19 @@ public class CircleView extends View implements ProteusView {
     }
 
     @Override
-    public void setViewManager(Manager viewManager) {
+    public void setViewManager(@NonNull Manager viewManager) {
         this.viewManager = viewManager;
+    }
+
+    @Override
+    public void setExtras(@Nullable Object extras) {
+        this.extras = extras;
+    }
+
+    @Nullable
+    @Override
+    public Object getExtras() {
+        return extras;
     }
 
     private void init() {
@@ -102,6 +118,7 @@ public class CircleView extends View implements ProteusView {
         }
     }
 
+    @NonNull
     @Override
     public View getAsView() {
         return this;

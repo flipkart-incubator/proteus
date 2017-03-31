@@ -20,6 +20,8 @@
 package com.flipkart.android.proteus.view;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -31,6 +33,9 @@ import com.flipkart.android.proteus.ProteusView;
  * @author aditya.sharat
  */
 public class ProteusFixedRatingBar extends com.flipkart.android.proteus.view.custom.FixedRatingBar implements ProteusView {
+
+    @Nullable
+    private Object extras;
 
     private Manager viewManager;
 
@@ -52,10 +57,22 @@ public class ProteusFixedRatingBar extends com.flipkart.android.proteus.view.cus
     }
 
     @Override
-    public void setViewManager(Manager manager) {
+    public void setViewManager(@NonNull Manager manager) {
         this.viewManager = manager;
     }
 
+    @Override
+    public void setExtras(@Nullable Object extras) {
+        this.extras = extras;
+    }
+
+    @Nullable
+    @Override
+    public Object getExtras() {
+        return extras;
+    }
+
+    @NonNull
     @Override
     public View getAsView() {
         return this;

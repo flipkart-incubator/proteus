@@ -19,6 +19,8 @@
 
 package com.flipkart.android.proteus.support.design.widget;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.view.View;
 
@@ -35,6 +37,9 @@ public class ProteusAppBarLayout extends AppBarLayout implements ProteusView {
 
     private Manager manager;
 
+    @Nullable
+    private Object extras;
+
     public ProteusAppBarLayout(ProteusContext context) {
         super(context);
     }
@@ -45,10 +50,22 @@ public class ProteusAppBarLayout extends AppBarLayout implements ProteusView {
     }
 
     @Override
-    public void setViewManager(Manager manager) {
+    public void setViewManager(@NonNull Manager manager) {
         this.manager = manager;
     }
 
+    @Override
+    public void setExtras(@Nullable Object extras) {
+        this.extras = extras;
+    }
+
+    @Nullable
+    @Override
+    public Object getExtras() {
+        return extras;
+    }
+
+    @NonNull
     @Override
     public View getAsView() {
         return this;

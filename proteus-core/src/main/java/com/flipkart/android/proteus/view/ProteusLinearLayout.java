@@ -22,6 +22,8 @@ package com.flipkart.android.proteus.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -35,6 +37,9 @@ import com.flipkart.android.proteus.ProteusView;
 public class ProteusLinearLayout extends android.widget.LinearLayout implements ProteusView {
 
     private Manager viewManager;
+
+    @Nullable
+    private Object extras;
 
     public ProteusLinearLayout(Context context) {
         super(context);
@@ -59,10 +64,22 @@ public class ProteusLinearLayout extends android.widget.LinearLayout implements 
     }
 
     @Override
-    public void setViewManager(Manager manager) {
+    public void setViewManager(@NonNull Manager manager) {
         this.viewManager = manager;
     }
 
+    @Override
+    public void setExtras(@Nullable Object extras) {
+        this.extras = extras;
+    }
+
+    @Nullable
+    @Override
+    public Object getExtras() {
+        return extras;
+    }
+
+    @NonNull
     @Override
     public View getAsView() {
         return this;

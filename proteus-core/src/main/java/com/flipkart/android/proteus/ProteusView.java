@@ -31,10 +31,36 @@ import com.flipkart.android.proteus.value.ObjectValue;
  */
 public interface ProteusView {
 
+    /**
+     *
+     * @return
+     */
     Manager getViewManager();
 
-    void setViewManager(Manager manager);
+    /**
+     *
+     * @param manager
+     */
+    void setViewManager(@NonNull Manager manager);
 
+    /**
+     *
+     * @param extras
+     */
+    void setExtras(@Nullable Object extras);
+
+    /**
+     *
+     * @return
+     */
+    @Nullable
+    Object getExtras();
+
+    /**
+     *
+     * @return
+     */
+    @NonNull
     View getAsView();
 
     /**
