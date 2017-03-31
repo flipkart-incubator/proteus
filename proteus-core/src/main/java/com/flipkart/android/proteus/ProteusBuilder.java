@@ -42,6 +42,7 @@ import com.flipkart.android.proteus.parser.custom.ViewGroupParser;
 import com.flipkart.android.proteus.parser.custom.WebViewParser;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -120,7 +121,7 @@ public class ProteusBuilder {
         }
     };
 
-    private Map<String, Proteus.Type> types = new HashMap<>();
+    private Map<String, ViewTypeParser> parsers = new LinkedHashMap<>();
     private HashMap<String, Function> formatters = new HashMap<>();
 
     public ProteusBuilder() {
@@ -129,16 +130,10 @@ public class ProteusBuilder {
 
     public ProteusBuilder register(ViewTypeParser parser) {
         String parentType = parser.getParentType();
-        ViewTypeParser parentParser = null;
-        if (null != parentType) {
-            Proteus.Type p = types.get(parentType);
-            if (null == p) {
-                throw new IllegalStateException(parentType + " is not a registered type parser");
-            }
-            parentParser = p.parser;
+        if (parentType != null && !parsers.containsKey(parentType)) {
+            throw new IllegalStateException(parentType + " is not a registered type parser");
         }
-        Proteus.Type t = new Proteus.Type(ID, parser.getType(), parser, parser.prepare(parentParser));
-        types.put(parser.getType(), t);
+        parsers.put(parser.getType(), parser);
         return this;
     }
 
@@ -153,12 +148,22 @@ public class ProteusBuilder {
     }
 
     @Nullable
-    public Proteus.Type get(@NonNull String type) {
-        return types.get(type);
+    public ViewTypeParser get(@NonNull String type) {
+        return parsers.get(type);
     }
 
     public Proteus build() {
+        Map<String, Proteus.Type> types = new HashMap<>();
+        for (Map.Entry<String, ViewTypeParser> entry : parsers.entrySet()) {
+            types.put(entry.getKey(), prepare(entry.getValue()));
+        }
         return new Proteus(types, formatters);
+    }
+
+    protected Proteus.Type prepare(ViewTypeParser parser) {
+        String name = parser.getType();
+        ViewTypeParser parent = parsers.get(parser.getParentType());
+        return new Proteus.Type(ID, name, parser, parser.prepare(parent));
     }
 
     public interface Module {
