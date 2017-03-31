@@ -53,7 +53,7 @@ public abstract class ViewTypeParser<V extends View> {
 
     private Map<String, AttributeSet.Attribute> attributes = new HashMap<>();
 
-    private int offset;
+    private int offset = 0;
 
     private AttributeSet attributeSet;
 
@@ -104,7 +104,6 @@ public abstract class ViewTypeParser<V extends View> {
     }
 
     /**
-     *
      * @param context
      * @param layout
      * @param data
@@ -209,8 +208,6 @@ public abstract class ViewTypeParser<V extends View> {
     @NonNull
     public AttributeSet prepare(@Nullable ViewTypeParser parent) {
         this.parent = parent;
-        this.processors = new AttributeProcessor[0];
-        this.attributes = new HashMap<>();
         this.offset = null != parent ? parent.getAttributeSet().getOffset() : 0;
         addAttributeProcessors();
         this.attributeSet = new AttributeSet(attributes.size() > 0 ? attributes : null, null != parent ? parent.getAttributeSet() : null);
@@ -330,9 +327,11 @@ public abstract class ViewTypeParser<V extends View> {
         public static class Attribute {
 
             public final int id;
+
+            @NonNull
             public final AttributeProcessor processor;
 
-            public Attribute(int id, AttributeProcessor processor) {
+            private Attribute(int id, @NonNull AttributeProcessor processor) {
                 this.processor = processor;
                 this.id = id;
             }
