@@ -112,7 +112,7 @@
                         "children": [
                           {
                             "type": "solid",
-                            "color": "~@{theme.color}"
+                            "color": "@{theme.color}"
                           }
                         ]
                       },
