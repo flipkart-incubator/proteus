@@ -64,7 +64,7 @@ dependencies {
 Instead of writing layouts in `XML`, in **proteus** layouts are described in `JSON`, which can be used to inflate native Android UI at runtime. The `JSON` layouts can be hosted anywhere (on the device, on servers, etc.).
 
 
-The [**Layout**](https://github.com/flipkart-incubator/proteus/wiki/Layouts) defines the the view heirarchy, just like XML. 
+The [**Layout**](https://github.com/flipkart-incubator/proteus/wiki/Layouts) defines the the view heirarchy, just like XML.
 
 The [**Data**](https://github.com/flipkart-incubator/proteus/wiki/Data) (optional) defines [data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings). These data bindings are similar to Android's [Data Binding](https://developer.android.com/topic/libraries/data-binding/index.html) library.
 
@@ -72,7 +72,7 @@ Give the `layout` and `data` to `ProteusLayoutInflater` and get back a native vi
 
 Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp) to see it in action.
 
-#### Some sample layout
+#### Sample layout
 
 ```javascript
 {
@@ -94,7 +94,7 @@ Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ
 }
 ```
 
-#### Some sample data
+#### Sample data
 
 ```javascript
 {
@@ -114,9 +114,9 @@ ProteusView view = proteusLayoutInflater.inflate(<layout>, <data>);
 container.addView(view.getAsView());
 ```
 
-#### Sample screenshot
+#### Output
 
-<img src="/assets/example-full.png" width="300px"/>
+<img src="/assets/example-small.png" width="360px"/>
 
 
 ### Setting up the Demo App
