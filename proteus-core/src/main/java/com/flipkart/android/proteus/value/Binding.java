@@ -288,11 +288,7 @@ public abstract class Binding extends Value {
         @NonNull
         @Override
         public String toString() {
-            /*String context = "@{" + Utils.join(arguments, ".") + "}";
-            String functions = "";
-            functions = "${" + function.getName() + "(" + Utils.join(arguments, ",", Utils.STYLE_SINGLE) + ")}";*/
-
-            return "crap";
+            return String.format("@{fn:%s(%s)}", function.getName(), Utils.join(arguments, ",", Utils.STYLE_SINGLE));
         }
     }
 }

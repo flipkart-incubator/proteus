@@ -26,7 +26,6 @@ import android.view.View;
 
 import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.value.AttributeResource;
-import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
@@ -43,7 +42,11 @@ public abstract class StringAttributeProcessor<V extends View> extends Attribute
      */
     @Override
     public void handleValue(V view, Value value) {
-        setString(view, value.getAsString());
+        if (value.isPrimitive() || value.isNull()) {
+            setString(view, value.getAsString());
+        } else {
+            setString(view, "[Object]");
+        }
     }
 
     @Override
