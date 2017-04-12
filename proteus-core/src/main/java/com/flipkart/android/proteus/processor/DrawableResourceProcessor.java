@@ -62,7 +62,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
         if (value.isDrawable()) {
             return value;
         } else if (value.isPrimitive()) {
-            Value precompiled = AttributeProcessor.staticPrecompile(value.getAsPrimitive(), context, null);
+            Value precompiled = AttributeProcessor.staticPreCompile(value.getAsPrimitive(), context, null);
             if (null != precompiled) {
                 return precompiled;
             }

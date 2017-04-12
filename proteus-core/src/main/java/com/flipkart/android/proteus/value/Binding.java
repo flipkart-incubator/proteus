@@ -244,7 +244,7 @@ public abstract class Binding extends Value {
                     token = token.substring(1, token.length() - 1);
                     resolved = new Primitive(token);
                 } else {
-                    resolved = AttributeProcessor.staticPrecompile(new Primitive(token), context, manager);
+                    resolved = AttributeProcessor.staticPreCompile(new Primitive(token), context, manager);
                 }
                 arguments[i] = resolved != null ? resolved : new Primitive(token);
             }

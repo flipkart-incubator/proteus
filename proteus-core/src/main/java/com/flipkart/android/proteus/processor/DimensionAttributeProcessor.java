@@ -62,7 +62,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
         if (value.isDimension()) {
             return value;
         }
-        Value precompiled = AttributeProcessor.staticPrecompile(value.getAsPrimitive(), context, null);
+        Value precompiled = AttributeProcessor.staticPreCompile(value.getAsPrimitive(), context, null);
         if (null != precompiled) {
             return precompiled;
         }
