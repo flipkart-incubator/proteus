@@ -30,7 +30,7 @@ import com.flipkart.android.proteus.value.ObjectValue;
  * ProteusView
  * <p>
  * This interface is just to add behaviour to Android views
- * so they can host the Proteus View Managers. Since Java < JDK 8
+ * so they can host the Proteus View Managers. Since Java &lt; JDK 8
  * do not have default implementations for interfaces all Views
  * which need to be inflated via proteus need to implement this
  * interface.
