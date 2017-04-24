@@ -159,11 +159,12 @@
         "type": "TextView",
         "layout_width": "wrap_content",
         "layout_height": "wrap_content",
-        "textSize": "18sp",
+        "textSize": "14sp",
         "data": {
-          "date": "@{fn:date(@{sec.ll}, 'E, d MMM')}"
+          "date": "@{fn:date(@{sec.ll},'E, d MMM')}",
+          "loc": "@{sec.loc}"
         },
-        "text": "@{fn:format('last login: %s from %s', @{date}, @{sec.loc})}",
+        "text": "@{fn:format('last login: %s from %s',@{date},@{loc})}",
         "style": "blue"
       }]
     }]

@@ -76,8 +76,6 @@ public class DataContext {
             out.add(key, resolved);
         }
 
-        Utils.addAllEntries(out, in);
-
         if (data.getData() == null) {
             data.setData(new ObjectValue());
         } else {
