@@ -22,7 +22,6 @@ package com.flipkart.android.proteus;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
-import com.flipkart.android.proteus.toolbox.Utils;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
 

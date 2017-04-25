@@ -113,6 +113,18 @@ public class Array extends Value {
     }
 
     /**
+     * Adds the specified value to self.
+     *
+     * @param value the value that needs to be added to the array.
+     */
+    public void add(int position, @Nullable Value value) {
+        if (value == null) {
+            value = Null.INSTANCE;
+        }
+        values.add(position, value);
+    }
+
+    /**
      * Adds all the values of the specified array to self.
      *
      * @param array the array whose values need to be added to the array.

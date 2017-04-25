@@ -57,8 +57,12 @@ public abstract class Binding extends Value {
 
     public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{fn:(\\S+?)\\(((?:(?<!\\\\)'.*?(?<!\\\\)'|.?)+)\\)\\}|@\\{(.+)\\}");
     public static final Pattern FUNCTION_ARGS_DELIMITER = Pattern.compile(",(?=(?:[^']*'[^']*')*[^']*$)");
-    public static final String DATA_PATH_DELIMITERS = ".[]";
-    public static final String SIMPLE_DATA_PATH_DELIMITER = ".";
+
+    public static final String DATA_PATH_DELIMITERS = ".]";
+
+    public static final char DELIMITER_OBJECT = '.';
+    public static final char DELIMITER_ARRAY_OPENING = '[';
+    public static final char DELIMITER_ARRAY_CLOSING = ']';
 
     /**
      * @param value
@@ -100,9 +104,9 @@ public abstract class Binding extends Value {
         private static final LruCache<String, DataBinding> DATA_BINDING_CACHE = new LruCache<>(64);
 
         @NonNull
-        private final String[] tokens;
+        private final Token[] tokens;
 
-        private DataBinding(@NonNull String[] tokens) {
+        private DataBinding(@NonNull Token[] tokens) {
             this.tokens = tokens;
         }
 
@@ -110,11 +114,24 @@ public abstract class Binding extends Value {
         public static DataBinding valueOf(@NonNull String path) {
             DataBinding binding = DATA_BINDING_CACHE.get(path);
             if (null == binding) {
-                StringTokenizer tokenizer = new StringTokenizer(path, DATA_PATH_DELIMITERS);
-                String[] tokens = new String[0];
+                StringTokenizer tokenizer = new StringTokenizer(path, DATA_PATH_DELIMITERS, true);
+                Token[] tokens = new Token[0];
+                String token;
+                char first;
+                int length;
                 while (tokenizer.hasMoreTokens()) {
+                    token = tokenizer.nextToken();
+                    length = token.length();
+                    first = token.charAt(0);
+                    if (length == 1 && first == DELIMITER_OBJECT) {
+                        continue;
+                    }
+                    if (length == 1 && first == DELIMITER_ARRAY_CLOSING) {
+                        tokens = correctPreviousToken(tokens);
+                        continue;
+                    }
                     tokens = Arrays.copyOf(tokens, tokens.length + 1);
-                    tokens[tokens.length - 1] = tokenizer.nextToken();
+                    tokens[tokens.length - 1] = new Token(token, false, false);
                 }
                 binding = new DataBinding(tokens);
                 DATA_BINDING_CACHE.put(path, binding);
@@ -122,9 +139,143 @@ public abstract class Binding extends Value {
             return binding;
         }
 
-        private static Result resolve(String[] tokens, Value data, int index) {
+        private static void assign(Token[] tokens, @NonNull Value value, @NonNull Value data, int dataIndex) {
+            Value current = data;
+            Token token;
+            int index = dataIndex;
+
+            for (int i = 0; i < tokens.length - 1; i++) {
+                token = tokens[i];
+                if (token.isArrayIndex) {
+                    try {
+                        index = getArrayIndex(token.value, dataIndex);
+                    } catch (NumberFormatException e) {
+                        return;
+                    }
+                    current = getArrayItem(current.getAsArray(), index, token.isArray);
+                } else if (token.isArray) {
+                    current = getArray(current, token.value, index);
+                } else {
+                    current = getObject(current, token, index);
+                }
+            }
+
+            token = tokens[tokens.length - 1];
+
+            if (token.isArrayIndex) {
+                try {
+                    index = getArrayIndex(token.value, dataIndex);
+                } catch (NumberFormatException e) {
+                    return;
+                }
+                getArrayItem(current.getAsArray(), index, false);
+                current.getAsArray().remove(index);
+                current.getAsArray().add(index, value);
+            } else {
+                current.getAsObject().add(token.value, value);
+            }
+        }
+
+        @NonNull
+        private static Value getObject(Value parent, Token token, int index) {
+            Value temp;
+            ObjectValue object;
+            if (parent.isArray()) {
+                temp = parent.getAsArray().get(index);
+                if (temp != null && temp.isObject()) {
+                    object = temp.getAsObject();
+                } else {
+                    object = new ObjectValue();
+                    parent.getAsArray().remove(index);
+                    parent.getAsArray().add(index, object);
+                }
+            } else {
+                temp = parent.getAsObject().get(token.value);
+                if (temp != null && temp.isObject()) {
+                    object = temp.getAsObject();
+                } else {
+                    object = new ObjectValue();
+                    parent.getAsObject().add(token.value, object);
+                }
+
+            }
+            return object;
+        }
+
+        @NonNull
+        private static Array getArray(Value parent, String token, int index) {
+            Value temp;
+            Array array;
+            if (parent.isArray()) {
+                temp = parent.getAsArray().get(index);
+                if (temp != null && temp.isArray()) {
+                    array = temp.getAsArray();
+                } else {
+                    array = new Array();
+                    parent.getAsArray().remove(index);
+                    parent.getAsArray().add(index, array);
+                }
+            } else {
+                temp = parent.getAsObject().get(token);
+                if (temp != null && temp.isArray()) {
+                    array = temp.getAsArray();
+                } else {
+                    array = new Array();
+                    parent.getAsObject().add(token, array);
+                }
+            }
+            return array;
+        }
+
+        @NonNull
+        private static Value getArrayItem(Array array, int index, boolean isArray) {
+            if (index >= array.size()) {
+                while (array.size() < index) {
+                    array.add(Null.INSTANCE);
+                }
+                if (isArray) {
+                    array.add(new Array());
+                } else {
+                    array.add(new ObjectValue());
+                }
+            }
+            return array.get(index);
+        }
+
+        private static int getArrayIndex(@NonNull String token, int dataIndex) throws NumberFormatException {
+            int index;
+            if (INDEX.equals(token)) {
+                index = dataIndex;
+            } else {
+                index = Integer.parseInt(token);
+            }
+            return index;
+        }
+
+        @NonNull
+        private static Token[] correctPreviousToken(Token[] tokens) {
+            Token previous = tokens[tokens.length - 1];
+            int index = previous.value.indexOf(DELIMITER_ARRAY_OPENING);
+            String prefix = previous.value.substring(0, index);
+            String suffix = previous.value.substring(index + 1, previous.value.length());
+
+            if (prefix.equals(ProteusConstants.EMPTY)) {
+                Token token = tokens[tokens.length - 1];
+                tokens[tokens.length - 1] = new Token(token.value, true, false);
+            } else {
+                tokens[tokens.length - 1] = new Token(prefix, true, false);
+            }
+
+            tokens = Arrays.copyOf(tokens, tokens.length + 1);
+            tokens[tokens.length - 1] = new Token(suffix, false, true);
+
+            return tokens;
+        }
+
+        @NonNull
+        private static Result resolve(Token[] tokens, Value data, int index) {
             // replace INDEX with index value
-            if (tokens.length == 1 && INDEX.equals(tokens[0])) {
+            if (tokens.length == 1 && INDEX.equals(tokens[0].value)) {
                 return Result.success(new Primitive(String.valueOf(index)));
             } else {
                 Value elementToReturn = data;
@@ -132,7 +283,7 @@ public abstract class Binding extends Value {
                 Array tempArray;
 
                 for (int i = 0; i < tokens.length; i++) {
-                    String segment = tokens[i];
+                    String segment = tokens[i].value;
                     if (elementToReturn == null) {
                         return Result.NO_SUCH_DATA_PATH_EXCEPTION;
                     }
@@ -190,10 +341,6 @@ public abstract class Binding extends Value {
             }
         }
 
-        public Iterator<String> getTokens() {
-            return new SimpleArrayIterator<>(this.tokens);
-        }
-
         @Override
         public Value copy() {
             return this;
@@ -214,8 +361,16 @@ public abstract class Binding extends Value {
             return new StringBuilder()
                     .append(BINDING_PREFIX_0)
                     .append(BINDING_PREFIX_1)
-                    .append(Utils.join(tokens, SIMPLE_DATA_PATH_DELIMITER))
+                    .append(Utils.join(Token.getValues(tokens), String.valueOf(DELIMITER_OBJECT)))
                     .append(BINDING_SUFFIX).toString();
+        }
+
+        public Iterator<Token> getTokens() {
+            return new SimpleArrayIterator<>(this.tokens);
+        }
+
+        public void assign(Value value, Value data, int index) {
+            assign(tokens, value, data, index);
         }
     }
 
@@ -289,6 +444,32 @@ public abstract class Binding extends Value {
         @Override
         public String toString() {
             return String.format("@{fn:%s(%s)}", function.getName(), Utils.join(arguments, ",", Utils.STYLE_SINGLE));
+        }
+    }
+
+    public static class Token {
+
+        @NonNull
+        public final String value;
+
+        public final boolean isArray;
+
+        public final boolean isArrayIndex;
+
+        public final boolean isBinding = false;
+
+        public Token(@NonNull String value, boolean isArray, boolean isArrayIndex) {
+            this.value = value;
+            this.isArray = isArray;
+            this.isArrayIndex = isArrayIndex;
+        }
+
+        public static String[] getValues(Token[] tokens) {
+            String[] values = new String[tokens.length];
+            for (int i = 0; i < tokens.length; i++) {
+                values[i] = tokens[i].value;
+            }
+            return values;
         }
     }
 }
