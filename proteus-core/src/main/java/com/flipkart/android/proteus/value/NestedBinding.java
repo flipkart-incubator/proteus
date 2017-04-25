@@ -64,7 +64,7 @@ public class NestedBinding extends Binding {
     @NonNull
     @Override
     public String toString() {
-        throw new UnsupportedOperationException(NestedBinding.class.getName() + " does not support toString()");
+        return getClass().getName() + "@" + Integer.toHexString(hashCode());
     }
 
     private Value evaluate(Context context, Binding binding, Value data, int index) {

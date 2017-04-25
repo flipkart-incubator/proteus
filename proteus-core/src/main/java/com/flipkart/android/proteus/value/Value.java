@@ -24,7 +24,6 @@ package com.flipkart.android.proteus.value;
  *
  * @author aditya.sharat
  */
-
 public abstract class Value {
 
     /**
@@ -348,8 +347,4 @@ public abstract class Value {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
-    @Override
-    public String toString() {
-        throw new UnsupportedOperationException(getClass().getName() + " has not implemented the toString() method");
-    }
 }

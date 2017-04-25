@@ -297,11 +297,6 @@ public abstract class Color extends Value {
             ColorStateList colors = new ColorStateList(states, this.colors);
             return Result.colors(colors);
         }
-
-        @Override
-        public String toString() {
-            return super.toString();
-        }
     }
 
     public static class Result {
