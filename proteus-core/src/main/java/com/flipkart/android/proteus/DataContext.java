@@ -20,12 +20,12 @@
 package com.flipkart.android.proteus;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -33,57 +33,74 @@ import java.util.Map;
  */
 public class DataContext {
 
-    private final boolean isClone;
-    private ObjectValue data;
-    @Nullable
-    private Map<String, Value> scope;
-    private int index;
+    private final boolean hasOwnProperties;
 
-    public DataContext() {
-        this.data = new ObjectValue();
-        this.scope = new HashMap<>();
-        this.index = -1;
-        this.isClone = false;
+    @Nullable
+    private final Map<String, Value> scope;
+
+    private final int index;
+
+    private ObjectValue data;
+
+    private DataContext(@Nullable Map<String, Value> scope, int index) {
+        this.scope = scope;
+        this.index = index;
+        this.hasOwnProperties = scope != null;
     }
 
     public DataContext(DataContext dataContext) {
         this.data = dataContext.getData();
         this.scope = dataContext.getScope();
         this.index = dataContext.getIndex();
-        this.isClone = true;
+        this.hasOwnProperties = false;
     }
 
-    public static DataContext updateDataContext(Context context, DataContext data, ObjectValue in, Map<String, Value> scope, int dataIndex) {
+    public static DataContext create(@NonNull Context context, @Nullable ObjectValue data, int dataIndex) {
+        DataContext dataContext = new DataContext(null, dataIndex);
+        dataContext.update(context, data);
+        return dataContext;
+    }
 
-        ObjectValue out = new ObjectValue();
+    public static DataContext create(@NonNull Context context, @Nullable ObjectValue data,
+                                     int dataIndex, @Nullable Map<String, Value> scope) {
+        DataContext dataContext = new DataContext(scope, dataIndex);
+        dataContext.update(context, data);
+        return dataContext;
+    }
 
-        data.setIndex(dataIndex);
-
+    public void update(@NonNull Context context, @Nullable ObjectValue in) {
         if (in == null) {
             in = new ObjectValue();
         }
+
+        if (scope == null) {
+            data = in;
+            return;
+        }
+
+        ObjectValue out = new ObjectValue();
 
         for (Map.Entry<String, Value> entry : scope.entrySet()) {
             String key = entry.getKey();
             Value value = entry.getValue();
             Value resolved;
             if (value.isBinding()) {
-                resolved = value.getAsBinding().evaluate(context, in, dataIndex);
+                resolved = value.getAsBinding().evaluate(context, in, index);
             } else {
                 resolved = value;
             }
             out.add(key, resolved);
         }
 
-        if (data.getData() == null) {
-            data.setData(new ObjectValue());
-        } else {
-            data.setData(out);
-        }
+        data = out;
+    }
 
-        data.setScope(scope);
+    public DataContext createChild(@NonNull Context context, @NonNull Map<String, Value> scope, int dataIndex) {
+        return create(context, data, dataIndex, scope);
+    }
 
-        return data;
+    public DataContext copy() {
+        return new DataContext(this);
     }
 
     public ObjectValue getData() {
@@ -99,27 +116,11 @@ public class DataContext {
         return scope;
     }
 
-    public void setScope(@Nullable Map<String, Value> scope) {
-        this.scope = scope;
-    }
-
-    public boolean isClone() {
-        return isClone;
+    public boolean hasOwnProperties() {
+        return hasOwnProperties;
     }
 
     public int getIndex() {
         return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public DataContext createChildScope(Context context, Map<String, Value> scope, int dataIndex) {
-        return updateDataContext(context, new DataContext(), data, scope, dataIndex);
-    }
-
-    public void updateDataContext(Context context, ObjectValue data) {
-        updateDataContext(context, this, data, scope, index);
     }
 }

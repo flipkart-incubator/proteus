@@ -33,7 +33,7 @@ import com.flipkart.android.proteus.value.Value;
 /**
  * TweenAnimationResourceProcessor
  * <p>
- * TODO: implement precompiling animation blocks
+ * TODO: implement pre compiling animation blocks
  * </p>
  *
  * @author yasirmhd

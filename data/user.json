@@ -22,7 +22,8 @@
       "gamma",
       "delta",
       "niner"
-    ]
+    ],
+    "type": null
   },
   "theme": {
     "color": "#88ee99"

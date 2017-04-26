@@ -53,7 +53,6 @@ import java.util.Map;
 
 /**
  * DrawableValue
- * TODO: the layer and state parser need to be moved here from the {@link ParseHelper}
  *
  * @author aditya.sharat
  */

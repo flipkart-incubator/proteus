@@ -166,6 +166,13 @@
         },
         "text": "@{fn:format('last login: %s from %s',@{date},@{loc})}",
         "style": "blue"
+      }, {
+        "type": "TextView",
+        "layout_width": "wrap_content",
+        "layout_height": "wrap_content",
+        "textSize": "14sp",
+        "text": "@{user.type}",
+        "visibility": "@{fn:ternary(@{user.type}, 'visible', 'gone')}"
       }]
     }]
   },

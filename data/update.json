@@ -21,7 +21,8 @@
       "meenie",
       "miney",
       "mo"
-    ]
+    ],
+    "type": "PAID"
   },
   "theme": {
     "color": "#ee8899"

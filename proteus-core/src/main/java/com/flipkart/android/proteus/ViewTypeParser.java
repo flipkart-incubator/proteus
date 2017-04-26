@@ -122,20 +122,16 @@ public abstract class ViewTypeParser<V extends View> {
         }
 
         if (map == null) {
-            if (parentDataContext != null) {
-                dataContext = new DataContext(parentDataContext);
+            if (parentDataContext == null) {
+                dataContext = DataContext.create(context, data, dataIndex);
             } else {
-                dataContext = new DataContext();
-                dataContext.setData(data);
-                dataContext.setIndex(dataIndex);
+                dataContext = parentDataContext.copy();
             }
         } else {
-            if (parentDataContext != null) {
-                dataContext = parentDataContext.createChildScope(context, map, dataIndex);
+            if (parentDataContext == null) {
+                dataContext = DataContext.create(context, data, dataIndex, map);
             } else {
-                dataContext = new DataContext();
-                dataContext.setData(data);
-                dataContext = dataContext.createChildScope(context, map, dataIndex);
+                dataContext = parentDataContext.createChild(context, map, dataIndex);
             }
         }
         return dataContext;
