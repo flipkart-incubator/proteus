@@ -431,7 +431,7 @@ public abstract class Binding extends Value {
         public Value evaluate(Context context, Value data, int index) {
             Value[] arguments = resolve(context, this.arguments, data, index);
             try {
-                return this.function.call(data, index, arguments);
+                return this.function.call(context, data, index, arguments);
             } catch (Exception e) {
                 if (ProteusConstants.isLoggingEnabled()) {
                     Log.e(Utils.LIB_NAME, e.getMessage(), e);
