@@ -436,7 +436,7 @@ public abstract class Binding extends Value {
                 if (ProteusConstants.isLoggingEnabled()) {
                     Log.e(Utils.LIB_NAME, e.getMessage(), e);
                 }
-                return data;
+                return Null.INSTANCE;
             }
         }
 

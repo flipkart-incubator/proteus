@@ -23,6 +23,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.flipkart.android.proteus.value.Null;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
 
@@ -85,7 +86,10 @@ public class DataContext {
             Value value = entry.getValue();
             Value resolved;
             if (value.isBinding()) {
-                resolved = value.getAsBinding().evaluate(context, in, index);
+                resolved = value.getAsBinding().evaluate(context, out, index);
+                if (resolved == Null.INSTANCE) {
+                    resolved = value.getAsBinding().evaluate(context, in, index);
+                }
             } else {
                 resolved = value;
             }
