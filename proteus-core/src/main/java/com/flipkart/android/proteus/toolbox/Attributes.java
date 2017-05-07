@@ -27,6 +27,7 @@ public class Attributes {
 
     public static class View {
         public static final String Above = "layout_above";
+        public static final String Activated = "activated";
         public static final String AlignBaseline = "layout_alignBaseline";
         public static final String AlignBottom = "layout_alignBottom";
         public static final String AlignEnd = "layout_alignEnd";
@@ -110,6 +111,7 @@ public class Attributes {
         public static final String ScrollbarFadeDuration = "scrollbarFadeDuration";
         public static final String ScrollbarSize = "scrollbarSize";
         public static final String ScrollbarStyle = "scrollbarStyle";
+        public static final String Selected = "selected";
         public static final String SoundEffectsEnabled = "soundEffectsEnabled";
         public static final String Style = "style";
         public static final String Tag = "tag";

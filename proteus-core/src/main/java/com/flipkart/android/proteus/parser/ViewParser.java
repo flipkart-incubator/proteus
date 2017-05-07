@@ -93,6 +93,13 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
     @Override
     protected void addAttributeProcessors() {
 
+        addAttributeProcessor(Attributes.View.Activated, new BooleanAttributeProcessor<V>() {
+            @Override
+            public void setBoolean(V view, boolean value) {
+                view.setActivated(value);
+            }
+        });
+
         addAttributeProcessor(Attributes.View.OnClick, new EventProcessor<V>() {
             @Override
             public void setOnEventListener(final V view, final Value value) {
@@ -104,6 +111,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 });
             }
         });
+
         addAttributeProcessor(Attributes.View.OnLongClick, new EventProcessor<V>() {
             @Override
             public void setOnEventListener(final V view, final Value value) {
@@ -116,6 +124,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 });
             }
         });
+
         addAttributeProcessor(Attributes.View.OnTouch, new EventProcessor<V>() {
             @Override
             public void setOnEventListener(final V view, final Value value) {
@@ -128,6 +137,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 });
             }
         });
+
         addAttributeProcessor(Attributes.View.Background, new DrawableResourceProcessor<V>() {
             @Override
             public void setDrawable(V view, Drawable drawable) {
@@ -139,6 +149,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 }
             }
         });
+
         addAttributeProcessor(Attributes.View.Height, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
@@ -149,6 +160,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 }
             }
         });
+
         addAttributeProcessor(Attributes.View.Width, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
@@ -174,6 +186,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 }
             }
         });
+
         addAttributeProcessor(Attributes.View.LayoutGravity, new GravityAttributeProcessor<V>() {
             @Override
             public void setGravity(V view, @Gravity int gravity) {
@@ -194,36 +207,42 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 }
             }
         });
+
         addAttributeProcessor(Attributes.View.Padding, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
                 view.setPadding((int) dimension, (int) dimension, (int) dimension, (int) dimension);
             }
         });
+
         addAttributeProcessor(Attributes.View.PaddingLeft, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
                 view.setPadding((int) dimension, view.getPaddingTop(), view.getPaddingRight(), view.getPaddingBottom());
             }
         });
+
         addAttributeProcessor(Attributes.View.PaddingTop, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
                 view.setPadding(view.getPaddingLeft(), (int) dimension, view.getPaddingRight(), view.getPaddingBottom());
             }
         });
+
         addAttributeProcessor(Attributes.View.PaddingRight, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), (int) dimension, view.getPaddingBottom());
             }
         });
+
         addAttributeProcessor(Attributes.View.PaddingBottom, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
                 view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(), (int) dimension);
             }
         });
+
         addAttributeProcessor(Attributes.View.Margin, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
@@ -239,6 +258,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 }
             }
         });
+
         addAttributeProcessor(Attributes.View.MarginLeft, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
@@ -254,6 +274,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 }
             }
         });
+
         addAttributeProcessor(Attributes.View.MarginTop, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
@@ -269,6 +290,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 }
             }
         });
+
         addAttributeProcessor(Attributes.View.MarginRight, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
@@ -284,6 +306,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 }
             }
         });
+
         addAttributeProcessor(Attributes.View.MarginBottom, new DimensionAttributeProcessor<V>() {
             @Override
             public void setDimension(V view, float dimension) {
@@ -322,12 +345,14 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 }
             }
         });
+
         addAttributeProcessor(Attributes.View.Alpha, new StringAttributeProcessor<V>() {
             @Override
             public void setString(V view, String value) {
                 view.setAlpha(ParseHelper.parseFloat(value));
             }
         });
+
         addAttributeProcessor(Attributes.View.Visibility, new AttributeProcessor<V>() {
             @Override
             public void handleValue(V view, Value value) {
@@ -366,6 +391,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 return ParseHelper.getVisibility(visibility);
             }
         });
+
         addAttributeProcessor(Attributes.View.Id, new StringAttributeProcessor<V>() {
             @Override
             public void setString(final V view, String value) {
@@ -402,28 +428,39 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                 }
             }
         });
+
         addAttributeProcessor(Attributes.View.ContentDescription, new StringAttributeProcessor<V>() {
             @Override
             public void setString(V view, String value) {
                 view.setContentDescription(value);
             }
         });
+
         addAttributeProcessor(Attributes.View.Clickable, new BooleanAttributeProcessor<V>() {
             @Override
             public void setBoolean(V view, boolean value) {
                 view.setClickable(value);
             }
         });
+
         addAttributeProcessor(Attributes.View.Tag, new StringAttributeProcessor<V>() {
             @Override
             public void setString(V view, String value) {
                 view.setTag(value);
             }
         });
+
         addAttributeProcessor(Attributes.View.Enabled, new BooleanAttributeProcessor<V>() {
             @Override
             public void setBoolean(V view, boolean value) {
                 view.setEnabled(value);
+            }
+        });
+
+        addAttributeProcessor(Attributes.View.Selected, new BooleanAttributeProcessor<V>() {
+            @Override
+            public void setBoolean(V view, boolean value) {
+                view.setSelected(value);
             }
         });
 
