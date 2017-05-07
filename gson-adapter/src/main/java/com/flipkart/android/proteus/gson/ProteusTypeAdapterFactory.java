@@ -25,6 +25,7 @@ import com.flipkart.android.proteus.FunctionManager;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.Layout;
@@ -495,6 +496,10 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 JsonReaderInternalAccess.INSTANCE.promoteNameToValue(in);
                 String key = in.nextString();
                 Value value = VALUE_TYPE_ADAPTER.read(in);
+                Value compiled = AttributeProcessor.staticPreCompile(value, context, PROTEUS_INSTANCE_HOLDER.getProteus().functions);
+                if (compiled != null) {
+                    value = compiled;
+                }
                 Value replaced = data.put(key, value);
                 if (replaced != null) {
                     throw new JsonSyntaxException("duplicate key: " + key);
