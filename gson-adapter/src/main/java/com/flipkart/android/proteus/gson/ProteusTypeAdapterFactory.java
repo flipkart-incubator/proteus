@@ -20,6 +20,7 @@
 package com.flipkart.android.proteus.gson;
 
 import android.content.Context;
+import android.support.v4.util.ArrayMap;
 
 import com.flipkart.android.proteus.FunctionManager;
 import com.flipkart.android.proteus.Proteus;
@@ -489,7 +490,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 throw new JsonSyntaxException("data must be a Map<String, String>.");
             }
 
-            Map<String, Value> data = new HashMap<>();
+            Map<String, Value> data = new ArrayMap<>();
 
             in.beginObject();
             while (in.hasNext()) {
