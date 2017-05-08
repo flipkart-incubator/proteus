@@ -20,7 +20,6 @@
 package com.flipkart.android.proteus.gson;
 
 import android.content.Context;
-import android.support.v4.util.ArrayMap;
 
 import com.flipkart.android.proteus.FunctionManager;
 import com.flipkart.android.proteus.Proteus;
