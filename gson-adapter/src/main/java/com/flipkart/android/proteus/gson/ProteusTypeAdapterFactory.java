@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -490,7 +491,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
                 throw new JsonSyntaxException("data must be a Map<String, String>.");
             }
 
-            Map<String, Value> data = new ArrayMap<>();
+            Map<String, Value> data = new LinkedHashMap<>();
 
             in.beginObject();
             while (in.hasNext()) {
