@@ -17,12 +17,17 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.managers;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.flipkart.android.proteus.BoundAttribute;
+import com.flipkart.android.proteus.DataContext;
+import com.flipkart.android.proteus.ProteusContext;
+import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 

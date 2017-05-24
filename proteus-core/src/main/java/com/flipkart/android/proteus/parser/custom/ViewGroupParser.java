@@ -30,7 +30,7 @@ import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
-import com.flipkart.android.proteus.ViewGroupManager;
+import com.flipkart.android.proteus.managers.ViewGroupManager;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
