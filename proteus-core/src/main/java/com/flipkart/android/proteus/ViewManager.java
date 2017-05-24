@@ -54,6 +54,9 @@ public class ViewManager implements ProteusView.Manager {
     @Nullable
     protected final List<BoundAttribute> boundAttributes;
 
+    @Nullable
+    protected Object extras;
+
     public ViewManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
                        @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
         this.context = context;
@@ -94,6 +97,12 @@ public class ViewManager implements ProteusView.Manager {
         }
     }
 
+    @Nullable
+    @Override
+    public View findViewById(@NonNull String id) {
+        return view.findViewById(context.getInflater().getUniqueViewId(id));
+    }
+
     @NonNull
     @Override
     public ProteusContext getContext() {
@@ -113,8 +122,13 @@ public class ViewManager implements ProteusView.Manager {
 
     @Nullable
     @Override
-    public View findViewById(@NonNull String id) {
-        return view.findViewById(context.getInflater().getUniqueViewId(id));
+    public Object getExtras() {
+        return this.extras;
+    }
+
+    @Override
+    public void setExtras(@Nullable Object extras) {
+        this.extras = extras;
     }
 
     private void updateDataContext(ObjectValue data) {

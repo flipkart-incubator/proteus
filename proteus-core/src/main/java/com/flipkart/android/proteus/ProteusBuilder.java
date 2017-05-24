@@ -54,10 +54,8 @@ import java.util.Map;
 
 public class ProteusBuilder {
 
-    private static final int ID = -1;
-
     /**
-     *
+     * The Default Module of Proteus.
      */
     public static final Module DEFAULT_MODULE = new Module() {
 
@@ -122,6 +120,7 @@ public class ProteusBuilder {
         }
     };
 
+    private static final int ID = -1;
     private Map<String, Map<String, AttributeProcessor>> processors = new LinkedHashMap<>();
     private Map<String, ViewTypeParser> parsers = new LinkedHashMap<>();
     private HashMap<String, Function> formatters = new HashMap<>();

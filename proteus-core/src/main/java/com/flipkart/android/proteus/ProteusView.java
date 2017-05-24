@@ -51,26 +51,6 @@ public interface ProteusView {
     void setViewManager(@NonNull Manager manager);
 
     /**
-     * Returns this proteus view's extras.
-     *
-     * @return the Object stored in this view as a extra, or {@code null} if not set
-     * @see #setExtras(Object)
-     */
-    @Nullable
-    Object getExtras();
-
-    /**
-     * Sets the extra associated with this view. A extra can be used to mark
-     * a view in its hierarchy and does not have to be unique within the
-     * hierarchy. Extras can also be used to store data within a proteus view
-     * without resorting to another data structure. It is similar to {@link View#setTag(Object)}
-     *
-     * @param extras The object to set as the extra.
-     * @see #setExtras(Object)
-     */
-    void setExtras(@Nullable Object extras);
-
-    /**
      * @return The interface as an Android native View.
      */
     @NonNull
@@ -91,6 +71,18 @@ public interface ProteusView {
         void update(@Nullable ObjectValue data);
 
         /**
+         * Look for a child view with the given id.  If this view has the given
+         * id, return this view. Similar to {@link View#findViewById(int)}. Since
+         * Proteus is a runtime inflater, layouts use String ids instead of int and it
+         * generates unique int ids using the {@link IdGenerator}.
+         *
+         * @param id The  string id to search for.
+         * @return The view that has the given id in the hierarchy or null
+         */
+        @Nullable
+        View findViewById(@NonNull String id);
+
+        /**
          * @return The Proteus Context associated with this Manager.
          */
         @NonNull
@@ -109,16 +101,24 @@ public interface ProteusView {
         DataContext getDataContext();
 
         /**
-         * Look for a child view with the given id.  If this view has the given
-         * id, return this view. Similar to {@link View#findViewById(int)}. Since
-         * Proteus is a runtime inflater, layouts use String ids instead of int and it
-         * generates unique int ids using the {@link IdGenerator}.
+         * Returns this proteus view's extras.
          *
-         * @param id The  string id to search for.
-         * @return The view that has the given id in the hierarchy or null
+         * @return the Object stored in this view as a extra, or {@code null} if not set
+         * @see #setExtras(Object)
          */
         @Nullable
-        View findViewById(@NonNull String id);
+        Object getExtras();
+
+        /**
+         * Sets the extra associated with this view. A extra can be used to mark a view in its hierarchy
+         * and does not have to be unique within the hierarchy. Extras can also be used to store data
+         * within a proteus view without resorting to another data structure.
+         * It is similar to {@link View#setTag(Object)}
+         *
+         * @param extras The object to set as the extra.
+         * @see #setExtras(Object)
+         */
+        void setExtras(@Nullable Object extras);
 
     }
 }

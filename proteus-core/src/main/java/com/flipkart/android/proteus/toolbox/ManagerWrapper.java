@@ -39,7 +39,6 @@ import com.flipkart.android.proteus.value.ObjectValue;
  *
  * @author adityasharat
  */
-
 public class ManagerWrapper implements ProteusView.Manager {
 
     private final ProteusView.Manager base;
@@ -51,6 +50,12 @@ public class ManagerWrapper implements ProteusView.Manager {
     @Override
     public void update(@Nullable ObjectValue data) {
         base.update(data);
+    }
+
+    @Nullable
+    @Override
+    public View findViewById(@NonNull String id) {
+        return base.findViewById(id);
     }
 
     @NonNull
@@ -73,8 +78,13 @@ public class ManagerWrapper implements ProteusView.Manager {
 
     @Nullable
     @Override
-    public View findViewById(@NonNull String id) {
-        return base.findViewById(id);
+    public Object getExtras() {
+        return base.getExtras();
+    }
+
+    @Override
+    public void setExtras(@Nullable Object extras) {
+        base.setExtras(extras);
     }
 
     public ProteusView.Manager getBaseManager() {

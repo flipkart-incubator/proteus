@@ -21,7 +21,6 @@ package com.flipkart.android.proteus.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusView;
@@ -35,9 +34,6 @@ public class ProteusHorizontalProgressBar extends com.flipkart.android.proteus.v
 
     private Manager viewManager;
 
-    @Nullable
-    private Object extras;
-
     public ProteusHorizontalProgressBar(Context context) {
         super(context);
     }
@@ -50,17 +46,6 @@ public class ProteusHorizontalProgressBar extends com.flipkart.android.proteus.v
     @Override
     public void setViewManager(@NonNull Manager manager) {
         this.viewManager = manager;
-    }
-
-    @Override
-    public void setExtras(@Nullable Object extras) {
-        this.extras = extras;
-    }
-
-    @Nullable
-    @Override
-    public Object getExtras() {
-        return extras;
     }
 
     @NonNull

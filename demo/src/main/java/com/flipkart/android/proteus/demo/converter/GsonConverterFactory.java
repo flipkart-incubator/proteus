@@ -36,15 +36,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public final class GsonConverterFactory extends Converter.Factory {
 
-    /**
-     * URL Encode the JSON String object before sending it over the wire.
-     */
-    @Documented
-    @Target(METHOD)
-    @Retention(RUNTIME)
-    public @interface URLEncoded {
-    }
-
     private final Gson gson;
 
     private GsonConverterFactory(Gson gson) {
@@ -75,5 +66,14 @@ public final class GsonConverterFactory extends Converter.Factory {
         }
 
         return result;
+    }
+
+    /**
+     * URL Encode the JSON String object before sending it over the wire.
+     */
+    @Documented
+    @Target(METHOD)
+    @Retention(RUNTIME)
+    public @interface URLEncoded {
     }
 }

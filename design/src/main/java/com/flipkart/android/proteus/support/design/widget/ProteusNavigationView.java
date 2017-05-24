@@ -20,7 +20,6 @@
 package com.flipkart.android.proteus.support.design.widget;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.view.View;
 
@@ -37,9 +36,6 @@ public class ProteusNavigationView extends NavigationView implements ProteusView
 
     private Manager manager;
 
-    @Nullable
-    private Object extras;
-
     public ProteusNavigationView(ProteusContext context) {
         super(context);
     }
@@ -52,17 +48,6 @@ public class ProteusNavigationView extends NavigationView implements ProteusView
     @Override
     public void setViewManager(@NonNull Manager manager) {
         this.manager = manager;
-    }
-
-    @Override
-    public void setExtras(@Nullable Object extras) {
-        this.extras = extras;
-    }
-
-    @Nullable
-    @Override
-    public Object getExtras() {
-        return extras;
     }
 
     @NonNull

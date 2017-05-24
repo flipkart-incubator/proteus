@@ -23,7 +23,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -37,9 +36,6 @@ import com.flipkart.android.proteus.ProteusView;
 public class ProteusImageView extends android.widget.ImageView implements ProteusView {
 
     private Manager viewManager;
-
-    @Nullable
-    private Object extras;
 
     public ProteusImageView(Context context) {
         super(context);
@@ -66,17 +62,6 @@ public class ProteusImageView extends android.widget.ImageView implements Proteu
     @Override
     public void setViewManager(@NonNull Manager manager) {
         this.viewManager = manager;
-    }
-
-    @Override
-    public void setExtras(@Nullable Object extras) {
-        this.extras = extras;
-    }
-
-    @Nullable
-    @Override
-    public Object getExtras() {
-        return extras;
     }
 
     @NonNull
