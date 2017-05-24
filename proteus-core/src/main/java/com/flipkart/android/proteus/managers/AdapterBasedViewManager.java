@@ -20,51 +20,31 @@
 package com.flipkart.android.proteus.managers;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.ProteusContext;
-import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.value.Layout;
-import com.flipkart.android.proteus.value.ObjectValue;
 
 /**
- * ViewGroupManager
+ * AdapterBasedViewManager.
  *
  * @author adityasharat
  */
+public class AdapterBasedViewManager extends ViewGroupManager {
 
-public class ViewGroupManager extends ViewManager {
-
-    public boolean hasDataBoundChildren;
-
-    public ViewGroupManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
-                            @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
+    public AdapterBasedViewManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
+                                   @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
         super(context, parser, view, layout, dataContext);
-        hasDataBoundChildren = false;
     }
 
+    /**
+     * Ignore updating the children in this case, that
+     * should be handled by the adapter attached to the view.
+     */
     @Override
-    public void update(@Nullable ObjectValue data) {
-        super.update(data);
-        updateChildren();
-    }
-
     protected void updateChildren() {
-        if (!hasDataBoundChildren && view instanceof ViewGroup) {
-            ViewGroup parent = (ViewGroup) view;
-            int count = parent.getChildCount();
-            View child;
 
-            for (int index = 0; index < count; index++) {
-                child = parent.getChildAt(index);
-                if (child instanceof ProteusView) {
-                    ((ProteusView) child).getViewManager().update(dataContext.getData());
-                }
-            }
-        }
     }
 }

@@ -24,9 +24,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 
@@ -36,7 +38,7 @@ import com.flipkart.android.proteus.value.ObjectValue;
  * @author adityasharat
  */
 
-public class RecyclerViewParser<T extends RecyclerView> extends ViewTypeParser {
+public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser {
 
     @NonNull
     @Override
@@ -54,6 +56,15 @@ public class RecyclerViewParser<T extends RecyclerView> extends ViewTypeParser {
     @Override
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusRecyclerView(context);
+    }
+
+    @NonNull
+    @Override
+    public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout,
+                                                 @NonNull ObjectValue data, @Nullable ViewTypeParser caller, @Nullable ViewGroup parent,
+                                                 int dataIndex) {
+        DataContext dataContext = createDataContext(context, layout, data, parent, dataIndex);
+        return new AdapterBasedViewManager(context, null != caller ? caller : this, view.getAsView(), layout, dataContext);
     }
 
     @Override
