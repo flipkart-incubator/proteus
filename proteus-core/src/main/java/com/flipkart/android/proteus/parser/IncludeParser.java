@@ -53,7 +53,7 @@ public class IncludeParser<V extends View> extends ViewTypeParser<V> {
     @Nullable
     @Override
     public String getParentType() {
-        return null;
+        return "View";
     }
 
     @NonNull
