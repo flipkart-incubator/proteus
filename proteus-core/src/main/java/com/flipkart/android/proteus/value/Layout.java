@@ -25,7 +25,7 @@ import android.support.annotation.Nullable;
 import com.flipkart.android.proteus.toolbox.Utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,7 +89,7 @@ public class Layout extends Value {
         }
         if (include.data != null) {
             if (data == null) {
-                data = new HashMap<>(include.data.size());
+                data = new LinkedHashMap<>(include.data.size());
             }
             data.putAll(include.data);
         }
