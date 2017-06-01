@@ -312,7 +312,7 @@ public abstract class ViewTypeParser<V extends View> {
 
         private final int offset;
 
-        private AttributeSet(@Nullable Map<String, Attribute> attributes, @Nullable AttributeSet parent, int offset) {
+        AttributeSet(@Nullable Map<String, Attribute> attributes, @Nullable AttributeSet parent, int offset) {
             this.attributes = attributes;
             this.parent = parent;
             int parentOffset = null != parent ? parent.getOffset() : 0;
@@ -342,7 +342,7 @@ public abstract class ViewTypeParser<V extends View> {
             @NonNull
             public final AttributeProcessor processor;
 
-            private Attribute(int id, @NonNull AttributeProcessor processor) {
+            Attribute(int id, @NonNull AttributeProcessor processor) {
                 this.processor = processor;
                 this.id = id;
             }

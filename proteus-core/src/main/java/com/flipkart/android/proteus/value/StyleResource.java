@@ -120,6 +120,6 @@ public class StyleResource extends Value {
     }
 
     private static class StyleCache {
-        private static final LruCache<String, StyleResource> cache = new LruCache<>(64);
+        static final LruCache<String, StyleResource> cache = new LruCache<>(64);
     }
 }

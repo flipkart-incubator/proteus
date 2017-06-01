@@ -230,6 +230,6 @@ public class Resource extends Value {
     }
 
     private static class ResourceCache {
-        private static final LruCache<String, Resource> cache = new LruCache<>(64);
+        static final LruCache<String, Resource> cache = new LruCache<>(64);
     }
 }

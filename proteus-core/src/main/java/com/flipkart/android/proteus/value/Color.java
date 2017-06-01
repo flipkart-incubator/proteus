@@ -235,7 +235,7 @@ public abstract class Color extends Value {
     public abstract Result apply(Context context);
 
     private static class ColorCache {
-        private static final LruCache<String, Color> cache = new LruCache<>(64);
+        static final LruCache<String, Color> cache = new LruCache<>(64);
     }
 
     public static class Int extends Color {
@@ -245,7 +245,7 @@ public abstract class Color extends Value {
         @ColorInt
         public final int value;
 
-        private Int(@ColorInt int value) {
+        Int(@ColorInt int value) {
             this.value = value;
         }
 
@@ -278,7 +278,7 @@ public abstract class Color extends Value {
         public final int[][] states;
         public final int[] colors;
 
-        private StateList(int[][] states, int[] colors) {
+        StateList(int[][] states, int[] colors) {
             this.states = states;
             this.colors = colors;
         }

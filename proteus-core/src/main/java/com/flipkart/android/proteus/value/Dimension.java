@@ -170,7 +170,7 @@ public class Dimension extends Value {
     }
 
     private static class DimensionCache {
-        private static final LruCache<String, Dimension> cache = new LruCache<>(64);
+        static final LruCache<String, Dimension> cache = new LruCache<>(64);
     }
 
 }

@@ -63,7 +63,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
     public static final ProteusInstanceHolder PROTEUS_INSTANCE_HOLDER = new ProteusInstanceHolder();
 
-    private Context context;
+    Context context;
 
     /**
      *
@@ -406,7 +406,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         return context;
     }
 
-    private static Value compileString(Context context, String string) {
+    static Value compileString(Context context, String string) {
         if (Binding.isBindingValue(string)) {
             return Binding.valueOf(string, context, PROTEUS_INSTANCE_HOLDER.getProteus().functions);
         } else {
@@ -427,7 +427,7 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
 
         private Proteus proteus;
 
-        private ProteusInstanceHolder() {
+        ProteusInstanceHolder() {
         }
 
         public Proteus getProteus() {
@@ -517,6 +517,9 @@ public class ProteusTypeAdapterFactory implements TypeAdapterFactory {
         private final Map<Class<? extends Value>, CustomValueTypeAdapter<? extends Value>> types = new HashMap<>();
 
         private CustomValueTypeAdapter<? extends Value>[] adapters = new CustomValueTypeAdapter[0];
+
+        CustomValueTypeAdapterMap() {
+        }
 
         public CustomValueTypeAdapter<? extends Value> register(Class<? extends Value> clazz, CustomValueTypeAdapterCreator creator) {
             CustomValueTypeAdapter<? extends Value> adapter = types.get(clazz);

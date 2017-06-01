@@ -74,7 +74,7 @@ public class ProteusActivity extends AppCompatActivity {
     private static final String BASE_URL = "http://10.0.2.2:8080/data/";
 
     private Retrofit retrofit;
-    private JsonResource resources;
+    JsonResource resources;
 
     private ProteusTypeAdapterFactory adapter;
 
@@ -82,12 +82,12 @@ public class ProteusActivity extends AppCompatActivity {
 
     private ProteusLayoutInflater layoutInflater;
 
-    private ObjectValue data;
-    private Layout layout;
-    private ProteusView view;
+    ObjectValue data;
+    Layout layout;
+    ProteusView view;
 
-    private Styles styles;
-    private Map<String, Layout> layouts;
+    Styles styles;
+    Map<String, Layout> layouts;
 
     private StyleManager styleManager = new StyleManager() {
 
@@ -235,7 +235,7 @@ public class ProteusActivity extends AppCompatActivity {
         container = (ViewGroup) findViewById(R.id.content_main);
     }
 
-    private void render() {
+    void render() {
 
         // remove the current view
         container.removeAllViews();
@@ -282,7 +282,7 @@ public class ProteusActivity extends AppCompatActivity {
         }.execute();
     }
 
-    private void fetch() {
+    void fetch() {
         new AsyncTask<Void, Void, Void>() {
 
             @Override

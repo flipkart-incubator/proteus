@@ -43,7 +43,7 @@ public class CircleView extends View implements ProteusView {
     Manager viewManager;
     private String HEX_COLOR = "#45ba8a";
     private Paint drawPaint;
-    private float radius;
+    float radius;
 
     public CircleView(Context context) {
         super(context);
@@ -94,7 +94,7 @@ public class CircleView extends View implements ProteusView {
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void removeOnGlobalLayoutListener(ViewTreeObserver.OnGlobalLayoutListener listener) {
+    void removeOnGlobalLayoutListener(ViewTreeObserver.OnGlobalLayoutListener listener) {
         if (Build.VERSION.SDK_INT < 16) {
             //noinspection deprecation
             getViewTreeObserver().removeGlobalOnLayoutListener(listener);
