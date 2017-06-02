@@ -472,7 +472,7 @@ public abstract class DrawableValue extends Value {
             @NonNull
             public final Value drawable;
 
-            private Level(ObjectValue value, Context context) {
+            Level(ObjectValue value, Context context) {
 
                 //noinspection ConstantConditions
                 minLevel = value.getAsInteger(MIN_LEVEL);

@@ -162,7 +162,7 @@ public class ProgressBarParser<T extends ProgressBar> extends ViewTypeParser<T> 
         }
     }
 
-    private Drawable getLayerDrawable(int progress, int background) {
+    Drawable getLayerDrawable(int progress, int background) {
         ShapeDrawable shape = new ShapeDrawable();
         shape.getPaint().setStyle(Paint.Style.FILL);
         shape.getPaint().setColor(background);

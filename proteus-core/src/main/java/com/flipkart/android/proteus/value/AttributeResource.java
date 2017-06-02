@@ -118,7 +118,7 @@ public class AttributeResource extends Value {
     }
 
     private static class AttributeCache {
-        private static final LruCache<String, AttributeResource> cache = new LruCache<>(16);
+        static final LruCache<String, AttributeResource> cache = new LruCache<>(16);
     }
 
 }
