@@ -26,12 +26,16 @@ import android.support.design.widget.CoordinatorLayout;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.parser.ParseHelper;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.processor.GravityAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
+import com.flipkart.android.proteus.toolbox.Attributes;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -76,6 +80,27 @@ public class DesignModuleAttributeHelper {
             @Override
             public void setString(V view, String value) {
                 CoordinatorLayoutParamsHelper.setLayoutBehavior(view, value);
+            }
+        });
+
+        processors.put(Attributes.View.LayoutGravity, new GravityAttributeProcessor<V>() {
+            @Override
+            public void setGravity(V view, @Gravity int gravity) {
+                ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+
+                if (layoutParams instanceof LinearLayout.LayoutParams) {
+                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) layoutParams;
+                    params.gravity = gravity;
+                    view.setLayoutParams(layoutParams);
+                } else if (layoutParams instanceof FrameLayout.LayoutParams) {
+                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) layoutParams;
+                    params.gravity = gravity;
+                    view.setLayoutParams(layoutParams);
+                } else if (layoutParams instanceof CoordinatorLayout.LayoutParams) {
+                    CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) layoutParams;
+                    params.gravity = gravity;
+                    view.setLayoutParams(layoutParams);
+                }
             }
         });
 
