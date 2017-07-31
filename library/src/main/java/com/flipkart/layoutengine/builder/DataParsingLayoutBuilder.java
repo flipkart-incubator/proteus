@@ -191,7 +191,11 @@ public class DataParsingLayoutBuilder extends SimpleLayoutBuilder {
                         dataPath = regexMatcher.group(3);
                         result = Utils.getElementFromData(dataPath, parserContext.getDataContext().getDataProvider(), parserContext.getDataContext().getIndex());
                         if (result.isSuccess() && null != result.element) {
-                            finalValue = finalValue.replace(matchedString, result.element.getAsString());
+                            String string = "";
+                            if (result.element.isJsonPrimitive()) {
+                                string = result.element.getAsString();
+                            }
+                            finalValue = finalValue.replace(matchedString, string);
                         } else {
                             finalValue = dataPath;
                             failed = true;
