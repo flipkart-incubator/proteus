@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
-apply plugin: 'artifactory'
-apply plugin: 'android-maven'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = 'com.github.jitpack'
 
 buildscript {
     repositories {
@@ -9,29 +10,21 @@ buildscript {
         maven { url 'http://artifactory.nm.flipkart.com:8081/artifactory/libs-release-local' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.3'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:2.2.3'
     }
 }
 
-group = ARTIFACTORY_GROUP
-version = VERSION_NAME
-status = STATUS
-
-repositories {
-    maven { url 'http://artifactory.nm.flipkart.com:8081/artifactory/libs-release-local' }
-}
-
 android {
     compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    buildToolsVersion '25.0.3'
 
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 356000
+        versionName "3.5.6"
     }
 
     compileOptions {
@@ -46,84 +39,39 @@ android {
     }
 }
 
-android.libraryVariants.all { variant ->
-    task("generate${variant.name}Javadoc", type: Javadoc) {
-        source = variant.javaCompile.source
-        def androidJar = "${android.sdkDirectory}/platforms/${android.compileSdkVersion}/android.jar"
-
-        classpath = files(variant.javaCompile.classpath.files, androidJar)
-        options {
-            links "http://docs.oracle.com/javase/7/docs/api/"
-            linksOffline "http://d.android.com/reference","${android.sdkDirectory}/docs/reference"
-        }
-        exclude '**/BuildConfig.java'
-        exclude '**/R.java'
-    }
-}
-
-configurations {
-    published
-}
-
-task sourceJar(type: Jar) {
-    from 'src/java'
-    classifier "sources"
-}
-
-artifactoryPublish {
-    dependsOn sourceJar
-}
-
-artifacts {
-    published sourceJar
-}
-
-configure(install.repositories.mavenInstaller) {
-    pom.project {
-        licenses {
-            license {
-                name 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                distribution 'repo'
-            }
-        }
-    }
-}
-
-artifactory {
-    contextUrl = ARTIFACTORY_REPO_URL
-    publish {
-        repository {
-            if(project.version.endsWith('-SNAPSHOT')) {
-                repoKey = SNAPSHOT_REPO_KEY
-            } else {
-                repoKey = RELEASE_REPO_KEY
-            }
-            //username = artifactory_user //The publisher user name, property taken from gradle.properties
-            //password = artifactory_password //The publisher password, property taken from gradle.properties
-        }
-        defaults {
-            publishConfigs('archives', 'published')
-            properties = ['build.status': "$it.project.status".toString()]
-            publishPom = true //Publish generated POM files to Artifactory (true by default)
-            publishIvy = false //Publish generated Ivy descriptor files to Artifactory (true by default)
-        }
-    }
-    resolve {
-        repository {
-            if(project.version.endsWith('-SNAPSHOT') || project.version.contains('-RC')) {
-                repoKey = SNAPSHOT_REPO_KEY
-            } else {
-                repoKey = RELEASE_REPO_KEY
-            }
-            //username = artifactory_user //Optional resolver user name (leave out to use anonymous resolution), property taken from gradle.properties
-            //password = artifactory_password //The resolver password, property taken from gradle.properties
-        }
-    }
-}
-
 dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.code.gson:gson:2.4'
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    failOnError false
+    source = android.sourceSets.main.java.sourceFiles
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    classpath += configurations.compile
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+
+android.libraryVariants.all { variant ->
+    def name = variant.buildType.name
+    def task = project.tasks.create "jar${name.capitalize()}", Jar
+    task.dependsOn variant.javaCompile
+    task.from variant.javaCompile.destinationDir
+    artifacts.add('archives', task);
 }
