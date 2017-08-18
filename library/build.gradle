@@ -1,7 +1,6 @@
-apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-
-group = 'com.github.jitpack'
+group = ARTIFACTORY_GROUP
+version = VERSION_NAME
+status = STATUS
 
 buildscript {
     repositories {
@@ -16,6 +15,14 @@ buildscript {
     }
 }
 
+apply plugin: 'com.android.library'
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.google.code.gson:gson:2.4'
+}
+
 android {
     compileSdkVersion 23
     buildToolsVersion '25.0.3'
@@ -24,7 +31,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 356000
-        versionName "3.5.6"
+        versionName "3.5.7"
     }
 
     compileOptions {
@@ -44,39 +51,65 @@ android {
 
 }
 
-dependencies {
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.google.code.gson:gson:2.4'
+apply plugin: 'maven-publish'
+apply plugin: 'com.github.dcendents.android-maven'
+
+configurations {
+    published
 }
 
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
+task sourceJar(type: Jar) {
+    from 'src/main/java'
+    classifier "sources"
 }
 
-task javadoc(type: Javadoc) {
-    failOnError false
-    source = android.sourceSets.main.java.sourceFiles
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    classpath += configurations.compile
-}
+publishing {
+    repositories {
+        maven {
+            url ARTIFACTORY_REPO_URL + "libs-${project.version.endsWith('-SNAPSHOT') ? 'snapshots' : 'release'}-local"
+        }
+    }
+    publications {
+        maven(MavenPublication) {
+            groupId ARTIFACTORY_GROUP
+            artifactId 'library'
+            version VERSION_NAME
+            // Or use same version as in android branch
+            // version = android.defaultConfig.versionName
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
+            artifact bundleRelease
+            artifact sourceJar
 
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
 
+                // List all compile dependencies and write to POM
+                configurations.compile.getAllDependencies().each { Dependency dep ->
+                    if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
+                        return // ignore invalid dependencies
 
-android.libraryVariants.all { variant ->
-    def name = variant.buildType.name
-    def task = project.tasks.create "jar${name.capitalize()}", Jar
-    task.dependsOn variant.javaCompile
-    task.from variant.javaCompile.destinationDir
-    artifacts.add('archives', task);
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', dep.group)
+                    dependencyNode.appendNode('artifactId', dep.name)
+                    dependencyNode.appendNode('version', dep.version)
+                    dependencyNode.appendNode('scope', 'compile')
+
+                    if (!dep.transitive) {
+                        // If this dependency is transitive, we should force exclude all its dependencies them from the POM
+                        def exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                        exclusionNode.appendNode('groupId', '*')
+                        exclusionNode.appendNode('artifactId', '*')
+                    } else if (!dep.properties.excludeRules.empty) {
+                        // Otherwise add specified exclude rules
+                        def exclusionsNode = dependencyNode.appendNode('exclusions')
+                        dep.properties.excludeRules.each { ExcludeRule rule ->
+                            def exclusionNode = exclusionsNode.appendNode('exclusion')
+                            exclusionNode.appendNode('groupId', rule.group ?: '*')
+                            exclusionNode.appendNode('artifactId', rule.module ?: '*')
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

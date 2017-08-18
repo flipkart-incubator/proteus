@@ -14,5 +14,9 @@ buildscript {
 allprojects {
     repositories {
         mavenCentral()
+        maven { url ARTIFACTORY_REPO_URL + 'libs-release-local' }
+        maven { url ARTIFACTORY_REPO_URL + 'libs-snapshot-local' }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
 }
