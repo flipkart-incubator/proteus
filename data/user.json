@@ -1,12 +1,12 @@
 {
-  "user": {
+  "0": {
     "name": "John Doe",
     "location": {
       "country": "India",
       "city": "Bengaluru",
       "pincode": "560103"
     },
-    "credits": 39550,
+    "credits": 39550.00,
     "level": 4,
     "achievements": {
       "current": 16,
@@ -19,7 +19,17 @@
     "tags": [
       "alpha",
       "beta",
-      "gamma"
-    ]
+      "gamma",
+      "delta",
+      "niner"
+    ],
+    "type": null
+  },
+  "theme": {
+    "color": "#88ee99"
+  },
+  "sec": {
+    "ll": "2017-01-01 12:01:37",
+    "loc": "BLR, IND"
   }
 }

@@ -6,13 +6,12 @@ android:
   components:
     - tools
     - platform-tools
-    - build-tools-24.0.3
-    - android-24
+    - build-tools-25.0.3
+    - android-25
     - extra-android-support
     - extra-android-m2repository
     - extra-google-m2repository
 before_install:
  - chmod +x gradlew
 script:
-   - ./gradlew library:test
    - ./gradlew build

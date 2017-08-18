@@ -13,7 +13,7 @@
 </a>
 
 **Proteus** is meant to be a drop-in replacement for Android’s `LayoutInflater`; but unlike the compiled XML layouts bundled in the APK, Proteus inflates layouts at runtime.
-With Proteus, you can control your Apps layout from the backend (no WebViews). Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. Proteus has runtime data bindings and formatters. Plugin in your own custom views and attributes and formatters.
+With Proteus, you can control your Apps layout from the backend (no WebViews). Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. Proteus has runtime data bindings and formatters. Plugin in your own custom views and attributes and functions.
 
 * **[Getting started](#getting-started)**
 * **[How it Works](#how-it-works)**
@@ -38,11 +38,12 @@ allprojects {
 
 // Add the dependency
 dependencies {
-        compile 'com.github.flipkart-incubator:proteus:4.2.0'
+        compile 'com.github.flipkart-incubator:proteus-core:5.0.0-rc8@aar'
+        compile 'com.github.flipkart-incubator:gson-adapter:5.0.0-rc8@aar'
 }
 ```
 
-#### Include as a module
+#### include as a module
 
 * Clone the **proteus** in the project folder
 
@@ -54,20 +55,21 @@ git clone https://github.com/flipkart-incubator/proteus.git
 
 ```javascript
 dependencies {
-  compile project('proteus:library')
+  compile project('proteus:proteus-core')
+  compile project('proteus:gson-adapter')
 }
 ```
 
 ## How it works
 
-Instead of writing layouts in `XML`, in **proteus** layouts are defined in `JSON`, which can be used to inflate native android UI at runtime. The `JSON` layouts can be hosted anywhere (on the device, on servers, etc.).
+Instead of writing layouts in `XML`, in **proteus** layouts are described in `JSON`, which can be used to inflate native Android UI at runtime. The `JSON` layouts can be hosted anywhere (on the device, on servers, etc.).
 
 
-[The "Layout"](https://github.com/flipkart-incubator/proteus/wiki/Layouts) defines the the view heirarchy, just like XML. 
+The [**Layout**](https://github.com/flipkart-incubator/proteus/wiki/Layouts) defines the the view heirarchy, just like XML.
 
-[The "Data"](https://github.com/flipkart-incubator/proteus/wiki/Data) (optional) defines [data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings).
+The [**Data**](https://github.com/flipkart-incubator/proteus/wiki/Data) (optional) defines [data bindings](https://github.com/flipkart-incubator/proteus/wiki/Data-Bindings). These data bindings are similar to Android's [Data Binding](https://developer.android.com/topic/libraries/data-binding/index.html) library.
 
-You give the layout and data to LayoutBuilder, you get back a native view. 
+Give the `layout` and `data` to `ProteusLayoutInflater` and get back a native view hierarchy.
 
 Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp) to see it in action.
 
@@ -82,13 +84,13 @@ Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ
     "layout_width": "200dp",
     "gravity": "center",
     "type": "TextView",
-    "text": "~{{user.profile.name}} ({{user.profile.experience}}$(number))"
+    "text": "@{user.profile.name}"
   }, {
     "type": "HorizontalProgressBar",
     "layout_width": "200dp",
     "layout_marginTop": "8dp",
     "max": 6000,
-    "progress": "$user.profile.experience"
+    "progress": "@{user.profile.experience}"
   }]
 }
 ```
@@ -109,18 +111,18 @@ Watch [this video](https://www.youtube.com/watch?v=W2Ord1oB72Q&index=1&list=PLIQ
 ### Sample Java code
 
 ```java
-ProteusView view = layoutBuilder.build(container, <layout>, <data>, 0, styles);
-container.addView((View) view);
+ProteusView view = proteusLayoutInflater.inflate(<layout>, <data>);
+container.addView(view.getAsView());
 ```
 
-#### Sample screenshot
+#### Output
 
-<img src="/assets/example-full.png" width="300px"/>
+<img src="/assets/example-small.png" width="360px"/>
 
 
 ### Setting up the Demo App
 
-The demo app will let you play around with Proteus as well as help you understand the internals better.
+The demo app will let you play around with proteus as well as help you understand the internals better.
 
 * Install NodeJS [here](https://nodejs.org/en/download/)
 * open a terminal
@@ -131,7 +133,7 @@ The demo app will let you play around with Proteus as well as help you understan
 
 **Ready to tinker**
 
-* Tinker around with the [layout](https://github.com/adityasharat/proteus-demo/blob/master/data/layout.json) and [data](https://github.com/adityasharat/proteus-demo/blob/master/data/user.json)
+* Tinker around with the [layout](https://github.com/adityasharat/proteus-demo/blob/develop/data/layout.json) and [data](https://github.com/adityasharat/proteus-demo/blob/develop/data/user.json)
 * Hit the FAB to refresh the app.
 
 ## Resources
@@ -144,15 +146,30 @@ The demo app will let you play around with Proteus as well as help you understan
 
 ## Contributing
 
-1. Fork the repo
-2. Apply your changes
-3. Submit your pull request
+### How?
+
+The easiest way to contribute is by [forking the repo](https://help.github.com/articles/fork-a-repo/), making your changes and [creating a pull request](https://help.github.com/articles/creating-a-pull-request/).
+
+### What?
+
+* Adding new Views and Attribute Proccessors.
+* Adding new Functions.
+* Adding JavaDoc and Wiki.
+* Completing TODOs
+* Writing unit tests.
+* Finding bugs and issues. (submit [here](https://github.com/flipkart-incubator/proteus/issues))
+* Fixing bugs and issues.
+* Implement performance/benchmarking tools.
 
 ## License
 
 [Apache v2.0](LICENSE)
 
+If you are using proteus check out the [can, cannot and must](https://tldrlegal.com/license/apache-license-2.0-(apache-2.0))
+
 ## Contributors
+
+You can check out the [contributors here](https://github.com/flipkart-incubator/proteus/graphs/contributors), but if you wish to contact us; just drop in a mail.
 
 * [adityasharat](mailto:adityasharat@gmail.com)
 * [thekirankumar](mailto:kiran.kumar@flipkart.com)
@@ -161,6 +178,8 @@ The demo app will let you play around with Proteus as well as help you understan
 ## StackOverflow
 
 Find us on [StackOverflow](http://stackoverflow.com) at [proteus](http://stackoverflow.com/questions/tagged/proteus).
+
+## Plugins
 
 ### One click XML to JSON conversion plugin
 
