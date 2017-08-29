@@ -129,6 +129,17 @@ public abstract class Binding extends Value {
     @NonNull
     public abstract String toString();
 
+    /**
+     * Returns a copy of this {@code Binding}, and since {@code Binding} is
+     * immutable this method returns this object itself.
+     *
+     * @return the same object
+     */
+    @Override
+    public Binding copy() {
+        return this;
+    }
+
     public static class DataBinding extends Binding {
 
         private static final LruCache<String, DataBinding> DATA_BINDING_CACHE = new LruCache<>(64);
@@ -371,11 +382,6 @@ public abstract class Binding extends Value {
             }
         }
 
-        @Override
-        public Value copy() {
-            return this;
-        }
-
         @NonNull
         @Override
         public Value evaluate(Context context, Value data, int index) {
@@ -449,11 +455,6 @@ public abstract class Binding extends Value {
 
         public Iterator<Value> getTokens() {
             return new SimpleArrayIterator<>(this.arguments);
-        }
-
-        @Override
-        public Value copy() {
-            return this;
         }
 
         @NonNull

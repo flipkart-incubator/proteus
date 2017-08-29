@@ -136,6 +136,13 @@ public class BindingTest {
     }
 
     @Test
+    public void copy() throws Exception {
+        Binding binding = Binding.valueOf("@{a.b.c}", null, null);
+
+        assertThat(binding, is(binding.copy()));
+    }
+
+    @Test
     public void evaluate_null_1() throws Exception {
         Binding binding = Binding.valueOf("@{a.b.c}", null, null);
 
