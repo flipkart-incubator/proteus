@@ -44,9 +44,9 @@ public final class Proteus {
     @NonNull
     private final Map<String, ViewTypeParser> parsers;
 
-    Proteus(@NonNull Map<String, Type> types, @NonNull final Map<String, Function> formatters) {
+    Proteus(@NonNull Map<String, Type> types, @NonNull final Map<String, Function> functions) {
         this.types = types;
-        this.functions = new FunctionManager(formatters);
+        this.functions = new FunctionManager(functions);
         this.parsers = map(types);
     }
 

@@ -90,7 +90,7 @@ public abstract class DrawableResourceProcessor<V extends View> extends Attribut
                 });
             }
         } else {
-            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFormatterManager()));
+            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFunctionManager()));
         }
     }
 

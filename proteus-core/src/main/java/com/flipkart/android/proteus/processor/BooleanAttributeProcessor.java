@@ -45,7 +45,7 @@ public abstract class BooleanAttributeProcessor<V extends View> extends Attribut
         if (value.isPrimitive() && value.getAsPrimitive().isBoolean()) {
             setBoolean(view, value.getAsPrimitive().getAsBoolean());
         } else {
-            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFormatterManager()));
+            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFunctionManager()));
         }
     }
 

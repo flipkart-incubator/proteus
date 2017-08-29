@@ -111,7 +111,7 @@ public class BindingTest {
     @Test
     public void evaluate_function() throws Exception {
         ProteusContext context = context();
-        Binding binding = Binding.valueOf("@{fn:add(1,1)}", context, context.getFormatterManager());
+        Binding binding = Binding.valueOf("@{fn:add(1,1)}", context, context.getFunctionManager());
 
         Value value = binding.evaluate(null, data(), 0);
 
@@ -130,7 +130,7 @@ public class BindingTest {
     public void to_string_2() throws Exception {
         ProteusContext context = context();
         String string = "@{fn:add('1','1')}";
-        Binding binding = Binding.valueOf(string, context, context.getFormatterManager());
+        Binding binding = Binding.valueOf(string, context, context.getFunctionManager());
 
         assertThat(binding.toString(), is(string));
     }

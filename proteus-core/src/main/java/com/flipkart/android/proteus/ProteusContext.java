@@ -63,13 +63,13 @@ public class ProteusContext extends ContextWrapper {
     }
 
     @NonNull
-    public FunctionManager getFormatterManager() {
+    public FunctionManager getFunctionManager() {
         return resources.getFunctionManager();
     }
 
     @NonNull
-    public Function getFormatter(@NonNull String name) {
-        return resources.getFormatter(name);
+    public Function getFunction(@NonNull String name) {
+        return resources.getFunction(name);
     }
 
     @Nullable

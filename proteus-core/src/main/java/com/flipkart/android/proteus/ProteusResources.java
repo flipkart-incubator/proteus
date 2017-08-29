@@ -61,7 +61,7 @@ public class ProteusResources {
     }
 
     @NonNull
-    public Function getFormatter(@NonNull String name) {
+    public Function getFunction(@NonNull String name) {
         return functionManager.get(name);
     }
 
