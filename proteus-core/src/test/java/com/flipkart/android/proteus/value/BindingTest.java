@@ -19,6 +19,12 @@
 
 package com.flipkart.android.proteus.value;
 
+import android.test.mock.MockContext;
+
+import com.flipkart.android.proteus.Proteus;
+import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.ProteusContext;
+
 import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -67,8 +73,13 @@ public class BindingTest {
         return object;
     }
 
+    public static ProteusContext context() {
+        Proteus proteus = new ProteusBuilder().build();
+        return proteus.createContextBuilder(new MockContext()).build();
+    }
+
     @Test
-    public void is_binding() throws Exception {
+    public void is_binding_1() throws Exception {
         assertThat(Binding.isBindingValue("@{a.b.c}"), is(true));
     }
 
@@ -80,7 +91,16 @@ public class BindingTest {
     }
 
     @Test
-    public void evaluate_simple() throws Exception {
+    public void evaluate_not_binding() throws Exception {
+        try {
+            Binding.valueOf("abc", null, null);
+        } catch (IllegalArgumentException e) {
+            assertThat(true, is(true));
+        }
+    }
+
+    @Test
+    public void evaluate_binding() throws Exception {
         Binding binding = Binding.valueOf("@{a.b.c}", null, null);
 
         Value value = binding.evaluate(null, data(), 0);
@@ -89,9 +109,28 @@ public class BindingTest {
     }
 
     @Test
-    public void to_string() throws Exception {
+    public void evaluate_function() throws Exception {
+        ProteusContext context = context();
+        Binding binding = Binding.valueOf("@{fn:add(1,1)}", context, context.getFormatterManager());
+
+        Value value = binding.evaluate(null, data(), 0);
+
+        assertThat(value.getAsString(), is("2.0"));
+    }
+
+    @Test
+    public void to_string_1() throws Exception {
         String string = "@{a.b.c}";
         Binding binding = Binding.valueOf(string, null, null);
+
+        assertThat(binding.toString(), is(string));
+    }
+
+    @Test
+    public void to_string_2() throws Exception {
+        ProteusContext context = context();
+        String string = "@{fn:add('1','1')}";
+        Binding binding = Binding.valueOf(string, context, context.getFormatterManager());
 
         assertThat(binding.toString(), is(string));
     }
@@ -384,6 +423,33 @@ public class BindingTest {
         result = Binding.DataBinding.valueOf("a.b.c").evaluate(null, data, 0);
 
         assertThat(result.getAsString(), is("10"));
+    }
+
+    @Test
+    public void assign_value_binding_13() throws Exception {
+        Binding.DataBinding binding = Binding.DataBinding.valueOf("a.b[x]");
+        ObjectValue data = data();
+        Value value = new Primitive(1);
+
+        binding.assign(value, data, 0);
+
+        value = binding.evaluate(null, data, 0);
+
+        assertThat(value.toString(), is("NULL"));
+
+    }
+
+    @Test
+    public void assign_value_binding_14() throws Exception {
+        Binding.DataBinding binding = Binding.DataBinding.valueOf("a.b[x].y");
+        ObjectValue data = data();
+        Value value = new Primitive(1);
+
+        binding.assign(value, data, 0);
+
+        value = binding.evaluate(null, data, 0);
+
+        assertThat(value.toString(), is("NULL"));
 
     }
 
