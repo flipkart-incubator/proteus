@@ -40,10 +40,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Binding
+ * <p>
+ * Binding is a type of {@link Value} which hosts a data binding.
+ * Any string that matches the pattern {@link #BINDING_PATTERN}
+ * is a valid binding. This class also hosts the methods to evaluate
+ * a binding on a dataset and assign a value on the dataset. A {@code Binding}
+ * object is immutable.
+ * </p>
  *
  * @author adityasharat
  */
+@SuppressWarnings("WeakerAccess")
 public abstract class Binding extends Value {
 
     public static final char BINDING_PREFIX_0 = '@';
@@ -65,8 +72,13 @@ public abstract class Binding extends Value {
     public static final char DELIMITER_ARRAY_CLOSING = ']';
 
     /**
-     * @param value
-     * @return
+     * This function does a loose check if a {@code String} should even be considered for
+     * evaluation as a {@code Binding}. It checks if the 1st and 2nd character are
+     * equal to {@link #BINDING_PREFIX_0} and {@link #BINDING_PREFIX_1},
+     * and the last character is {@link #BINDING_SUFFIX}.
+     *
+     * @param value the {@code String} to be tested.
+     * @return @{@code true} if and only if the prefix and suffix for match the binding pattern else {@code false}.
      */
     public static boolean isBindingValue(@NonNull final String value) {
         return value.length() > 3
@@ -76,9 +88,12 @@ public abstract class Binding extends Value {
     }
 
     /**
-     * @param value
-     * @param context
-     * @param manager @return
+     * This function returns a {@code Binding} object holding the
+     * value extracted from the specified {@code String}
+     *
+     * @param value   the value to be parsed.
+     * @param context the {@link Context} of the caller.
+     * @param manager the {@link FunctionManager} to evaluate function bindings.
      */
     public static Binding valueOf(@NonNull final String value, Context context, FunctionManager manager) {
         Matcher matcher = BINDING_PATTERN.matcher(value);
@@ -93,9 +108,24 @@ public abstract class Binding extends Value {
         }
     }
 
+    /**
+     * This method evaluates the {@code Binding} on the specified {@link Value} and returns
+     * the evaluated result. If it is unable to evaluate the {@code Binding} successfully it returns
+     * {@link Null}.
+     *
+     * @param context the {@link Context} of the caller.
+     * @param data    the @{link Value} on which the binding will be evaluated.
+     * @param index   the index to use if the {@code Binding} contains {@link #INDEX} as a token.
+     * @return the evaluated {@link Value}.
+     */
     @NonNull
     public abstract Value evaluate(Context context, Value data, int index);
 
+    /**
+     * Returns a {@code String} object representing this {@code Binding}.
+     *
+     * @return a string representation of this {@code Binding}.
+     */
     @NonNull
     public abstract String toString();
 
