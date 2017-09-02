@@ -38,8 +38,8 @@ allprojects {
 
 // Add the dependency
 dependencies {
-        compile 'com.github.flipkart-incubator:proteus-core:5.0.0-rc8@aar'
-        compile 'com.github.flipkart-incubator:gson-adapter:5.0.0-rc8@aar'
+        compile 'com.github.flipkart-incubator:proteus-core:5.0.0-rc11@aar'
+        compile 'com.github.flipkart-incubator:gson-adapter:5.0.0-rc11@aar'
 }
 ```
 
