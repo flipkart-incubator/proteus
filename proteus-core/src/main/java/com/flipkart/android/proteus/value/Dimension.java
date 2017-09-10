@@ -29,7 +29,11 @@ import com.flipkart.android.proteus.toolbox.BiMap;
 import com.flipkart.android.proteus.toolbox.HashBiMap;
 
 /**
- * Dimension
+ * <p>
+ * Dimension is a type of {@link Value} which hosts dimensions.
+ * Any android dimension string can be parsed into a {@code Dimension}
+ * object. Eg. "12dp", "16sp", etc.  A {@code Dimension} object is immutable.
+ * </p>
  *
  * @author aditya.sharat
  */
@@ -109,6 +113,12 @@ public class Dimension extends Value {
         this.unit = unit;
     }
 
+    /**
+     * This function returns a {@code Dimension} object holding the
+     * value extracted from the specified {@code String}
+     *
+     * @param dimension the value to be parsed.
+     */
     public static Dimension valueOf(String dimension) {
         if (null == dimension) {
             return ZERO;
@@ -172,5 +182,4 @@ public class Dimension extends Value {
     private static class DimensionCache {
         static final LruCache<String, Dimension> cache = new LruCache<>(64);
     }
-
 }
