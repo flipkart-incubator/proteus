@@ -22,12 +22,12 @@ apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.jitpack'
 
 android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 500000
         versionName "5.0.0"
     }
@@ -44,7 +44,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-annotations:26.0.0-alpha1'
+    compile "com.android.support:support-annotations:${rootProject.ext.supportLibraryVersion}"
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     testCompile 'junit:junit:4.12'
