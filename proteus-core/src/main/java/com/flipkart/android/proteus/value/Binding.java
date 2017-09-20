@@ -98,9 +98,9 @@ public abstract class Binding extends Value {
     public static Binding valueOf(@NonNull final String value, Context context, FunctionManager manager) {
         Matcher matcher = BINDING_PATTERN.matcher(value);
         if (matcher.find()) {
-            if (matcher.group(3) != null) {
+            if (matcher.group(3) != null) { // It is data binding
                 return DataBinding.valueOf(matcher.group(3));
-            } else {
+            } else { // It is function binding
                 return FunctionBinding.valueOf(matcher.group(1), matcher.group(2), context, manager);
             }
         } else {
@@ -122,7 +122,9 @@ public abstract class Binding extends Value {
     public abstract Value evaluate(Context context, Value data, int index);
 
     /**
-     * Returns a {@code String} object representing this {@code Binding}.
+     * Returns a {@code String} representation of this {@code Binding}.
+     * This string can be parsed back into a {@code Binding} object using
+     * the {@link #valueOf(String, Context, FunctionManager)} function.
      *
      * @return a string representation of this {@code Binding}.
      */
@@ -130,8 +132,8 @@ public abstract class Binding extends Value {
     public abstract String toString();
 
     /**
-     * Returns a copy of this {@code Binding}, and since {@code Binding} is
-     * immutable this method returns this object itself.
+     * Returns a copy of this {@code Binding}, and since {@code Binding}
+     * is an immutable this method returns the object itself.
      *
      * @return the same object
      */
@@ -140,6 +142,15 @@ public abstract class Binding extends Value {
         return this;
     }
 
+
+    /**
+     * <p>
+     * DataBinding is a type of {@link Binding} which represents a
+     * simple data path. eg. @{a.b.c}, @{a.e.f[8]}.
+     * </p>
+     *
+     * @author adityasharat
+     */
     public static class DataBinding extends Binding {
 
         private static final LruCache<String, DataBinding> DATA_BINDING_CACHE = new LruCache<>(64);
@@ -410,6 +421,18 @@ public abstract class Binding extends Value {
         }
     }
 
+    /**
+     * <p>
+     * FunctionBinding is a type of {@link Binding} which represents a
+     * function call. eg. @{ fn:add(1,2) }, @{ fn:and(@{a.b}, @{a.c}) }.
+     * The format is @{  fn&lt;name>:(&lt;arguments&gt;) }, where &lt;name&gt;
+     * is the name of the function and &lt;arguments&gt; is are comma separated
+     * arguments. Note that the arguments can be values (strings should be in single quotes) or
+     * {@link DataBinding} but NOT {@code FunctionBinding}.
+     * </p>
+     *
+     * @author adityasharat
+     */
     public static class FunctionBinding extends Binding {
 
         @NonNull
