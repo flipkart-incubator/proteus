@@ -136,7 +136,7 @@ public class Dimension extends Value {
     }
 
     public float apply(Context context) {
-        double result;
+        double result = 0;
 
         switch (unit) {
             case DIMENSION_UNIT_ENUM:
@@ -150,8 +150,6 @@ public class Dimension extends Value {
             case DIMENSION_UNIT_IN:
                 result = TypedValue.applyDimension(unit, (float) value, context.getResources().getDisplayMetrics());
                 break;
-            default:
-                result = 0;
         }
 
         return (float) result;
