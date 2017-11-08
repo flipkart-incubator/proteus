@@ -21,6 +21,7 @@ package com.flipkart.android.proteus.support.v7.widget;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -29,8 +30,14 @@ import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
+import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.support.v7.SimpleAdapter;
+import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
+import com.flipkart.android.proteus.value.Resource;
+import com.flipkart.android.proteus.value.StyleResource;
+import com.flipkart.android.proteus.value.Value;
 
 /**
  * RecyclerViewParser
@@ -39,6 +46,9 @@ import com.flipkart.android.proteus.value.ObjectValue;
  */
 
 public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser {
+
+    public static final String ATTRIBUTE_ITEM_LAYOUT = "item-layout";
+    public static final String ATTRIBUTE_ITEM_COUNT = "item-count";
 
     @NonNull
     @Override
@@ -69,6 +79,37 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser {
 
     @Override
     protected void addAttributeProcessors() {
+
+        addAttributeProcessor("adapter", new AttributeProcessor<V>() {
+
+            @Override
+            public void handleValue(V view, Value value) {
+                if (value.isObject()) {
+                    Layout layout = value.getAsObject().getAsLayout(ATTRIBUTE_ITEM_LAYOUT);
+                    Integer count = value.getAsObject().getAsInteger(ATTRIBUTE_ITEM_COUNT);
+                    ObjectValue data = ((ProteusView) view).getViewManager().getDataContext().getData();
+                    ProteusContext context = (ProteusContext) view.getContext();
+                    SimpleAdapter adapter = new SimpleAdapter(context.getInflater(), data, layout, count != null ? count : 0);
+                    view.setAdapter(adapter);
+                    view.setLayoutManager(new LinearLayoutManager(context));
+                }
+            }
+
+            @Override
+            public void handleResource(V view, Resource resource) {
+                throw new IllegalArgumentException("Recycler View 'adapter' expects only object values");
+            }
+
+            @Override
+            public void handleAttributeResource(V view, AttributeResource attribute) {
+                throw new IllegalArgumentException("Recycler View 'adapter' expects only object values");
+            }
+
+            @Override
+            public void handleStyleResource(V view, StyleResource style) {
+                throw new IllegalArgumentException("Recycler View 'adapter' expects only object values");
+            }
+        });
 
     }
 }
