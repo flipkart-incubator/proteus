@@ -254,6 +254,7 @@
         },
         "adapter": {
           "@": {
+            "type": "simple-list",
             "item-count": "@{items.$length}",
             "item-layout": {
               "type": "TextView",

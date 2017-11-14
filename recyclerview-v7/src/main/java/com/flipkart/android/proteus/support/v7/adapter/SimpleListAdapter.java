@@ -17,16 +17,16 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.support.v7;
+package com.flipkart.android.proteus.support.v7.adapter;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusLayoutInflater;
 import com.flipkart.android.proteus.ProteusView;
+import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
@@ -34,11 +34,26 @@ import com.flipkart.android.proteus.value.Value;
 import java.util.Map;
 
 /**
- * SimpleAdapter.
+ * SimpleListAdapter.
  *
- * @adityasharat
+ * @author adityasharat
  */
-public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.SimpleViewHolder> {
+public class SimpleListAdapter extends ProteusRecyclerViewAdapter<ProteusViewHolder> {
+
+    private static final String ATTRIBUTE_ITEM_LAYOUT = "item-layout";
+    private static final String ATTRIBUTE_ITEM_COUNT = "item-count";
+
+    public static final Builder<SimpleListAdapter> BUILDER = new Builder<SimpleListAdapter>() {
+        @Override
+        public SimpleListAdapter create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
+            Layout layout = config.getAsObject().getAsLayout(ATTRIBUTE_ITEM_LAYOUT);
+            Integer count = config.getAsObject().getAsInteger(ATTRIBUTE_ITEM_COUNT);
+            ObjectValue data = view.getViewManager().getDataContext().getData();
+            ProteusContext context = (ProteusContext) view.getContext();
+
+            return new SimpleListAdapter(context.getInflater(), data, layout, count != null ? count : 0);
+        }
+    };
 
     private ProteusLayoutInflater inflater;
 
@@ -47,7 +62,7 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.SimpleView
     private Layout layout;
     private Map<String, Value> scope;
 
-    public SimpleAdapter(ProteusLayoutInflater inflater, ObjectValue data, Layout layout, int count) {
+    private SimpleListAdapter(ProteusLayoutInflater inflater, ObjectValue data, Layout layout, int count) {
         this.inflater = inflater;
         this.data = data;
         this.count = count;
@@ -56,13 +71,13 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.SimpleView
     }
 
     @Override
-    public SimpleAdapter.SimpleViewHolder onCreateViewHolder(ViewGroup parent, int type) {
+    public ProteusViewHolder onCreateViewHolder(ViewGroup parent, int type) {
         ProteusView view = inflater.inflate(layout, new ObjectValue());
-        return new SimpleViewHolder(view);
+        return new ProteusViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(SimpleAdapter.SimpleViewHolder holder, int position) {
+    public void onBindViewHolder(ProteusViewHolder holder, int position) {
         DataContext context = DataContext.create(holder.context, data, position, scope);
         holder.view.getViewManager().update(context.getData());
     }
@@ -70,20 +85,5 @@ public class SimpleAdapter extends RecyclerView.Adapter<SimpleAdapter.SimpleView
     @Override
     public int getItemCount() {
         return count;
-    }
-
-    static class SimpleViewHolder extends RecyclerView.ViewHolder {
-
-        @NonNull
-        public final ProteusContext context;
-
-        @NonNull
-        public final ProteusView view;
-
-        SimpleViewHolder(@NonNull ProteusView view) {
-            super(view.getAsView());
-            this.view = view;
-            this.context = view.getViewManager().getContext();
-        }
     }
 }

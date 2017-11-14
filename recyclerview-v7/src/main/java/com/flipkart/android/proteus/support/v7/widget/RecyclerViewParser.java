@@ -31,7 +31,8 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
-import com.flipkart.android.proteus.support.v7.SimpleAdapter;
+import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
+import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
@@ -45,10 +46,16 @@ import com.flipkart.android.proteus.value.Value;
  * @author adityasharat
  */
 
-public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser {
+public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V> {
 
-    public static final String ATTRIBUTE_ITEM_LAYOUT = "item-layout";
-    public static final String ATTRIBUTE_ITEM_COUNT = "item-count";
+    private static final String ATTRIBUTE_TYPE = "type";
+
+    @NonNull
+    private final RecyclerViewAdapterFactory factory;
+
+    public RecyclerViewParser(@NonNull RecyclerViewAdapterFactory factory) {
+        this.factory = factory;
+    }
 
     @NonNull
     @Override
@@ -85,13 +92,12 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser {
             @Override
             public void handleValue(V view, Value value) {
                 if (value.isObject()) {
-                    Layout layout = value.getAsObject().getAsLayout(ATTRIBUTE_ITEM_LAYOUT);
-                    Integer count = value.getAsObject().getAsInteger(ATTRIBUTE_ITEM_COUNT);
-                    ObjectValue data = ((ProteusView) view).getViewManager().getDataContext().getData();
-                    ProteusContext context = (ProteusContext) view.getContext();
-                    SimpleAdapter adapter = new SimpleAdapter(context.getInflater(), data, layout, count != null ? count : 0);
-                    view.setAdapter(adapter);
-                    view.setLayoutManager(new LinearLayoutManager(context));
+                    String type = value.getAsObject().getAsString(ATTRIBUTE_TYPE);
+                    if (type != null) {
+                        ProteusRecyclerViewAdapter adapter = factory.create(type, (ProteusRecyclerView) view, value.getAsObject());
+                        view.setAdapter(adapter);
+                        view.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                    }
                 }
             }
 

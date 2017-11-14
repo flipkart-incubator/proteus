@@ -19,7 +19,11 @@
 
 package com.flipkart.android.proteus.support.v7;
 
+import android.support.annotation.NonNull;
+
 import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
+import com.flipkart.android.proteus.support.v7.adapter.SimpleListAdapter;
 import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
 
 /**
@@ -29,16 +33,29 @@ import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
  */
 public class RecyclerViewModule implements ProteusBuilder.Module {
 
-    private RecyclerViewModule() {
+    public static final String ADAPTER_TYPE_SIMPLE_LIST = "simple-list";
 
+    @NonNull
+    private RecyclerViewAdapterFactory factory;
+
+    private RecyclerViewModule(@NonNull RecyclerViewAdapterFactory factory) {
+        this.factory = factory;
+    }
+
+    public static RecyclerViewModule create(@NonNull RecyclerViewAdapterFactory factory) {
+        return new RecyclerViewModule(factory);
     }
 
     public static RecyclerViewModule create() {
-        return new RecyclerViewModule();
+        RecyclerViewAdapterFactory factory = new RecyclerViewAdapterFactory();
+
+        factory.register(ADAPTER_TYPE_SIMPLE_LIST, SimpleListAdapter.BUILDER);
+
+        return create(factory);
     }
 
     @Override
     public void registerWith(ProteusBuilder builder) {
-        builder.register(new RecyclerViewParser());
+        builder.register(new RecyclerViewParser(factory));
     }
 }
