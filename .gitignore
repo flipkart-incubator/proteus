@@ -12,3 +12,4 @@ out/
 /*/*.iml
 *.iml
 /captures
+npm-debug.log

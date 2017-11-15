@@ -31,5 +31,42 @@
   "sec": {
     "ll": "2017-01-01 12:01:37",
     "loc": "BLR, IND"
+  },
+  "data": {
+    "achievements": [
+      "Malcontent",
+      "Trusty Hardware",
+      "Anchor's Aweigh!",
+      "Heavy Weapons",
+      "Revenge!",
+      "Submissive",
+      "Zero-Point Energy",
+      "Hallowed Ground",
+      "Where Cubbage Fears to Tread",
+      "Barnacle Bowling",
+      "Bug Hunt",
+      "Defiant",
+      "Warden Freeman",
+      "Follow Freeman",
+      "Radiation Levels Detected",
+      "Plaza Defender",
+      "Blast from the Past",
+      "One Man Army",
+      "Fight the Power",
+      "Giant Killer",
+      "Singularity Collapse",
+      "OSHA Violation",
+      "Targetted Advertising",
+      "Atomizer",
+      "What cat?",
+      "Counter-Sniper",
+      "Two Points",
+      "Vorticough",
+      "Flushed",
+      "Hack Attack!",
+      "Zombie Chopper",
+      "Keep Off the Sand!",
+      "Lambda Locator"
+    ]
   }
 }

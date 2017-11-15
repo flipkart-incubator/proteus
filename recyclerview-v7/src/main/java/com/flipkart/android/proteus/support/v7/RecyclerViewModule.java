@@ -19,26 +19,55 @@
 
 package com.flipkart.android.proteus.support.v7;
 
+import android.support.annotation.NonNull;
+
 import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
+import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
+import com.flipkart.android.proteus.support.v7.adapter.SimpleListAdapter;
 import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
 
 /**
- * RecyclerViewModule
+ * RecyclerViewModule.
  *
  * @author adityasharat
  */
 public class RecyclerViewModule implements ProteusBuilder.Module {
 
-    private RecyclerViewModule() {
+    public static final String ADAPTER_TYPE_SIMPLE_LIST = "simple-list";
 
+    @NonNull
+    private RecyclerViewAdapterFactory factory;
+
+    private RecyclerViewModule(@NonNull RecyclerViewAdapterFactory factory) {
+        this.factory = factory;
     }
 
     public static RecyclerViewModule create() {
-        return new RecyclerViewModule();
+        return new Builder().includeDefaultAdapters().build();
     }
 
     @Override
     public void registerWith(ProteusBuilder builder) {
-        builder.register(new RecyclerViewParser());
+        builder.register(new RecyclerViewParser(factory));
+    }
+
+    public static class Builder {
+
+        private final RecyclerViewAdapterFactory factory = new RecyclerViewAdapterFactory();
+
+        public Builder register(@NonNull String type, @NonNull ProteusRecyclerViewAdapter.Builder builder) {
+            factory.register(type, builder);
+            return this;
+        }
+
+        public Builder includeDefaultAdapters() {
+            factory.register(ADAPTER_TYPE_SIMPLE_LIST, SimpleListAdapter.BUILDER);
+            return this;
+        }
+
+        public RecyclerViewModule build() {
+            return new RecyclerViewModule(factory);
+        }
     }
 }
