@@ -37,10 +37,10 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
     public static final String ADAPTER_TYPE_SIMPLE_LIST = "simple-list";
 
     @NonNull
-    private RecyclerViewAdapterFactory factory;
+    private RecyclerViewAdapterFactory adapterFactory;
 
-    private RecyclerViewModule(@NonNull RecyclerViewAdapterFactory factory) {
-        this.factory = factory;
+    private RecyclerViewModule(@NonNull RecyclerViewAdapterFactory adapterFactory) {
+        this.adapterFactory = adapterFactory;
     }
 
     public static RecyclerViewModule create() {
@@ -49,25 +49,25 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
 
     @Override
     public void registerWith(ProteusBuilder builder) {
-        builder.register(new RecyclerViewParser(factory));
+        builder.register(new RecyclerViewParser(adapterFactory));
     }
 
     public static class Builder {
 
-        private final RecyclerViewAdapterFactory factory = new RecyclerViewAdapterFactory();
+        private final RecyclerViewAdapterFactory adapterFactory = new RecyclerViewAdapterFactory();
 
         public Builder register(@NonNull String type, @NonNull ProteusRecyclerViewAdapter.Builder builder) {
-            factory.register(type, builder);
+            adapterFactory.register(type, builder);
             return this;
         }
 
         public Builder includeDefaultAdapters() {
-            factory.register(ADAPTER_TYPE_SIMPLE_LIST, SimpleListAdapter.BUILDER);
+            adapterFactory.register(ADAPTER_TYPE_SIMPLE_LIST, SimpleListAdapter.BUILDER);
             return this;
         }
 
         public RecyclerViewModule build() {
-            return new RecyclerViewModule(factory);
+            return new RecyclerViewModule(adapterFactory);
         }
     }
 }

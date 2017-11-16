@@ -51,10 +51,10 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
     private static final String ATTRIBUTE_TYPE = "type";
 
     @NonNull
-    private final RecyclerViewAdapterFactory factory;
+    private final RecyclerViewAdapterFactory adapterFactory;
 
-    public RecyclerViewParser(@NonNull RecyclerViewAdapterFactory factory) {
-        this.factory = factory;
+    public RecyclerViewParser(@NonNull RecyclerViewAdapterFactory adapterFactory) {
+        this.adapterFactory = adapterFactory;
     }
 
     @NonNull
@@ -94,7 +94,7 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
                 if (value.isObject()) {
                     String type = value.getAsObject().getAsString(ATTRIBUTE_TYPE);
                     if (type != null) {
-                        ProteusRecyclerViewAdapter adapter = factory.create(type, (ProteusRecyclerView) view, value.getAsObject());
+                        ProteusRecyclerViewAdapter adapter = adapterFactory.create(type, (ProteusRecyclerView) view, value.getAsObject());
                         view.setAdapter(adapter);
                         view.setLayoutManager(new LinearLayoutManager(view.getContext()));
                     }
