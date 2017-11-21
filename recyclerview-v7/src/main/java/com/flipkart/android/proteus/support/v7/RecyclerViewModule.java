@@ -52,6 +52,17 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
         builder.register(new RecyclerViewParser(factory));
     }
 
+    /**
+     * Use the Recycler View Module Builder to register custom {@link ProteusRecyclerViewAdapter}
+     * implementations. A default {@link ProteusRecyclerViewAdapter} is included if you call the
+     * {@link #includeDefaultAdapters()} method of the builder.
+     *
+     * @see ProteusRecyclerViewAdapter
+     * @see RecyclerViewAdapterFactory
+     * @see SimpleListAdapter
+     *
+     * @author adityasharat
+     */
     public static class Builder {
 
         private final RecyclerViewAdapterFactory factory = new RecyclerViewAdapterFactory();
