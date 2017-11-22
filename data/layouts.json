@@ -252,6 +252,9 @@
         "data": {
           "items": "@{data.achievements}"
         },
+        "layout_manager": {
+          "type": "LinearLayoutManager"
+        },
         "adapter": {
           "@": {
             "type": "simple-list",
