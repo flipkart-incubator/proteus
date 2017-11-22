@@ -36,7 +36,7 @@ import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
  */
 public class RecyclerViewModule implements ProteusBuilder.Module {
 
-    public static final String ADAPTER_SIMPLE_LIST = "simple-list";
+    public static final String ADAPTER_SIMPLE_LIST = "SimpleListAdapter";
 
     public static final String LAYOUT_MANAGER_LINEAR = "LinearLayoutManager";
 
