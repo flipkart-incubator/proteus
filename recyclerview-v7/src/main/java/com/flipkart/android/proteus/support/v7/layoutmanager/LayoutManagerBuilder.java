@@ -20,8 +20,8 @@
 package com.flipkart.android.proteus.support.v7.layoutmanager;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 
-import com.flipkart.android.proteus.LayoutManager;
 import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
 import com.flipkart.android.proteus.value.ObjectValue;
 
@@ -30,7 +30,7 @@ import com.flipkart.android.proteus.value.ObjectValue;
  *
  * @author adityasharat
  */
-public interface LayoutManagerBuilder<LM extends LayoutManager> {
+public interface LayoutManagerBuilder<LM extends RecyclerView.LayoutManager> {
 
     LM create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
 
