@@ -33,6 +33,7 @@ import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
+import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerFactory;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
@@ -53,8 +54,12 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
     @NonNull
     private final RecyclerViewAdapterFactory adapterFactory;
 
-    public RecyclerViewParser(@NonNull RecyclerViewAdapterFactory adapterFactory) {
+    @NonNull
+    private final LayoutManagerFactory layoutManagerFactory;
+
+    public RecyclerViewParser(@NonNull RecyclerViewAdapterFactory adapterFactory, @NonNull LayoutManagerFactory layoutManagerFactory) {
         this.adapterFactory = adapterFactory;
+        this.layoutManagerFactory = layoutManagerFactory;
     }
 
     @NonNull
@@ -96,7 +101,6 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
                     if (type != null) {
                         ProteusRecyclerViewAdapter adapter = adapterFactory.create(type, (ProteusRecyclerView) view, value.getAsObject());
                         view.setAdapter(adapter);
-                        view.setLayoutManager(new LinearLayoutManager(view.getContext()));
                     }
                 }
             }
@@ -114,6 +118,35 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
             @Override
             public void handleStyleResource(V view, StyleResource style) {
                 throw new IllegalArgumentException("Recycler View 'adapter' expects only object values");
+            }
+        });
+
+        addAttributeProcessor("layout_manager", new AttributeProcessor<V>() {
+
+            @Override
+            public void handleValue(V view, Value value) {
+                if (value.isObject()) {
+                    String type = value.getAsObject().getAsString(ATTRIBUTE_TYPE);
+                    if (type != null) {
+                        RecyclerView.LayoutManager layoutManager = layoutManagerFactory.create(type, (ProteusRecyclerView) view, value.getAsObject());
+                        view.setLayoutManager(layoutManager);
+                    }
+                }
+            }
+
+            @Override
+            public void handleResource(V view, Resource resource) {
+                throw new IllegalArgumentException("Recycler View 'layout_manager' expects only object values");
+            }
+
+            @Override
+            public void handleAttributeResource(V view, AttributeResource attribute) {
+                throw new IllegalArgumentException("Recycler View 'layout_manager' expects only object values");
+            }
+
+            @Override
+            public void handleStyleResource(V view, StyleResource style) {
+                throw new IllegalArgumentException("Recycler View 'layout_manager' expects only object values");
             }
         });
 
