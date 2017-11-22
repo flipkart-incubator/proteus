@@ -32,6 +32,7 @@ import com.flipkart.android.proteus.value.ObjectValue;
  */
 public interface LayoutManagerBuilder<LM extends RecyclerView.LayoutManager> {
 
+    @NonNull
     LM create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
 
 }
