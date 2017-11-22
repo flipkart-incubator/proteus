@@ -21,8 +21,8 @@ package com.flipkart.android.proteus.support.v7.layoutmanager;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 
-import com.flipkart.android.proteus.LayoutManager;
 import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
 import com.flipkart.android.proteus.value.ObjectValue;
 
@@ -47,7 +47,7 @@ public class LayoutManagerFactory {
         return builders.remove(type);
     }
 
-    public LayoutManager create(@NonNull String type, @NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
+    public RecyclerView.LayoutManager create(@NonNull String type, @NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
         return builders.get(type).create(view, config);
     }
 
