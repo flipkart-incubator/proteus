@@ -22,6 +22,7 @@ package com.flipkart.android.proteus.support.v7.layoutmanager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.flipkart.android.proteus.LayoutManager;
 import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
 import com.flipkart.android.proteus.value.ObjectValue;
 
@@ -35,18 +36,18 @@ import java.util.Map;
  */
 public class LayoutManagerFactory {
 
-    private Map<String, ProteusLayoutManager.Builder> builders = new HashMap<>();
+    private Map<String, LayoutManagerBuilder> builders = new HashMap<>();
 
-    public void register(@NonNull String type, @NonNull ProteusLayoutManager.Builder builder) {
+    public void register(@NonNull String type, @NonNull LayoutManagerBuilder builder) {
         builders.put(type, builder);
     }
 
     @Nullable
-    public ProteusLayoutManager.Builder remove(@NonNull String type) {
+    public LayoutManagerBuilder remove(@NonNull String type) {
         return builders.remove(type);
     }
 
-    public ProteusLayoutManager create(@NonNull String type, @NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
+    public LayoutManager create(@NonNull String type, @NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
         return builders.get(type).create(view, config);
     }
 

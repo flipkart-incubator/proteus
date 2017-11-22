@@ -20,20 +20,18 @@
 package com.flipkart.android.proteus.support.v7.layoutmanager;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 
+import com.flipkart.android.proteus.LayoutManager;
 import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
 import com.flipkart.android.proteus.value.ObjectValue;
 
 /**
- * ProteusLayoutManager
+ * LayoutManagerBuilder
  *
  * @author adityasharat
  */
-public abstract class ProteusLayoutManager extends RecyclerView.LayoutManager {
+public interface LayoutManagerBuilder<LM extends LayoutManager> {
 
-    public interface Builder<A extends ProteusLayoutManager> {
-        A create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
-    }
+    LM create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
 
 }
