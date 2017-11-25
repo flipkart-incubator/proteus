@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.support.v7.adapter;
+package com.flipkart.android.proteus.support.v7.layoutmanager;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -26,16 +26,13 @@ import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
 import com.flipkart.android.proteus.value.ObjectValue;
 
 /**
- * ProteusRecyclerViewAdapter.
+ * LayoutManagerBuilder
  *
  * @author adityasharat
  */
+public interface LayoutManagerBuilder<LM extends RecyclerView.LayoutManager> {
 
-public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder> extends RecyclerView.Adapter<VH> {
-
-    public interface Builder<A extends ProteusRecyclerViewAdapter> {
-        @NonNull
-        A create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
-    }
+    @NonNull
+    LM create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
 
 }

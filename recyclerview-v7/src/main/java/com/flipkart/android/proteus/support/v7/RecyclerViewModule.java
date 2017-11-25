@@ -25,6 +25,8 @@ import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
 import com.flipkart.android.proteus.support.v7.adapter.SimpleListAdapter;
+import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerFactory;
+import com.flipkart.android.proteus.support.v7.layoutmanager.ProteusLinearLayoutManager;
 import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
 
 /**
@@ -34,51 +36,89 @@ import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
  */
 public class RecyclerViewModule implements ProteusBuilder.Module {
 
-    public static final String ADAPTER_TYPE_SIMPLE_LIST = "simple-list";
+    public static final String ADAPTER_SIMPLE_LIST = "SimpleListAdapter";
+
+    public static final String LAYOUT_MANAGER_LINEAR = "LinearLayoutManager";
 
     @NonNull
-    private RecyclerViewAdapterFactory factory;
+    private final RecyclerViewAdapterFactory adapterFactory;
 
-    private RecyclerViewModule(@NonNull RecyclerViewAdapterFactory factory) {
-        this.factory = factory;
+    @NonNull
+    private final LayoutManagerFactory layoutManagerFactory;
+
+    private RecyclerViewModule(@NonNull RecyclerViewAdapterFactory adapterFactory, @NonNull LayoutManagerFactory layoutManagerFactory) {
+        this.adapterFactory = adapterFactory;
+        this.layoutManagerFactory = layoutManagerFactory;
     }
 
     public static RecyclerViewModule create() {
-        return new Builder().includeDefaultAdapters().build();
+        return new Builder().build();
     }
 
     @Override
     public void registerWith(ProteusBuilder builder) {
-        builder.register(new RecyclerViewParser(factory));
+        builder.register(new RecyclerViewParser(adapterFactory, layoutManagerFactory));
     }
 
     /**
      * Use the Recycler View Module Builder to register custom {@link ProteusRecyclerViewAdapter}
-     * implementations. A default {@link ProteusRecyclerViewAdapter} is included if you call the
-     * {@link #includeDefaultAdapters()} method of the builder.
+     * implementations. A default {@link ProteusRecyclerViewAdapter} and
+     * {@link android.support.v7.widget.RecyclerView.LayoutManager} are included by default. To
+     * exclude them call {@link #excludeDefaultAdapters()} and {@link #excludeDefaultLayoutManagers()}.
      *
+     * @author adityasharat
      * @see ProteusRecyclerViewAdapter
      * @see RecyclerViewAdapterFactory
      * @see SimpleListAdapter
-     *
-     * @author adityasharat
+     * @see LayoutManagerFactory
+     * @see ProteusLinearLayoutManager
      */
     public static class Builder {
 
-        private final RecyclerViewAdapterFactory factory = new RecyclerViewAdapterFactory();
+        @NonNull
+        private final RecyclerViewAdapterFactory adapterFactory = new RecyclerViewAdapterFactory();
+
+        @NonNull
+        private LayoutManagerFactory layoutManagerFactory = new LayoutManagerFactory();
+
+        private boolean includeDefaultAdapters = true;
+
+        private boolean includeDefaultLayoutManagers = true;
 
         public Builder register(@NonNull String type, @NonNull ProteusRecyclerViewAdapter.Builder builder) {
-            factory.register(type, builder);
+            adapterFactory.register(type, builder);
             return this;
         }
 
-        public Builder includeDefaultAdapters() {
-            factory.register(ADAPTER_TYPE_SIMPLE_LIST, SimpleListAdapter.BUILDER);
+        private void registerDefaultAdapters() {
+            adapterFactory.register(ADAPTER_SIMPLE_LIST, SimpleListAdapter.BUILDER);
+        }
+
+        private void registerDefaultLayoutManagers() {
+            layoutManagerFactory.register(LAYOUT_MANAGER_LINEAR, ProteusLinearLayoutManager.BUILDER);
+        }
+
+        public Builder excludeDefaultAdapters() {
+            includeDefaultAdapters = false;
+            return this;
+        }
+
+        public Builder excludeDefaultLayoutManagers() {
+            includeDefaultLayoutManagers = false;
             return this;
         }
 
         public RecyclerViewModule build() {
-            return new RecyclerViewModule(factory);
+
+            if (includeDefaultAdapters) {
+                registerDefaultAdapters();
+            }
+
+            if (includeDefaultLayoutManagers) {
+                registerDefaultLayoutManagers();
+            }
+
+            return new RecyclerViewModule(adapterFactory, layoutManagerFactory);
         }
     }
 }

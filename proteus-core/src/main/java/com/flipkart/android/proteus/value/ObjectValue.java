@@ -219,12 +219,26 @@ public class ObjectValue extends Value {
         return null;
     }
 
+    public boolean getAsBoolean(String memberName, boolean defaultValue) {
+        if (isBoolean(memberName)) {
+            return getAsPrimitive(memberName).getAsBoolean();
+        }
+        return defaultValue;
+    }
+
     @Nullable
     public Integer getAsInteger(String memberName) {
         if (isNumber(memberName)) {
             return getAsPrimitive(memberName).getAsInt();
         }
         return null;
+    }
+
+    public int getAsInteger(String memberName, int defaultValue) {
+        if (isNumber(memberName)) {
+            return getAsPrimitive(memberName).getAsInt();
+        }
+        return defaultValue;
     }
 
     @Nullable
@@ -235,6 +249,13 @@ public class ObjectValue extends Value {
         return null;
     }
 
+    public float getAsFloat(String memberName, float defaultValue) {
+        if (isNumber(memberName)) {
+            return getAsPrimitive(memberName).getAsFloat();
+        }
+        return defaultValue;
+    }
+
     @Nullable
     public Double getAsDouble(String memberName) {
         if (isNumber(memberName)) {
@@ -243,12 +264,26 @@ public class ObjectValue extends Value {
         return null;
     }
 
+    public double getAsDouble(String memberName, double defaultValue) {
+        if (isNumber(memberName)) {
+            return getAsPrimitive(memberName).getAsDouble();
+        }
+        return defaultValue;
+    }
+
     @Nullable
     public Long getAsLong(String memberName) {
         if (isNumber(memberName)) {
             return getAsPrimitive(memberName).getAsLong();
         }
         return null;
+    }
+
+    public long getAsLong(String memberName, long defaultValue) {
+        if (isNumber(memberName)) {
+            return getAsPrimitive(memberName).getAsLong();
+        }
+        return defaultValue;
     }
 
     @Nullable

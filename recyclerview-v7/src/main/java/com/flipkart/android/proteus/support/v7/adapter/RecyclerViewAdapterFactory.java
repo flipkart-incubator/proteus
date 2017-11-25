@@ -46,7 +46,7 @@ public class RecyclerViewAdapterFactory {
         return adapters.remove(type);
     }
 
-    public ProteusRecyclerViewAdapter create(@NonNull String type, @NonNull ProteusRecyclerView view, ObjectValue config) {
+    public ProteusRecyclerViewAdapter create(@NonNull String type, @NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
         return adapters.get(type).create(view, config);
     }
 }

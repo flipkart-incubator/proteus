@@ -44,6 +44,7 @@ public class SimpleListAdapter extends ProteusRecyclerViewAdapter<ProteusViewHol
     private static final String ATTRIBUTE_ITEM_COUNT = "item-count";
 
     public static final Builder<SimpleListAdapter> BUILDER = new Builder<SimpleListAdapter>() {
+        @NonNull
         @Override
         public SimpleListAdapter create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
             Layout layout = config.getAsObject().getAsLayout(ATTRIBUTE_ITEM_LAYOUT);

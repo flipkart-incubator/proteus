@@ -17,25 +17,38 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.support.v7.adapter;
+package com.flipkart.android.proteus.support.v7.layoutmanager;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 
 import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
 import com.flipkart.android.proteus.value.ObjectValue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * ProteusRecyclerViewAdapter.
+ * LayoutManagerFactory
  *
  * @author adityasharat
  */
+public class LayoutManagerFactory {
 
-public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder> extends RecyclerView.Adapter<VH> {
+    private Map<String, LayoutManagerBuilder> builders = new HashMap<>();
 
-    public interface Builder<A extends ProteusRecyclerViewAdapter> {
-        @NonNull
-        A create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
+    public void register(@NonNull String type, @NonNull LayoutManagerBuilder builder) {
+        builders.put(type, builder);
+    }
+
+    @Nullable
+    public LayoutManagerBuilder remove(@NonNull String type) {
+        return builders.remove(type);
+    }
+
+    public RecyclerView.LayoutManager create(@NonNull String type, @NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
+        return builders.get(type).create(view, config);
     }
 
 }
