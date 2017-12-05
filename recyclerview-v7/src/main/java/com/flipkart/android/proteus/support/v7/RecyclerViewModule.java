@@ -30,15 +30,20 @@ import com.flipkart.android.proteus.support.v7.layoutmanager.ProteusLinearLayout
 import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
 
 /**
- * RecyclerViewModule.
+ * <p>
+ * RecyclerView Module contains the attribute processors, Layout Manager and Adapter Factories, and
+ * their default implementations for the {@link android.support.v7.widget.RecyclerView}.
+ * </p>
  *
  * @author adityasharat
+ * @see RecyclerViewAdapterFactory
+ * @see LayoutManagerFactory
  */
 public class RecyclerViewModule implements ProteusBuilder.Module {
 
-    public static final String ADAPTER_SIMPLE_LIST = "SimpleListAdapter";
+    static final String ADAPTER_SIMPLE_LIST = "SimpleListAdapter";
 
-    public static final String LAYOUT_MANAGER_LINEAR = "LinearLayoutManager";
+    static final String LAYOUT_MANAGER_LINEAR = "LinearLayoutManager";
 
     @NonNull
     private final RecyclerViewAdapterFactory adapterFactory;
@@ -46,11 +51,30 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
     @NonNull
     private final LayoutManagerFactory layoutManagerFactory;
 
-    private RecyclerViewModule(@NonNull RecyclerViewAdapterFactory adapterFactory, @NonNull LayoutManagerFactory layoutManagerFactory) {
+    /**
+     * <p>
+     * Returns a new instance of the Recycler View Module.
+     * </p>
+     *
+     * @param adapterFactory       The adapter factory to be used to evaluate the 'adapter' attribute.
+     * @param layoutManagerFactory The layout manager factory to evaluate the 'layout_manager' attribute.
+     */
+    RecyclerViewModule(@NonNull RecyclerViewAdapterFactory adapterFactory, @NonNull LayoutManagerFactory layoutManagerFactory) {
         this.adapterFactory = adapterFactory;
         this.layoutManagerFactory = layoutManagerFactory;
     }
 
+    /**
+     * <p>
+     * The default constructor method to create a new instance of this class. This method internally
+     * uses the {@link Builder} and registers the default Adapters and Layout Managers of the
+     * Recycler View.
+     * </p>
+     *
+     * @return Returns a new instance of the module with default implementations registered.
+     * @see SimpleListAdapter
+     * @see ProteusLinearLayoutManager
+     */
     public static RecyclerViewModule create() {
         return new Builder().build();
     }
@@ -85,6 +109,15 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
 
         private boolean includeDefaultLayoutManagers = true;
 
+        /**
+         * <p>
+         * Registers a new {@link ProteusRecyclerViewAdapter}.
+         * </p>
+         *
+         * @param type    The 'type' of the adapter which will be used in the 'adapter' attribute..
+         * @param builder The builder for the adapter.
+         * @return this builder.
+         */
         public Builder register(@NonNull String type, @NonNull ProteusRecyclerViewAdapter.Builder builder) {
             adapterFactory.register(type, builder);
             return this;
@@ -98,16 +131,41 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
             layoutManagerFactory.register(LAYOUT_MANAGER_LINEAR, ProteusLinearLayoutManager.BUILDER);
         }
 
+        /**
+         * <p>
+         * Will exclude the default {@link ProteusRecyclerViewAdapter} implementations from the module.
+         * </p>
+         *
+         * @return this builder.
+         */
+        @SuppressWarnings("WeakerAccess")
         public Builder excludeDefaultAdapters() {
             includeDefaultAdapters = false;
             return this;
         }
 
+        /**
+         * <p>
+         * Will exclude the default {@link android.support.v7.widget.RecyclerView.LayoutManager}
+         * implementations from the module.
+         * </p>
+         *
+         * @return this builder.
+         */
+        @SuppressWarnings("WeakerAccess")
         public Builder excludeDefaultLayoutManagers() {
             includeDefaultLayoutManagers = false;
             return this;
         }
 
+        /**
+         * <p>
+         * Returns a new instance of {@link RecyclerViewModule}.
+         * </p>
+         *
+         * @return a new instance of {@link RecyclerViewModule}.
+         */
+        @SuppressWarnings("WeakerAccess")
         public RecyclerViewModule build() {
 
             if (includeDefaultAdapters) {
