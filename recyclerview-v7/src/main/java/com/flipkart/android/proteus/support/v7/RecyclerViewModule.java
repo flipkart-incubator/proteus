@@ -57,8 +57,8 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
      * Returns a new instance of the Recycler View Module.
      * </p>
      *
-     * @param adapterFactory       The adapter factory to be used to evaluate the 'adapter' attribute.
-     * @param layoutManagerFactory The layout manager factory to evaluate the 'layout_manager' attribute.
+     * @param adapterFactory       The adapter factory to be used to evaluate the {@link RecyclerViewParser#ATTRIBUTE_ADAPTER} attribute.
+     * @param layoutManagerFactory The layout manager factory to evaluate the {@link RecyclerViewParser#ATTRIBUTE_LAYOUT_MANAGER} attribute.
      */
     RecyclerViewModule(@NonNull RecyclerViewAdapterFactory adapterFactory, @NonNull LayoutManagerFactory layoutManagerFactory) {
         this.adapterFactory = adapterFactory;
@@ -116,7 +116,7 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
          * Registers a new {@link ProteusRecyclerViewAdapter}.
          * </p>
          *
-         * @param type    The 'type' of the adapter which will be used in the 'adapter' attribute.
+         * @param type    The 'type' of the adapter which will be used in the {@link RecyclerViewParser#ATTRIBUTE_ADAPTER} attribute.
          * @param builder The builder for the adapter.
          * @return this builder.
          */
@@ -130,7 +130,7 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
          * Registers a new {@link ProteusRecyclerViewAdapter}.
          * </p>
          *
-         * @param type    The 'type' of the layout manager which will be used in the 'layout_manager' attribute.
+         * @param type    The {@link RecyclerViewParser#ATTRIBUTE_TYPE} of the layout manager which will be used in the {@link RecyclerViewParser#ATTRIBUTE_LAYOUT_MANAGER} attribute.
          * @param builder The builder for the layout manager.
          * @return this builder.
          */
