@@ -25,6 +25,7 @@ import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
 import com.flipkart.android.proteus.support.v7.adapter.SimpleListAdapter;
+import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerBuilder;
 import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerFactory;
 import com.flipkart.android.proteus.support.v7.layoutmanager.ProteusLinearLayoutManager;
 import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
@@ -97,6 +98,7 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
      * @see LayoutManagerFactory
      * @see ProteusLinearLayoutManager
      */
+    @SuppressWarnings("WeakerAccess")
     public static class Builder {
 
         @NonNull
@@ -114,7 +116,7 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
          * Registers a new {@link ProteusRecyclerViewAdapter}.
          * </p>
          *
-         * @param type    The 'type' of the adapter which will be used in the 'adapter' attribute..
+         * @param type    The 'type' of the adapter which will be used in the 'adapter' attribute.
          * @param builder The builder for the adapter.
          * @return this builder.
          */
@@ -125,12 +127,25 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
 
         /**
          * <p>
+         * Registers a new {@link ProteusRecyclerViewAdapter}.
+         * </p>
+         *
+         * @param type    The 'type' of the layout manager which will be used in the 'layout_manager' attribute.
+         * @param builder The builder for the layout manager.
+         * @return this builder.
+         */
+        public Builder register(@NonNull String type, @NonNull LayoutManagerBuilder builder) {
+            layoutManagerFactory.register(type, builder);
+            return this;
+        }
+
+        /**
+         * <p>
          * Will exclude the default {@link ProteusRecyclerViewAdapter} implementations from the module.
          * </p>
          *
          * @return this builder.
          */
-        @SuppressWarnings("WeakerAccess")
         public Builder excludeDefaultAdapters() {
             includeDefaultAdapters = false;
             return this;
@@ -144,7 +159,6 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
          *
          * @return this builder.
          */
-        @SuppressWarnings("WeakerAccess")
         public Builder excludeDefaultLayoutManagers() {
             includeDefaultLayoutManagers = false;
             return this;
@@ -157,7 +171,6 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
          *
          * @return a new instance of {@link RecyclerViewModule}.
          */
-        @SuppressWarnings("WeakerAccess")
         public RecyclerViewModule build() {
 
             if (includeDefaultAdapters) {
@@ -172,11 +185,11 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
         }
 
         private void registerDefaultAdapters() {
-            adapterFactory.register(ADAPTER_SIMPLE_LIST, SimpleListAdapter.BUILDER);
+            register(ADAPTER_SIMPLE_LIST, SimpleListAdapter.BUILDER);
         }
 
         private void registerDefaultLayoutManagers() {
-            layoutManagerFactory.register(LAYOUT_MANAGER_LINEAR, ProteusLinearLayoutManager.BUILDER);
+            register(LAYOUT_MANAGER_LINEAR, ProteusLinearLayoutManager.BUILDER);
         }
     }
 }
