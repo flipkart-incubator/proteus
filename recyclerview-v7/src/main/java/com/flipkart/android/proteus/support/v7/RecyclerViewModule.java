@@ -123,14 +123,6 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
             return this;
         }
 
-        private void registerDefaultAdapters() {
-            adapterFactory.register(ADAPTER_SIMPLE_LIST, SimpleListAdapter.BUILDER);
-        }
-
-        private void registerDefaultLayoutManagers() {
-            layoutManagerFactory.register(LAYOUT_MANAGER_LINEAR, ProteusLinearLayoutManager.BUILDER);
-        }
-
         /**
          * <p>
          * Will exclude the default {@link ProteusRecyclerViewAdapter} implementations from the module.
@@ -177,6 +169,14 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
             }
 
             return new RecyclerViewModule(adapterFactory, layoutManagerFactory);
+        }
+
+        private void registerDefaultAdapters() {
+            adapterFactory.register(ADAPTER_SIMPLE_LIST, SimpleListAdapter.BUILDER);
+        }
+
+        private void registerDefaultLayoutManagers() {
+            layoutManagerFactory.register(LAYOUT_MANAGER_LINEAR, ProteusLinearLayoutManager.BUILDER);
         }
     }
 }
