@@ -25,20 +25,26 @@ import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
 import com.flipkart.android.proteus.support.v7.adapter.SimpleListAdapter;
+import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerBuilder;
 import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerFactory;
 import com.flipkart.android.proteus.support.v7.layoutmanager.ProteusLinearLayoutManager;
 import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
 
 /**
- * RecyclerViewModule.
+ * <p>
+ * RecyclerView Module contains the attribute processors, Layout Manager and Adapter Factories, and
+ * their default implementations for the {@link android.support.v7.widget.RecyclerView}.
+ * </p>
  *
  * @author adityasharat
+ * @see RecyclerViewAdapterFactory
+ * @see LayoutManagerFactory
  */
 public class RecyclerViewModule implements ProteusBuilder.Module {
 
-    public static final String ADAPTER_SIMPLE_LIST = "SimpleListAdapter";
+    static final String ADAPTER_SIMPLE_LIST = "SimpleListAdapter";
 
-    public static final String LAYOUT_MANAGER_LINEAR = "LinearLayoutManager";
+    static final String LAYOUT_MANAGER_LINEAR = "LinearLayoutManager";
 
     @NonNull
     private final RecyclerViewAdapterFactory adapterFactory;
@@ -46,11 +52,30 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
     @NonNull
     private final LayoutManagerFactory layoutManagerFactory;
 
-    private RecyclerViewModule(@NonNull RecyclerViewAdapterFactory adapterFactory, @NonNull LayoutManagerFactory layoutManagerFactory) {
+    /**
+     * <p>
+     * Returns a new instance of the Recycler View Module.
+     * </p>
+     *
+     * @param adapterFactory       The adapter factory to be used to evaluate the {@link RecyclerViewParser#ATTRIBUTE_ADAPTER} attribute.
+     * @param layoutManagerFactory The layout manager factory to evaluate the {@link RecyclerViewParser#ATTRIBUTE_LAYOUT_MANAGER} attribute.
+     */
+    RecyclerViewModule(@NonNull RecyclerViewAdapterFactory adapterFactory, @NonNull LayoutManagerFactory layoutManagerFactory) {
         this.adapterFactory = adapterFactory;
         this.layoutManagerFactory = layoutManagerFactory;
     }
 
+    /**
+     * <p>
+     * The default constructor method to create a new instance of this class. This method internally
+     * uses the {@link Builder} and registers the default Adapters and Layout Managers of the
+     * Recycler View.
+     * </p>
+     *
+     * @return Returns a new instance of the module with default implementations registered.
+     * @see SimpleListAdapter
+     * @see ProteusLinearLayoutManager
+     */
     public static RecyclerViewModule create() {
         return new Builder().build();
     }
@@ -73,6 +98,7 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
      * @see LayoutManagerFactory
      * @see ProteusLinearLayoutManager
      */
+    @SuppressWarnings("WeakerAccess")
     public static class Builder {
 
         @NonNull
@@ -85,29 +111,66 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
 
         private boolean includeDefaultLayoutManagers = true;
 
+        /**
+         * <p>
+         * Registers a new {@link ProteusRecyclerViewAdapter}.
+         * </p>
+         *
+         * @param type    The 'type' of the adapter which will be used in the {@link RecyclerViewParser#ATTRIBUTE_ADAPTER} attribute.
+         * @param builder The builder for the adapter.
+         * @return this builder.
+         */
         public Builder register(@NonNull String type, @NonNull ProteusRecyclerViewAdapter.Builder builder) {
             adapterFactory.register(type, builder);
             return this;
         }
 
-        private void registerDefaultAdapters() {
-            adapterFactory.register(ADAPTER_SIMPLE_LIST, SimpleListAdapter.BUILDER);
+        /**
+         * <p>
+         * Registers a new {@link ProteusRecyclerViewAdapter}.
+         * </p>
+         *
+         * @param type    The {@link RecyclerViewParser#ATTRIBUTE_TYPE} of the layout manager which will be used in the {@link RecyclerViewParser#ATTRIBUTE_LAYOUT_MANAGER} attribute.
+         * @param builder The builder for the layout manager.
+         * @return this builder.
+         */
+        public Builder register(@NonNull String type, @NonNull LayoutManagerBuilder builder) {
+            layoutManagerFactory.register(type, builder);
+            return this;
         }
 
-        private void registerDefaultLayoutManagers() {
-            layoutManagerFactory.register(LAYOUT_MANAGER_LINEAR, ProteusLinearLayoutManager.BUILDER);
-        }
-
+        /**
+         * <p>
+         * Will exclude the default {@link ProteusRecyclerViewAdapter} implementations from the module.
+         * </p>
+         *
+         * @return this builder.
+         */
         public Builder excludeDefaultAdapters() {
             includeDefaultAdapters = false;
             return this;
         }
 
+        /**
+         * <p>
+         * Will exclude the default {@link android.support.v7.widget.RecyclerView.LayoutManager}
+         * implementations from the module.
+         * </p>
+         *
+         * @return this builder.
+         */
         public Builder excludeDefaultLayoutManagers() {
             includeDefaultLayoutManagers = false;
             return this;
         }
 
+        /**
+         * <p>
+         * Returns a new instance of {@link RecyclerViewModule}.
+         * </p>
+         *
+         * @return a new instance of {@link RecyclerViewModule}.
+         */
         public RecyclerViewModule build() {
 
             if (includeDefaultAdapters) {
@@ -119,6 +182,14 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
             }
 
             return new RecyclerViewModule(adapterFactory, layoutManagerFactory);
+        }
+
+        private void registerDefaultAdapters() {
+            register(ADAPTER_SIMPLE_LIST, SimpleListAdapter.BUILDER);
+        }
+
+        private void registerDefaultLayoutManagers() {
+            register(LAYOUT_MANAGER_LINEAR, ProteusLinearLayoutManager.BUILDER);
         }
     }
 }

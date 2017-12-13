@@ -21,11 +21,11 @@ package com.flipkart.android.proteus.support.v7.widget;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
+import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
@@ -49,7 +49,10 @@ import com.flipkart.android.proteus.value.Value;
 
 public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V> {
 
-    private static final String ATTRIBUTE_TYPE = "type";
+    public static final String ATTRIBUTE_ADAPTER = "adapter";
+    public static final String ATTRIBUTE_LAYOUT_MANAGER = "layout_manager";
+
+    public static final String ATTRIBUTE_TYPE = ProteusConstants.TYPE;
 
     @NonNull
     private final RecyclerViewAdapterFactory adapterFactory;
@@ -92,7 +95,7 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
     @Override
     protected void addAttributeProcessors() {
 
-        addAttributeProcessor("adapter", new AttributeProcessor<V>() {
+        addAttributeProcessor(ATTRIBUTE_ADAPTER, new AttributeProcessor<V>() {
 
             @Override
             public void handleValue(V view, Value value) {
@@ -121,7 +124,7 @@ public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V
             }
         });
 
-        addAttributeProcessor("layout_manager", new AttributeProcessor<V>() {
+        addAttributeProcessor(ATTRIBUTE_LAYOUT_MANAGER, new AttributeProcessor<V>() {
 
             @Override
             public void handleValue(V view, Value value) {
