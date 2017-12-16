@@ -38,12 +38,12 @@ allprojects {
 
 // Add the dependency
 dependencies {
-        compile 'com.github.flipkart-incubator:proteus-core:5.0.0-rc11@aar'
-        compile 'com.github.flipkart-incubator:gson-adapter:5.0.0-rc11@aar'
+        compile 'com.github.flipkart-incubator:proteus-core:5.0.0-rc12@aar'
+        compile 'com.github.flipkart-incubator:gson-adapter:5.0.0-rc12@aar'
 }
 ```
 
-#### include as a module
+#### include as a module (gradle 3.x.x)
 
 * Clone the **proteus** in the project folder
 
