@@ -144,6 +144,14 @@ The demo app will let you play around with proteus as well as help you understan
 * [DroidCon Talk](https://www.youtube.com/watch?v=ue0ax2_18k8)
 * [Demo Videos](https://www.youtube.com/playlist?list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp)
 
+## Supported Modules
+
+* Native Android Widgets
+* CardView v7
+* Android Design Library
+* RecyclerView v7
+* Android Support v4
+
 ## Contributing
 
 ### How?
