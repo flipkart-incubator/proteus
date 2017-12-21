@@ -25,7 +25,7 @@ With Proteus, you can control your Apps layout from the backend (no WebViews). F
 
 ## Getting Started
 
-#### gradle
+#### gradle (gradle 3.x.x)
 
 ```javascript
 // Add it in your root build.gradle at the end of repositories:
