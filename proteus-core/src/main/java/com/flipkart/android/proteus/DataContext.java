@@ -23,6 +23,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.flipkart.android.proteus.managers.ViewManager;
+import com.flipkart.android.proteus.value.Binding.FunctionBinding;
 import com.flipkart.android.proteus.value.Null;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
@@ -30,25 +32,72 @@ import com.flipkart.android.proteus.value.Value;
 import java.util.Map;
 
 /**
+ * DataContext class hosts a the data, scope, index, and if
+ * this context has it's own scope or if it inherits from a parent.
+ * An instance of this class used in the update flow of a {@link ProteusView}
+ * which is executed when {@link ViewManager#update(ObjectValue)} is
+ * invoked. The {@link #data} is update on every update call.
+ *
  * @author Aditya Sharat
  */
 public class DataContext {
 
+    /**
+     * This property is used to identify whether
+     * this data context is simply cloned from it's
+     * parent data context. Which implies that the
+     * {@link #scope} and {@link #data} were copied
+     * from it's parents data context.
+     */
     private final boolean hasOwnProperties;
 
+    /**
+     * This is the local isolated scope created for this
+     * {@link ProteusView} hosting this instance of the
+     * data context. This is populated from the {@code data}
+     * attribute specified in the layout.
+     */
     @Nullable
     private final Map<String, Value> scope;
 
+    /**
+     * This index is used to resolve the {@code $index} meta
+     * values when dealing with arrays and data bound
+     * {@code children} attribute.
+     */
     private final int index;
 
+    /**
+     * The data which will be used to bind all data bound
+     * attribute values of the layout.
+     */
     private ObjectValue data;
 
+    /**
+     * This is the default constructor to create a new {@code DataContext}.
+     * The {@link #hasOwnProperties} is initialized to {@code true} is and
+     * only if the {@param scope} argument is non null. An empty non null,
+     * null, a {@param scope} which does not refer to any data paths from
+     * the parent scope implies that the hosting {@link ProteusView} is
+     * completely isolated from the parent and cannot access any data from
+     * above it in the hierarchy.
+     *
+     * @param scope the local isolate scope for this data context.
+     * @param index the data index for this data context.
+     */
     private DataContext(@Nullable Map<String, Value> scope, int index) {
         this.scope = scope;
         this.index = index;
         this.hasOwnProperties = scope != null;
     }
 
+    /**
+     * This is a copy constructor for creating a clone of
+     * another data context. The {@link #hasOwnProperties}
+     * is always {@code false} for a cloned data context.
+     *
+     * @param dataContext the parent data context to clone from.
+     */
     public DataContext(DataContext dataContext) {
         this.data = dataContext.getData();
         this.scope = dataContext.getScope();
