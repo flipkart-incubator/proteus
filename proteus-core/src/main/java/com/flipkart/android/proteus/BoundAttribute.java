@@ -21,16 +21,29 @@ package com.flipkart.android.proteus;
 
 import android.support.annotation.NonNull;
 
+import com.flipkart.android.proteus.managers.ViewManager;
 import com.flipkart.android.proteus.value.Binding;
+import com.flipkart.android.proteus.value.ObjectValue;
 
 /**
+ * BoundAttribute holds the attribute id to binding pair
+ * which is used in the update flow of a {@link ProteusView}
+ * which is executed when {@link ViewManager#update(ObjectValue)}
+ * is invoked.
+ *
  * @author kirankumar
  * @author adityasharat
  */
 public class BoundAttribute {
 
+    /**
+     * The {@code int} attribute id of the pair.
+     */
     public final int attributeId;
 
+    /**
+     * The {@link Binding} for the layout attributes value.
+     */
     @NonNull
     public final Binding binding;
 
