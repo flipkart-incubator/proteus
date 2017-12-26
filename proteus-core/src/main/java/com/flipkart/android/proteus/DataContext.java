@@ -105,9 +105,18 @@ public class DataContext {
         this.hasOwnProperties = false;
     }
 
+    /**
+     * Utility method to create a new {@link DataContext} without any {@link #scope}.
+     * TODO: passing {@param context} is completely unnecessary for this utility method.
+     *
+     * @param context   The proteus android context to resolve {@link FunctionBinding} to evaluate the scope.
+     * @param data      The data to be used by the data context.
+     * @param dataIndex The data index to used by the data context.
+     * @return A new data context with scope evaluated.
+     */
     public static DataContext create(@NonNull Context context, @Nullable ObjectValue data, int dataIndex) {
         DataContext dataContext = new DataContext(null, dataIndex);
-        dataContext.update(context, data);
+        dataContext.update(context, data); /* TODO: calling update will not do anything, remove it */
         return dataContext;
     }
 
