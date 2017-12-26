@@ -13,7 +13,7 @@
 </a>
 
 **Proteus** is meant to be a drop-in replacement for Android’s `LayoutInflater`; but unlike the compiled XML layouts bundled in the APK, Proteus inflates layouts at runtime.
-With Proteus, you can control your Apps layout from the backend (no WebViews). Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. Proteus has runtime data bindings and formatters. Plugin in your own custom views and attributes and functions.
+With Proteus, you can control your Apps layout from the backend (no WebViews). Forget the boilerplate code to `findViewById`, cast it to a `TextView`, and then `setText()`. Proteus has runtime data bindings and formatters. Plugin in your own custom views and attributes and functions to flavour proteus to your requirements.
 
 * **[Getting started](#getting-started)**
 * **[How it Works](#how-it-works)**
@@ -25,7 +25,7 @@ With Proteus, you can control your Apps layout from the backend (no WebViews). F
 
 ## Getting Started
 
-#### gradle
+#### gradle (gradle 3.x.x)
 
 ```javascript
 // Add it in your root build.gradle at the end of repositories:
@@ -38,12 +38,12 @@ allprojects {
 
 // Add the dependency
 dependencies {
-        compile 'com.github.flipkart-incubator:proteus-core:5.0.0-rc11@aar'
-        compile 'com.github.flipkart-incubator:gson-adapter:5.0.0-rc11@aar'
+        compile 'com.github.flipkart-incubator:proteus-core:5.0.0-rc12@aar'
+        compile 'com.github.flipkart-incubator:gson-adapter:5.0.0-rc12@aar'
 }
 ```
 
-#### include as a module
+#### include as a module (gradle 3.x.x)
 
 * Clone the **proteus** in the project folder
 
@@ -143,6 +143,14 @@ The demo app will let you play around with proteus as well as help you understan
 * [API References]() *under construction*
 * [DroidCon Talk](https://www.youtube.com/watch?v=ue0ax2_18k8)
 * [Demo Videos](https://www.youtube.com/playlist?list=PLIQ3ghGBPsqu0F-OHhKRq2s76vSkdUlJp)
+
+## Supported Modules
+
+* Native Android Widgets
+* CardView v7
+* Android Design Library
+* RecyclerView v7
+* Android Support v4
 
 ## Contributing
 
