@@ -108,7 +108,7 @@ public class DataContext {
     /**
      * Utility method to create a new {@link DataContext} without any {@link #scope}.
      *
-     * @param context   The proteus android context to resolve {@link FunctionBinding} to evaluate the scope.
+     * @param context   The proteus context to resolve {@link FunctionBinding} to evaluate the scope.
      * @param data      The data to be used by the data context.
      * @param dataIndex The data index to used by the data context.
      * @return A new data context with scope evaluated.
@@ -119,6 +119,15 @@ public class DataContext {
         return dataContext;
     }
 
+    /**
+     * Utility method to create a new {@link DataContext} with a {@link #scope}.
+     *
+     * @param context   The proteus android context to resolve {@link FunctionBinding} to evaluate the scope.
+     * @param data      The data to be used by the data context.
+     * @param dataIndex The data index to used by the data context.
+     * @param scope     The scope map used to create the {@link #data} of this data context.
+     * @return A new data context with scope evaluated.
+     */
     public static DataContext create(@NonNull Context context, @Nullable ObjectValue data,
                                      int dataIndex, @Nullable Map<String, Value> scope) {
         DataContext dataContext = new DataContext(scope, dataIndex);
@@ -126,6 +135,12 @@ public class DataContext {
         return dataContext;
     }
 
+    /**
+     * Update this data context with new data.
+     *
+     * @param context The proteus context used to evaluate {@link FunctionBinding} to evaluate the scope.
+     * @param in      The new data.
+     */
     public void update(@NonNull Context context, @Nullable ObjectValue in) {
         if (in == null) {
             in = new ObjectValue();
@@ -156,10 +171,24 @@ public class DataContext {
         data = out;
     }
 
+    /**
+     * A utility method to create a child data context, with its own scope and index from the data
+     * of this data context.
+     *
+     * @param context   The proteus context used to evaluate {@link FunctionBinding} to evaluate the scope.
+     * @param scope     The scope for the new data context
+     * @param dataIndex The data index to used by the new data context.
+     * @return A new data context with scope evaluated.
+     */
     public DataContext createChild(@NonNull Context context, @NonNull Map<String, Value> scope, int dataIndex) {
         return create(context, data, dataIndex, scope);
     }
 
+    /**
+     * Returns a clone of this data context with {@link #hasOwnProperties} set to {@code false}.
+     *
+     * @return
+     */
     public DataContext copy() {
         return new DataContext(this);
     }
