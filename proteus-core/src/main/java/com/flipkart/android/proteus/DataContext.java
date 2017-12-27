@@ -187,7 +187,7 @@ public class DataContext {
     /**
      * Returns a clone of this data context with {@link #hasOwnProperties} set to {@code false}.
      *
-     * @return
+     * @return a new cloned data context.
      */
     public DataContext copy() {
         return new DataContext(this);
