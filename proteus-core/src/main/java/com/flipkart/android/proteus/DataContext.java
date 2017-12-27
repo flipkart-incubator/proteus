@@ -19,7 +19,6 @@
 
 package com.flipkart.android.proteus;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -113,7 +112,7 @@ public class DataContext {
      * @param dataIndex The data index to used by the data context.
      * @return A new data context with scope evaluated.
      */
-    public static DataContext create(@NonNull Context context, @Nullable ObjectValue data, int dataIndex) {
+    public static DataContext create(@NonNull ProteusContext context, @Nullable ObjectValue data, int dataIndex) {
         DataContext dataContext = new DataContext(null, dataIndex);
         dataContext.update(context, data);
         return dataContext;
@@ -128,7 +127,7 @@ public class DataContext {
      * @param scope     The scope map used to create the {@link #data} of this data context.
      * @return A new data context with scope evaluated.
      */
-    public static DataContext create(@NonNull Context context, @Nullable ObjectValue data,
+    public static DataContext create(@NonNull ProteusContext context, @Nullable ObjectValue data,
                                      int dataIndex, @Nullable Map<String, Value> scope) {
         DataContext dataContext = new DataContext(scope, dataIndex);
         dataContext.update(context, data);
@@ -141,7 +140,7 @@ public class DataContext {
      * @param context The proteus context used to evaluate {@link FunctionBinding} to evaluate the scope.
      * @param in      The new data.
      */
-    public void update(@NonNull Context context, @Nullable ObjectValue in) {
+    public void update(@NonNull ProteusContext context, @Nullable ObjectValue in) {
         if (in == null) {
             in = new ObjectValue();
         }
@@ -180,7 +179,7 @@ public class DataContext {
      * @param dataIndex The data index to used by the new data context.
      * @return A new data context with scope evaluated.
      */
-    public DataContext createChild(@NonNull Context context, @NonNull Map<String, Value> scope, int dataIndex) {
+    public DataContext createChild(@NonNull ProteusContext context, @NonNull Map<String, Value> scope, int dataIndex) {
         return create(context, data, dataIndex, scope);
     }
 
