@@ -82,7 +82,7 @@ public class ProteusBuilder {
             builder.register(new ProgressBarParser());
             builder.register(new HorizontalProgressBarParser());
 
-            // register the default formatters
+            // register the default functions
             builder.register(Function.DATE);
             builder.register(Function.FORMAT);
             builder.register(Function.JOIN);
@@ -123,7 +123,7 @@ public class ProteusBuilder {
     private static final int ID = -1;
     private Map<String, Map<String, AttributeProcessor>> processors = new LinkedHashMap<>();
     private Map<String, ViewTypeParser> parsers = new LinkedHashMap<>();
-    private HashMap<String, Function> formatters = new HashMap<>();
+    private HashMap<String, Function> functions = new HashMap<>();
 
     public ProteusBuilder() {
         DEFAULT_MODULE.registerWith(this);
@@ -151,7 +151,7 @@ public class ProteusBuilder {
     }
 
     public ProteusBuilder register(@NonNull Function function) {
-        formatters.put(function.getName(), function);
+        functions.put(function.getName(), function);
         return this;
     }
 
@@ -170,7 +170,7 @@ public class ProteusBuilder {
         for (Map.Entry<String, ViewTypeParser> entry : parsers.entrySet()) {
             types.put(entry.getKey(), prepare(entry.getValue()));
         }
-        return new Proteus(types, formatters);
+        return new Proteus(types, functions);
     }
 
     protected Proteus.Type prepare(ViewTypeParser parser) {

@@ -17,29 +17,25 @@
  * specific language governing permissions and limitations under the License.
  */
 
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+package com.flipkart.android.proteus.support.v7.adapter;
 
-buildscript {
-    repositories {
-        mavenCentral()
-        jcenter()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
-    }
-}
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 
-allprojects {
-    repositories {
-        mavenCentral()
-    }
-}
+import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
+import com.flipkart.android.proteus.value.ObjectValue;
 
-ext {
-    compileSdkVersion = 26
-    minSdkVersion = 14
-    targetSdkVersion = 26
-    buildToolsVersion = '26.0.1'
-    supportLibraryVersion = '26.0.0-alpha1'
+/**
+ * ProteusRecyclerViewAdapter.
+ *
+ * @author adityasharat
+ */
+
+public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder> extends RecyclerView.Adapter<VH> {
+
+    public interface Builder<A extends ProteusRecyclerViewAdapter> {
+        @NonNull
+        A create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
+    }
+
 }

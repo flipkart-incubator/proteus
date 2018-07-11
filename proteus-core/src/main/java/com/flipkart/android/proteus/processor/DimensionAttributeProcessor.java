@@ -74,7 +74,7 @@ public abstract class DimensionAttributeProcessor<T extends View> extends Attrib
         if (value.isDimension()) {
             setDimension(view, value.getAsDimension().apply(view.getContext()));
         } else if (value.isPrimitive()) {
-            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFormatterManager()));
+            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFunctionManager()));
         }
     }
 

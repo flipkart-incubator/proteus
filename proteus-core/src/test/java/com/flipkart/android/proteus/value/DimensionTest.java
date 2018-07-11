@@ -19,6 +19,18 @@
 
 package com.flipkart.android.proteus.value;
 
+import android.content.Context;
+import android.content.res.Resources;
+import android.test.mock.MockContext;
+import android.test.mock.MockResources;
+import android.util.DisplayMetrics;
+import android.view.ViewGroup;
+
+import org.junit.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
 /**
  * DimensionTest
  *
@@ -26,19 +38,30 @@ package com.flipkart.android.proteus.value;
  */
 public class DimensionTest {
 
-    /*private Context context = RuntimeEnvironment.application.getApplicationContext();
-    private Resources resources = context.getResources();
+    private static Context context() {
+        return new MockContext() {
+            @Override
+            public Resources getResources() {
+                return new MockResources() {
+                    @Override
+                    public DisplayMetrics getDisplayMetrics() {
+                        return new DisplayMetrics();
+                    }
+                };
+            }
+        };
+    }
 
     @Test
     public void valueOf_Null() throws Exception {
-        Dimension d = Dimension.valueOf(null, null);
+        Dimension d = Dimension.valueOf(null);
         assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
     }
 
     @Test
     public void valueOf_MatchParent() throws Exception {
-        Dimension d = Dimension.valueOf("match_parent", null);
+        Dimension d = Dimension.valueOf("match_parent");
         assertThat((int) d.value, is(ViewGroup.LayoutParams.MATCH_PARENT));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_ENUM));
     }
@@ -46,118 +69,129 @@ public class DimensionTest {
     @Test
     public void valueOf_WrapContent() throws Exception {
         Dimension d;
-        d = Dimension.valueOf("wrap_content", null);
+        d = Dimension.valueOf("wrap_content");
         assertThat((int) d.value, is(ViewGroup.LayoutParams.WRAP_CONTENT));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_ENUM));
     }
 
     @Test
     public void valueOf_Unit_Invalid() throws Exception {
-        Dimension d = Dimension.valueOf("abcd", null);
+        Dimension d = Dimension.valueOf("abcd");
         assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
 
-        d = Dimension.valueOf("16q", null);
+        d = Dimension.valueOf("16q");
         assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
 
-        d = Dimension.valueOf("16", null);
+        d = Dimension.valueOf("16");
         assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
 
-        d = Dimension.valueOf("1", null);
+        d = Dimension.valueOf("1");
         assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
     }
 
     @Test
     public void valueOf_Unit_None() throws Exception {
-        Dimension d = Dimension.valueOf("16", null);
+        Dimension d = Dimension.valueOf("16");
         assertThat(d.value, is(0d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
     }
 
     @Test
     public void valueOf_Unit_PX() throws Exception {
-        Dimension d = Dimension.valueOf("16px", null);
+        Dimension d = Dimension.valueOf("16px");
         assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
     }
 
     @Test
     public void valueOf_Unit_DP() throws Exception {
-        Dimension d = Dimension.valueOf("16dp", null);
+        Dimension d = Dimension.valueOf("16dp");
         assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_DP));
     }
 
     @Test
     public void valueOf_Unit_SP() throws Exception {
-        Dimension d = Dimension.valueOf("16sp", null);
+        Dimension d = Dimension.valueOf("16sp");
         assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_SP));
     }
 
     @Test
     public void valueOf_Unit_PT() throws Exception {
-        Dimension d = Dimension.valueOf("16pt", null);
+        Dimension d = Dimension.valueOf("16pt");
         assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PT));
     }
 
     @Test
     public void valueOf_Unit_IN() throws Exception {
-        Dimension d = Dimension.valueOf("16in", null);
+        Dimension d = Dimension.valueOf("16in");
         assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_IN));
     }
 
     @Test
     public void valueOf_Unit_MM() throws Exception {
-        Dimension d = Dimension.valueOf("16mm", null);
+        Dimension d = Dimension.valueOf("16mm");
         assertThat(d.value, is(16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_MM));
     }
 
     @Test
     public void valueOf_Unit_Negative() throws Exception {
-        Dimension d = Dimension.valueOf("-16dp", null);
+        Dimension d = Dimension.valueOf("-16dp");
         assertThat(d.value, is(-16d));
         assertThat(d.unit, is(Dimension.DIMENSION_UNIT_DP));
     }
 
     @Test
-    public void valueOf_Unit_Resource_Not_Found() throws Exception {
-        String input = "@dimen/undefined";
-
-        //noinspection unchecked
-        //when(resources.getIdentifier(input, "dimen", context.getPackageName())).thenReturn(0);
-        //when(context.getResources()).thenReturn(resources);
-
-        Dimension d = Dimension.valueOf(input, context);
-
-        assertThat(d.value, is(0d));
-        assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
-    }
-
-    @Test
-    public void valueOf_Unit_Attribute_Exception() throws Exception {
-        Dimension d = Dimension.valueOf("?undefined:undefined", context);
-        assertThat(d.value, is(0d));
-        assertThat(d.unit, is(Dimension.DIMENSION_UNIT_PX));
-    }
-
-    @Test
     public void copy() throws Exception {
-        Dimension d = Dimension.valueOf("24dp", null);
+        Dimension d = Dimension.valueOf("24dp");
         assertThat(d, is(d.copy()));
     }
 
     @Test
     public void cache() throws Exception {
-        Dimension d1 = Dimension.valueOf("16dp", context);
-        Dimension d2 = Dimension.valueOf("16dp", context);
+        Dimension d1 = Dimension.valueOf("16dp");
+        Dimension d2 = Dimension.valueOf("16dp");
 
         assertThat(d1, is(d2));
-    }*/
+    }
+
+    @Test
+    public void to_string() throws Exception {
+        String string = "16dp";
+        Dimension dimension = Dimension.valueOf(string);
+
+        assertThat(dimension.toString(), is(string));
+
+        string = "16.5dp";
+        dimension = Dimension.valueOf(string);
+
+        assertThat(dimension.toString(), is(string));
+
+        string = "match_parent";
+        dimension = Dimension.valueOf(string);
+
+        assertThat(dimension.toString(), is(string));
+    }
+
+    @Test
+    public void apply() throws Exception {
+        Dimension dimension = Dimension.valueOf("24dp");
+        float result = dimension.apply(context());
+        assertThat(result, is(24f));
+
+        dimension = Dimension.valueOf("match_parent");
+        result = dimension.apply(context());
+        assertThat(result, is(-1f));
+
+        result = Dimension.apply("24dp", context());
+        assertThat(result, is(24f));
+    }
 }

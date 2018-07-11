@@ -106,7 +106,7 @@ public class NestedBinding extends Binding {
     }
 
     @Override
-    public Value copy() {
-        return null;
+    public Binding copy() {
+        return this;
     }
 }

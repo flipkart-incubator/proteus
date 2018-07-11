@@ -17,38 +17,38 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus;
+package com.flipkart.android.proteus.support.v7.layoutmanager;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 
-import com.flipkart.android.proteus.managers.ViewManager;
-import com.flipkart.android.proteus.value.Binding;
+import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
 import com.flipkart.android.proteus.value.ObjectValue;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * BoundAttribute holds the attribute id to binding pair
- * which is used in the update flow of a {@link ProteusView}
- * which is executed when {@link ViewManager#update(ObjectValue)}
- * is invoked.
+ * LayoutManagerFactory
  *
- * @author kirankumar
  * @author adityasharat
  */
-public class BoundAttribute {
+public class LayoutManagerFactory {
 
-    /**
-     * The {@code int} attribute id of the pair.
-     */
-    public final int attributeId;
+    private Map<String, LayoutManagerBuilder> builders = new HashMap<>();
 
-    /**
-     * The {@link Binding} for the layout attributes value.
-     */
-    @NonNull
-    public final Binding binding;
-
-    public BoundAttribute(int attributeId, @NonNull Binding binding) {
-        this.attributeId = attributeId;
-        this.binding = binding;
+    public void register(@NonNull String type, @NonNull LayoutManagerBuilder builder) {
+        builders.put(type, builder);
     }
+
+    @Nullable
+    public LayoutManagerBuilder remove(@NonNull String type) {
+        return builders.remove(type);
+    }
+
+    public RecyclerView.LayoutManager create(@NonNull String type, @NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
+        return builders.get(type).create(view, config);
+    }
+
 }

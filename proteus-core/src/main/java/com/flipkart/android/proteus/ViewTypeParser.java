@@ -19,7 +19,6 @@
 
 package com.flipkart.android.proteus;
 
-import android.content.Context;
 import android.content.res.XmlResourceParser;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -113,7 +112,7 @@ public abstract class ViewTypeParser<V extends View> {
      * @return
      */
     @NonNull
-    protected DataContext createDataContext(Context context, @NonNull Layout layout, @NonNull ObjectValue data,
+    protected DataContext createDataContext(ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
                                             @Nullable ViewGroup parent, int dataIndex) {
         DataContext dataContext, parentDataContext = null;
         Map<String, Value> map = layout.data;

@@ -76,7 +76,7 @@ public abstract class ColorResourceProcessor<V extends View> extends AttributePr
         if (value.isColor()) {
             apply(view, value.getAsColor());
         } else {
-            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFormatterManager()));
+            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFunctionManager()));
         }
     }
 

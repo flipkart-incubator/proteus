@@ -360,7 +360,7 @@ public class ViewParser<V extends View> extends ViewTypeParser<V> {
                     // noinspection ResourceType
                     view.setVisibility(value.getAsInt());
                 } else {
-                    process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFormatterManager()));
+                    process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFunctionManager()));
                 }
             }
 
