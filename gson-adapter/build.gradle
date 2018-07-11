@@ -51,8 +51,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':proteus-core')
+
+    implementation "com.android.support:support-annotations:${rootProject.ext.supportLibraryVersion}"
     implementation 'com.google.code.gson:gson:2.7'
+
+    implementation project(path: ':proteus-core')
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
