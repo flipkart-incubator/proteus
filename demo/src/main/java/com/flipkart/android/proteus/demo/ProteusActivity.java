@@ -68,7 +68,6 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 
-
 public class ProteusActivity extends AppCompatActivity {
 
     private static final String BASE_URL = "http://10.0.2.2:8080/data/";
