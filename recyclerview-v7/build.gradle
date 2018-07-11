@@ -5,7 +5,7 @@
  *
  * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
  *
- * Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
+ * Copyright (c) 2018 Flipkart Internet Pvt. Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
  * this file except in compliance with the License. You may obtain a copy of the
@@ -40,6 +40,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        performance {
+
+        }
     }
     lintOptions {
         abortOnError false
@@ -47,14 +50,17 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "com.android.support:recyclerview-v7:${rootProject.ext.supportLibraryVersion}"
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
+
+    implementation project(path: ':proteus-core')
+
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile "com.android.support:recyclerview-v7:${rootProject.ext.supportLibraryVersion}"
-    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
-    testCompile 'junit:junit:4.12'
-    compile project(path: ':proteus-core')
+    testImplementation 'junit:junit:4.12'
 }
 
 task sourcesJar(type: Jar) {

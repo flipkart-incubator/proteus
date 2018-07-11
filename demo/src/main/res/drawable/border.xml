@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Apache License
   ~ Version 2.0, January 2004
   ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
   ~
-  ~ Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
+  ~ Copyright (c) 2018 Flipkart Internet Pvt. Ltd.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use
   ~ this file except in compliance with the License. You may obtain a copy of the
@@ -19,10 +18,10 @@
   -->
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-       android:shape="rectangle">
+    android:shape="rectangle">
     <stroke
         android:width="2dp"
-        android:color="#cccccc"/>
+        android:color="#cccccc" />
 
-    <solid android:color="#efefef"/>
+    <solid android:color="#efefef" />
 </shape>

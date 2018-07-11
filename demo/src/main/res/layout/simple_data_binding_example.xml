@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Apache License
   ~ Version 2.0, January 2004
   ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
   ~
-  ~ Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
+  ~ Copyright (c) 2018 Flipkart Internet Pvt. Ltd.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use
   ~ this file except in compliance with the License. You may obtain a copy of the
@@ -19,13 +18,13 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:paddingBottom="0dp"
-             android:paddingLeft="16dp"
-             android:paddingRight="16dp"
-             android:paddingTop="16dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="0dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +39,7 @@
             android:text="profile"
             android:textColor="#027cd5"
             android:textSize="8sp"
-            tools:ignore="SmallSp"/>
+            tools:ignore="SmallSp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -54,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="8dp"
-                android:textSize="24dp"/>
+                android:textSize="24dp" />
 
             <TextView
                 android:id="@+id/user_level"
@@ -62,21 +61,21 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/user_name"
                 android:textColor="#c48866"
-                tools:ignore="RtlHardcoded"/>
+                tools:ignore="RtlHardcoded" />
 
             <TextView
                 android:id="@+id/user_achievements"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/user_name"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp" />
 
             <TextView
                 android:id="@+id/user_tags"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/user_achievements"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp" />
 
         </RelativeLayout>
 
@@ -91,17 +90,17 @@
             <TextView
                 android:id="@+id/user_location_country"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/user_location_city"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/user_location_pincode"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
@@ -117,13 +116,13 @@
                 android:id="@+id/user_experience"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp" />
 
             <TextView
                 android:id="@+id/user_credits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"/>
+                android:layout_marginTop="8dp" />
 
         </LinearLayout>
 

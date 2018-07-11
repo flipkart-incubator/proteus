@@ -5,7 +5,7 @@
   ~
   ~ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
   ~
-  ~ Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
+  ~ Copyright (c) 2018 Flipkart Internet Pvt. Ltd.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use
   ~ this file except in compliance with the License. You may obtain a copy of the
@@ -32,9 +32,9 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
 

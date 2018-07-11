@@ -5,7 +5,7 @@
  *
  * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
  *
- * Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
+ * Copyright (c) 2018 Flipkart Internet Pvt. Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
  * this file except in compliance with the License. You may obtain a copy of the
@@ -40,15 +40,19 @@ android {
         release {
             minifyEnabled false
         }
+        performance {
+
+        }
     }
 }
 
 dependencies {
-    compile "com.android.support:support-annotations:${rootProject.ext.supportLibraryVersion}"
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    implementation "com.android.support:support-annotations:${rootProject.ext.supportLibraryVersion}"
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
 }
 
 task sourcesJar(type: Jar) {

@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Apache License
   ~ Version 2.0, January 2004
   ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
   ~
-  ~ Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
+  ~ Copyright (c) 2018 Flipkart Internet Pvt. Ltd.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use
   ~ this file except in compliance with the License. You may obtain a copy of the
@@ -19,13 +18,13 @@
   -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:paddingBottom="0dp"
-             android:paddingLeft="16dp"
-             android:paddingRight="16dp"
-             android:paddingTop="16dp">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="0dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp">
 
 
     <RelativeLayout
@@ -42,7 +41,7 @@
             android:text="Center"
             android:textColor="#323232"
             android:textSize="14sp"
-            tools:ignore="HardcodedText"/>
+            tools:ignore="HardcodedText" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -50,7 +49,7 @@
             android:layout_above="@id/center"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="8dp"
-            android:src="@drawable/star_filled"/>
+            android:src="@drawable/star_filled" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -58,7 +57,7 @@
             android:layout_below="@id/center"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
-            android:src="@drawable/star_filled"/>
+            android:src="@drawable/star_filled" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -67,7 +66,7 @@
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@id/center"
             android:src="@drawable/star_filled"
-            tools:ignore="RtlHardcoded"/>
+            tools:ignore="RtlHardcoded" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -76,7 +75,7 @@
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@id/center"
             android:src="@drawable/star_filled"
-            tools:ignore="RtlHardcoded"/>
+            tools:ignore="RtlHardcoded" />
 
         <ImageView
             android:layout_width="100dp"
@@ -87,7 +86,7 @@
             android:background="#027cd5"
             android:padding="8dp"
             android:scaleType="fitCenter"
-            tools:ignore="RtlHardcoded"/>
+            tools:ignore="RtlHardcoded" />
 
     </RelativeLayout>
 

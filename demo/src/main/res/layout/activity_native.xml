@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Apache License
   ~ Version 2.0, January 2004
   ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
   ~
-  ~ Copyright (c) 2017 Flipkart Internet Pvt. Ltd.
+  ~ Copyright (c) 2018 Flipkart Internet Pvt. Ltd.
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License"); you may not use
   ~ this file except in compliance with the License. You may obtain a copy of the
@@ -19,10 +18,10 @@
   -->
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -51,7 +50,7 @@
                     android:text="TextView"
                     android:textColor="#000000"
                     android:textSize="12sp"
-                    tools:ignore="HardcodedText"/>
+                    tools:ignore="HardcodedText" />
 
                 <TextView
                     android:id="@+id/html_text_view"
@@ -59,14 +58,14 @@
                     android:layout_height="wrap_content"
                     android:gravity="right"
                     android:textSize="14sp"
-                    tools:ignore="RtlHardcoded"/>
+                    tools:ignore="RtlHardcoded" />
 
                 <ImageView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginRight="8dp"
                     android:src="@drawable/github_icon"
-                    tools:ignore="RtlHardcoded"/>
+                    tools:ignore="RtlHardcoded" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -84,7 +83,7 @@
                         android:text="1"
                         android:textColor="#2cdb81"
                         android:textSize="12sp"
-                        tools:ignore="HardcodedText,RtlHardcoded"/>
+                        tools:ignore="HardcodedText,RtlHardcoded" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -96,7 +95,7 @@
                         android:text="2"
                         android:textColor="#2cdb81"
                         android:textSize="12sp"
-                        tools:ignore="HardcodedText,RtlHardcoded"/>
+                        tools:ignore="HardcodedText,RtlHardcoded" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -108,7 +107,7 @@
                         android:text="3"
                         android:textColor="#2cdb81"
                         android:textSize="12sp"
-                        tools:ignore="HardcodedText,RtlHardcoded"/>
+                        tools:ignore="HardcodedText,RtlHardcoded" />
 
                 </LinearLayout>
 
@@ -116,9 +115,9 @@
 
         </FrameLayout>
 
-        <include layout="@layout/relative_layout_example"/>
+        <include layout="@layout/relative_layout_example" />
 
-        <include layout="@layout/simple_data_binding_example"/>
+        <include layout="@layout/simple_data_binding_example" />
 
     </LinearLayout>
 </ScrollView>
