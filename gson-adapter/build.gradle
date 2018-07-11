@@ -40,6 +40,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        performance {
+
+        }
     }
     lintOptions {
         abortOnError false
@@ -47,15 +50,15 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':proteus-core')
-    compile 'com.google.code.gson:gson:2.7'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':proteus-core')
+    implementation 'com.google.code.gson:gson:2.7'
 
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-core:1.10.19'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:1.10.19'
 }
 
 task sourcesJar(type: Jar) {
