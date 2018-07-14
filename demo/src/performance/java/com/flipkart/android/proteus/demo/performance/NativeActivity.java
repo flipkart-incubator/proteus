@@ -68,10 +68,10 @@ public class NativeActivity extends BaseActivity {
     }
 
     private void bindView(View view) {
-        TextView tv = (TextView) view.findViewById(R.id.html_text_view);
+        TextView tv = view.findViewById(R.id.html_text_view);
         tv.setText(Html.fromHtml(getString(R.string.html)));
 
-        ImageView iv = (ImageView) view.findViewById(R.id.url_image_view);
+        ImageView iv = view.findViewById(R.id.url_image_view);
         loadImage(iv, IMAGE_URL);
 
         bindUserView(view);
@@ -79,31 +79,31 @@ public class NativeActivity extends BaseActivity {
 
     @SuppressLint("SetTextI18n")
     private void bindUserView(View view) {
-        TextView userName = (TextView) view.findViewById(R.id.user_name);
+        TextView userName = view.findViewById(R.id.user_name);
         userName.setText(data.user.name);
 
-        TextView userLevel = (TextView) view.findViewById(R.id.user_level);
+        TextView userLevel = view.findViewById(R.id.user_level);
         userLevel.setText("(" + data.user.level + ")");
 
-        TextView userAchievements = (TextView) view.findViewById(R.id.user_achievements);
+        TextView userAchievements = view.findViewById(R.id.user_achievements);
         userAchievements.setText(STRING_ACHIEVEMENTS + data.user.achievements + "/" + data.metaData.totalAchievements);
 
-        TextView userTags = (TextView) view.findViewById(R.id.user_tags);
+        TextView userTags = view.findViewById(R.id.user_tags);
         userTags.setText(getJoinedString(data.metaData.tags));
 
-        TextView country = (TextView) view.findViewById(R.id.user_location_country);
+        TextView country = view.findViewById(R.id.user_location_country);
         country.setText(data.user.location.country + ", ");
 
-        TextView city = (TextView) view.findViewById(R.id.user_location_city);
+        TextView city = view.findViewById(R.id.user_location_city);
         city.setText(data.user.location.city + ", ");
 
-        TextView pincode = (TextView) view.findViewById(R.id.user_location_pincode);
+        TextView pincode = view.findViewById(R.id.user_location_pincode);
         pincode.setText(data.user.location.pincode);
 
-        TextView experience = (TextView) view.findViewById(R.id.user_experience);
+        TextView experience = view.findViewById(R.id.user_experience);
         experience.setText("Experience : " + data.user.experience);
 
-        TextView credits = (TextView) view.findViewById(R.id.user_credits);
+        TextView credits = view.findViewById(R.id.user_credits);
         credits.setText("Credits : " + data.user.credits);
     }
 

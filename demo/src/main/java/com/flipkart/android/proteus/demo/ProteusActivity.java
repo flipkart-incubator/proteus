@@ -180,11 +180,11 @@ public class ProteusActivity extends AppCompatActivity {
         setContentView(R.layout.activity_proteus);
 
         // set the toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         // setBoolean refresh button click
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,7 +192,7 @@ public class ProteusActivity extends AppCompatActivity {
             }
         });
 
-        container = (ViewGroup) findViewById(R.id.content_main);
+        container = findViewById(R.id.content_main);
     }
 
     void render() {
