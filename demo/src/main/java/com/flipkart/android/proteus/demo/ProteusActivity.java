@@ -19,11 +19,6 @@
 
 package com.flipkart.android.proteus.demo;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -47,6 +42,8 @@ import com.flipkart.android.proteus.StyleManager;
 import com.flipkart.android.proteus.Styles;
 import com.flipkart.android.proteus.demo.converter.GsonConverterFactory;
 import com.flipkart.android.proteus.demo.models.JsonResource;
+import com.flipkart.android.proteus.demo.tasks.ImageLoaderTask;
+import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
 import com.flipkart.android.proteus.support.design.DesignModule;
 import com.flipkart.android.proteus.support.v4.SupportV4Module;
@@ -59,9 +56,6 @@ import com.flipkart.android.proteus.value.Value;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -112,39 +106,7 @@ public class ProteusActivity extends AppCompatActivity {
     private ProteusLayoutInflater.ImageLoader loader = new ProteusLayoutInflater.ImageLoader() {
         @Override
         public void getBitmap(ProteusView view, String url, final DrawableValue.AsyncCallback callback) {
-            URL _url;
-
-            try {
-                _url = new URL(url);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                return;
-            }
-
-            new AsyncTask<URL, Integer, Bitmap>() {
-                @Override
-                protected Bitmap doInBackground(URL... params) {
-                    if (isNetworkAvailable()) {
-                        try {
-                            return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        Log.e("PROTEUS", "No network");
-                    }
-                    return null;
-                }
-
-                protected void onPostExecute(@Nullable Bitmap result) {
-                    if (result != null) {
-                        callback.setBitmap(result);
-                    } else {
-                        //noinspection deprecation
-                        callback.setDrawable(ProteusActivity.this.getResources().getDrawable(R.drawable.ic_launcher));
-                    }
-                }
-            }.execute(_url);
+            new ImageLoaderTask(ProteusActivity.this, callback).execute(url);
         }
     };
 
@@ -157,11 +119,10 @@ public class ProteusActivity extends AppCompatActivity {
         @NonNull
         @Override
         public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, ObjectValue data, int index) {
-            //noinspection ConstantConditions because we want to crash here
-            return null;
+            // TODO: instead return some implementation of an unknown view
+            throw new ProteusInflateException("Unknown view type '" + type + "' cannot be inflated");
         }
 
-        @NonNull
         @Override
         public void onEvent(String event, Value value, ProteusView view) {
             try {
@@ -382,11 +343,5 @@ public class ProteusActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

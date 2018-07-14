@@ -18,9 +18,9 @@ package com.flipkart.android.proteus.demo.performance;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,14 +28,13 @@ import android.widget.TextView;
 
 import com.flipkart.android.proteus.demo.R;
 import com.flipkart.android.proteus.demo.models.Data;
+import com.flipkart.android.proteus.demo.tasks.ImageLoaderTask;
+import com.flipkart.android.proteus.value.DrawableValue;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 public class NativeActivity extends BaseActivity {
@@ -116,30 +115,18 @@ public class NativeActivity extends BaseActivity {
         return builder.toString();
     }
 
-    private void loadImage(final ImageView view, String urlString) {
-        URL url;
-        try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return;
-        }
-        new AsyncTask<URL, Integer, Bitmap>() {
+    private void loadImage(final ImageView view, String url) {
+        new ImageLoaderTask(this, new DrawableValue.AsyncCallback() {
+            @Override
+            protected void apply(@NonNull Drawable drawable) {
+                view.setImageDrawable(drawable);
+            }
 
             @Override
-            protected Bitmap doInBackground(URL... params) {
-                try {
-                    return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
+            protected void apply(@NonNull Bitmap bitmap) {
+                view.setImageBitmap(bitmap);
             }
-
-            protected void onPostExecute(Bitmap result) {
-                view.setImageBitmap(result);
-            }
-        }.execute(url);
+        }).execute(url);
     }
 
     private Data getJsonFromFile(int resId) {
