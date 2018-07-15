@@ -18,9 +18,9 @@ package com.flipkart.android.proteus.demo.performance;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
@@ -28,14 +28,13 @@ import android.widget.TextView;
 
 import com.flipkart.android.proteus.demo.R;
 import com.flipkart.android.proteus.demo.models.Data;
+import com.flipkart.android.proteus.demo.tasks.ImageLoaderTask;
+import com.flipkart.android.proteus.value.DrawableValue;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 public class NativeActivity extends BaseActivity {
@@ -69,10 +68,10 @@ public class NativeActivity extends BaseActivity {
     }
 
     private void bindView(View view) {
-        TextView tv = (TextView) view.findViewById(R.id.html_text_view);
+        TextView tv = view.findViewById(R.id.html_text_view);
         tv.setText(Html.fromHtml(getString(R.string.html)));
 
-        ImageView iv = (ImageView) view.findViewById(R.id.url_image_view);
+        ImageView iv = view.findViewById(R.id.url_image_view);
         loadImage(iv, IMAGE_URL);
 
         bindUserView(view);
@@ -80,31 +79,31 @@ public class NativeActivity extends BaseActivity {
 
     @SuppressLint("SetTextI18n")
     private void bindUserView(View view) {
-        TextView userName = (TextView) view.findViewById(R.id.user_name);
+        TextView userName = view.findViewById(R.id.user_name);
         userName.setText(data.user.name);
 
-        TextView userLevel = (TextView) view.findViewById(R.id.user_level);
+        TextView userLevel = view.findViewById(R.id.user_level);
         userLevel.setText("(" + data.user.level + ")");
 
-        TextView userAchievements = (TextView) view.findViewById(R.id.user_achievements);
+        TextView userAchievements = view.findViewById(R.id.user_achievements);
         userAchievements.setText(STRING_ACHIEVEMENTS + data.user.achievements + "/" + data.metaData.totalAchievements);
 
-        TextView userTags = (TextView) view.findViewById(R.id.user_tags);
+        TextView userTags = view.findViewById(R.id.user_tags);
         userTags.setText(getJoinedString(data.metaData.tags));
 
-        TextView country = (TextView) view.findViewById(R.id.user_location_country);
+        TextView country = view.findViewById(R.id.user_location_country);
         country.setText(data.user.location.country + ", ");
 
-        TextView city = (TextView) view.findViewById(R.id.user_location_city);
+        TextView city = view.findViewById(R.id.user_location_city);
         city.setText(data.user.location.city + ", ");
 
-        TextView pincode = (TextView) view.findViewById(R.id.user_location_pincode);
+        TextView pincode = view.findViewById(R.id.user_location_pincode);
         pincode.setText(data.user.location.pincode);
 
-        TextView experience = (TextView) view.findViewById(R.id.user_experience);
+        TextView experience = view.findViewById(R.id.user_experience);
         experience.setText("Experience : " + data.user.experience);
 
-        TextView credits = (TextView) view.findViewById(R.id.user_credits);
+        TextView credits = view.findViewById(R.id.user_credits);
         credits.setText("Credits : " + data.user.credits);
     }
 
@@ -116,30 +115,18 @@ public class NativeActivity extends BaseActivity {
         return builder.toString();
     }
 
-    private void loadImage(final ImageView view, String urlString) {
-        URL url;
-        try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return;
-        }
-        new AsyncTask<URL, Integer, Bitmap>() {
+    private void loadImage(final ImageView view, String url) {
+        new ImageLoaderTask(this, new DrawableValue.AsyncCallback() {
+            @Override
+            protected void apply(@NonNull Drawable drawable) {
+                view.setImageDrawable(drawable);
+            }
 
             @Override
-            protected Bitmap doInBackground(URL... params) {
-                try {
-                    return BitmapFactory.decodeStream(params[0].openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
+            protected void apply(@NonNull Bitmap bitmap) {
+                view.setImageBitmap(bitmap);
             }
-
-            protected void onPostExecute(Bitmap result) {
-                view.setImageBitmap(result);
-            }
-        }.execute(url);
+        }).execute(url);
     }
 
     private Data getJsonFromFile(int resId) {
