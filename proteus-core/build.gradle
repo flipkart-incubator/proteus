@@ -40,9 +40,6 @@ android {
         release {
             minifyEnabled false
         }
-        performance {
-
-        }
     }
 }
 
