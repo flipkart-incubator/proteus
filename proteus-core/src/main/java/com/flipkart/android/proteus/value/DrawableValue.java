@@ -955,7 +955,7 @@ public abstract class DrawableValue extends Value {
 
         private boolean recycled;
 
-        AsyncCallback() {
+        protected AsyncCallback() {
         }
 
         public void setBitmap(@NonNull Bitmap bitmap) {

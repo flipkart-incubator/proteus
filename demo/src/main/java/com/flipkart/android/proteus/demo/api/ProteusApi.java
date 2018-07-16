@@ -17,24 +17,34 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.demo.models;
+package com.flipkart.android.proteus.demo.api;
+
+import com.flipkart.android.proteus.Styles;
+import com.flipkart.android.proteus.value.Layout;
+import com.flipkart.android.proteus.value.ObjectValue;
+
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
 
 /**
- * User
+ * ProteusApi
  *
  * @author aditya.sharat
  */
-public class User {
-    public String name;
-    public int level;
-    public int achievements;
-    public int experience;
-    public Location location;
-    public int credits;
 
-    public static class Location {
-        public String country;
-        public String city;
-        public String pincode;
-    }
+public interface ProteusApi {
+
+    @GET("user.json")
+    Call<ObjectValue> getUserData();
+
+    @GET("styles.json")
+    Call<Styles> getStyles();
+
+    @GET("layout.json")
+    Call<Layout> getLayout();
+
+    @GET("layouts.json")
+    Call<Map<String, Layout>> getLayouts();
 }

@@ -35,11 +35,6 @@ android {
         release {
             minifyEnabled false
         }
-
-        performance {
-            debuggable true
-            signingConfig signingConfigs.debug
-        }
     }
 
     configurations {

@@ -22,25 +22,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/render"
-        android:orderInCategory="100"
+        android:id="@+id/reload"
         android:icon="@android:drawable/ic_dialog_info"
-        app:showAsAction="always"
-        tools:ignore="HardcodedText"
-        android:title="render" />
-
-    <item
-        android:id="@+id/update"
         android:orderInCategory="100"
-        android:icon="@android:drawable/ic_dialog_alert"
+        android:title="reload"
         app:showAsAction="always"
-        tools:ignore="HardcodedText"
-        android:title="update" />
-
-    <item
-        android:id="@+id/compile"
-        app:showAsAction="never"
-        tools:ignore="HardcodedText"
-        android:title="write layout" />
+        tools:ignore="HardcodedText" />
 
 </menu>
