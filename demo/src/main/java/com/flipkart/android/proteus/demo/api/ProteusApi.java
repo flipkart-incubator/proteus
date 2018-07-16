@@ -17,7 +17,7 @@
  * specific language governing permissions and limitations under the License.
  */
 
-package com.flipkart.android.proteus.demo.models;
+package com.flipkart.android.proteus.demo.api;
 
 import com.flipkart.android.proteus.Styles;
 import com.flipkart.android.proteus.value.Layout;
@@ -27,17 +27,17 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 
 /**
- * JsonResource
+ * ProteusApi
  *
  * @author aditya.sharat
  */
 
-public interface JsonResource {
-    @GET("{path}")
-    Call<ObjectValue> get(@Path("path") String path);
+public interface ProteusApi {
+
+    @GET("user.json")
+    Call<ObjectValue> getUserData();
 
     @GET("styles.json")
     Call<Styles> getStyles();
