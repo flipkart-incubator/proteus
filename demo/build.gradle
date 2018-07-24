@@ -75,6 +75,11 @@ android {
         implementation 'com.squareup.retrofit2:retrofit:2.1.0'
         implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
 
+        implementation('com.github.bumptech.glide:glide:4.7.1') {
+            exclude group: "com.android.support"
+        }
+        annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
+
         implementation project(':proteus-core')
         implementation project(':gson-adapter')
         implementation project(':support-v4')
