@@ -39,7 +39,8 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.StyleManager;
 import com.flipkart.android.proteus.Styles;
 import com.flipkart.android.proteus.demo.api.ProteusManager;
-import com.flipkart.android.proteus.demo.tasks.ImageLoaderTask;
+import com.flipkart.android.proteus.demo.utils.GlideApp;
+import com.flipkart.android.proteus.demo.utils.ImageLoaderTarget;
 import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Layout;
@@ -82,7 +83,9 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
     private ProteusLayoutInflater.ImageLoader loader = new ProteusLayoutInflater.ImageLoader() {
         @Override
         public void getBitmap(ProteusView view, String url, final DrawableValue.AsyncCallback callback) {
-            new ImageLoaderTask(ProteusActivity.this, callback).execute(url);
+            GlideApp.with(ProteusActivity.this)
+                    .load(url)
+                    .into(new ImageLoaderTarget(callback));
         }
     };
 
