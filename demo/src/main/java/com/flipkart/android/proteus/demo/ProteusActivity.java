@@ -85,6 +85,8 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         public void getBitmap(ProteusView view, String url, final DrawableValue.AsyncCallback callback) {
             GlideApp.with(ProteusActivity.this)
                     .load(url)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.image_broken)
                     .into(new ImageLoaderTarget(callback));
         }
     };

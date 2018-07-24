@@ -23,13 +23,11 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.bumptech.glide.request.Request;
-import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.flipkart.android.proteus.value.DrawableValue;
 
-public class ImageLoaderTarget implements Target<Drawable> {
+public class ImageLoaderTarget extends SimpleTarget<Drawable> {
 
     @NonNull
     private final DrawableValue.AsyncCallback callback;
@@ -39,62 +37,7 @@ public class ImageLoaderTarget implements Target<Drawable> {
     }
 
     @Override
-    public void onLoadStarted(@Nullable Drawable placeholder) {
-        if (placeholder != null) {
-            callback.setDrawable(placeholder);
-        }
-    }
-
-    @Override
-    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-        if (errorDrawable != null) {
-            callback.setDrawable(errorDrawable);
-        }
-    }
-
-    @Override
     public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
         callback.setDrawable(resource);
-    }
-
-    @Override
-    public void onLoadCleared(@Nullable Drawable placeholder) {
-
-    }
-
-    @Override
-    public void getSize(@NonNull SizeReadyCallback cb) {
-
-    }
-
-    @Override
-    public void removeCallback(@NonNull SizeReadyCallback cb) {
-
-    }
-
-    @Override
-    public void setRequest(@Nullable Request request) {
-
-    }
-
-    @Nullable
-    @Override
-    public Request getRequest() {
-        return null;
-    }
-
-    @Override
-    public void onStart() {
-
-    }
-
-    @Override
-    public void onStop() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-
     }
 }
