@@ -276,5 +276,32 @@
         }
       }
     ]
+  },
+  "AlertDialogLayout": {
+    "type": "LinearLayout",
+    "orientation": "vertical",
+    "layout_width": "80dp",
+    "layout_height": "wrap_content",
+    "padding": "20dp",
+    "children": [
+      {
+        "type": "TextView",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "layout_marginTop": "16dp",
+        "gravity": "center",
+        "textColor": "#ffaa77",
+        "textSize": "32sp",
+        "text": "This is an alert!"
+      },
+      {
+        "type": "TextView",
+        "layout_width": "match_parent",
+        "layout_height": "wrap_content",
+        "gravity": "center",
+        "textSize": "22sp",
+        "text": "press ok to continue."
+      }
+    ]
   }
 }
