@@ -19,10 +19,12 @@
 
 package com.flipkart.android.proteus.demo;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -128,7 +130,7 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                reload();
+                alert();
             }
         });
 
@@ -160,22 +162,21 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         proteusManager.removeListener(this);
     }
 
-    void render() {
-
-        // remove the current view
-        container.removeAllViews();
-
-        // Inflate a new view using proteus
-        long start = System.currentTimeMillis();
-        view = layoutInflater.inflate(layout, data, container, 0);
-        System.out.println("inflate time: " + (System.currentTimeMillis() - start));
-
-        // Add the inflated view to the container
-        container.addView(view.getAsView());
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
     }
 
-    void reload() {
-        proteusManager.update();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.reload:
+                reload();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -192,20 +193,34 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+    private void alert() {
+        ProteusView view = layoutInflater.inflate("AlertDialogLayout", data);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view.getAsView())
+                .setPositiveButton(R.string.action_alert_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.reload:
-                reload();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+    void render() {
+
+        // remove the current view
+        container.removeAllViews();
+
+        // Inflate a new view using proteus
+        long start = System.currentTimeMillis();
+        view = layoutInflater.inflate(layout, data, container, 0);
+        System.out.println("inflate time: " + (System.currentTimeMillis() - start));
+
+        // Add the inflated view to the container
+        container.addView(view.getAsView());
+    }
+
+    void reload() {
+        proteusManager.update();
     }
 }

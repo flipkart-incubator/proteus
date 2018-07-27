@@ -22,4 +22,5 @@
     <string name="html">
         <![CDATA[<b>TextView</b> with <font color=#cc8322><i>HTML</i></font> content.]]>
     </string>
+    <string name="action_alert_ok">Ok</string>
 </resources>
