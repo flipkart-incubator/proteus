@@ -23,7 +23,7 @@
 
     <item
         android:id="@+id/reload"
-        android:icon="@android:drawable/ic_dialog_info"
+        android:icon="@drawable/refresh"
         android:orderInCategory="100"
         android:title="reload"
         app:showAsAction="always"
