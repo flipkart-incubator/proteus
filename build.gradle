@@ -21,9 +21,10 @@
 
 buildscript {
     repositories {
+        mavenLocal()
+        google()
         mavenCentral()
         jcenter()
-        google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.2.1'
@@ -33,13 +34,17 @@ buildscript {
 
 allprojects {
     repositories {
+        mavenLocal()
+        google()
         mavenCentral()
         jcenter()
-        google()
     }
 }
 
 ext {
+    groupName = 'com.github.flipkart-incubator.proteus'
+    versionName = '5.0.0-rc13'
+    versionCode = 500013
     compileSdkVersion = 28
     minSdkVersion = 14
     targetSdkVersion = 28
