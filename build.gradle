@@ -42,6 +42,8 @@ allprojects {
 }
 
 ext {
+    versionName = '5.0.0-rc13'
+    versionCode = 500013
     compileSdkVersion = 28
     minSdkVersion = 14
     targetSdkVersion = 28

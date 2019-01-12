@@ -20,7 +20,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.flipkart-incubator.proteus'
-version = '5.0.0'
+version = rootProject.ext.versionName
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
