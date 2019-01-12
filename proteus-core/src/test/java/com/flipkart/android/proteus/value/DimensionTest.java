@@ -21,8 +21,6 @@ package com.flipkart.android.proteus.value;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.test.mock.MockContext;
-import android.test.mock.MockResources;
 import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 
@@ -30,6 +28,8 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * DimensionTest
@@ -39,17 +39,12 @@ import static org.hamcrest.core.Is.is;
 public class DimensionTest {
 
     private static Context context() {
-        return new MockContext() {
-            @Override
-            public Resources getResources() {
-                return new MockResources() {
-                    @Override
-                    public DisplayMetrics getDisplayMetrics() {
-                        return new DisplayMetrics();
-                    }
-                };
-            }
-        };
+        DisplayMetrics metric = new DisplayMetrics();
+        Context context = mock(Context.class);
+        Resources resources = mock(Resources.class);
+        when(context.getResources()).thenReturn(resources);
+        when(resources.getDisplayMetrics()).thenReturn(metric);
+        return context;
     }
 
     @Test

@@ -19,7 +19,7 @@
 
 package com.flipkart.android.proteus.value;
 
-import android.test.mock.MockContext;
+import android.content.Context;
 
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusBuilder;
@@ -29,6 +29,7 @@ import org.junit.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
 
 /**
  * BindingTest
@@ -75,7 +76,8 @@ public class BindingTest {
 
     public static ProteusContext context() {
         Proteus proteus = new ProteusBuilder().build();
-        return proteus.createContextBuilder(new MockContext()).build();
+        Context context = mock(Context.class);
+        return proteus.createContextBuilder(context).build();
     }
 
     @Test
