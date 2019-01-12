@@ -19,7 +19,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
-group = 'com.github.flipkart-incubator.proteus'
+group = rootProject.ext.groupName
 version = rootProject.ext.versionName
 
 android {
