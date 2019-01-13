@@ -25,7 +25,7 @@ android {
 
     defaultConfig {
         applicationId "com.flipkart.android.proteus.demo"
-        minSdkVersion 19
+        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
