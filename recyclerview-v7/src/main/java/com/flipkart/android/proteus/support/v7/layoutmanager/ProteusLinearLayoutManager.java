@@ -28,23 +28,23 @@ import com.flipkart.android.proteus.value.ObjectValue;
  */
 public class ProteusLinearLayoutManager extends LinearLayoutManager {
 
-    private static final String ATTRIBUTE_ORIENTATION = "orientation";
-    private static final String ATTRIBUTE_REVERSE_LAYOUT = "reverse";
+  private static final String ATTRIBUTE_ORIENTATION = "orientation";
+  private static final String ATTRIBUTE_REVERSE_LAYOUT = "reverse";
 
-    public static final LayoutManagerBuilder<ProteusLinearLayoutManager> BUILDER = new LayoutManagerBuilder<ProteusLinearLayoutManager>() {
+  public static final LayoutManagerBuilder<ProteusLinearLayoutManager> BUILDER = new LayoutManagerBuilder<ProteusLinearLayoutManager>() {
 
-        @NonNull
-        @Override
-        public ProteusLinearLayoutManager create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
+    @NonNull
+    @Override
+    public ProteusLinearLayoutManager create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
 
-            int orientation = config.getAsInteger(ATTRIBUTE_ORIENTATION, LinearLayoutManager.VERTICAL);
-            boolean reverseLayout = config.getAsBoolean(ATTRIBUTE_REVERSE_LAYOUT, false);
+      int orientation = config.getAsInteger(ATTRIBUTE_ORIENTATION, LinearLayoutManager.VERTICAL);
+      boolean reverseLayout = config.getAsBoolean(ATTRIBUTE_REVERSE_LAYOUT, false);
 
-            return new ProteusLinearLayoutManager(view.getContext(), orientation, reverseLayout);
-        }
-    };
-
-    public ProteusLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
-        super(context, orientation, reverseLayout);
+      return new ProteusLinearLayoutManager(view.getContext(), orientation, reverseLayout);
     }
+  };
+
+  public ProteusLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+    super(context, orientation, reverseLayout);
+  }
 }

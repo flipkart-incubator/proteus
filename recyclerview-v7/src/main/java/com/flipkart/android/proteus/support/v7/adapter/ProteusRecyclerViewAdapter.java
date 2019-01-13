@@ -30,9 +30,9 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 public abstract class ProteusRecyclerViewAdapter<VH extends ProteusViewHolder> extends RecyclerView.Adapter<VH> {
 
-    public interface Builder<A extends ProteusRecyclerViewAdapter> {
-        @NonNull
-        A create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
-    }
+  public interface Builder<A extends ProteusRecyclerViewAdapter> {
+    @NonNull
+    A create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config);
+  }
 
 }

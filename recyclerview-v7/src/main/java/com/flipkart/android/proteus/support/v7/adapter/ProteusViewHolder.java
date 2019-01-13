@@ -29,15 +29,15 @@ import com.flipkart.android.proteus.ProteusView;
  */
 class ProteusViewHolder extends RecyclerView.ViewHolder {
 
-    @NonNull
-    final ProteusContext context;
+  @NonNull
+  final ProteusContext context;
 
-    @NonNull
-    public final ProteusView view;
+  @NonNull
+  public final ProteusView view;
 
-    ProteusViewHolder(@NonNull ProteusView view) {
-        super(view.getAsView());
-        this.view = view;
-        this.context = view.getViewManager().getContext();
-    }
+  ProteusViewHolder(@NonNull ProteusView view) {
+    super(view.getAsView());
+    this.view = view;
+    this.context = view.getViewManager().getContext();
+  }
 }

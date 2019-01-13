@@ -33,19 +33,19 @@ import java.util.Map;
  */
 public class LayoutManagerFactory {
 
-    private Map<String, LayoutManagerBuilder> builders = new HashMap<>();
+  private Map<String, LayoutManagerBuilder> builders = new HashMap<>();
 
-    public void register(@NonNull String type, @NonNull LayoutManagerBuilder builder) {
-        builders.put(type, builder);
-    }
+  public void register(@NonNull String type, @NonNull LayoutManagerBuilder builder) {
+    builders.put(type, builder);
+  }
 
-    @Nullable
-    public LayoutManagerBuilder remove(@NonNull String type) {
-        return builders.remove(type);
-    }
+  @Nullable
+  public LayoutManagerBuilder remove(@NonNull String type) {
+    return builders.remove(type);
+  }
 
-    public RecyclerView.LayoutManager create(@NonNull String type, @NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
-        return builders.get(type).create(view, config);
-    }
+  public RecyclerView.LayoutManager create(@NonNull String type, @NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
+    return builders.get(type).create(view, config);
+  }
 
 }

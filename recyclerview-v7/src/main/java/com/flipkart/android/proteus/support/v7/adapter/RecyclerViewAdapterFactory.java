@@ -32,18 +32,18 @@ import java.util.Map;
  */
 public class RecyclerViewAdapterFactory {
 
-    private Map<String, ProteusRecyclerViewAdapter.Builder> adapters = new HashMap<>();
+  private Map<String, ProteusRecyclerViewAdapter.Builder> adapters = new HashMap<>();
 
-    public void register(@NonNull String type, @NonNull ProteusRecyclerViewAdapter.Builder builder) {
-        adapters.put(type, builder);
-    }
+  public void register(@NonNull String type, @NonNull ProteusRecyclerViewAdapter.Builder builder) {
+    adapters.put(type, builder);
+  }
 
-    @Nullable
-    public ProteusRecyclerViewAdapter.Builder remove(@NonNull String type) {
-        return adapters.remove(type);
-    }
+  @Nullable
+  public ProteusRecyclerViewAdapter.Builder remove(@NonNull String type) {
+    return adapters.remove(type);
+  }
 
-    public ProteusRecyclerViewAdapter create(@NonNull String type, @NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
-        return adapters.get(type).create(view, config);
-    }
+  public ProteusRecyclerViewAdapter create(@NonNull String type, @NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
+    return adapters.get(type).create(view, config);
+  }
 }
