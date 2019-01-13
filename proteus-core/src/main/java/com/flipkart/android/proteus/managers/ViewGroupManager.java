@@ -36,32 +36,32 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 public class ViewGroupManager extends ViewManager {
 
-    public boolean hasDataBoundChildren;
+  public boolean hasDataBoundChildren;
 
-    public ViewGroupManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
-                            @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
-        super(context, parser, view, layout, dataContext);
-        hasDataBoundChildren = false;
-    }
+  public ViewGroupManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
+                          @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
+    super(context, parser, view, layout, dataContext);
+    hasDataBoundChildren = false;
+  }
 
-    @Override
-    public void update(@Nullable ObjectValue data) {
-        super.update(data);
-        updateChildren();
-    }
+  @Override
+  public void update(@Nullable ObjectValue data) {
+    super.update(data);
+    updateChildren();
+  }
 
-    protected void updateChildren() {
-        if (!hasDataBoundChildren && view instanceof ViewGroup) {
-            ViewGroup parent = (ViewGroup) view;
-            int count = parent.getChildCount();
-            View child;
+  protected void updateChildren() {
+    if (!hasDataBoundChildren && view instanceof ViewGroup) {
+      ViewGroup parent = (ViewGroup) view;
+      int count = parent.getChildCount();
+      View child;
 
-            for (int index = 0; index < count; index++) {
-                child = parent.getChildAt(index);
-                if (child instanceof ProteusView) {
-                    ((ProteusView) child).getViewManager().update(dataContext.getData());
-                }
-            }
+      for (int index = 0; index < count; index++) {
+        child = parent.getChildAt(index);
+        if (child instanceof ProteusView) {
+          ((ProteusView) child).getViewManager().update(dataContext.getData());
         }
+      }
     }
+  }
 }

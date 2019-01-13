@@ -29,11 +29,11 @@ import java.util.Map;
  * @author adityasharat
  */
 public abstract class StyleManager {
-    @Nullable
-    protected abstract Styles getStyles();
+  @Nullable
+  protected abstract Styles getStyles();
 
-    @Nullable
-    public Map<String, Value> get(@NonNull String name) {
-        return null != getStyles() ? getStyles().get(name) : null;
-    }
+  @Nullable
+  public Map<String, Value> get(@NonNull String name) {
+    return null != getStyles() ? getStyles().get(name) : null;
+  }
 }

@@ -28,11 +28,11 @@ import java.util.Map;
  */
 public class Styles extends HashMap<String, Map<String, Value>> {
 
-    public Map<String, Value> getStyle(String name) {
-        return this.get(name);
-    }
+  public Map<String, Value> getStyle(String name) {
+    return this.get(name);
+  }
 
-    public boolean contains(String name) {
-        return this.containsKey(name);
-    }
+  public boolean contains(String name) {
+    return this.containsKey(name);
+  }
 }

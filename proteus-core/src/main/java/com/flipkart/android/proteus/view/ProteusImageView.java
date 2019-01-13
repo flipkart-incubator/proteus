@@ -32,38 +32,38 @@ import com.flipkart.android.proteus.ProteusView;
  */
 public class ProteusImageView extends android.widget.ImageView implements ProteusView {
 
-    private Manager viewManager;
+  private Manager viewManager;
 
-    public ProteusImageView(Context context) {
-        super(context);
-    }
+  public ProteusImageView(Context context) {
+    super(context);
+  }
 
-    public ProteusImageView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+  public ProteusImageView(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
 
-    public ProteusImageView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+  public ProteusImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+  }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ProteusImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public ProteusImageView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    super(context, attrs, defStyleAttr, defStyleRes);
+  }
 
-    @Override
-    public Manager getViewManager() {
-        return viewManager;
-    }
+  @Override
+  public Manager getViewManager() {
+    return viewManager;
+  }
 
-    @Override
-    public void setViewManager(@NonNull Manager manager) {
-        this.viewManager = manager;
-    }
+  @Override
+  public void setViewManager(@NonNull Manager manager) {
+    this.viewManager = manager;
+  }
 
-    @NonNull
-    @Override
-    public View getAsView() {
-        return this;
-    }
+  @NonNull
+  @Override
+  public View getAsView() {
+    return this;
+  }
 }

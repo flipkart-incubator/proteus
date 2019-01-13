@@ -38,111 +38,111 @@ import java.util.List;
  */
 public class ViewManager implements ProteusView.Manager {
 
-    @NonNull
-    protected final ProteusContext context;
+  @NonNull
+  protected final ProteusContext context;
 
-    @NonNull
-    protected final View view;
+  @NonNull
+  protected final View view;
 
-    @NonNull
-    protected final Layout layout;
+  @NonNull
+  protected final Layout layout;
 
-    @NonNull
-    protected final DataContext dataContext;
+  @NonNull
+  protected final DataContext dataContext;
 
-    @NonNull
-    protected final ViewTypeParser parser;
+  @NonNull
+  protected final ViewTypeParser parser;
 
-    @Nullable
-    protected final List<BoundAttribute> boundAttributes;
+  @Nullable
+  protected final List<BoundAttribute> boundAttributes;
 
-    @Nullable
-    protected Object extras;
+  @Nullable
+  protected Object extras;
 
-    public ViewManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
-                       @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
-        this.context = context;
-        this.parser = parser;
-        this.view = view;
-        this.layout = layout;
-        this.dataContext = dataContext;
+  public ViewManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
+                     @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
+    this.context = context;
+    this.parser = parser;
+    this.view = view;
+    this.layout = layout;
+    this.dataContext = dataContext;
 
-        if (null != layout.attributes) {
-            List<BoundAttribute> boundAttributes = new ArrayList<>();
-            for (Layout.Attribute attribute : layout.attributes) {
-                if (attribute.value.isBinding()) {
-                    boundAttributes.add(new BoundAttribute(attribute.id, attribute.value.getAsBinding()));
-                }
-            }
-            if (boundAttributes.size() > 0) {
-                this.boundAttributes = boundAttributes;
-            } else {
-                this.boundAttributes = null;
-            }
-        } else {
-            this.boundAttributes = null;
+    if (null != layout.attributes) {
+      List<BoundAttribute> boundAttributes = new ArrayList<>();
+      for (Layout.Attribute attribute : layout.attributes) {
+        if (attribute.value.isBinding()) {
+          boundAttributes.add(new BoundAttribute(attribute.id, attribute.value.getAsBinding()));
         }
+      }
+      if (boundAttributes.size() > 0) {
+        this.boundAttributes = boundAttributes;
+      } else {
+        this.boundAttributes = null;
+      }
+    } else {
+      this.boundAttributes = null;
+    }
+  }
+
+  @Override
+  public void update(@Nullable ObjectValue data) {
+    // update the data context so all child views can refer to new data
+    if (data != null) {
+      updateDataContext(data);
     }
 
-    @Override
-    public void update(@Nullable ObjectValue data) {
-        // update the data context so all child views can refer to new data
-        if (data != null) {
-            updateDataContext(data);
-        }
-
-        // update the bound attributes of this view
-        if (this.boundAttributes != null) {
-            for (BoundAttribute boundAttribute : this.boundAttributes) {
-                this.handleBinding(boundAttribute);
-            }
-        }
+    // update the bound attributes of this view
+    if (this.boundAttributes != null) {
+      for (BoundAttribute boundAttribute : this.boundAttributes) {
+        this.handleBinding(boundAttribute);
+      }
     }
+  }
 
-    @Nullable
-    @Override
-    public View findViewById(@NonNull String id) {
-        return view.findViewById(context.getInflater().getUniqueViewId(id));
-    }
+  @Nullable
+  @Override
+  public View findViewById(@NonNull String id) {
+    return view.findViewById(context.getInflater().getUniqueViewId(id));
+  }
 
-    @NonNull
-    @Override
-    public ProteusContext getContext() {
-        return this.context;
-    }
+  @NonNull
+  @Override
+  public ProteusContext getContext() {
+    return this.context;
+  }
 
-    @NonNull
-    @Override
-    public Layout getLayout() {
-        return this.layout;
-    }
+  @NonNull
+  @Override
+  public Layout getLayout() {
+    return this.layout;
+  }
 
-    @NonNull
-    public DataContext getDataContext() {
-        return dataContext;
-    }
+  @NonNull
+  public DataContext getDataContext() {
+    return dataContext;
+  }
 
-    @Nullable
-    @Override
-    public Object getExtras() {
-        return this.extras;
-    }
+  @Nullable
+  @Override
+  public Object getExtras() {
+    return this.extras;
+  }
 
-    @Override
-    public void setExtras(@Nullable Object extras) {
-        this.extras = extras;
-    }
+  @Override
+  public void setExtras(@Nullable Object extras) {
+    this.extras = extras;
+  }
 
-    private void updateDataContext(ObjectValue data) {
-        if (dataContext.hasOwnProperties()) {
-            dataContext.update(context, data);
-        } else {
-            dataContext.setData(data);
-        }
+  private void updateDataContext(ObjectValue data) {
+    if (dataContext.hasOwnProperties()) {
+      dataContext.update(context, data);
+    } else {
+      dataContext.setData(data);
     }
+  }
 
-    private void handleBinding(BoundAttribute boundAttribute) {
-        //noinspection unchecked
-        parser.handleAttribute(view, boundAttribute.attributeId, boundAttribute.binding);
-    }
+  private void handleBinding(BoundAttribute boundAttribute) {
+    //noinspection unchecked
+    parser.handleAttribute(view, boundAttribute.attributeId, boundAttribute.binding);
+  }
 }

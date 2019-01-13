@@ -47,70 +47,70 @@ import static java.lang.annotation.ElementType.TYPE;
 
 public abstract class GravityAttributeProcessor<V extends View> extends AttributeProcessor<V> {
 
-    public static final Primitive NO_GRAVITY = new Primitive(android.view.Gravity.NO_GRAVITY);
+  public static final Primitive NO_GRAVITY = new Primitive(android.view.Gravity.NO_GRAVITY);
 
-    @Override
-    public void handleValue(V view, Value value) {
-        int gravity = android.view.Gravity.NO_GRAVITY;
-        if (value.isPrimitive() && value.getAsPrimitive().isNumber()) {
-            gravity = value.getAsInt();
-        } else if (value.isPrimitive()) {
-            gravity = ParseHelper.parseGravity(value.getAsString());
-        }
-        //noinspection WrongConstant
-        setGravity(view, gravity);
+  @Override
+  public void handleValue(V view, Value value) {
+    int gravity = android.view.Gravity.NO_GRAVITY;
+    if (value.isPrimitive() && value.getAsPrimitive().isNumber()) {
+      gravity = value.getAsInt();
+    } else if (value.isPrimitive()) {
+      gravity = ParseHelper.parseGravity(value.getAsString());
     }
+    //noinspection WrongConstant
+    setGravity(view, gravity);
+  }
 
-    @Override
-    public void handleResource(V view, Resource resource) {
-        Integer gravity = resource.getInteger(view.getContext());
-        //noinspection WrongConstant
-        setGravity(view, null != gravity ? gravity : android.view.Gravity.NO_GRAVITY);
+  @Override
+  public void handleResource(V view, Resource resource) {
+    Integer gravity = resource.getInteger(view.getContext());
+    //noinspection WrongConstant
+    setGravity(view, null != gravity ? gravity : android.view.Gravity.NO_GRAVITY);
+  }
+
+  @Override
+  public void handleAttributeResource(V view, AttributeResource attribute) {
+    TypedArray a = attribute.apply(view.getContext());
+    set(view, a);
+  }
+
+  @Override
+  public void handleStyleResource(V view, StyleResource style) {
+    TypedArray a = style.apply(view.getContext());
+    set(view, a);
+  }
+
+  private void set(V view, TypedArray a) {
+    //noinspection WrongConstant
+    setGravity(view, a.getInt(0, android.view.Gravity.NO_GRAVITY));
+  }
+
+  public abstract void setGravity(V view, @Gravity int gravity);
+
+  @Override
+  public Value compile(@Nullable Value value, Context context) {
+    if (null == value) {
+      return NO_GRAVITY;
     }
+    return ParseHelper.getGravity(value.getAsString());
+  }
 
-    @Override
-    public void handleAttributeResource(V view, AttributeResource attribute) {
-        TypedArray a = attribute.apply(view.getContext());
-        set(view, a);
-    }
-
-    @Override
-    public void handleStyleResource(V view, StyleResource style) {
-        TypedArray a = style.apply(view.getContext());
-        set(view, a);
-    }
-
-    private void set(V view, TypedArray a) {
-        //noinspection WrongConstant
-        setGravity(view, a.getInt(0, android.view.Gravity.NO_GRAVITY));
-    }
-
-    public abstract void setGravity(V view, @Gravity int gravity);
-
-    @Override
-    public Value compile(@Nullable Value value, Context context) {
-        if (null == value) {
-            return NO_GRAVITY;
-        }
-        return ParseHelper.getGravity(value.getAsString());
-    }
-
-    @IntDef({android.view.Gravity.NO_GRAVITY,
-            android.view.Gravity.TOP,
-            android.view.Gravity.BOTTOM,
-            android.view.Gravity.LEFT,
-            android.view.Gravity.RIGHT,
-            android.view.Gravity.START,
-            android.view.Gravity.END,
-            android.view.Gravity.CENTER_VERTICAL,
-            android.view.Gravity.FILL_VERTICAL,
-            android.view.Gravity.CENTER_HORIZONTAL,
-            android.view.Gravity.FILL_HORIZONTAL,
-            android.view.Gravity.CENTER,
-            android.view.Gravity.FILL})
-    @Retention(RetentionPolicy.SOURCE)
-    @Target({FIELD, METHOD, PARAMETER, LOCAL_VARIABLE, TYPE})
-    public @interface Gravity {
-    }
+  @IntDef({android.view.Gravity.NO_GRAVITY,
+    android.view.Gravity.TOP,
+    android.view.Gravity.BOTTOM,
+    android.view.Gravity.LEFT,
+    android.view.Gravity.RIGHT,
+    android.view.Gravity.START,
+    android.view.Gravity.END,
+    android.view.Gravity.CENTER_VERTICAL,
+    android.view.Gravity.FILL_VERTICAL,
+    android.view.Gravity.CENTER_HORIZONTAL,
+    android.view.Gravity.FILL_HORIZONTAL,
+    android.view.Gravity.CENTER,
+    android.view.Gravity.FILL})
+  @Retention(RetentionPolicy.SOURCE)
+  @Target({FIELD, METHOD, PARAMETER, LOCAL_VARIABLE, TYPE})
+  public @interface Gravity {
+  }
 
 }

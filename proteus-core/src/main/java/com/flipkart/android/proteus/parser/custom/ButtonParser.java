@@ -34,26 +34,26 @@ import com.flipkart.android.proteus.view.ProteusButton;
  */
 public class ButtonParser<T extends Button> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "Button";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "Button";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "TextView";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "TextView";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusButton(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusButton(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
-    }
+  @Override
+  protected void addAttributeProcessors() {
+  }
 }

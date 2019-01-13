@@ -34,27 +34,27 @@ import com.flipkart.android.proteus.view.ProteusEditText;
  */
 public class EditTextParser<T extends EditText> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "EditText";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "EditText";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "TextView";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "TextView";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusEditText(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusEditText(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-    }
+  }
 }

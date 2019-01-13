@@ -41,42 +41,42 @@ import com.flipkart.android.proteus.value.Value;
 
 public class IncludeParser<V extends View> extends ViewTypeParser<V> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "include";
+  @NonNull
+  @Override
+  public String getType() {
+    return "include";
+  }
+
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "View";
+  }
+
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout include, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+
+    if (include.extras == null) {
+      throw new IllegalArgumentException("required attribute 'layout' missing.");
     }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "View";
+    Value type = include.extras.get(ProteusConstants.LAYOUT);
+    if (null == type || !type.isPrimitive()) {
+      throw new ProteusInflateException("required attribute 'layout' missing or is not a string");
     }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout include, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-
-        if (include.extras == null) {
-            throw new IllegalArgumentException("required attribute 'layout' missing.");
-        }
-
-        Value type = include.extras.get(ProteusConstants.LAYOUT);
-        if (null == type || !type.isPrimitive()) {
-            throw new ProteusInflateException("required attribute 'layout' missing or is not a string");
-        }
-
-        Layout layout = context.getLayout(type.getAsString());
-        if (null == layout) {
-            throw new ProteusInflateException("Layout '" + type + "' not found");
-        }
-
-        return context.getInflater().inflate(layout.merge(include), data, parent, dataIndex);
+    Layout layout = context.getLayout(type.getAsString());
+    if (null == layout) {
+      throw new ProteusInflateException("Layout '" + type + "' not found");
     }
 
-    @Override
-    protected void addAttributeProcessors() {
+    return context.getInflater().inflate(layout.merge(include), data, parent, dataIndex);
+  }
 
-    }
+  @Override
+  protected void addAttributeProcessors() {
+
+  }
 
 }

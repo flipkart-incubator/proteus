@@ -29,13 +29,13 @@ import android.os.Parcelable;
  * @author aditya.sharat
  */
 public interface IdGenerator extends Parcelable {
-    /**
-     * Generates and returns a unique id, for the given key.
-     * If key exists, returns old value.
-     * Ensure that all
-     *
-     * @param id the value for which the ID is returns.
-     * @return a unique ID integer for use with {@link android.view.View#setId(int)}.
-     */
-    int getUnique(String id);
+  /**
+   * Generates and returns a unique id, for the given key.
+   * If key exists, returns old value.
+   * Ensure that all
+   *
+   * @param id the value for which the ID is returns.
+   * @return a unique ID integer for use with {@link android.view.View#setId(int)}.
+   */
+  int getUnique(String id);
 }

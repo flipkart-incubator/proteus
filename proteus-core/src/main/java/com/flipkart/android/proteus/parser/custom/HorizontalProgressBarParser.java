@@ -35,27 +35,27 @@ import com.flipkart.android.proteus.view.custom.HorizontalProgressBar;
  */
 public class HorizontalProgressBarParser<T extends HorizontalProgressBar> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "HorizontalProgressBar";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "HorizontalProgressBar";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "ProgressBar";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "ProgressBar";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusHorizontalProgressBar(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusHorizontalProgressBar(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
-    }
+  @Override
+  protected void addAttributeProcessors() {
+  }
 
 }

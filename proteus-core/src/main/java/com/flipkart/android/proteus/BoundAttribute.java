@@ -33,19 +33,19 @@ import com.flipkart.android.proteus.value.ObjectValue;
  */
 public class BoundAttribute {
 
-    /**
-     * The {@code int} attribute id of the pair.
-     */
-    public final int attributeId;
+  /**
+   * The {@code int} attribute id of the pair.
+   */
+  public final int attributeId;
 
-    /**
-     * The {@link Binding} for the layout attributes value.
-     */
-    @NonNull
-    public final Binding binding;
+  /**
+   * The {@link Binding} for the layout attributes value.
+   */
+  @NonNull
+  public final Binding binding;
 
-    public BoundAttribute(int attributeId, @NonNull Binding binding) {
-        this.attributeId = attributeId;
-        this.binding = binding;
-    }
+  public BoundAttribute(int attributeId, @NonNull Binding binding) {
+    this.attributeId = attributeId;
+    this.binding = binding;
+  }
 }

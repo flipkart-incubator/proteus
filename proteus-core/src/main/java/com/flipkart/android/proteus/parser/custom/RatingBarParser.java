@@ -40,64 +40,64 @@ import com.flipkart.android.proteus.view.custom.FixedRatingBar;
  */
 public class RatingBarParser<T extends FixedRatingBar> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "RatingBar";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "RatingBar";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "View";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "View";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusFixedRatingBar(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusFixedRatingBar(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor(Attributes.RatingBar.NumStars, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.setNumStars(ParseHelper.parseInt(value));
-            }
-        });
-        addAttributeProcessor(Attributes.RatingBar.Rating, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.setRating(ParseHelper.parseFloat(value));
-            }
-        });
-        addAttributeProcessor(Attributes.RatingBar.IsIndicator, new BooleanAttributeProcessor<T>() {
-            @Override
-            public void setBoolean(T view, boolean value) {
-                view.setIsIndicator(value);
-            }
-        });
-        addAttributeProcessor(Attributes.RatingBar.StepSize, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.setStepSize(ParseHelper.parseFloat(value));
-            }
-        });
-        addAttributeProcessor(Attributes.RatingBar.MinHeight, new DimensionAttributeProcessor<T>() {
-            @Override
-            public void setDimension(T view, float dimension) {
-                view.setMinimumHeight((int) dimension);
-            }
-        });
-        addAttributeProcessor(Attributes.RatingBar.ProgressDrawable, new DrawableResourceProcessor<T>() {
-            @Override
-            public void setDrawable(T view, Drawable drawable) {
-                drawable = view.getTiledDrawable(drawable, false);
-                view.setProgressDrawable(drawable);
-            }
-        });
-    }
+    addAttributeProcessor(Attributes.RatingBar.NumStars, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.setNumStars(ParseHelper.parseInt(value));
+      }
+    });
+    addAttributeProcessor(Attributes.RatingBar.Rating, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.setRating(ParseHelper.parseFloat(value));
+      }
+    });
+    addAttributeProcessor(Attributes.RatingBar.IsIndicator, new BooleanAttributeProcessor<T>() {
+      @Override
+      public void setBoolean(T view, boolean value) {
+        view.setIsIndicator(value);
+      }
+    });
+    addAttributeProcessor(Attributes.RatingBar.StepSize, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.setStepSize(ParseHelper.parseFloat(value));
+      }
+    });
+    addAttributeProcessor(Attributes.RatingBar.MinHeight, new DimensionAttributeProcessor<T>() {
+      @Override
+      public void setDimension(T view, float dimension) {
+        view.setMinimumHeight((int) dimension);
+      }
+    });
+    addAttributeProcessor(Attributes.RatingBar.ProgressDrawable, new DrawableResourceProcessor<T>() {
+      @Override
+      public void setDrawable(T view, Drawable drawable) {
+        drawable = view.getTiledDrawable(drawable, false);
+        view.setProgressDrawable(drawable);
+      }
+    });
+  }
 }

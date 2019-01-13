@@ -37,40 +37,40 @@ import com.flipkart.android.proteus.view.ProteusCheckBox;
  */
 public class CheckBoxParser<T extends CheckBox> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "CheckBox";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "CheckBox";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "Button";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "Button";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusCheckBox(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusCheckBox(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor(Attributes.CheckBox.Button, new DrawableResourceProcessor<T>() {
-            @Override
-            public void setDrawable(T view, Drawable drawable) {
-                view.setButtonDrawable(drawable);
-            }
-        });
+    addAttributeProcessor(Attributes.CheckBox.Button, new DrawableResourceProcessor<T>() {
+      @Override
+      public void setDrawable(T view, Drawable drawable) {
+        view.setButtonDrawable(drawable);
+      }
+    });
 
-        addAttributeProcessor(Attributes.CheckBox.Checked, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.setChecked(Boolean.parseBoolean(value));
-            }
-        });
-    }
+    addAttributeProcessor(Attributes.CheckBox.Checked, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.setChecked(Boolean.parseBoolean(value));
+      }
+    });
+  }
 }

@@ -38,51 +38,51 @@ import com.flipkart.android.proteus.view.ProteusHorizontalScrollView;
 public class HorizontalScrollViewParser<T extends HorizontalScrollView> extends ViewTypeParser<T> {
 
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "HorizontalScrollView";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "HorizontalScrollView";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "FrameLayout";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "FrameLayout";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusHorizontalScrollView(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusHorizontalScrollView(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor(Attributes.HorizontalScrollView.FillViewPort, new BooleanAttributeProcessor<T>() {
-            @Override
-            public void setBoolean(T view, boolean value) {
-                view.setFillViewport(value);
-            }
-        });
-        addAttributeProcessor(Attributes.ScrollView.Scrollbars, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                if ("none".equals(value)) {
-                    view.setHorizontalScrollBarEnabled(false);
-                    view.setVerticalScrollBarEnabled(false);
-                } else if ("horizontal".equals(value)) {
-                    view.setHorizontalScrollBarEnabled(true);
-                    view.setVerticalScrollBarEnabled(false);
-                } else if ("vertical".equals(value)) {
-                    view.setHorizontalScrollBarEnabled(false);
-                    view.setVerticalScrollBarEnabled(true);
-                } else {
-                    view.setHorizontalScrollBarEnabled(false);
-                    view.setVerticalScrollBarEnabled(false);
-                }
-            }
-        });
-    }
+    addAttributeProcessor(Attributes.HorizontalScrollView.FillViewPort, new BooleanAttributeProcessor<T>() {
+      @Override
+      public void setBoolean(T view, boolean value) {
+        view.setFillViewport(value);
+      }
+    });
+    addAttributeProcessor(Attributes.ScrollView.Scrollbars, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        if ("none".equals(value)) {
+          view.setHorizontalScrollBarEnabled(false);
+          view.setVerticalScrollBarEnabled(false);
+        } else if ("horizontal".equals(value)) {
+          view.setHorizontalScrollBarEnabled(true);
+          view.setVerticalScrollBarEnabled(false);
+        } else if ("vertical".equals(value)) {
+          view.setHorizontalScrollBarEnabled(false);
+          view.setVerticalScrollBarEnabled(true);
+        } else {
+          view.setHorizontalScrollBarEnabled(false);
+          view.setVerticalScrollBarEnabled(false);
+        }
+      }
+    });
+  }
 }

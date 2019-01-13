@@ -29,25 +29,25 @@ import com.flipkart.android.proteus.ProteusView;
  */
 public class ProteusHorizontalProgressBar extends com.flipkart.android.proteus.view.custom.HorizontalProgressBar implements ProteusView {
 
-    private Manager viewManager;
+  private Manager viewManager;
 
-    public ProteusHorizontalProgressBar(Context context) {
-        super(context);
-    }
+  public ProteusHorizontalProgressBar(Context context) {
+    super(context);
+  }
 
-    @Override
-    public Manager getViewManager() {
-        return viewManager;
-    }
+  @Override
+  public Manager getViewManager() {
+    return viewManager;
+  }
 
-    @Override
-    public void setViewManager(@NonNull Manager manager) {
-        this.viewManager = manager;
-    }
+  @Override
+  public void setViewManager(@NonNull Manager manager) {
+    this.viewManager = manager;
+  }
 
-    @NonNull
-    @Override
-    public View getAsView() {
-        return this;
-    }
+  @NonNull
+  @Override
+  public View getAsView() {
+    return this;
+  }
 }

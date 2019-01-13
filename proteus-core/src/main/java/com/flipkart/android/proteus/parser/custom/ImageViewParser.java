@@ -39,54 +39,54 @@ import com.flipkart.android.proteus.view.ProteusImageView;
  */
 public class ImageViewParser<T extends ImageView> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "ImageView";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "ImageView";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "View";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "View";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusImageView(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusImageView(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor(Attributes.ImageView.Src, new DrawableResourceProcessor<T>() {
-            @Override
-            public void setDrawable(T view, Drawable drawable) {
-                view.setImageDrawable(drawable);
-            }
-        });
+    addAttributeProcessor(Attributes.ImageView.Src, new DrawableResourceProcessor<T>() {
+      @Override
+      public void setDrawable(T view, Drawable drawable) {
+        view.setImageDrawable(drawable);
+      }
+    });
 
-        addAttributeProcessor(Attributes.ImageView.ScaleType, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                ProteusImageView.ScaleType scaleType;
-                scaleType = ParseHelper.parseScaleType(value);
-                if (scaleType != null)
-                    view.setScaleType(scaleType);
-            }
-        });
+    addAttributeProcessor(Attributes.ImageView.ScaleType, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        ProteusImageView.ScaleType scaleType;
+        scaleType = ParseHelper.parseScaleType(value);
+        if (scaleType != null)
+          view.setScaleType(scaleType);
+      }
+    });
 
-        addAttributeProcessor(Attributes.ImageView.AdjustViewBounds, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                if ("true".equals(value)) {
-                    view.setAdjustViewBounds(true);
-                } else {
-                    view.setAdjustViewBounds(false);
-                }
-            }
-        });
-    }
+    addAttributeProcessor(Attributes.ImageView.AdjustViewBounds, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        if ("true".equals(value)) {
+          view.setAdjustViewBounds(true);
+        } else {
+          view.setAdjustViewBounds(false);
+        }
+      }
+    });
+  }
 }

@@ -29,7 +29,7 @@ package com.flipkart.android.proteus;
 
 public class ProteusContextWrapper extends ProteusContext {
 
-    public ProteusContextWrapper(ProteusContext context) {
-        super(context, context.getProteusResources(), context.getLoader(), context.getCallback());
-    }
+  public ProteusContextWrapper(ProteusContext context) {
+    super(context, context.getProteusResources(), context.getLoader(), context.getCallback());
+  }
 }

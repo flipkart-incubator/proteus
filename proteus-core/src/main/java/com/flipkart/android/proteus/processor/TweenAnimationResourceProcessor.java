@@ -37,34 +37,34 @@ import com.flipkart.android.proteus.value.Value;
  */
 public abstract class TweenAnimationResourceProcessor<V extends View> extends AttributeProcessor<V> {
 
-    private static final String TAG = "TweenAnimationResource";
+  private static final String TAG = "TweenAnimationResource";
 
-    @Override
-    public void handleValue(V view, Value value) {
-        Animation animation = AnimationUtils.loadAnimation(view.getContext(), value);
-        if (null != animation) {
-            setAnimation(view, animation);
-        } else {
-            if (ProteusConstants.isLoggingEnabled()) {
-                Log.e(TAG, "Animation Resource must be a primitive or an object. value -> " + value.toString());
-            }
-        }
+  @Override
+  public void handleValue(V view, Value value) {
+    Animation animation = AnimationUtils.loadAnimation(view.getContext(), value);
+    if (null != animation) {
+      setAnimation(view, animation);
+    } else {
+      if (ProteusConstants.isLoggingEnabled()) {
+        Log.e(TAG, "Animation Resource must be a primitive or an object. value -> " + value.toString());
+      }
     }
+  }
 
-    @Override
-    public void handleResource(V view, Resource resource) {
+  @Override
+  public void handleResource(V view, Resource resource) {
 
-    }
+  }
 
-    @Override
-    public void handleAttributeResource(V view, AttributeResource attribute) {
+  @Override
+  public void handleAttributeResource(V view, AttributeResource attribute) {
 
-    }
+  }
 
-    @Override
-    public void handleStyleResource(V view, StyleResource style) {
+  @Override
+  public void handleStyleResource(V view, StyleResource style) {
 
-    }
+  }
 
-    public abstract void setAnimation(V view, Animation animation);
+  public abstract void setAnimation(V view, Animation animation);
 }

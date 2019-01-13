@@ -37,41 +37,41 @@ import com.flipkart.android.proteus.view.custom.AspectRatioFrameLayout;
  */
 public class FrameLayoutParser<T extends AspectRatioFrameLayout> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "FrameLayout";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "FrameLayout";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "ViewGroup";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "ViewGroup";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusAspectRatioFrameLayout(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusAspectRatioFrameLayout(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor(Attributes.FrameLayout.HeightRatio, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.setAspectRatioHeight(ParseHelper.parseInt(value));
+    addAttributeProcessor(Attributes.FrameLayout.HeightRatio, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.setAspectRatioHeight(ParseHelper.parseInt(value));
 
-            }
-        });
-        addAttributeProcessor(Attributes.FrameLayout.WidthRatio, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.setAspectRatioWidth(ParseHelper.parseInt(value));
+      }
+    });
+    addAttributeProcessor(Attributes.FrameLayout.WidthRatio, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.setAspectRatioWidth(ParseHelper.parseInt(value));
 
-            }
-        });
-    }
+      }
+    });
+  }
 }

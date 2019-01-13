@@ -25,7 +25,7 @@ import android.widget.ProgressBar;
  * @author Aditya Sharat
  */
 public class HorizontalProgressBar extends ProgressBar {
-    public HorizontalProgressBar(Context context) {
-        super(context, null, android.R.attr.progressBarStyleHorizontal);
-    }
+  public HorizontalProgressBar(Context context) {
+    super(context, null, android.R.attr.progressBarStyleHorizontal);
+  }
 }

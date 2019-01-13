@@ -30,33 +30,33 @@ import com.flipkart.android.proteus.ProteusView;
  */
 public class ProteusFixedRatingBar extends com.flipkart.android.proteus.view.custom.FixedRatingBar implements ProteusView {
 
-    private Manager viewManager;
+  private Manager viewManager;
 
-    public ProteusFixedRatingBar(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+  public ProteusFixedRatingBar(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+  }
 
-    public ProteusFixedRatingBar(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+  public ProteusFixedRatingBar(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
 
-    public ProteusFixedRatingBar(Context context) {
-        super(context);
-    }
+  public ProteusFixedRatingBar(Context context) {
+    super(context);
+  }
 
-    @Override
-    public Manager getViewManager() {
-        return viewManager;
-    }
+  @Override
+  public Manager getViewManager() {
+    return viewManager;
+  }
 
-    @Override
-    public void setViewManager(@NonNull Manager manager) {
-        this.viewManager = manager;
-    }
+  @Override
+  public void setViewManager(@NonNull Manager manager) {
+    this.viewManager = manager;
+  }
 
-    @NonNull
-    @Override
-    public View getAsView() {
-        return this;
-    }
+  @NonNull
+  @Override
+  public View getAsView() {
+    return this;
+  }
 }

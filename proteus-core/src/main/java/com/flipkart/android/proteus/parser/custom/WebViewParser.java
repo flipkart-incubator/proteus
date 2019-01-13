@@ -35,39 +35,39 @@ import com.flipkart.android.proteus.view.ProteusWebView;
  */
 public class WebViewParser<T extends WebView> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "WebView";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "WebView";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "View";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "View";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusWebView(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusWebView(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor(Attributes.WebView.Url, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.loadUrl(value);
-            }
-        });
-        addAttributeProcessor(Attributes.WebView.HTML, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.loadData(value, "text/html", "UTF-8");
-            }
-        });
-    }
+    addAttributeProcessor(Attributes.WebView.Url, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.loadUrl(value);
+      }
+    });
+    addAttributeProcessor(Attributes.WebView.HTML, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.loadData(value, "text/html", "UTF-8");
+      }
+    });
+  }
 }

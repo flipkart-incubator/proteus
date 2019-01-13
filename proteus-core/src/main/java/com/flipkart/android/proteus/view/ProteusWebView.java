@@ -32,38 +32,38 @@ import com.flipkart.android.proteus.ProteusView;
  */
 public class ProteusWebView extends android.webkit.WebView implements ProteusView {
 
-    private Manager viewManager;
+  private Manager viewManager;
 
-    public ProteusWebView(Context context) {
-        super(context);
-    }
+  public ProteusWebView(Context context) {
+    super(context);
+  }
 
-    public ProteusWebView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+  public ProteusWebView(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
 
-    public ProteusWebView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+  public ProteusWebView(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+  }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ProteusWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public ProteusWebView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    super(context, attrs, defStyleAttr, defStyleRes);
+  }
 
-    @Override
-    public Manager getViewManager() {
-        return viewManager;
-    }
+  @Override
+  public Manager getViewManager() {
+    return viewManager;
+  }
 
-    @Override
-    public void setViewManager(@NonNull Manager manager) {
-        this.viewManager = manager;
-    }
+  @Override
+  public void setViewManager(@NonNull Manager manager) {
+    this.viewManager = manager;
+  }
 
-    @NonNull
-    @Override
-    public View getAsView() {
-        return this;
-    }
+  @NonNull
+  @Override
+  public View getAsView() {
+    return this;
+  }
 }

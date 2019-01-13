@@ -36,33 +36,33 @@ import com.flipkart.android.proteus.view.ProteusRelativeLayout;
  */
 public class RelativeLayoutParser<T extends RelativeLayout> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "RelativeLayout";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "RelativeLayout";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "ViewGroup";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "ViewGroup";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusRelativeLayout(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusRelativeLayout(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor(Attributes.View.Gravity, new GravityAttributeProcessor<T>() {
-            @Override
-            public void setGravity(T view, @Gravity int gravity) {
-                view.setGravity(gravity);
-            }
-        });
-    }
+    addAttributeProcessor(Attributes.View.Gravity, new GravityAttributeProcessor<T>() {
+      @Override
+      public void setGravity(T view, @Gravity int gravity) {
+        view.setGravity(gravity);
+      }
+    });
+  }
 }

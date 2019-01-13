@@ -39,84 +39,84 @@ import android.widget.RatingBar;
  * Created by kirankumar on 04/12/14.
  */
 public class FixedRatingBar extends RatingBar {
-    private Bitmap sampleTile;
+  private Bitmap sampleTile;
 
-    public FixedRatingBar(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+  public FixedRatingBar(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+  }
+
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public FixedRatingBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    super(context, attrs, defStyleAttr, defStyleRes);
+  }
+
+  public FixedRatingBar(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
+
+  public FixedRatingBar(Context context) {
+    super(context);
+  }
+
+  public void setSampleTile(Bitmap bitmap) {
+    this.sampleTile = bitmap;
+  }
+
+  protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    if (sampleTile != null) {
+      final int width = sampleTile.getWidth() * getNumStars();
+      setMeasuredDimension(resolveSize(width, widthMeasureSpec), getMeasuredHeight());
+    }
+  }
+
+  Shape getDrawableShape() {
+    final float[] roundedCorners = new float[]{5, 5, 5, 5, 5, 5, 5, 5};
+    return new RoundRectShape(roundedCorners, null, null);
+  }
+
+  /**
+   * Taken from AOSP !!
+   * Converts a drawable to a tiled version of itself. It will recursively
+   * traverse layer and state list drawables.
+   */
+  public Drawable getTiledDrawable(Drawable drawable, boolean clip) {
+
+    if (drawable instanceof LayerDrawable) {
+      LayerDrawable background = (LayerDrawable) drawable;
+      final int N = background.getNumberOfLayers();
+      Drawable[] outDrawables = new Drawable[N];
+
+      for (int i = 0; i < N; i++) {
+        int id = background.getId(i);
+        outDrawables[i] = getTiledDrawable(background.getDrawable(i),
+          (id == android.R.id.progress || id == android.R.id.secondaryProgress));
+      }
+
+      LayerDrawable newBg = new LayerDrawable(outDrawables);
+
+      for (int i = 0; i < N; i++) {
+        newBg.setId(i, background.getId(i));
+      }
+
+      return newBg;
+
+    } else if (drawable instanceof BitmapDrawable) {
+
+      final Bitmap tileBitmap = ((BitmapDrawable) drawable).getBitmap();
+      if (sampleTile == null) {
+        sampleTile = tileBitmap;
+      }
+      final ShapeDrawable shapeDrawable = new ShapeDrawable(getDrawableShape());
+
+      final BitmapShader bitmapShader = new BitmapShader(tileBitmap,
+        Shader.TileMode.REPEAT, Shader.TileMode.CLAMP);
+      shapeDrawable.getPaint().setShader(bitmapShader);
+
+      return (clip) ? new ClipDrawable(shapeDrawable, Gravity.LEFT,
+        ClipDrawable.HORIZONTAL) : shapeDrawable;
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public FixedRatingBar(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    public FixedRatingBar(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public FixedRatingBar(Context context) {
-        super(context);
-    }
-
-    public void setSampleTile(Bitmap bitmap) {
-        this.sampleTile = bitmap;
-    }
-
-    protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        if (sampleTile != null) {
-            final int width = sampleTile.getWidth() * getNumStars();
-            setMeasuredDimension(resolveSize(width, widthMeasureSpec), getMeasuredHeight());
-        }
-    }
-
-    Shape getDrawableShape() {
-        final float[] roundedCorners = new float[]{5, 5, 5, 5, 5, 5, 5, 5};
-        return new RoundRectShape(roundedCorners, null, null);
-    }
-
-    /**
-     * Taken from AOSP !!
-     * Converts a drawable to a tiled version of itself. It will recursively
-     * traverse layer and state list drawables.
-     */
-    public Drawable getTiledDrawable(Drawable drawable, boolean clip) {
-
-        if (drawable instanceof LayerDrawable) {
-            LayerDrawable background = (LayerDrawable) drawable;
-            final int N = background.getNumberOfLayers();
-            Drawable[] outDrawables = new Drawable[N];
-
-            for (int i = 0; i < N; i++) {
-                int id = background.getId(i);
-                outDrawables[i] = getTiledDrawable(background.getDrawable(i),
-                        (id == android.R.id.progress || id == android.R.id.secondaryProgress));
-            }
-
-            LayerDrawable newBg = new LayerDrawable(outDrawables);
-
-            for (int i = 0; i < N; i++) {
-                newBg.setId(i, background.getId(i));
-            }
-
-            return newBg;
-
-        } else if (drawable instanceof BitmapDrawable) {
-
-            final Bitmap tileBitmap = ((BitmapDrawable) drawable).getBitmap();
-            if (sampleTile == null) {
-                sampleTile = tileBitmap;
-            }
-            final ShapeDrawable shapeDrawable = new ShapeDrawable(getDrawableShape());
-
-            final BitmapShader bitmapShader = new BitmapShader(tileBitmap,
-                    Shader.TileMode.REPEAT, Shader.TileMode.CLAMP);
-            shapeDrawable.getPaint().setShader(bitmapShader);
-
-            return (clip) ? new ClipDrawable(shapeDrawable, Gravity.LEFT,
-                    ClipDrawable.HORIZONTAL) : shapeDrawable;
-        }
-
-        return drawable;
-    }
+    return drawable;
+  }
 }

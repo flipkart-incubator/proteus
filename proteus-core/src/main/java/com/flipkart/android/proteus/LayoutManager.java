@@ -30,11 +30,11 @@ import java.util.Map;
  */
 public abstract class LayoutManager {
 
-    @Nullable
-    protected abstract Map<String, Layout> getLayouts();
+  @Nullable
+  protected abstract Map<String, Layout> getLayouts();
 
-    @Nullable
-    public Layout get(@NonNull String name) {
-        return null != getLayouts() ? getLayouts().get(name) : null;
-    }
+  @Nullable
+  public Layout get(@NonNull String name) {
+    return null != getLayouts() ? getLayouts().get(name) : null;
+  }
 }

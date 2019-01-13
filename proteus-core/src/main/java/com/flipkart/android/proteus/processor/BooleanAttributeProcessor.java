@@ -37,37 +37,37 @@ import com.flipkart.android.proteus.value.Value;
 
 public abstract class BooleanAttributeProcessor<V extends View> extends AttributeProcessor<V> {
 
-    @Override
-    public void handleValue(V view, Value value) {
-        if (value.isPrimitive() && value.getAsPrimitive().isBoolean()) {
-            setBoolean(view, value.getAsPrimitive().getAsBoolean());
-        } else {
-            process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFunctionManager()));
-        }
+  @Override
+  public void handleValue(V view, Value value) {
+    if (value.isPrimitive() && value.getAsPrimitive().isBoolean()) {
+      setBoolean(view, value.getAsPrimitive().getAsBoolean());
+    } else {
+      process(view, precompile(value, view.getContext(), ((ProteusContext) view.getContext()).getFunctionManager()));
     }
+  }
 
-    @Override
-    public void handleResource(V view, Resource resource) {
-        Boolean bool = resource.getBoolean(view.getContext());
-        setBoolean(view, null != bool ? bool : false);
-    }
+  @Override
+  public void handleResource(V view, Resource resource) {
+    Boolean bool = resource.getBoolean(view.getContext());
+    setBoolean(view, null != bool ? bool : false);
+  }
 
-    @Override
-    public void handleAttributeResource(V view, AttributeResource attribute) {
-        TypedArray a = attribute.apply(view.getContext());
-        setBoolean(view, a.getBoolean(0, false));
-    }
+  @Override
+  public void handleAttributeResource(V view, AttributeResource attribute) {
+    TypedArray a = attribute.apply(view.getContext());
+    setBoolean(view, a.getBoolean(0, false));
+  }
 
-    @Override
-    public void handleStyleResource(V view, StyleResource style) {
-        TypedArray a = style.apply(view.getContext());
-        setBoolean(view, a.getBoolean(0, false));
-    }
+  @Override
+  public void handleStyleResource(V view, StyleResource style) {
+    TypedArray a = style.apply(view.getContext());
+    setBoolean(view, a.getBoolean(0, false));
+  }
 
-    public abstract void setBoolean(V view, boolean value);
+  public abstract void setBoolean(V view, boolean value);
 
-    @Override
-    public Value compile(@Nullable Value value, Context context) {
-        return ParseHelper.parseBoolean(value) ? ProteusConstants.TRUE : ProteusConstants.FALSE;
-    }
+  @Override
+  public Value compile(@Nullable Value value, Context context) {
+    return ParseHelper.parseBoolean(value) ? ProteusConstants.TRUE : ProteusConstants.FALSE;
+  }
 }

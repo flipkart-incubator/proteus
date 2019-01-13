@@ -37,85 +37,85 @@ import java.util.regex.Pattern;
  */
 public class AttributeResource extends Value {
 
-    public static final AttributeResource NULL = new AttributeResource(-1);
+  public static final AttributeResource NULL = new AttributeResource(-1);
 
-    private static final String ATTR_START_LITERAL = "?";
-    private static final String ATTR_LITERAL = "attr/";
-    private static final Pattern sAttributePattern = Pattern.compile("(\\?)(\\S*)(:?)(attr/?)(\\S*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-    private static final Map<String, Class> sHashMap = new HashMap<>();
+  private static final String ATTR_START_LITERAL = "?";
+  private static final String ATTR_LITERAL = "attr/";
+  private static final Pattern sAttributePattern = Pattern.compile("(\\?)(\\S*)(:?)(attr/?)(\\S*)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+  private static final Map<String, Class> sHashMap = new HashMap<>();
 
-    public final int attributeId;
+  public final int attributeId;
 
-    private AttributeResource(final int attributeId) {
-        this.attributeId = attributeId;
+  private AttributeResource(final int attributeId) {
+    this.attributeId = attributeId;
+  }
+
+  private AttributeResource(String value, Context context) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
+    String attributeName;
+    String packageName = null;
+    Matcher matcher = sAttributePattern.matcher(value);
+
+    if (matcher.matches()) {
+      attributeName = matcher.group(5);
+      packageName = matcher.group(2);
+    } else {
+      attributeName = value.substring(1);
     }
 
-    private AttributeResource(String value, Context context) throws ClassNotFoundException, NoSuchFieldException, IllegalAccessException {
-        String attributeName;
-        String packageName = null;
-        Matcher matcher = sAttributePattern.matcher(value);
+    Class clazz;
+    if (null != packageName && !packageName.isEmpty()) {
+      packageName = packageName.substring(0, packageName.length() - 1);
+    } else {
+      packageName = context.getPackageName();
+    }
 
-        if (matcher.matches()) {
-            attributeName = matcher.group(5);
-            packageName = matcher.group(2);
-        } else {
-            attributeName = value.substring(1);
+    String className = packageName + ".R$attr";
+    clazz = sHashMap.get(className);
+    if (null == clazz) {
+      clazz = Class.forName(className);
+      sHashMap.put(className, clazz);
+    }
+    Field field = clazz.getField(attributeName);
+    attributeId = field.getInt(null);
+  }
+
+  public static boolean isAttributeResource(String value) {
+    return value.startsWith(ATTR_START_LITERAL) && value.contains(ATTR_LITERAL);
+  }
+
+  @Nullable
+  public static AttributeResource valueOf(String value, Context context) {
+    AttributeResource attribute = AttributeCache.cache.get(value);
+    if (null == attribute) {
+      try {
+        attribute = new AttributeResource(value, context);
+      } catch (Exception e) {
+        if (ProteusConstants.isLoggingEnabled()) {
+          e.printStackTrace();
         }
-
-        Class clazz;
-        if (null != packageName && !packageName.isEmpty()) {
-            packageName = packageName.substring(0, packageName.length() - 1);
-        } else {
-            packageName = context.getPackageName();
-        }
-
-        String className = packageName + ".R$attr";
-        clazz = sHashMap.get(className);
-        if (null == clazz) {
-            clazz = Class.forName(className);
-            sHashMap.put(className, clazz);
-        }
-        Field field = clazz.getField(attributeName);
-        attributeId = field.getInt(null);
+        attribute = NULL;
+      }
+      AttributeCache.cache.put(value, attribute);
     }
+    return NULL == attribute ? null : attribute;
+  }
 
-    public static boolean isAttributeResource(String value) {
-        return value.startsWith(ATTR_START_LITERAL) && value.contains(ATTR_LITERAL);
-    }
+  @Nullable
+  public static AttributeResource valueOf(int value) {
+    return new AttributeResource(value);
+  }
 
-    @Nullable
-    public static AttributeResource valueOf(String value, Context context) {
-        AttributeResource attribute = AttributeCache.cache.get(value);
-        if (null == attribute) {
-            try {
-                attribute = new AttributeResource(value, context);
-            } catch (Exception e) {
-                if (ProteusConstants.isLoggingEnabled()) {
-                    e.printStackTrace();
-                }
-                attribute = NULL;
-            }
-            AttributeCache.cache.put(value, attribute);
-        }
-        return NULL == attribute ? null : attribute;
-    }
+  public TypedArray apply(@NonNull Context context) {
+    return context.obtainStyledAttributes(new int[]{attributeId});
+  }
 
-    @Nullable
-    public static AttributeResource valueOf(int value) {
-        return new AttributeResource(value);
-    }
+  @Override
+  public Value copy() {
+    return this;
+  }
 
-    public TypedArray apply(@NonNull Context context) {
-        return context.obtainStyledAttributes(new int[]{attributeId});
-    }
-
-    @Override
-    public Value copy() {
-        return this;
-    }
-
-    private static class AttributeCache {
-        static final LruCache<String, AttributeResource> cache = new LruCache<>(16);
-    }
+  private static class AttributeCache {
+    static final LruCache<String, AttributeResource> cache = new LruCache<>(16);
+  }
 
 }

@@ -26,48 +26,48 @@ import java.util.Iterator;
 
 public class SimpleArrayIterator<E> implements Iterator<E> {
 
-    private final E[] elements;
-    private int cursor;
+  private final E[] elements;
+  private int cursor;
 
-    public SimpleArrayIterator(E[] elements) {
-        this.elements = elements;
-        cursor = 0;
-    }
+  public SimpleArrayIterator(E[] elements) {
+    this.elements = elements;
+    cursor = 0;
+  }
 
-    public static Iterator<Integer> createIntArrayIterator(final int[] elements) {
-        return new Iterator<Integer>() {
+  public static Iterator<Integer> createIntArrayIterator(final int[] elements) {
+    return new Iterator<Integer>() {
 
-            private int cursor;
+      private int cursor;
 
-            @Override
-            public boolean hasNext() {
-                return cursor < elements.length;
-            }
-
-            @Override
-            public Integer next() {
-                Integer e = elements[cursor];
-                cursor++;
-                return e;
-            }
-        };
-    }
-
-    @Override
-    public boolean hasNext() {
+      @Override
+      public boolean hasNext() {
         return cursor < elements.length;
-    }
+      }
 
-    @Override
-    public E next() {
-        E e = elements[cursor];
+      @Override
+      public Integer next() {
+        Integer e = elements[cursor];
         cursor++;
         return e;
-    }
+      }
+    };
+  }
 
-    @Override
-    public void remove() {
-        throw new UnsupportedOperationException("remove() is not allowed.");
-    }
+  @Override
+  public boolean hasNext() {
+    return cursor < elements.length;
+  }
+
+  @Override
+  public E next() {
+    E e = elements[cursor];
+    cursor++;
+    return e;
+  }
+
+  @Override
+  public void remove() {
+    throw new UnsupportedOperationException("remove() is not allowed.");
+  }
 
 }

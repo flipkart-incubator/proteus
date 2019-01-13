@@ -38,53 +38,53 @@ import com.flipkart.android.proteus.value.ObjectValue;
  */
 public class ManagerWrapper implements ProteusView.Manager {
 
-    private final ProteusView.Manager base;
+  private final ProteusView.Manager base;
 
-    public ManagerWrapper(ProteusView.Manager base) {
-        this.base = base;
-    }
+  public ManagerWrapper(ProteusView.Manager base) {
+    this.base = base;
+  }
 
-    @Override
-    public void update(@Nullable ObjectValue data) {
-        base.update(data);
-    }
+  @Override
+  public void update(@Nullable ObjectValue data) {
+    base.update(data);
+  }
 
-    @Nullable
-    @Override
-    public View findViewById(@NonNull String id) {
-        return base.findViewById(id);
-    }
+  @Nullable
+  @Override
+  public View findViewById(@NonNull String id) {
+    return base.findViewById(id);
+  }
 
-    @NonNull
-    @Override
-    public ProteusContext getContext() {
-        return base.getContext();
-    }
+  @NonNull
+  @Override
+  public ProteusContext getContext() {
+    return base.getContext();
+  }
 
-    @NonNull
-    @Override
-    public Layout getLayout() {
-        return base.getLayout();
-    }
+  @NonNull
+  @Override
+  public Layout getLayout() {
+    return base.getLayout();
+  }
 
-    @NonNull
-    @Override
-    public DataContext getDataContext() {
-        return base.getDataContext();
-    }
+  @NonNull
+  @Override
+  public DataContext getDataContext() {
+    return base.getDataContext();
+  }
 
-    @Nullable
-    @Override
-    public Object getExtras() {
-        return base.getExtras();
-    }
+  @Nullable
+  @Override
+  public Object getExtras() {
+    return base.getExtras();
+  }
 
-    @Override
-    public void setExtras(@Nullable Object extras) {
-        base.setExtras(extras);
-    }
+  @Override
+  public void setExtras(@Nullable Object extras) {
+    base.setExtras(extras);
+  }
 
-    public ProteusView.Manager getBaseManager() {
-        return base;
-    }
+  public ProteusView.Manager getBaseManager() {
+    return base;
+  }
 }

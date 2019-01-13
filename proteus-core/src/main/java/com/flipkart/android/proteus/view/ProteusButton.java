@@ -32,38 +32,38 @@ import com.flipkart.android.proteus.ProteusView;
  */
 public class ProteusButton extends android.widget.Button implements ProteusView {
 
-    Manager viewManager;
+  Manager viewManager;
 
-    public ProteusButton(Context context) {
-        super(context);
-    }
+  public ProteusButton(Context context) {
+    super(context);
+  }
 
-    public ProteusButton(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+  public ProteusButton(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
 
-    public ProteusButton(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+  public ProteusButton(Context context, AttributeSet attrs, int defStyleAttr) {
+    super(context, attrs, defStyleAttr);
+  }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ProteusButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public ProteusButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    super(context, attrs, defStyleAttr, defStyleRes);
+  }
 
-    @Override
-    public Manager getViewManager() {
-        return viewManager;
-    }
+  @Override
+  public Manager getViewManager() {
+    return viewManager;
+  }
 
-    @Override
-    public void setViewManager(@NonNull Manager manager) {
-        this.viewManager = manager;
-    }
+  @Override
+  public void setViewManager(@NonNull Manager manager) {
+    this.viewManager = manager;
+  }
 
-    @NonNull
-    @Override
-    public View getAsView() {
-        return this;
-    }
+  @NonNull
+  @Override
+  public View getAsView() {
+    return this;
+  }
 }

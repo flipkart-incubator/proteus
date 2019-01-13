@@ -26,7 +26,7 @@ import android.view.InflateException;
 
 public class ProteusInflateException extends InflateException {
 
-    public ProteusInflateException(String message) {
-        super(message);
-    }
+  public ProteusInflateException(String message) {
+    super(message);
+  }
 }

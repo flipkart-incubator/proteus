@@ -32,38 +32,38 @@ import com.flipkart.android.proteus.ProteusView;
  */
 public class ProteusAspectRatioFrameLayout extends com.flipkart.android.proteus.view.custom.AspectRatioFrameLayout implements ProteusView {
 
-    private Manager viewManager;
+  private Manager viewManager;
 
-    public ProteusAspectRatioFrameLayout(Context context) {
-        super(context);
-    }
+  public ProteusAspectRatioFrameLayout(Context context) {
+    super(context);
+  }
 
-    public ProteusAspectRatioFrameLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
+  public ProteusAspectRatioFrameLayout(Context context, AttributeSet attrs) {
+    super(context, attrs);
+  }
 
-    public ProteusAspectRatioFrameLayout(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
+  public ProteusAspectRatioFrameLayout(Context context, AttributeSet attrs, int defStyle) {
+    super(context, attrs, defStyle);
+  }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ProteusAspectRatioFrameLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
+  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+  public ProteusAspectRatioFrameLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    super(context, attrs, defStyleAttr, defStyleRes);
+  }
 
-    @Override
-    public Manager getViewManager() {
-        return viewManager;
-    }
+  @Override
+  public Manager getViewManager() {
+    return viewManager;
+  }
 
-    @Override
-    public void setViewManager(@NonNull Manager manager) {
-        this.viewManager = manager;
-    }
+  @Override
+  public void setViewManager(@NonNull Manager manager) {
+    this.viewManager = manager;
+  }
 
-    @NonNull
-    @Override
-    public View getAsView() {
-        return this;
-    }
+  @NonNull
+  @Override
+  public View getAsView() {
+    return this;
+  }
 }

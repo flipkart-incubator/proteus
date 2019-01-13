@@ -42,86 +42,86 @@ import com.flipkart.android.proteus.view.ProteusLinearLayout;
  */
 public class LinearLayoutParser<T extends LinearLayout> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "LinearLayout";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "LinearLayout";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "ViewGroup";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "ViewGroup";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusLinearLayout(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusLinearLayout(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor(Attributes.LinearLayout.Orientation, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                if ("horizontal".equals(value)) {
-                    view.setOrientation(ProteusLinearLayout.HORIZONTAL);
-                } else {
-                    view.setOrientation(ProteusLinearLayout.VERTICAL);
-                }
-            }
-        });
+    addAttributeProcessor(Attributes.LinearLayout.Orientation, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        if ("horizontal".equals(value)) {
+          view.setOrientation(ProteusLinearLayout.HORIZONTAL);
+        } else {
+          view.setOrientation(ProteusLinearLayout.VERTICAL);
+        }
+      }
+    });
 
-        addAttributeProcessor(Attributes.View.Gravity, new GravityAttributeProcessor<T>() {
-            @Override
-            public void setGravity(T view, @Gravity int gravity) {
-                view.setGravity(gravity);
-            }
-        });
+    addAttributeProcessor(Attributes.View.Gravity, new GravityAttributeProcessor<T>() {
+      @Override
+      public void setGravity(T view, @Gravity int gravity) {
+        view.setGravity(gravity);
+      }
+    });
 
-        addAttributeProcessor(Attributes.LinearLayout.Divider, new DrawableResourceProcessor<T>() {
-            @SuppressLint("NewApi")
-            @Override
-            public void setDrawable(T view, Drawable drawable) {
+    addAttributeProcessor(Attributes.LinearLayout.Divider, new DrawableResourceProcessor<T>() {
+      @SuppressLint("NewApi")
+      @Override
+      public void setDrawable(T view, Drawable drawable) {
 
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-                    view.setDividerDrawable(drawable);
-                }
-            }
-        });
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+          view.setDividerDrawable(drawable);
+        }
+      }
+    });
 
-        addAttributeProcessor(Attributes.LinearLayout.DividerPadding, new DimensionAttributeProcessor<T>() {
-            @SuppressLint("NewApi")
-            @Override
-            public void setDimension(T view, float dimension) {
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-                    view.setDividerPadding((int) dimension);
-                }
-            }
-        });
+    addAttributeProcessor(Attributes.LinearLayout.DividerPadding, new DimensionAttributeProcessor<T>() {
+      @SuppressLint("NewApi")
+      @Override
+      public void setDimension(T view, float dimension) {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+          view.setDividerPadding((int) dimension);
+        }
+      }
+    });
 
-        addAttributeProcessor(Attributes.LinearLayout.ShowDividers, new StringAttributeProcessor<T>() {
-            @SuppressLint("NewApi")
-            @Override
-            public void setString(T view, String value) {
+    addAttributeProcessor(Attributes.LinearLayout.ShowDividers, new StringAttributeProcessor<T>() {
+      @SuppressLint("NewApi")
+      @Override
+      public void setString(T view, String value) {
 
-                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
-                    int dividerMode = ParseHelper.parseDividerMode(value);
-                    // noinspection ResourceType
-                    view.setShowDividers(dividerMode);
-                }
-            }
-        });
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.GINGERBREAD_MR1) {
+          int dividerMode = ParseHelper.parseDividerMode(value);
+          // noinspection ResourceType
+          view.setShowDividers(dividerMode);
+        }
+      }
+    });
 
-        addAttributeProcessor(Attributes.LinearLayout.WeightSum, new StringAttributeProcessor<T>() {
-            @SuppressLint("NewApi")
-            @Override
-            public void setString(T view, String value) {
-                view.setWeightSum(ParseHelper.parseFloat(value));
-            }
-        });
-    }
+    addAttributeProcessor(Attributes.LinearLayout.WeightSum, new StringAttributeProcessor<T>() {
+      @SuppressLint("NewApi")
+      @Override
+      public void setString(T view, String value) {
+        view.setWeightSum(ParseHelper.parseFloat(value));
+      }
+    });
+  }
 }

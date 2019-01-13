@@ -39,37 +39,37 @@ import com.flipkart.android.proteus.value.Value;
 
 public abstract class EventProcessor<T extends View> extends AttributeProcessor<T> {
 
-    @Override
-    public void handleValue(T view, Value value) {
-        setOnEventListener(view, value);
-    }
+  @Override
+  public void handleValue(T view, Value value) {
+    setOnEventListener(view, value);
+  }
 
-    @Override
-    public void handleResource(T view, Resource resource) {
-        setOnEventListener(view, resource);
-    }
+  @Override
+  public void handleResource(T view, Resource resource) {
+    setOnEventListener(view, resource);
+  }
 
-    @Override
-    public void handleAttributeResource(T view, AttributeResource attribute) {
-        setOnEventListener(view, attribute);
-    }
+  @Override
+  public void handleAttributeResource(T view, AttributeResource attribute) {
+    setOnEventListener(view, attribute);
+  }
 
-    @Override
-    public void handleStyleResource(T view, StyleResource style) {
-        setOnEventListener(view, style);
-    }
+  @Override
+  public void handleStyleResource(T view, StyleResource style) {
+    setOnEventListener(view, style);
+  }
 
-    public abstract void setOnEventListener(T view, Value value);
+  public abstract void setOnEventListener(T view, Value value);
 
-    /**
-     * @param event
-     * @param value
-     * @param view
-     */
-    public void trigger(String event, Value value, ProteusView view) {
-        ProteusLayoutInflater.Callback callback = view.getViewManager().getContext().getCallback();
-        if (null != callback) {
-            callback.onEvent(event, value, view);
-        }
+  /**
+   * @param event
+   * @param value
+   * @param view
+   */
+  public void trigger(String event, Value value, ProteusView view) {
+    ProteusLayoutInflater.Callback callback = view.getViewManager().getContext().getCallback();
+    if (null != callback) {
+      callback.onEvent(event, value, view);
     }
+  }
 }

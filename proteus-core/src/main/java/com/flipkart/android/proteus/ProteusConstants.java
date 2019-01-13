@@ -23,29 +23,29 @@ import com.flipkart.android.proteus.value.Primitive;
  */
 public class ProteusConstants {
 
-    public static final String TYPE = "type";
-    public static final String LAYOUT = "layout";
+  public static final String TYPE = "type";
+  public static final String LAYOUT = "layout";
 
-    public static final String DATA = "data";
-    public static final String COLLECTION = "collection";
+  public static final String DATA = "data";
+  public static final String COLLECTION = "collection";
 
-    public static final String DATA_NULL = "null";
+  public static final String DATA_NULL = "null";
 
-    public static final String STYLE_DELIMITER = "\\.";
+  public static final String STYLE_DELIMITER = "\\.";
 
-    public static final String EMPTY = "";
+  public static final String EMPTY = "";
 
-    public static final Primitive EMPTY_STRING = new Primitive(EMPTY);
-    public static final Primitive TRUE = new Primitive(true);
-    public static final Primitive FALSE = new Primitive(false);
+  public static final Primitive EMPTY_STRING = new Primitive(EMPTY);
+  public static final Primitive TRUE = new Primitive(true);
+  public static final Primitive FALSE = new Primitive(false);
 
-    private static boolean isLoggingEnabled = false;
+  private static boolean isLoggingEnabled = false;
 
-    public static void setIsLoggingEnabled(boolean isLoggingEnabled) {
-        ProteusConstants.isLoggingEnabled = isLoggingEnabled;
-    }
+  public static void setIsLoggingEnabled(boolean isLoggingEnabled) {
+    ProteusConstants.isLoggingEnabled = isLoggingEnabled;
+  }
 
-    public static boolean isLoggingEnabled() {
-        return ProteusConstants.isLoggingEnabled;
-    }
+  public static boolean isLoggingEnabled() {
+    return ProteusConstants.isLoggingEnabled;
+  }
 }

@@ -31,17 +31,17 @@ import com.flipkart.android.proteus.value.Layout;
  */
 public class AdapterBasedViewManager extends ViewGroupManager {
 
-    public AdapterBasedViewManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
-                                   @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
-        super(context, parser, view, layout, dataContext);
-    }
+  public AdapterBasedViewManager(@NonNull ProteusContext context, @NonNull ViewTypeParser parser,
+                                 @NonNull View view, @NonNull Layout layout, @NonNull DataContext dataContext) {
+    super(context, parser, view, layout, dataContext);
+  }
 
-    /**
-     * Ignore updating the children in this case, that
-     * should be handled by the adapter attached to the view.
-     */
-    @Override
-    protected void updateChildren() {
+  /**
+   * Ignore updating the children in this case, that
+   * should be handled by the adapter attached to the view.
+   */
+  @Override
+  protected void updateChildren() {
 
-    }
+  }
 }
