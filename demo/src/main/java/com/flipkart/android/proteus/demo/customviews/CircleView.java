@@ -37,73 +37,73 @@ import com.flipkart.android.proteus.ProteusView;
 
 public class CircleView extends View implements ProteusView {
 
-    Manager viewManager;
-    private String HEX_COLOR = "#45ba8a";
-    private Paint drawPaint;
-    float radius;
+  Manager viewManager;
+  private String HEX_COLOR = "#45ba8a";
+  private Paint drawPaint;
+  float radius;
 
-    public CircleView(Context context) {
-        super(context);
-        init();
-    }
+  public CircleView(Context context) {
+    super(context);
+    init();
+  }
 
-    public CircleView(final Context context, final AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
+  public CircleView(final Context context, final AttributeSet attrs) {
+    super(context, attrs);
+    init();
+  }
 
-    public void setColor(String HEX_COLOR) {
-        this.HEX_COLOR = HEX_COLOR;
-    }
+  public void setColor(String HEX_COLOR) {
+    this.HEX_COLOR = HEX_COLOR;
+  }
 
-    @Override
-    public Manager getViewManager() {
-        return viewManager;
-    }
+  @Override
+  public Manager getViewManager() {
+    return viewManager;
+  }
 
-    @Override
-    public void setViewManager(@NonNull Manager viewManager) {
-        this.viewManager = viewManager;
-    }
+  @Override
+  public void setViewManager(@NonNull Manager viewManager) {
+    this.viewManager = viewManager;
+  }
 
-    private void init() {
-        drawPaint = new Paint();
-        drawPaint.setColor(Color.parseColor(HEX_COLOR));
-        drawPaint.setAntiAlias(true);
-        setOnMeasureCallback();
-    }
+  private void init() {
+    drawPaint = new Paint();
+    drawPaint.setColor(Color.parseColor(HEX_COLOR));
+    drawPaint.setAntiAlias(true);
+    setOnMeasureCallback();
+  }
 
-    @Override
-    protected void onDraw(final Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.drawCircle(radius, radius, radius, drawPaint);
-    }
+  @Override
+  protected void onDraw(final Canvas canvas) {
+    super.onDraw(canvas);
+    canvas.drawCircle(radius, radius, radius, drawPaint);
+  }
 
-    private void setOnMeasureCallback() {
-        ViewTreeObserver vto = getViewTreeObserver();
-        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                removeOnGlobalLayoutListener(this);
-                radius = getMeasuredWidth() / 2;
-            }
-        });
-    }
+  private void setOnMeasureCallback() {
+    ViewTreeObserver vto = getViewTreeObserver();
+    vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+      @Override
+      public void onGlobalLayout() {
+        removeOnGlobalLayoutListener(this);
+        radius = getMeasuredWidth() / 2;
+      }
+    });
+  }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    void removeOnGlobalLayoutListener(ViewTreeObserver.OnGlobalLayoutListener listener) {
-        if (Build.VERSION.SDK_INT < 16) {
-            //noinspection deprecation
-            getViewTreeObserver().removeGlobalOnLayoutListener(listener);
-        } else {
-            getViewTreeObserver().removeOnGlobalLayoutListener(listener);
-        }
+  @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+  void removeOnGlobalLayoutListener(ViewTreeObserver.OnGlobalLayoutListener listener) {
+    if (Build.VERSION.SDK_INT < 16) {
+      //noinspection deprecation
+      getViewTreeObserver().removeGlobalOnLayoutListener(listener);
+    } else {
+      getViewTreeObserver().removeOnGlobalLayoutListener(listener);
     }
+  }
 
-    @NonNull
-    @Override
-    public View getAsView() {
-        return this;
-    }
+  @NonNull
+  @Override
+  public View getAsView() {
+    return this;
+  }
 
 }

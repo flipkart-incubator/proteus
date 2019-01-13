@@ -33,15 +33,15 @@ import retrofit2.http.GET;
 
 public interface ProteusApi {
 
-    @GET("user.json")
-    Call<ObjectValue> getUserData();
+  @GET("user.json")
+  Call<ObjectValue> getUserData();
 
-    @GET("styles.json")
-    Call<Styles> getStyles();
+  @GET("styles.json")
+  Call<Styles> getStyles();
 
-    @GET("layout.json")
-    Call<Layout> getLayout();
+  @GET("layout.json")
+  Call<Layout> getLayout();
 
-    @GET("layouts.json")
-    Call<Map<String, Layout>> getLayouts();
+  @GET("layouts.json")
+  Call<Map<String, Layout>> getLayouts();
 }

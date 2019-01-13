@@ -27,32 +27,32 @@ import okhttp3.ResponseBody;
 import retrofit2.Converter;
 
 final class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
-    private final Gson gson;
-    private final Type type;
-    private TypeAdapter<T> typeAdapter;
+  private final Gson gson;
+  private final Type type;
+  private TypeAdapter<T> typeAdapter;
 
-    GsonResponseBodyConverter(Gson gson, Type type) {
-        this.gson = gson;
-        this.type = type;
-    }
+  GsonResponseBodyConverter(Gson gson, Type type) {
+    this.gson = gson;
+    this.type = type;
+  }
 
-    private TypeAdapter<T> getAdapter() {
-        if (null == typeAdapter) {
-            //noinspection unchecked
-            typeAdapter = (TypeAdapter<T>) gson.getAdapter(TypeToken.get(type));
-        }
-        return typeAdapter;
+  private TypeAdapter<T> getAdapter() {
+    if (null == typeAdapter) {
+      //noinspection unchecked
+      typeAdapter = (TypeAdapter<T>) gson.getAdapter(TypeToken.get(type));
     }
+    return typeAdapter;
+  }
 
-    @Override
-    public T convert(ResponseBody value) throws IOException {
-        TypeAdapter<T> adapter = getAdapter();
-        JsonReader jsonReader = gson.newJsonReader(value.charStream());
-        jsonReader.setLenient(true);
-        try {
-            return adapter.read(jsonReader);
-        } finally {
-            value.close();
-        }
+  @Override
+  public T convert(ResponseBody value) throws IOException {
+    TypeAdapter<T> adapter = getAdapter();
+    JsonReader jsonReader = gson.newJsonReader(value.charStream());
+    jsonReader.setLenient(true);
+    try {
+      return adapter.read(jsonReader);
+    } finally {
+      value.close();
     }
+  }
 }

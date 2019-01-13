@@ -26,15 +26,15 @@ import com.flipkart.android.proteus.value.DrawableValue;
 
 public class ImageLoaderTarget extends SimpleTarget<Drawable> {
 
-    @NonNull
-    private final DrawableValue.AsyncCallback callback;
+  @NonNull
+  private final DrawableValue.AsyncCallback callback;
 
-    public ImageLoaderTarget(@NonNull DrawableValue.AsyncCallback callback) {
-        this.callback = callback;
-    }
+  public ImageLoaderTarget(@NonNull DrawableValue.AsyncCallback callback) {
+    this.callback = callback;
+  }
 
-    @Override
-    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-        callback.setDrawable(resource);
-    }
+  @Override
+  public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+    callback.setDrawable(resource);
+  }
 }

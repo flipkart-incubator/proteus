@@ -50,174 +50,174 @@ import java.util.Map;
 
 public class ProteusActivity extends AppCompatActivity implements ProteusManager.Listener {
 
-    private ProteusManager proteusManager;
-    private ProteusLayoutInflater layoutInflater;
+  private ProteusManager proteusManager;
+  private ProteusLayoutInflater layoutInflater;
 
-    ObjectValue data;
-    Layout layout;
-    Styles styles;
-    Map<String, Layout> layouts;
+  ObjectValue data;
+  Layout layout;
+  Styles styles;
+  Map<String, Layout> layouts;
 
-    private StyleManager styleManager = new StyleManager() {
+  private StyleManager styleManager = new StyleManager() {
 
-        @Nullable
-        @Override
-        protected Styles getStyles() {
-            return styles;
-        }
-    };
-
-    private LayoutManager layoutManager = new LayoutManager() {
-
-        @Nullable
-        @Override
-        protected Map<String, Layout> getLayouts() {
-            return layouts;
-        }
-    };
-
-    /**
-     * Simple implementation of ImageLoader for loading images from url in background.
-     */
-    private ProteusLayoutInflater.ImageLoader loader = new ProteusLayoutInflater.ImageLoader() {
-        @Override
-        public void getBitmap(ProteusView view, String url, final DrawableValue.AsyncCallback callback) {
-            GlideApp.with(ProteusActivity.this)
-                    .load(url)
-                    .placeholder(R.drawable.placeholder)
-                    .error(R.drawable.image_broken)
-                    .into(new ImageLoaderTarget(callback));
-        }
-    };
-
-    /**
-     * Implementation of Callback. This is where we get callbacks from proteus regarding
-     * errors and events.
-     */
-    private ProteusLayoutInflater.Callback callback = new ProteusLayoutInflater.Callback() {
-
-        @NonNull
-        @Override
-        public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, ObjectValue data, int index) {
-            // TODO: instead return some implementation of an unknown view
-            throw new ProteusInflateException("Unknown view type '" + type + "' cannot be inflated");
-        }
-
-        @Override
-        public void onEvent(String event, Value value, ProteusView view) {
-            Log.i("ProteusEvent", value.toString());
-        }
-    };
-
-    ProteusView view;
-    private ViewGroup container;
-
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected Styles getStyles() {
+      return styles;
+    }
+  };
 
-        setContentView(R.layout.activity_proteus);
+  private LayoutManager layoutManager = new LayoutManager() {
 
-        // set the toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+    @Nullable
+    @Override
+    protected Map<String, Layout> getLayouts() {
+      return layouts;
+    }
+  };
 
-        // setBoolean refresh button click
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                alert();
-            }
-        });
+  /**
+   * Simple implementation of ImageLoader for loading images from url in background.
+   */
+  private ProteusLayoutInflater.ImageLoader loader = new ProteusLayoutInflater.ImageLoader() {
+    @Override
+    public void getBitmap(ProteusView view, String url, final DrawableValue.AsyncCallback callback) {
+      GlideApp.with(ProteusActivity.this)
+        .load(url)
+        .placeholder(R.drawable.placeholder)
+        .error(R.drawable.image_broken)
+        .into(new ImageLoaderTarget(callback));
+    }
+  };
 
-        container = findViewById(R.id.content_main);
+  /**
+   * Implementation of Callback. This is where we get callbacks from proteus regarding
+   * errors and events.
+   */
+  private ProteusLayoutInflater.Callback callback = new ProteusLayoutInflater.Callback() {
 
-        DemoApplication application = (DemoApplication) getApplication();
-        proteusManager = application.getProteusManager();
-
-        ProteusContext context = proteusManager.getProteus().createContextBuilder(this)
-                .setLayoutManager(layoutManager)
-                .setCallback(callback)
-                .setImageLoader(loader)
-                .setStyleManager(styleManager)
-                .build();
-
-        layoutInflater = context.getInflater();
+    @NonNull
+    @Override
+    public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, ObjectValue data, int index) {
+      // TODO: instead return some implementation of an unknown view
+      throw new ProteusInflateException("Unknown view type '" + type + "' cannot be inflated");
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        proteusManager.addListener(this);
-        proteusManager.load();
+    public void onEvent(String event, Value value, ProteusView view) {
+      Log.i("ProteusEvent", value.toString());
     }
+  };
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        proteusManager.removeListener(this);
-    }
+  ProteusView view;
+  private ViewGroup container;
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+
+    setContentView(R.layout.activity_proteus);
+
+    // set the toolbar
+    Toolbar toolbar = findViewById(R.id.toolbar);
+    setSupportActionBar(toolbar);
+
+    // setBoolean refresh button click
+    FloatingActionButton fab = findViewById(R.id.fab);
+    fab.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        alert();
+      }
+    });
+
+    container = findViewById(R.id.content_main);
+
+    DemoApplication application = (DemoApplication) getApplication();
+    proteusManager = application.getProteusManager();
+
+    ProteusContext context = proteusManager.getProteus().createContextBuilder(this)
+      .setLayoutManager(layoutManager)
+      .setCallback(callback)
+      .setImageLoader(loader)
+      .setStyleManager(styleManager)
+      .build();
+
+    layoutInflater = context.getInflater();
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    proteusManager.addListener(this);
+    proteusManager.load();
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    proteusManager.removeListener(this);
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.main, menu);
+    return true;
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    int id = item.getItemId();
+    switch (id) {
+      case R.id.reload:
+        reload();
         return true;
     }
+    return super.onOptionsItemSelected(item);
+  }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.reload:
-                reload();
-                return true;
+  @Override
+  public void onLoad() {
+    data = proteusManager.getData();
+    layout = proteusManager.getRootLayout();
+    layouts = proteusManager.getLayouts();
+    styles = proteusManager.getStyles();
+    render();
+  }
+
+  @Override
+  public void onError(@NonNull Exception e) {
+    Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+  }
+
+  private void alert() {
+    ProteusView view = layoutInflater.inflate("AlertDialogLayout", data);
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setView(view.getAsView())
+      .setPositiveButton(R.string.action_alert_ok, new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialogInterface, int i) {
+          dialogInterface.dismiss();
         }
-        return super.onOptionsItemSelected(item);
-    }
+      })
+      .show();
+  }
 
-    @Override
-    public void onLoad() {
-        data = proteusManager.getData();
-        layout = proteusManager.getRootLayout();
-        layouts = proteusManager.getLayouts();
-        styles = proteusManager.getStyles();
-        render();
-    }
+  void render() {
 
-    @Override
-    public void onError(@NonNull Exception e) {
-        Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-    }
+    // remove the current view
+    container.removeAllViews();
 
-    private void alert() {
-        ProteusView view = layoutInflater.inflate("AlertDialogLayout", data);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setView(view.getAsView())
-                .setPositiveButton(R.string.action_alert_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                })
-                .show();
-    }
+    // Inflate a new view using proteus
+    long start = System.currentTimeMillis();
+    view = layoutInflater.inflate(layout, data, container, 0);
+    System.out.println("inflate time: " + (System.currentTimeMillis() - start));
 
-    void render() {
+    // Add the inflated view to the container
+    container.addView(view.getAsView());
+  }
 
-        // remove the current view
-        container.removeAllViews();
-
-        // Inflate a new view using proteus
-        long start = System.currentTimeMillis();
-        view = layoutInflater.inflate(layout, data, container, 0);
-        System.out.println("inflate time: " + (System.currentTimeMillis() - start));
-
-        // Add the inflated view to the container
-        container.addView(view.getAsView());
-    }
-
-    void reload() {
-        proteusManager.update();
-    }
+  void reload() {
+    proteusManager.update();
+  }
 }

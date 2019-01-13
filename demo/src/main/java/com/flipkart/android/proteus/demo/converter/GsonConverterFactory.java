@@ -33,44 +33,44 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 public final class GsonConverterFactory extends Converter.Factory {
 
-    private final Gson gson;
+  private final Gson gson;
 
-    private GsonConverterFactory(Gson gson) {
-        this.gson = gson;
+  private GsonConverterFactory(Gson gson) {
+    this.gson = gson;
+  }
+
+  public static GsonConverterFactory create(Gson gson) {
+    return new GsonConverterFactory(gson);
+  }
+
+  @Override
+  public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
+    return new GsonResponseBodyConverter<>(gson, type);
+  }
+
+  @Override
+  public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations,
+                                                        Annotation[] methodAnnotations, Retrofit retrofit) {
+    Converter<?, RequestBody> result = null;
+    for (Annotation annotation : methodAnnotations) {
+      if (annotation instanceof URLEncoded) {
+        result = new UrlEncodedGsonRequestBodyConverter<>(gson, type);
+      }
     }
 
-    public static GsonConverterFactory create(Gson gson) {
-        return new GsonConverterFactory(gson);
+    if (null == result) {
+      result = new GsonRequestBodyConverter<>(gson, type);
     }
 
-    @Override
-    public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
-        return new GsonResponseBodyConverter<>(gson, type);
-    }
+    return result;
+  }
 
-    @Override
-    public Converter<?, RequestBody> requestBodyConverter(Type type, Annotation[] parameterAnnotations,
-                                                          Annotation[] methodAnnotations, Retrofit retrofit) {
-        Converter<?, RequestBody> result = null;
-        for (Annotation annotation : methodAnnotations) {
-            if (annotation instanceof URLEncoded) {
-                result = new UrlEncodedGsonRequestBodyConverter<>(gson, type);
-            }
-        }
-
-        if (null == result) {
-            result = new GsonRequestBodyConverter<>(gson, type);
-        }
-
-        return result;
-    }
-
-    /**
-     * URL Encode the JSON String object before sending it over the wire.
-     */
-    @Documented
-    @Target(METHOD)
-    @Retention(RUNTIME)
-    public @interface URLEncoded {
-    }
+  /**
+   * URL Encode the JSON String object before sending it over the wire.
+   */
+  @Documented
+  @Target(METHOD)
+  @Retention(RUNTIME)
+  public @interface URLEncoded {
+  }
 }

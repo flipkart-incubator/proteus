@@ -32,36 +32,36 @@ import okio.Buffer;
 import retrofit2.Converter;
 
 final class GsonRequestBodyConverter<T> implements Converter<T, RequestBody> {
-    private static final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=UTF-8");
-    private static final Charset UTF_8 = Charset.forName("UTF-8");
+  private static final MediaType MEDIA_TYPE = MediaType.parse("application/json; charset=UTF-8");
+  private static final Charset UTF_8 = Charset.forName("UTF-8");
 
-    private final Gson gson;
-    private final Type type;
-    private TypeAdapter<T> typeAdapter;
+  private final Gson gson;
+  private final Type type;
+  private TypeAdapter<T> typeAdapter;
 
-    GsonRequestBodyConverter(Gson gson, Type type) {
-        this.gson = gson;
-        this.type = type;
+  GsonRequestBodyConverter(Gson gson, Type type) {
+    this.gson = gson;
+    this.type = type;
+  }
+
+  private TypeAdapter<T> getAdapter() {
+    if (null == typeAdapter) {
+      //noinspection unchecked
+      typeAdapter = (TypeAdapter<T>) gson.getAdapter(TypeToken.get(type));
     }
-
-    private TypeAdapter<T> getAdapter() {
-        if (null == typeAdapter) {
-            //noinspection unchecked
-            typeAdapter = (TypeAdapter<T>) gson.getAdapter(TypeToken.get(type));
-        }
-        return typeAdapter;
-    }
+    return typeAdapter;
+  }
 
 
-    @Override
-    public RequestBody convert(T value) throws IOException {
-        TypeAdapter<T> adapter = getAdapter();
-        Buffer buffer = new Buffer();
-        Writer writer = new OutputStreamWriter(buffer.outputStream(), UTF_8);
-        JsonWriter jsonWriter = gson.newJsonWriter(writer);
-        jsonWriter.setSerializeNulls(true);
-        adapter.write(jsonWriter, value);
-        jsonWriter.close();
-        return RequestBody.create(MEDIA_TYPE, buffer.readByteString());
-    }
+  @Override
+  public RequestBody convert(T value) throws IOException {
+    TypeAdapter<T> adapter = getAdapter();
+    Buffer buffer = new Buffer();
+    Writer writer = new OutputStreamWriter(buffer.outputStream(), UTF_8);
+    JsonWriter jsonWriter = gson.newJsonWriter(writer);
+    jsonWriter.setSerializeNulls(true);
+    adapter.write(jsonWriter, value);
+    jsonWriter.close();
+    return RequestBody.create(MEDIA_TYPE, buffer.readByteString());
+  }
 }
