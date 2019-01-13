@@ -37,33 +37,33 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 public class ViewPagerParser<T extends ViewPager> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "ViewPager";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "ViewPager";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "ViewGroup";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "ViewGroup";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusViewPager(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusViewPager(context);
+  }
 
-    @NonNull
-    @Override
-    public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewTypeParser caller, @Nullable ViewGroup parent, int dataIndex) {
-        DataContext dataContext = createDataContext(context, layout, data, parent, dataIndex);
-        return new AdapterBasedViewManager(context, null != caller ? caller : this, view.getAsView(), layout, dataContext);
-    }
+  @NonNull
+  @Override
+  public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewTypeParser caller, @Nullable ViewGroup parent, int dataIndex) {
+    DataContext dataContext = createDataContext(context, layout, data, parent, dataIndex);
+    return new AdapterBasedViewManager(context, null != caller ? caller : this, view.getAsView(), layout, dataContext);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-    }
+  }
 }

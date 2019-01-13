@@ -27,15 +27,15 @@ import com.flipkart.android.proteus.support.v4.view.ViewPagerParser;
 
 public class SupportV4Module implements ProteusBuilder.Module {
 
-    private SupportV4Module() {
-    }
+  private SupportV4Module() {
+  }
 
-    public static SupportV4Module create() {
-        return new SupportV4Module();
-    }
+  public static SupportV4Module create() {
+    return new SupportV4Module();
+  }
 
-    @Override
-    public void registerWith(ProteusBuilder builder) {
-        builder.register(new ViewPagerParser());
-    }
+  @Override
+  public void registerWith(ProteusBuilder builder) {
+    builder.register(new ViewPagerParser());
+  }
 }

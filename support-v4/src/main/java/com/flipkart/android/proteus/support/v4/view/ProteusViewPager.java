@@ -30,25 +30,25 @@ import com.flipkart.android.proteus.ProteusView;
 
 public class ProteusViewPager extends android.support.v4.view.ViewPager implements ProteusView {
 
-    private Manager viewManager;
+  private Manager viewManager;
 
-    public ProteusViewPager(ProteusContext context) {
-        super(context);
-    }
+  public ProteusViewPager(ProteusContext context) {
+    super(context);
+  }
 
-    @Override
-    public Manager getViewManager() {
-        return viewManager;
-    }
+  @Override
+  public Manager getViewManager() {
+    return viewManager;
+  }
 
-    @Override
-    public void setViewManager(@NonNull Manager manager) {
-        this.viewManager = manager;
-    }
+  @Override
+  public void setViewManager(@NonNull Manager manager) {
+    this.viewManager = manager;
+  }
 
-    @NonNull
-    @Override
-    public View getAsView() {
-        return this;
-    }
+  @NonNull
+  @Override
+  public View getAsView() {
+    return this;
+  }
 }
