@@ -25,6 +25,6 @@ import com.flipkart.android.proteus.value.Value;
  */
 public abstract class CustomValueTypeAdapterCreator<V extends Value> {
 
-    public abstract CustomValueTypeAdapter<V> create(int type, ProteusTypeAdapterFactory factory);
+  public abstract CustomValueTypeAdapter<V> create(int type, ProteusTypeAdapterFactory factory);
 
 }
