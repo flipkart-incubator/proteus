@@ -27,8 +27,8 @@ android {
         applicationId "com.flipkart.android.proteus.demo"
         minSdkVersion 19
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 500000
-        versionName "5.0.0"
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
     }
 
     buildTypes {
