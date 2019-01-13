@@ -1,20 +1,17 @@
 /*
- * Apache License
- * Version 2.0, January 2004
- * http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright 2019 Flipkart Internet Pvt. Ltd.
  *
- * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Copyright (c) 2018 Flipkart Internet Pvt. Ltd.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
- * this file except in compliance with the License. You may obtain a copy of the
- * License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed
- * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.flipkart.android.proteus.parser.custom;
@@ -43,64 +40,64 @@ import com.flipkart.android.proteus.view.custom.FixedRatingBar;
  */
 public class RatingBarParser<T extends FixedRatingBar> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "RatingBar";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "RatingBar";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "View";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "View";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusFixedRatingBar(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusFixedRatingBar(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor(Attributes.RatingBar.NumStars, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.setNumStars(ParseHelper.parseInt(value));
-            }
-        });
-        addAttributeProcessor(Attributes.RatingBar.Rating, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.setRating(ParseHelper.parseFloat(value));
-            }
-        });
-        addAttributeProcessor(Attributes.RatingBar.IsIndicator, new BooleanAttributeProcessor<T>() {
-            @Override
-            public void setBoolean(T view, boolean value) {
-                view.setIsIndicator(value);
-            }
-        });
-        addAttributeProcessor(Attributes.RatingBar.StepSize, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.setStepSize(ParseHelper.parseFloat(value));
-            }
-        });
-        addAttributeProcessor(Attributes.RatingBar.MinHeight, new DimensionAttributeProcessor<T>() {
-            @Override
-            public void setDimension(T view, float dimension) {
-                view.setMinimumHeight((int) dimension);
-            }
-        });
-        addAttributeProcessor(Attributes.RatingBar.ProgressDrawable, new DrawableResourceProcessor<T>() {
-            @Override
-            public void setDrawable(T view, Drawable drawable) {
-                drawable = view.getTiledDrawable(drawable, false);
-                view.setProgressDrawable(drawable);
-            }
-        });
-    }
+    addAttributeProcessor(Attributes.RatingBar.NumStars, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.setNumStars(ParseHelper.parseInt(value));
+      }
+    });
+    addAttributeProcessor(Attributes.RatingBar.Rating, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.setRating(ParseHelper.parseFloat(value));
+      }
+    });
+    addAttributeProcessor(Attributes.RatingBar.IsIndicator, new BooleanAttributeProcessor<T>() {
+      @Override
+      public void setBoolean(T view, boolean value) {
+        view.setIsIndicator(value);
+      }
+    });
+    addAttributeProcessor(Attributes.RatingBar.StepSize, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.setStepSize(ParseHelper.parseFloat(value));
+      }
+    });
+    addAttributeProcessor(Attributes.RatingBar.MinHeight, new DimensionAttributeProcessor<T>() {
+      @Override
+      public void setDimension(T view, float dimension) {
+        view.setMinimumHeight((int) dimension);
+      }
+    });
+    addAttributeProcessor(Attributes.RatingBar.ProgressDrawable, new DrawableResourceProcessor<T>() {
+      @Override
+      public void setDrawable(T view, Drawable drawable) {
+        drawable = view.getTiledDrawable(drawable, false);
+        view.setProgressDrawable(drawable);
+      }
+    });
+  }
 }

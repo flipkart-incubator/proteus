@@ -1,20 +1,17 @@
 /*
- * Apache License
- * Version 2.0, January 2004
- * http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright 2019 Flipkart Internet Pvt. Ltd.
  *
- * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Copyright (c) 2018 Flipkart Internet Pvt. Ltd.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
- * this file except in compliance with the License. You may obtain a copy of the
- * License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed
- * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.flipkart.android.proteus.parser.custom;
@@ -40,40 +37,40 @@ import com.flipkart.android.proteus.view.ProteusCheckBox;
  */
 public class CheckBoxParser<T extends CheckBox> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "CheckBox";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "CheckBox";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "Button";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "Button";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-                                  @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusCheckBox(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+                                @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusCheckBox(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor(Attributes.CheckBox.Button, new DrawableResourceProcessor<T>() {
-            @Override
-            public void setDrawable(T view, Drawable drawable) {
-                view.setButtonDrawable(drawable);
-            }
-        });
+    addAttributeProcessor(Attributes.CheckBox.Button, new DrawableResourceProcessor<T>() {
+      @Override
+      public void setDrawable(T view, Drawable drawable) {
+        view.setButtonDrawable(drawable);
+      }
+    });
 
-        addAttributeProcessor(Attributes.CheckBox.Checked, new StringAttributeProcessor<T>() {
-            @Override
-            public void setString(T view, String value) {
-                view.setChecked(Boolean.parseBoolean(value));
-            }
-        });
-    }
+    addAttributeProcessor(Attributes.CheckBox.Checked, new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        view.setChecked(Boolean.parseBoolean(value));
+      }
+    });
+  }
 }

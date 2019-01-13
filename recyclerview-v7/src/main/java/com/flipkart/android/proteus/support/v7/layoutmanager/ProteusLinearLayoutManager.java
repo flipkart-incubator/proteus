@@ -1,20 +1,17 @@
 /*
- * Apache License
- * Version 2.0, January 2004
- * http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright 2019 Flipkart Internet Pvt. Ltd.
  *
- * TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * Copyright (c) 2018 Flipkart Internet Pvt. Ltd.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
- * this file except in compliance with the License. You may obtain a copy of the
- * License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed
- * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
- * CONDITIONS OF ANY KIND, either express or implied. See the License for the
- * specific language governing permissions and limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.flipkart.android.proteus.support.v7.layoutmanager;
@@ -31,23 +28,23 @@ import com.flipkart.android.proteus.value.ObjectValue;
  */
 public class ProteusLinearLayoutManager extends LinearLayoutManager {
 
-    private static final String ATTRIBUTE_ORIENTATION = "orientation";
-    private static final String ATTRIBUTE_REVERSE_LAYOUT = "reverse";
+  private static final String ATTRIBUTE_ORIENTATION = "orientation";
+  private static final String ATTRIBUTE_REVERSE_LAYOUT = "reverse";
 
-    public static final LayoutManagerBuilder<ProteusLinearLayoutManager> BUILDER = new LayoutManagerBuilder<ProteusLinearLayoutManager>() {
+  public static final LayoutManagerBuilder<ProteusLinearLayoutManager> BUILDER = new LayoutManagerBuilder<ProteusLinearLayoutManager>() {
 
-        @NonNull
-        @Override
-        public ProteusLinearLayoutManager create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
+    @NonNull
+    @Override
+    public ProteusLinearLayoutManager create(@NonNull ProteusRecyclerView view, @NonNull ObjectValue config) {
 
-            int orientation = config.getAsInteger(ATTRIBUTE_ORIENTATION, LinearLayoutManager.VERTICAL);
-            boolean reverseLayout = config.getAsBoolean(ATTRIBUTE_REVERSE_LAYOUT, false);
+      int orientation = config.getAsInteger(ATTRIBUTE_ORIENTATION, LinearLayoutManager.VERTICAL);
+      boolean reverseLayout = config.getAsBoolean(ATTRIBUTE_REVERSE_LAYOUT, false);
 
-            return new ProteusLinearLayoutManager(view.getContext(), orientation, reverseLayout);
-        }
-    };
-
-    public ProteusLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
-        super(context, orientation, reverseLayout);
+      return new ProteusLinearLayoutManager(view.getContext(), orientation, reverseLayout);
     }
+  };
+
+  public ProteusLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
+    super(context, orientation, reverseLayout);
+  }
 }
