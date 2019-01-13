@@ -42,117 +42,117 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 public class CollapsingToolbarLayoutParser<V extends CollapsingToolbarLayout> extends ViewTypeParser<V> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "CollapsingToolbarLayout";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "CollapsingToolbarLayout";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "FrameLayout";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "FrameLayout";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusCollapsingToolbarLayout(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusCollapsingToolbarLayout(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor("collapsedTitleGravity", new GravityAttributeProcessor<V>() {
-            @Override
-            public void setGravity(V view, @Gravity int gravity) {
-                view.setCollapsedTitleGravity(gravity);
-            }
-        });
+    addAttributeProcessor("collapsedTitleGravity", new GravityAttributeProcessor<V>() {
+      @Override
+      public void setGravity(V view, @Gravity int gravity) {
+        view.setCollapsedTitleGravity(gravity);
+      }
+    });
 
-        addAttributeProcessor("contentScrim", new DrawableResourceProcessor<V>() {
-            @Override
-            public void setDrawable(V view, Drawable drawable) {
-                view.setContentScrim(drawable);
-            }
-        });
+    addAttributeProcessor("contentScrim", new DrawableResourceProcessor<V>() {
+      @Override
+      public void setDrawable(V view, Drawable drawable) {
+        view.setContentScrim(drawable);
+      }
+    });
 
-        addAttributeProcessor("expandedTitleGravity", new GravityAttributeProcessor<V>() {
-            @Override
-            public void setGravity(V view, @Gravity int gravity) {
-                view.setExpandedTitleGravity(gravity);
-            }
-        });
+    addAttributeProcessor("expandedTitleGravity", new GravityAttributeProcessor<V>() {
+      @Override
+      public void setGravity(V view, @Gravity int gravity) {
+        view.setExpandedTitleGravity(gravity);
+      }
+    });
 
-        addAttributeProcessor("expandedTitleMargin", new DimensionAttributeProcessor<V>() {
-            @Override
-            public void setDimension(V view, float dimension) {
-                view.setExpandedTitleMargin((int) dimension, (int) dimension, (int) dimension, (int) dimension);
-            }
-        });
+    addAttributeProcessor("expandedTitleMargin", new DimensionAttributeProcessor<V>() {
+      @Override
+      public void setDimension(V view, float dimension) {
+        view.setExpandedTitleMargin((int) dimension, (int) dimension, (int) dimension, (int) dimension);
+      }
+    });
 
-        addAttributeProcessor("expandedTitleMarginBottom", new DimensionAttributeProcessor<V>() {
-            @Override
-            public void setDimension(V view, float dimension) {
-                view.setExpandedTitleMarginBottom((int) dimension);
-            }
-        });
+    addAttributeProcessor("expandedTitleMarginBottom", new DimensionAttributeProcessor<V>() {
+      @Override
+      public void setDimension(V view, float dimension) {
+        view.setExpandedTitleMarginBottom((int) dimension);
+      }
+    });
 
-        addAttributeProcessor("expandedTitleMarginEnd", new DimensionAttributeProcessor<V>() {
-            @Override
-            public void setDimension(V view, float dimension) {
-                view.setExpandedTitleMarginEnd((int) dimension);
-            }
-        });
+    addAttributeProcessor("expandedTitleMarginEnd", new DimensionAttributeProcessor<V>() {
+      @Override
+      public void setDimension(V view, float dimension) {
+        view.setExpandedTitleMarginEnd((int) dimension);
+      }
+    });
 
-        addAttributeProcessor("expandedTitleMarginStart", new DimensionAttributeProcessor<V>() {
-            @Override
-            public void setDimension(V view, float dimension) {
-                view.setExpandedTitleMarginStart((int) dimension);
-            }
-        });
+    addAttributeProcessor("expandedTitleMarginStart", new DimensionAttributeProcessor<V>() {
+      @Override
+      public void setDimension(V view, float dimension) {
+        view.setExpandedTitleMarginStart((int) dimension);
+      }
+    });
 
-        addAttributeProcessor("expandedTitleMarginTop", new DimensionAttributeProcessor<V>() {
-            @Override
-            public void setDimension(V view, float dimension) {
-                view.setExpandedTitleMarginTop((int) dimension);
-            }
-        });
+    addAttributeProcessor("expandedTitleMarginTop", new DimensionAttributeProcessor<V>() {
+      @Override
+      public void setDimension(V view, float dimension) {
+        view.setExpandedTitleMarginTop((int) dimension);
+      }
+    });
 
-        addAttributeProcessor("scrimAnimationDuration", new NumberAttributeProcessor<V>() {
-            @Override
-            public void setNumber(V view, @NonNull Number value) {
-                view.setScrimAnimationDuration(value.longValue());
-            }
-        });
+    addAttributeProcessor("scrimAnimationDuration", new NumberAttributeProcessor<V>() {
+      @Override
+      public void setNumber(V view, @NonNull Number value) {
+        view.setScrimAnimationDuration(value.longValue());
+      }
+    });
 
 
-        addAttributeProcessor("scrimVisibleHeightTrigger", new DimensionAttributeProcessor<V>() {
-            @Override
-            public void setDimension(V view, float dimension) {
-                view.setScrimVisibleHeightTrigger((int) dimension);
-            }
-        });
+    addAttributeProcessor("scrimVisibleHeightTrigger", new DimensionAttributeProcessor<V>() {
+      @Override
+      public void setDimension(V view, float dimension) {
+        view.setScrimVisibleHeightTrigger((int) dimension);
+      }
+    });
 
-        addAttributeProcessor("statusBarScrim", new DrawableResourceProcessor<V>() {
-            @Override
-            public void setDrawable(V view, Drawable drawable) {
-                view.setStatusBarScrim(drawable);
-            }
-        });
+    addAttributeProcessor("statusBarScrim", new DrawableResourceProcessor<V>() {
+      @Override
+      public void setDrawable(V view, Drawable drawable) {
+        view.setStatusBarScrim(drawable);
+      }
+    });
 
-        addAttributeProcessor("title", new StringAttributeProcessor<V>() {
-            @Override
-            public void setString(V view, String value) {
-                view.setTitle(value);
-            }
-        });
+    addAttributeProcessor("title", new StringAttributeProcessor<V>() {
+      @Override
+      public void setString(V view, String value) {
+        view.setTitle(value);
+      }
+    });
 
-        addAttributeProcessor("titleEnabled", new BooleanAttributeProcessor<V>() {
-            @Override
-            public void setBoolean(V view, boolean value) {
-                view.setTitleEnabled(value);
-            }
-        });
-    }
+    addAttributeProcessor("titleEnabled", new BooleanAttributeProcessor<V>() {
+      @Override
+      public void setBoolean(V view, boolean value) {
+        view.setTitleEnabled(value);
+      }
+    });
+  }
 }

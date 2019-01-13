@@ -44,92 +44,92 @@ import com.flipkart.android.proteus.value.Value;
  */
 
 public class AppBarLayoutParser<V extends AppBarLayout> extends ViewTypeParser<V> {
-    @NonNull
-    @Override
-    public String getType() {
-        return "AppBarLayout";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "AppBarLayout";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "LinearLayout";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "LinearLayout";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusAppBarLayout(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusAppBarLayout(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor("targetElevation", new DimensionAttributeProcessor<V>() {
-            @Override
-            public void setDimension(V view, float dimension) {
-                //noinspection deprecation
-                view.setTargetElevation(dimension);
-            }
-        });
+    addAttributeProcessor("targetElevation", new DimensionAttributeProcessor<V>() {
+      @Override
+      public void setDimension(V view, float dimension) {
+        //noinspection deprecation
+        view.setTargetElevation(dimension);
+      }
+    });
 
-        addAttributeProcessor("orientation", new AttributeProcessor<V>() {
+    addAttributeProcessor("orientation", new AttributeProcessor<V>() {
 
-            private final Primitive VERTICAL = new Primitive(AppBarLayout.VERTICAL);
-            private final Primitive HORIZONTAL = new Primitive(AppBarLayout.HORIZONTAL);
+      private final Primitive VERTICAL = new Primitive(AppBarLayout.VERTICAL);
+      private final Primitive HORIZONTAL = new Primitive(AppBarLayout.HORIZONTAL);
 
-            @Override
-            public void handleValue(V view, Value value) {
-                //noinspection WrongConstant
-                view.setOrientation(value.getAsInt());
-            }
+      @Override
+      public void handleValue(V view, Value value) {
+        //noinspection WrongConstant
+        view.setOrientation(value.getAsInt());
+      }
 
-            @Override
-            public void handleResource(V view, Resource resource) {
-                Integer orientation = resource.getInteger(view.getContext());
-                if (orientation != null) {
-                    //noinspection WrongConstant
-                    view.setOrientation(orientation);
-                }
-            }
+      @Override
+      public void handleResource(V view, Resource resource) {
+        Integer orientation = resource.getInteger(view.getContext());
+        if (orientation != null) {
+          //noinspection WrongConstant
+          view.setOrientation(orientation);
+        }
+      }
 
-            @Override
-            public void handleAttributeResource(V view, AttributeResource attribute) {
-                TypedArray a = attribute.apply(view.getContext());
-                int orientation = a.getInt(0, AppBarLayout.VERTICAL);
-                //noinspection WrongConstant
-                view.setOrientation(orientation);
-            }
+      @Override
+      public void handleAttributeResource(V view, AttributeResource attribute) {
+        TypedArray a = attribute.apply(view.getContext());
+        int orientation = a.getInt(0, AppBarLayout.VERTICAL);
+        //noinspection WrongConstant
+        view.setOrientation(orientation);
+      }
 
-            @Override
-            public void handleStyleResource(V view, StyleResource style) {
-                TypedArray a = style.apply(view.getContext());
-                int orientation = a.getInt(0, AppBarLayout.VERTICAL);
-                //noinspection WrongConstant
-                view.setOrientation(orientation);
-            }
+      @Override
+      public void handleStyleResource(V view, StyleResource style) {
+        TypedArray a = style.apply(view.getContext());
+        int orientation = a.getInt(0, AppBarLayout.VERTICAL);
+        //noinspection WrongConstant
+        view.setOrientation(orientation);
+      }
 
-            @Override
-            public Value compile(@Nullable Value value, Context context) {
-                if (null != value && value.isPrimitive()) {
-                    String string = value.getAsString();
-                    if ("vertical".equals(string)) {
-                        return VERTICAL;
-                    } else {
-                        return HORIZONTAL;
-                    }
-                } else {
-                    return VERTICAL;
-                }
-            }
-        });
+      @Override
+      public Value compile(@Nullable Value value, Context context) {
+        if (null != value && value.isPrimitive()) {
+          String string = value.getAsString();
+          if ("vertical".equals(string)) {
+            return VERTICAL;
+          } else {
+            return HORIZONTAL;
+          }
+        } else {
+          return VERTICAL;
+        }
+      }
+    });
 
-        addAttributeProcessor("expanded", new BooleanAttributeProcessor<V>() {
-            @Override
-            public void setBoolean(V view, boolean value) {
-                view.setExpanded(value);
-            }
-        });
+    addAttributeProcessor("expanded", new BooleanAttributeProcessor<V>() {
+      @Override
+      public void setBoolean(V view, boolean value) {
+        view.setExpanded(value);
+      }
+    });
 
-    }
+  }
 }

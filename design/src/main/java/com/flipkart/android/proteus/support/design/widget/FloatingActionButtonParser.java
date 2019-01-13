@@ -43,84 +43,84 @@ import com.flipkart.android.proteus.value.Value;
 
 public class FloatingActionButtonParser<V extends FloatingActionButton> extends ViewTypeParser<V> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "FloatingActionButton";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "FloatingActionButton";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "ImageButton";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "ImageButton";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusFloatingActionButton(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusFloatingActionButton(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor("elevation", new DimensionAttributeProcessor<V>() {
-            @Override
-            public void setDimension(V view, float dimension) {
-                view.setCompatElevation(dimension);
-            }
-        });
+    addAttributeProcessor("elevation", new DimensionAttributeProcessor<V>() {
+      @Override
+      public void setDimension(V view, float dimension) {
+        view.setCompatElevation(dimension);
+      }
+    });
 
-        addAttributeProcessor("fabSize", new NumberAttributeProcessor<V>() {
+    addAttributeProcessor("fabSize", new NumberAttributeProcessor<V>() {
 
-            private final Primitive AUTO = new Primitive(FloatingActionButton.SIZE_AUTO);
-            private final Primitive MINI = new Primitive(FloatingActionButton.SIZE_MINI);
-            private final Primitive NORMAL = new Primitive(FloatingActionButton.SIZE_NORMAL);
+      private final Primitive AUTO = new Primitive(FloatingActionButton.SIZE_AUTO);
+      private final Primitive MINI = new Primitive(FloatingActionButton.SIZE_MINI);
+      private final Primitive NORMAL = new Primitive(FloatingActionButton.SIZE_NORMAL);
 
-            @Override
-            public void setNumber(V view, @NonNull Number value) {
-                //noinspection WrongConstant
-                view.setSize(value.intValue());
-            }
+      @Override
+      public void setNumber(V view, @NonNull Number value) {
+        //noinspection WrongConstant
+        view.setSize(value.intValue());
+      }
 
-            @Override
-            public Value compile(@Nullable Value value, Context context) {
-                if (value != null) {
-                    String string = value.getAsString();
-                    switch (string) {
-                        case "auto":
-                            return AUTO;
-                        case "mini":
-                            return MINI;
-                        case "normal":
-                            return NORMAL;
-                        default:
-                            return AUTO;
-                    }
-                } else {
-                    return AUTO;
-                }
-            }
-        });
+      @Override
+      public Value compile(@Nullable Value value, Context context) {
+        if (value != null) {
+          String string = value.getAsString();
+          switch (string) {
+            case "auto":
+              return AUTO;
+            case "mini":
+              return MINI;
+            case "normal":
+              return NORMAL;
+            default:
+              return AUTO;
+          }
+        } else {
+          return AUTO;
+        }
+      }
+    });
 
-        addAttributeProcessor("rippleColor", new ColorResourceProcessor<V>() {
-            @Override
-            public void setColor(V view, int color) {
-                view.setRippleColor(color);
-            }
+    addAttributeProcessor("rippleColor", new ColorResourceProcessor<V>() {
+      @Override
+      public void setColor(V view, int color) {
+        view.setRippleColor(color);
+      }
 
-            @Override
-            public void setColor(V view, ColorStateList colors) {
-                throw new IllegalArgumentException("rippleColor must be a color int");
-            }
-        });
+      @Override
+      public void setColor(V view, ColorStateList colors) {
+        throw new IllegalArgumentException("rippleColor must be a color int");
+      }
+    });
 
-        addAttributeProcessor("useCompatPadding", new BooleanAttributeProcessor<V>() {
-            @Override
-            public void setBoolean(V view, boolean value) {
-                view.setUseCompatPadding(value);
-            }
-        });
+    addAttributeProcessor("useCompatPadding", new BooleanAttributeProcessor<V>() {
+      @Override
+      public void setBoolean(V view, boolean value) {
+        view.setUseCompatPadding(value);
+      }
+    });
 
-    }
+  }
 }

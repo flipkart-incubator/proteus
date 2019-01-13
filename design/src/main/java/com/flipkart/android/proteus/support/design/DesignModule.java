@@ -31,21 +31,21 @@ import com.flipkart.android.proteus.support.design.widget.FloatingActionButtonPa
 
 public class DesignModule implements ProteusBuilder.Module {
 
-    private DesignModule() {
-    }
+  private DesignModule() {
+  }
 
-    public static DesignModule create() {
-        return new DesignModule();
-    }
+  public static DesignModule create() {
+    return new DesignModule();
+  }
 
-    @Override
-    public void registerWith(ProteusBuilder builder) {
-        builder.register(new AppBarLayoutParser());
-        builder.register(new BottomNavigationViewParser());
-        builder.register(new CollapsingToolbarLayoutParser());
-        builder.register(new CoordinatorLayoutParser());
-        builder.register(new FloatingActionButtonParser());
-        DesignModuleAttributeHelper.register(builder);
-    }
+  @Override
+  public void registerWith(ProteusBuilder builder) {
+    builder.register(new AppBarLayoutParser());
+    builder.register(new BottomNavigationViewParser());
+    builder.register(new CollapsingToolbarLayoutParser());
+    builder.register(new CoordinatorLayoutParser());
+    builder.register(new FloatingActionButtonParser());
+    DesignModuleAttributeHelper.register(builder);
+  }
 
 }

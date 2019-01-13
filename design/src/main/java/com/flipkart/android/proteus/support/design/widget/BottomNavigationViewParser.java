@@ -42,100 +42,100 @@ import com.flipkart.android.proteus.value.Value;
  */
 
 public class BottomNavigationViewParser<V extends BottomNavigationView> extends ViewTypeParser<V> {
-    @NonNull
-    @Override
-    public String getType() {
-        return "BottomNavigationView";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "BottomNavigationView";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "FrameLayout";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "FrameLayout";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusBottomNavigationView(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusBottomNavigationView(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor("itemBackground", new AttributeProcessor<V>() {
-            @Override
-            public void handleValue(V view, Value value) {
-                throw new IllegalArgumentException("itemBackground must be a drawable resource id");
-            }
+    addAttributeProcessor("itemBackground", new AttributeProcessor<V>() {
+      @Override
+      public void handleValue(V view, Value value) {
+        throw new IllegalArgumentException("itemBackground must be a drawable resource id");
+      }
 
-            @Override
-            public void handleResource(V view, Resource resource) {
-                view.setItemBackgroundResource(resource.resId);
-            }
+      @Override
+      public void handleResource(V view, Resource resource) {
+        view.setItemBackgroundResource(resource.resId);
+      }
 
-            @Override
-            public void handleAttributeResource(V view, AttributeResource attribute) {
-                throw new IllegalArgumentException("itemBackground must be a drawable resource id");
-            }
+      @Override
+      public void handleAttributeResource(V view, AttributeResource attribute) {
+        throw new IllegalArgumentException("itemBackground must be a drawable resource id");
+      }
 
-            @Override
-            public void handleStyleResource(V view, StyleResource style) {
-                throw new IllegalArgumentException("itemBackground must be a drawable resource id");
-            }
-        });
+      @Override
+      public void handleStyleResource(V view, StyleResource style) {
+        throw new IllegalArgumentException("itemBackground must be a drawable resource id");
+      }
+    });
 
-        addAttributeProcessor("itemIconTint", new ColorResourceProcessor<V>() {
-            @Override
-            public void setColor(V view, int color) {
-                throw new IllegalArgumentException("itemIconTint must be a color state list");
-            }
+    addAttributeProcessor("itemIconTint", new ColorResourceProcessor<V>() {
+      @Override
+      public void setColor(V view, int color) {
+        throw new IllegalArgumentException("itemIconTint must be a color state list");
+      }
 
-            @Override
-            public void setColor(V view, ColorStateList colors) {
-                view.setItemIconTintList(colors);
-            }
-        });
+      @Override
+      public void setColor(V view, ColorStateList colors) {
+        view.setItemIconTintList(colors);
+      }
+    });
 
-        addAttributeProcessor("itemTextColor", new ColorResourceProcessor<V>() {
-            @Override
-            public void setColor(V view, int color) {
-                throw new IllegalArgumentException("itemIconTint must be a color state list");
-            }
+    addAttributeProcessor("itemTextColor", new ColorResourceProcessor<V>() {
+      @Override
+      public void setColor(V view, int color) {
+        throw new IllegalArgumentException("itemIconTint must be a color state list");
+      }
 
-            @Override
-            public void setColor(V view, ColorStateList colors) {
-                view.setItemTextColor(colors);
-            }
-        });
+      @Override
+      public void setColor(V view, ColorStateList colors) {
+        view.setItemTextColor(colors);
+      }
+    });
 
-        addAttributeProcessor("menu", new AttributeProcessor<V>() {
-            @Override
-            public void handleValue(V view, Value value) {
-                throw new IllegalArgumentException("menu must be a R.menu.<sid>");
-            }
+    addAttributeProcessor("menu", new AttributeProcessor<V>() {
+      @Override
+      public void handleValue(V view, Value value) {
+        throw new IllegalArgumentException("menu must be a R.menu.<sid>");
+      }
 
-            @Override
-            public void handleResource(V view, Resource resource) {
-                Integer id = resource.getInteger(view.getContext());
-                if (null != id) {
-                    view.inflateMenu(id);
-                }
-            }
+      @Override
+      public void handleResource(V view, Resource resource) {
+        Integer id = resource.getInteger(view.getContext());
+        if (null != id) {
+          view.inflateMenu(id);
+        }
+      }
 
-            @Override
-            public void handleAttributeResource(V view, AttributeResource attribute) {
-                TypedArray a = attribute.apply(view.getContext());
-                int id = a.getResourceId(0, 0);
-                view.inflateMenu(id);
-            }
+      @Override
+      public void handleAttributeResource(V view, AttributeResource attribute) {
+        TypedArray a = attribute.apply(view.getContext());
+        int id = a.getResourceId(0, 0);
+        view.inflateMenu(id);
+      }
 
-            @Override
-            public void handleStyleResource(V view, StyleResource style) {
-                TypedArray a = style.apply(view.getContext());
-                int id = a.getResourceId(0, 0);
-                view.inflateMenu(id);
-            }
-        });
-    }
+      @Override
+      public void handleStyleResource(V view, StyleResource style) {
+        TypedArray a = style.apply(view.getContext());
+        int id = a.getResourceId(0, 0);
+        view.inflateMenu(id);
+      }
+    });
+  }
 }

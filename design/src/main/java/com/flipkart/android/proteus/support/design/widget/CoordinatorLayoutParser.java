@@ -38,40 +38,40 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 public class CoordinatorLayoutParser<V extends CoordinatorLayout> extends ViewTypeParser<V> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "CoordinatorLayout";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "CoordinatorLayout";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "ViewGroup";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "ViewGroup";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusCoordinatorLayout(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusCoordinatorLayout(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor("statusBarBackground", new DrawableResourceProcessor<V>() {
-            @Override
-            public void setDrawable(V view, Drawable drawable) {
-                view.setStatusBarBackground(drawable);
-            }
-        });
+    addAttributeProcessor("statusBarBackground", new DrawableResourceProcessor<V>() {
+      @Override
+      public void setDrawable(V view, Drawable drawable) {
+        view.setStatusBarBackground(drawable);
+      }
+    });
 
-        addAttributeProcessor("fitSystemWindows", new BooleanAttributeProcessor<V>() {
-            @Override
-            public void setBoolean(V view, boolean value) {
-                view.setFitsSystemWindows(value);
-            }
-        });
+    addAttributeProcessor("fitSystemWindows", new BooleanAttributeProcessor<V>() {
+      @Override
+      public void setBoolean(V view, boolean value) {
+        view.setFitsSystemWindows(value);
+      }
+    });
 
-    }
+  }
 }
