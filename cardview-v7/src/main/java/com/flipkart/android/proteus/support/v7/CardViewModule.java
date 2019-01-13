@@ -27,15 +27,15 @@ import com.flipkart.android.proteus.support.v7.widget.CardViewParser;
 
 public class CardViewModule implements ProteusBuilder.Module {
 
-    private CardViewModule() {
-    }
+  private CardViewModule() {
+  }
 
-    public static CardViewModule create() {
-        return new CardViewModule();
-    }
+  public static CardViewModule create() {
+    return new CardViewModule();
+  }
 
-    @Override
-    public void registerWith(ProteusBuilder builder) {
-        builder.register(new CardViewParser());
-    }
+  @Override
+  public void registerWith(ProteusBuilder builder) {
+    builder.register(new CardViewParser());
+  }
 }

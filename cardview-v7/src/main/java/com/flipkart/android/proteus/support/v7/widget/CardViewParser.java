@@ -39,124 +39,124 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 public class CardViewParser<T extends CardView> extends ViewTypeParser<T> {
 
-    @NonNull
-    @Override
-    public String getType() {
-        return "CardView";
-    }
+  @NonNull
+  @Override
+  public String getType() {
+    return "CardView";
+  }
 
-    @Nullable
-    @Override
-    public String getParentType() {
-        return "FrameLayout";
-    }
+  @Nullable
+  @Override
+  public String getParentType() {
+    return "FrameLayout";
+  }
 
-    @NonNull
-    @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-        return new ProteusCardView(context);
-    }
+  @NonNull
+  @Override
+  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
+    return new ProteusCardView(context);
+  }
 
-    @Override
-    protected void addAttributeProcessors() {
+  @Override
+  protected void addAttributeProcessors() {
 
-        addAttributeProcessor("cardBackgroundColor", new ColorResourceProcessor<T>() {
-            @Override
-            public void setColor(T view, int color) {
-                view.setCardBackgroundColor(color);
-            }
+    addAttributeProcessor("cardBackgroundColor", new ColorResourceProcessor<T>() {
+      @Override
+      public void setColor(T view, int color) {
+        view.setCardBackgroundColor(color);
+      }
 
-            @Override
-            public void setColor(T view, ColorStateList colors) {
-                view.setCardBackgroundColor(colors);
-            }
-        });
+      @Override
+      public void setColor(T view, ColorStateList colors) {
+        view.setCardBackgroundColor(colors);
+      }
+    });
 
-        addAttributeProcessor("cardCornerRadius", new DimensionAttributeProcessor<T>() {
-            @Override
-            public void setDimension(T view, float dimension) {
-                view.setRadius(dimension);
-            }
-        });
+    addAttributeProcessor("cardCornerRadius", new DimensionAttributeProcessor<T>() {
+      @Override
+      public void setDimension(T view, float dimension) {
+        view.setRadius(dimension);
+      }
+    });
 
-        addAttributeProcessor("cardElevation", new DimensionAttributeProcessor<T>() {
-            @Override
-            public void setDimension(T view, float dimension) {
-                view.setCardElevation(dimension);
-            }
-        });
+    addAttributeProcessor("cardElevation", new DimensionAttributeProcessor<T>() {
+      @Override
+      public void setDimension(T view, float dimension) {
+        view.setCardElevation(dimension);
+      }
+    });
 
-        addAttributeProcessor("cardMaxElevation", new DimensionAttributeProcessor<T>() {
-            @Override
-            public void setDimension(T view, float dimension) {
-                view.setMaxCardElevation(dimension);
-            }
-        });
+    addAttributeProcessor("cardMaxElevation", new DimensionAttributeProcessor<T>() {
+      @Override
+      public void setDimension(T view, float dimension) {
+        view.setMaxCardElevation(dimension);
+      }
+    });
 
-        addAttributeProcessor("cardPreventCornerOverlap", new BooleanAttributeProcessor<T>() {
-            @Override
-            public void setBoolean(T view, boolean value) {
-                view.setPreventCornerOverlap(value);
-            }
-        });
+    addAttributeProcessor("cardPreventCornerOverlap", new BooleanAttributeProcessor<T>() {
+      @Override
+      public void setBoolean(T view, boolean value) {
+        view.setPreventCornerOverlap(value);
+      }
+    });
 
-        addAttributeProcessor("cardUseCompatPadding", new BooleanAttributeProcessor<T>() {
-            @Override
-            public void setBoolean(T view, boolean value) {
-                view.setUseCompatPadding(value);
-            }
-        });
+    addAttributeProcessor("cardUseCompatPadding", new BooleanAttributeProcessor<T>() {
+      @Override
+      public void setBoolean(T view, boolean value) {
+        view.setUseCompatPadding(value);
+      }
+    });
 
-        addAttributeProcessor("contentPadding", new DimensionAttributeProcessor<T>() {
-            @Override
-            public void setDimension(T view, float dimension) {
-                view.setContentPadding((int) dimension, (int) dimension, (int) dimension, (int) dimension);
-            }
-        });
+    addAttributeProcessor("contentPadding", new DimensionAttributeProcessor<T>() {
+      @Override
+      public void setDimension(T view, float dimension) {
+        view.setContentPadding((int) dimension, (int) dimension, (int) dimension, (int) dimension);
+      }
+    });
 
-        addAttributeProcessor("contentPaddingBottom", new DimensionAttributeProcessor<T>() {
-            @Override
-            public void setDimension(T view, float dimension) {
-                int t = view.getContentPaddingTop();
-                int r = view.getContentPaddingRight();
-                int l = view.getContentPaddingLeft();
+    addAttributeProcessor("contentPaddingBottom", new DimensionAttributeProcessor<T>() {
+      @Override
+      public void setDimension(T view, float dimension) {
+        int t = view.getContentPaddingTop();
+        int r = view.getContentPaddingRight();
+        int l = view.getContentPaddingLeft();
 
-                view.setContentPadding(l, t, r, (int) dimension);
-            }
-        });
+        view.setContentPadding(l, t, r, (int) dimension);
+      }
+    });
 
-        addAttributeProcessor("contentPaddingLeft", new DimensionAttributeProcessor<T>() {
-            @Override
-            public void setDimension(T view, float dimension) {
-                int t = view.getContentPaddingTop();
-                int r = view.getContentPaddingRight();
-                int b = view.getContentPaddingBottom();
+    addAttributeProcessor("contentPaddingLeft", new DimensionAttributeProcessor<T>() {
+      @Override
+      public void setDimension(T view, float dimension) {
+        int t = view.getContentPaddingTop();
+        int r = view.getContentPaddingRight();
+        int b = view.getContentPaddingBottom();
 
-                view.setContentPadding((int) dimension, t, r, b);
-            }
-        });
+        view.setContentPadding((int) dimension, t, r, b);
+      }
+    });
 
-        addAttributeProcessor("contentPaddingRight", new DimensionAttributeProcessor<T>() {
-            @Override
-            public void setDimension(T view, float dimension) {
-                int t = view.getContentPaddingTop();
-                int b = view.getContentPaddingBottom();
-                int l = view.getContentPaddingLeft();
+    addAttributeProcessor("contentPaddingRight", new DimensionAttributeProcessor<T>() {
+      @Override
+      public void setDimension(T view, float dimension) {
+        int t = view.getContentPaddingTop();
+        int b = view.getContentPaddingBottom();
+        int l = view.getContentPaddingLeft();
 
-                view.setContentPadding(l, t, (int) dimension, b);
-            }
-        });
+        view.setContentPadding(l, t, (int) dimension, b);
+      }
+    });
 
-        addAttributeProcessor("contentPaddingTop", new DimensionAttributeProcessor<T>() {
-            @Override
-            public void setDimension(T view, float dimension) {
-                int r = view.getContentPaddingRight();
-                int b = view.getContentPaddingBottom();
-                int l = view.getContentPaddingLeft();
+    addAttributeProcessor("contentPaddingTop", new DimensionAttributeProcessor<T>() {
+      @Override
+      public void setDimension(T view, float dimension) {
+        int r = view.getContentPaddingRight();
+        int b = view.getContentPaddingBottom();
+        int l = view.getContentPaddingLeft();
 
-                view.setContentPadding(l, (int) dimension, r, b);
-            }
-        });
+        view.setContentPadding(l, (int) dimension, r, b);
+      }
+    });
 
-    }
+  }
 }
