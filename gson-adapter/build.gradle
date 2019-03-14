@@ -48,7 +48,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'com.google.code.gson:gson:2.8.2'
-    api "androidx.support:support-annotations:${rootProject.ext.supportLibraryVersion}"
+    api "androidx.annotation:annotation:${rootProject.ext.supportLibraryVersion}"
     api project(path: ':proteus-core')
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
