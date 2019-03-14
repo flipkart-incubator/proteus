@@ -63,7 +63,7 @@ android {
     dependencies {
         implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-        implementation "androidx.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
+        implementation "androidx.appcompat:appcompat:${rootProject.ext.supportLibraryVersion}"
         implementation "androidx.support:design:${rootProject.ext.supportLibraryVersion}"
         implementation 'com.github.tony19:logback-android-core:1.1.1-3'
         implementation 'com.github.tony19:logback-android-classic:1.1.1-3'

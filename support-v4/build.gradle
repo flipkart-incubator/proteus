@@ -47,7 +47,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    api "androidx.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
+    api "androidx.appcompat:appcompat:${rootProject.ext.supportLibraryVersion}"
     api project(path: ':proteus-core')
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
