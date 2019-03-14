@@ -18,7 +18,8 @@ package com.flipkart.android.proteus.support.v7.widget;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
