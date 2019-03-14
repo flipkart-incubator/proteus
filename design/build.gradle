@@ -47,7 +47,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "androidx.support:design:${rootProject.ext.supportLibraryVersion}"
+    implementation "com.google.android.material:material:${rootProject.ext.supportLibraryVersion}"
     api "androidx.appcompat:appcompat:${rootProject.ext.supportLibraryVersion}"
     api project(path: ':proteus-core')
 

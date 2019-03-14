@@ -19,7 +19,8 @@ package com.flipkart.android.proteus.support.design.widget;
 import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;

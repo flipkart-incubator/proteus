@@ -17,11 +17,11 @@
 package com.flipkart.android.proteus.support.design.widget;
 
 import androidx.annotation.NonNull;
-import android.support.design.widget.TextInputLayout;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
+import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * ProteusTextInputLayout
