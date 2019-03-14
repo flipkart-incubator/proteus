@@ -41,7 +41,7 @@ allprojects {
 ext {
     groupName = 'com.github.flipkart-incubator.proteus'
     versionName = '5.0.0-snapshot'
-    versionCode = 500014
+    versionCode = 500015
     compileSdkVersion = 28
     minSdkVersion = 19
     targetSdkVersion = 28
