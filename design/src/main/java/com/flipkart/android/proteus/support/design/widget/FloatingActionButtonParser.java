@@ -18,8 +18,8 @@ package com.flipkart.android.proteus.support.design.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.view.ViewGroup;
 

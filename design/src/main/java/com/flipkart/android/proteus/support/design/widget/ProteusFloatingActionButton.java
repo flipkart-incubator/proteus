@@ -16,7 +16,7 @@
 
 package com.flipkart.android.proteus.support.design.widget;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 

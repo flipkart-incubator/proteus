@@ -16,7 +16,7 @@
 
 package com.flipkart.android.proteus.support.v4.view;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusContext;

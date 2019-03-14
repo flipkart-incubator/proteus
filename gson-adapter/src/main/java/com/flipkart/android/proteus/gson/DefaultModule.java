@@ -16,7 +16,7 @@
 
 package com.flipkart.android.proteus.gson;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Binding;

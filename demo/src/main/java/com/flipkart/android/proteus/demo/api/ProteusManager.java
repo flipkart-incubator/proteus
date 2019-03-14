@@ -17,8 +17,8 @@
 package com.flipkart.android.proteus.demo.api;
 
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.flipkart.android.proteus.Proteus;

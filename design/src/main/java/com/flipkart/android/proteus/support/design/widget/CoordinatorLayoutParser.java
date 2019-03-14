@@ -17,8 +17,8 @@
 package com.flipkart.android.proteus.support.design.widget;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.view.ViewGroup;
 

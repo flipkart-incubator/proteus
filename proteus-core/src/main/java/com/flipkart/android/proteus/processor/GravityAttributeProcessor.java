@@ -18,8 +18,8 @@ package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.IntDef;
-import android.support.annotation.Nullable;
+import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.parser.ParseHelper;

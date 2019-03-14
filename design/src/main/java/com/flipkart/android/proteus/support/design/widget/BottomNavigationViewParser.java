@@ -18,8 +18,8 @@ package com.flipkart.android.proteus.support.design.widget;
 
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.view.ViewGroup;
 

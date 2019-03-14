@@ -16,7 +16,7 @@
 
 package com.flipkart.android.proteus.managers;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 
 import com.flipkart.android.proteus.DataContext;

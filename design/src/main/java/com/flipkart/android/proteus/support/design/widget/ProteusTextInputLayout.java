@@ -16,7 +16,7 @@
 
 package com.flipkart.android.proteus.support.design.widget;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 

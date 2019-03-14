@@ -16,7 +16,7 @@
 
 package com.flipkart.android.proteus.support.v7.adapter;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
 import com.flipkart.android.proteus.ProteusContext;

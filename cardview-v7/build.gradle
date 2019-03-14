@@ -47,8 +47,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "com.android.support:cardview-v7:${rootProject.ext.supportLibraryVersion}"
-    api "com.android.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
+    implementation "androidx.support:cardview-v7:${rootProject.ext.supportLibraryVersion}"
+    api "androidx.support:appcompat-v7:${rootProject.ext.supportLibraryVersion}"
     api project(path: ':proteus-core')
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
