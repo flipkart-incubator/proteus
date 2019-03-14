@@ -16,9 +16,9 @@
 
 package com.flipkart.android.proteus;
 
-import android.support.annotation.NonNull;
-
 import java.util.Map;
+
+import androidx.annotation.NonNull;
 
 /**
  * FunctionManager

@@ -17,9 +17,6 @@
 package com.flipkart.android.proteus.support.design.widget;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;
@@ -33,6 +30,10 @@ import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * CollapsingToolbarLayoutParser

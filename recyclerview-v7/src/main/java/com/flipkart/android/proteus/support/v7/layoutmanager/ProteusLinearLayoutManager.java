@@ -17,11 +17,12 @@
 package com.flipkart.android.proteus.support.v7.layoutmanager;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 
 import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
 import com.flipkart.android.proteus.value.ObjectValue;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 /**
  * @author adityasharat

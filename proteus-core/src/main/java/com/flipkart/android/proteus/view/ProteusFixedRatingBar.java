@@ -17,11 +17,12 @@
 package com.flipkart.android.proteus.view;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusView;
+
+import androidx.annotation.NonNull;
 
 /**
  * FixedRatingBar

@@ -53,11 +53,11 @@
           },
           {
             "type": "ImageView",
-            "src": "https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png",
+            "src": "https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png",
             "layout_height": "70dp",
             "layout_width": "120dp",
             "padding": "4dp",
-            "background": "@color/colorPrimary",
+            "background": "#000000",
             "scaleType": "fitCenter",
             "layout_alignParentTop": true,
             "layout_alignParentRight": true

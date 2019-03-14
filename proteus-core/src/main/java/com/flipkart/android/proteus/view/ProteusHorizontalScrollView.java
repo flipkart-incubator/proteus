@@ -19,11 +19,12 @@ package com.flipkart.android.proteus.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusView;
+
+import androidx.annotation.NonNull;
 
 /**
  * HorizontalScrollView

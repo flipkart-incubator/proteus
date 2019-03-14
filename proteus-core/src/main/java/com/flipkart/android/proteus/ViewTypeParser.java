@@ -17,8 +17,6 @@
 package com.flipkart.android.proteus;
 
 import android.content.res.XmlResourceParser;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -35,6 +33,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * @author adityasharat

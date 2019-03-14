@@ -18,9 +18,6 @@ package com.flipkart.android.proteus.support.design.widget;
 
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;
@@ -34,6 +31,10 @@ import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * BottomNavigationViewParser

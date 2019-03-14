@@ -17,9 +17,6 @@
 package com.flipkart.android.proteus.support.v7.widget;
 
 import android.content.res.ColorStateList;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;
@@ -30,6 +27,10 @@ import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 
 /**
  * CardViewParser

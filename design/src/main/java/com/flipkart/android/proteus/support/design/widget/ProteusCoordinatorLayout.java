@@ -16,12 +16,13 @@
 
 package com.flipkart.android.proteus.support.design.widget;
 
-import android.support.annotation.NonNull;
-import android.support.design.widget.CoordinatorLayout;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
+
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 /**
  * ProteusCoordinatorLayout

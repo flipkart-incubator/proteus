@@ -17,8 +17,6 @@
 package com.flipkart.android.proteus.parser.custom;
 
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;
@@ -34,6 +32,9 @@ import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.view.ProteusFixedRatingBar;
 import com.flipkart.android.proteus.view.custom.FixedRatingBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Created by kiran.kumar on 12/05/14.

@@ -16,9 +16,6 @@
 
 package com.flipkart.android.proteus;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.flipkart.android.proteus.parser.IncludeParser;
 import com.flipkart.android.proteus.parser.ViewParser;
 import com.flipkart.android.proteus.parser.custom.ButtonParser;
@@ -42,6 +39,9 @@ import com.flipkart.android.proteus.processor.AttributeProcessor;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * ProteusBuilder

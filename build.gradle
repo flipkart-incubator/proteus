@@ -24,7 +24,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
@@ -40,11 +40,13 @@ allprojects {
 
 ext {
     groupName = 'com.github.flipkart-incubator.proteus'
-    versionName = '5.0.0-snapshot'
-    versionCode = 500014
+    versionName = '5.0.0-rc15'
+    versionCode = 500015
     compileSdkVersion = 28
     minSdkVersion = 19
     targetSdkVersion = 28
     buildToolsVersion = '28.0.3'
-    supportLibraryVersion = '28.0.0'
+    supportLibraryVersion = '1.0.2'
 }
+
+apply plugin: 'maven-publish'

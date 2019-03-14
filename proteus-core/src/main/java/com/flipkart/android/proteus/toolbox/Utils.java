@@ -16,9 +16,6 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-
 import com.flipkart.android.proteus.value.Array;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Primitive;
@@ -27,6 +24,9 @@ import com.flipkart.android.proteus.value.Value;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Map;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 
 /**
  * @author Aditya Sharat

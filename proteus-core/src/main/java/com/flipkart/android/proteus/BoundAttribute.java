@@ -16,11 +16,11 @@
 
 package com.flipkart.android.proteus;
 
-import android.support.annotation.NonNull;
-
 import com.flipkart.android.proteus.managers.ViewManager;
 import com.flipkart.android.proteus.value.Binding;
 import com.flipkart.android.proteus.value.ObjectValue;
+
+import androidx.annotation.NonNull;
 
 /**
  * BoundAttribute holds the attribute id to binding pair

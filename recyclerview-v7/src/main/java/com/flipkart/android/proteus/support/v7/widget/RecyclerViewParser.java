@@ -16,9 +16,6 @@
 
 package com.flipkart.android.proteus.support.v7.widget;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
@@ -37,6 +34,10 @@ import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * RecyclerViewParser

@@ -16,8 +16,6 @@
 
 package com.flipkart.android.proteus;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -27,6 +25,9 @@ import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
 
 import java.util.Iterator;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * A layout builder which can parse json to construct an android view out of it. It uses the

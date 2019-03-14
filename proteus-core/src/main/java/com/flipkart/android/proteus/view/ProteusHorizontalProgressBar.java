@@ -17,10 +17,11 @@
 package com.flipkart.android.proteus.view;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusView;
+
+import androidx.annotation.NonNull;
 
 /**
  * HorizontalProgressBar

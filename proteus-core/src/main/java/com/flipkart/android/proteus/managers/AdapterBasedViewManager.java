@@ -16,13 +16,14 @@
 
 package com.flipkart.android.proteus.managers;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.value.Layout;
+
+import androidx.annotation.NonNull;
 
 /**
  * AdapterBasedViewManager.

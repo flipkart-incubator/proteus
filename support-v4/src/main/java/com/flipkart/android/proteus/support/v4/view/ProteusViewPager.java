@@ -16,11 +16,13 @@
 
 package com.flipkart.android.proteus.support.v4.view;
 
-import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
+
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * ProteusViewPager
@@ -28,7 +30,7 @@ import com.flipkart.android.proteus.ProteusView;
  * @author adityasharat
  */
 
-public class ProteusViewPager extends android.support.v4.view.ViewPager implements ProteusView {
+public class ProteusViewPager extends ViewPager implements ProteusView {
 
   private Manager viewManager;
 

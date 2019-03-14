@@ -17,10 +17,11 @@
 package com.flipkart.android.proteus.value;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import java.util.Iterator;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
 
 /**
  * NestedBinding

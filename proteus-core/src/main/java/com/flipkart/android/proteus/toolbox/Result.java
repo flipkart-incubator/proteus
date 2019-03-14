@@ -16,14 +16,14 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-
 import com.flipkart.android.proteus.value.Null;
 import com.flipkart.android.proteus.value.Value;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 
 /**
  * Result class hold the return status and the data

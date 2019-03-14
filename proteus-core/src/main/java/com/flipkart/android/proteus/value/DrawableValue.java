@@ -29,8 +29,6 @@ import android.graphics.drawable.LevelListDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.View;
@@ -47,6 +45,9 @@ import com.flipkart.android.proteus.toolbox.SimpleArrayIterator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * DrawableValue

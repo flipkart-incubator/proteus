@@ -19,7 +19,6 @@ package com.flipkart.android.proteus.processor;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusContext;
@@ -30,6 +29,8 @@ import com.flipkart.android.proteus.value.DrawableValue;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
+
+import androidx.annotation.Nullable;
 
 /**
  * Use this as the base processor for references like @drawable or remote resources with http:// urls.

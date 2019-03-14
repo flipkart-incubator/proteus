@@ -17,7 +17,6 @@
 package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.DataContext;
@@ -31,6 +30,8 @@ import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
+
+import androidx.annotation.Nullable;
 
 /**
  * @author kirankumar
