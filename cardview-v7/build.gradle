@@ -47,7 +47,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation "androidx.cardview:cardview:${rootProject.ext.supportLibraryVersion}"
+    implementation "androidx.cardview:cardview:1.0.0"
     api "androidx.appcompat:appcompat:${rootProject.ext.supportLibraryVersion}"
     api project(path: ':proteus-core')
 
