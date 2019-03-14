@@ -16,8 +16,6 @@
 
 package com.flipkart.android.proteus.parser;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,6 +27,9 @@ import com.flipkart.android.proteus.exceptions.ProteusInflateException;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * IncludeParser

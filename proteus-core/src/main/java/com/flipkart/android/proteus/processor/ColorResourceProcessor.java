@@ -19,7 +19,6 @@ package com.flipkart.android.proteus.processor;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import androidx.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusContext;
@@ -29,6 +28,8 @@ import com.flipkart.android.proteus.value.Color;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
+
+import androidx.annotation.Nullable;
 
 public abstract class ColorResourceProcessor<V extends View> extends AttributeProcessor<V> {
 

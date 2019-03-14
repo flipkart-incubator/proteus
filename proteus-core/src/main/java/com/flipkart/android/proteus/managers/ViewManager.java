@@ -16,8 +16,6 @@
 
 package com.flipkart.android.proteus.managers;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.BoundAttribute;
@@ -30,6 +28,9 @@ import com.flipkart.android.proteus.value.ObjectValue;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * ViewManager

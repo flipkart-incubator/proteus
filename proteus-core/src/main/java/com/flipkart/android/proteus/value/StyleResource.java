@@ -18,14 +18,15 @@ package com.flipkart.android.proteus.value;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.util.LruCache;
 
 import com.flipkart.android.proteus.ProteusConstants;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * StyleResource

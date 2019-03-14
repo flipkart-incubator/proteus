@@ -19,7 +19,6 @@ package com.flipkart.android.proteus.parser;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -36,6 +35,8 @@ import com.flipkart.android.proteus.value.Value;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.Nullable;
 
 /**
  * @author kiran.kumar

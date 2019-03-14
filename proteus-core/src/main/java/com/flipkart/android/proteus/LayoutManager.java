@@ -16,12 +16,12 @@
 
 package com.flipkart.android.proteus;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.flipkart.android.proteus.value.Layout;
 
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * LayoutManager

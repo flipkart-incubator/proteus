@@ -16,10 +16,6 @@
 
 package com.flipkart.android.proteus.support.v4.view;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
@@ -29,6 +25,10 @@ import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * ViewPagerParser

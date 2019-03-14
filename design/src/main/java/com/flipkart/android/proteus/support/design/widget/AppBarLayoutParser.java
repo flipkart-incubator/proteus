@@ -18,8 +18,6 @@ package com.flipkart.android.proteus.support.design.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;
@@ -36,6 +34,9 @@ import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
 import com.google.android.material.appbar.AppBarLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * AppBarLayoutParser

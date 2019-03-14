@@ -18,8 +18,6 @@ package com.flipkart.android.proteus.support.design.widget;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;
@@ -34,6 +32,9 @@ import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Primitive;
 import com.flipkart.android.proteus.value.Value;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * FloatingActionButtonParser

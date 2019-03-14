@@ -16,7 +16,6 @@
 
 package com.flipkart.android.proteus.support.v7.adapter;
 
-import androidx.annotation.NonNull;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.DataContext;
@@ -29,6 +28,8 @@ import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
 
 import java.util.Map;
+
+import androidx.annotation.NonNull;
 
 /**
  * SimpleListAdapter.

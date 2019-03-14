@@ -16,14 +16,14 @@
 
 package com.flipkart.android.proteus.support.v7.adapter;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.flipkart.android.proteus.support.v7.widget.ProteusRecyclerView;
 import com.flipkart.android.proteus.value.ObjectValue;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * RecyclerViewAdapterFactory.

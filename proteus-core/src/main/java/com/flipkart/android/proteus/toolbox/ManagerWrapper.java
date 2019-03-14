@@ -16,8 +16,6 @@
 
 package com.flipkart.android.proteus.toolbox;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.DataContext;
@@ -25,6 +23,9 @@ import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * ManagerWrapper

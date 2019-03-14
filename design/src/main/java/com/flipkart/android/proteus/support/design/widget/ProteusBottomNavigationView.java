@@ -16,12 +16,13 @@
 
 package com.flipkart.android.proteus.support.design.widget;
 
-import androidx.annotation.NonNull;
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.annotation.NonNull;
 
 /**
  * ProteusBottomNavigationView

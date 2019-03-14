@@ -16,13 +16,14 @@
 
 package com.flipkart.android.proteus.processor;
 
-import androidx.annotation.NonNull;
 import android.view.View;
 
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
+
+import androidx.annotation.NonNull;
 
 /**
  * NumberAttributeProcessor

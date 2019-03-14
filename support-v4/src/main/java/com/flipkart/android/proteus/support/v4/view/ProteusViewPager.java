@@ -16,13 +16,13 @@
 
 package com.flipkart.android.proteus.support.v4.view;
 
-import androidx.annotation.NonNull;
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.View;
 
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
+
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * ProteusViewPager

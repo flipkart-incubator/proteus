@@ -18,9 +18,6 @@ package com.flipkart.android.proteus.value;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.LruCache;
 import android.util.StateSet;
@@ -28,6 +25,10 @@ import android.util.StateSet;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * ColorValue

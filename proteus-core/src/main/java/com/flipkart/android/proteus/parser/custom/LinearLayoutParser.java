@@ -19,8 +19,6 @@ package com.flipkart.android.proteus.parser.custom;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -36,6 +34,9 @@ import com.flipkart.android.proteus.toolbox.Attributes;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.view.ProteusLinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Created by kiran.kumar on 12/05/14.

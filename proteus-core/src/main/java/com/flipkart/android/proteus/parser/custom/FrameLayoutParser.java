@@ -16,8 +16,6 @@
 
 package com.flipkart.android.proteus.parser.custom;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.ViewGroup;
 
 import com.flipkart.android.proteus.ProteusContext;
@@ -30,6 +28,9 @@ import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.view.ProteusAspectRatioFrameLayout;
 import com.flipkart.android.proteus.view.custom.AspectRatioFrameLayout;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 
 /**

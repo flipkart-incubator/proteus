@@ -18,8 +18,6 @@ package com.flipkart.android.proteus.processor;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import androidx.annotation.IntDef;
-import androidx.annotation.Nullable;
 import android.view.View;
 
 import com.flipkart.android.proteus.parser.ParseHelper;
@@ -32,6 +30,9 @@ import com.flipkart.android.proteus.value.Value;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.LOCAL_VARIABLE;

@@ -21,8 +21,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -56,6 +54,9 @@ import com.flipkart.android.proteus.value.Value;
 import com.flipkart.android.proteus.view.ProteusAndroidView;
 
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * @author kiran.kumar

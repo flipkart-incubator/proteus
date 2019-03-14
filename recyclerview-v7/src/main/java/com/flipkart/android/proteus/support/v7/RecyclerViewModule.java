@@ -16,8 +16,6 @@
 
 package com.flipkart.android.proteus.support.v7;
 
-import androidx.annotation.NonNull;
-
 import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
@@ -26,6 +24,8 @@ import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerBuilde
 import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerFactory;
 import com.flipkart.android.proteus.support.v7.layoutmanager.ProteusLinearLayoutManager;
 import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
+
+import androidx.annotation.NonNull;
 
 /**
  * <p>

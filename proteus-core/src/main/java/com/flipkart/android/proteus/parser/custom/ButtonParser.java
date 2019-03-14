@@ -17,8 +17,6 @@
 package com.flipkart.android.proteus.parser.custom;
 
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.Button;
 
@@ -28,6 +26,9 @@ import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.view.ProteusButton;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Created by kiran.kumar on 12/05/14.

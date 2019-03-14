@@ -22,12 +22,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
-import androidx.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
 import com.flipkart.android.proteus.ProteusView;
+
+import androidx.annotation.NonNull;
 
 /**
  * CircleView

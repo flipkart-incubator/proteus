@@ -16,9 +16,6 @@
 
 package com.flipkart.android.proteus;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.flipkart.android.proteus.managers.ViewManager;
 import com.flipkart.android.proteus.value.Binding.FunctionBinding;
 import com.flipkart.android.proteus.value.Null;
@@ -26,6 +23,9 @@ import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Value;
 
 import java.util.Map;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * DataContext class hosts a the data, scope, index, and if
