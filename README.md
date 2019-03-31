@@ -25,38 +25,28 @@ With Proteus, you can control your Apps layout from the backend (no WebViews). F
 
 ## Getting Started
 
-#### gradle (gradle 3.x.x)
+#### gradle (gradle 4.10.*)
 
 ```javascript
 // Add it in your root build.gradle at the end of repositories:
 allprojects {
-	repositories {
-		...
-		maven { url "https://jitpack.io" }
-	}
-}
-
-// Add the dependency
-dependencies {
-        compile 'com.github.flipkart-incubator:proteus-core:5.0.0-rc12@aar'
-        compile 'com.github.flipkart-incubator:gson-adapter:5.0.0-rc12@aar'
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
 }
 ```
 
-#### include as a module (gradle 3.x.x)
-
-* Clone the **proteus** in the project folder
-
-```javascript
-git clone https://github.com/flipkart-incubator/proteus.git
 ```
-
-* Include the a project in you apps `build.gradle` file
-
-```javascript
+// Add in your app level dependency
 dependencies {
-  compile project('proteus:proteus-core')
-  compile project('proteus:gson-adapter')
+    implementation 'com.github.flipkart-incubator.proteus:proteus-core:5.0.0'
+    implementation 'com.github.flipkart-incubator.proteus:gson-adapter:5.0.0'
+    implementation 'com.github.flipkart-incubator.proteus:cardview-v7:5.0.0'
+    implementation 'com.github.flipkart-incubator.proteus:design:5.0.0'
+    implementation 'com.github.flipkart-incubator.proteus:recyclerview-v7:5.0.0'
+    implementation 'com.github.flipkart-incubator.proteus:support-v4:5.0.0'
 }
 ```
 
