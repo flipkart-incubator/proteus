@@ -41,12 +41,12 @@ allprojects {
 ```
 // Add in your app level dependency
 dependencies {
-    implementation 'com.github.flipkart-incubator.proteus:proteus-core:5.0.0'
-    implementation 'com.github.flipkart-incubator.proteus:gson-adapter:5.0.0'
-    implementation 'com.github.flipkart-incubator.proteus:cardview-v7:5.0.0'
-    implementation 'com.github.flipkart-incubator.proteus:design:5.0.0'
-    implementation 'com.github.flipkart-incubator.proteus:recyclerview-v7:5.0.0'
-    implementation 'com.github.flipkart-incubator.proteus:support-v4:5.0.0'
+    implementation 'com.github.flipkart-incubator.proteus:proteus-core:5.0.1'
+    implementation 'com.github.flipkart-incubator.proteus:gson-adapter:5.0.1'
+    implementation 'com.github.flipkart-incubator.proteus:cardview-v7:5.0.1'
+    implementation 'com.github.flipkart-incubator.proteus:design:5.0.1'
+    implementation 'com.github.flipkart-incubator.proteus:recyclerview-v7:5.0.1'
+    implementation 'com.github.flipkart-incubator.proteus:support-v4:5.0.1'
 }
 ```
 
