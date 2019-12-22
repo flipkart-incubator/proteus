@@ -42,11 +42,11 @@ ext {
     groupName = 'com.github.flipkart-incubator.proteus'
     versionName = '5.0.1'
     versionCode = 500017
-    compileSdkVersion = 28
+    compileSdkVersion = 29
     minSdkVersion = 19
-    targetSdkVersion = 28
-    buildToolsVersion = '28.0.3'
-    supportLibraryVersion = '1.0.2'
+    targetSdkVersion = 29
+    buildToolsVersion = '29.0.2'
+    supportLibraryVersion = '1.1.0'
 }
 
 apply plugin: 'maven-publish'
