@@ -22,6 +22,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -254,5 +255,32 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
         view.setHint(value);
       }
     });
+
+    addAttributeProcessor("htmlText", new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        setHtmlText(view, value);
+      }
+    });
+
+    addAttributeProcessor("fontFamily", new StringAttributeProcessor<T>() {
+      @Override
+      public void setString(T view, String value) {
+        Typeface typeface;
+        typeface = Typeface.createFromAsset(view.getContext().getAssets(), value);
+        if (typeface != null) {
+          view.setTypeface(typeface);
+        }
+      }
+    });
+  }
+
+  protected void setHtmlText(TextView textView, String text) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+      textView.setText(Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY));
+    } else {
+      textView.setText(Html.fromHtml(text));
+    }
+    textView.setMovementMethod(LinkMovementMethod.getInstance());
   }
 }
