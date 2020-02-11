@@ -81,6 +81,7 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
           //noinspection deprecation
           view.setText(Html.fromHtml(value));
         }
+        view.setMovementMethod(LinkMovementMethod.getInstance());
       }
     });
     addAttributeProcessor(Attributes.TextView.Text, new StringAttributeProcessor<T>() {
@@ -256,13 +257,6 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
       }
     });
 
-    addAttributeProcessor("htmlText", new StringAttributeProcessor<T>() {
-      @Override
-      public void setString(T view, String value) {
-        setHtmlText(view, value);
-      }
-    });
-
     addAttributeProcessor("fontFamily", new StringAttributeProcessor<T>() {
       @Override
       public void setString(T view, String value) {
@@ -275,12 +269,4 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
     });
   }
 
-  protected void setHtmlText(TextView textView, String text) {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-      textView.setText(Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY));
-    } else {
-      textView.setText(Html.fromHtml(text));
-    }
-    textView.setMovementMethod(LinkMovementMethod.getInstance());
-  }
 }
