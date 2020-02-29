@@ -33,7 +33,7 @@ import retrofit2.http.GET;
 
 public interface ProteusApi {
 
-  @GET("user.json")
+  @GET("data.json")
   Call<ObjectValue> getUserData();
 
   @GET("styles.json")

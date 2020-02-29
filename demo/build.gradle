@@ -59,6 +59,10 @@ android {
         exclude 'META-INF/dependencies.txt'
         exclude 'META-INF/LGPL2.1'
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 
     dependencies {
         implementation fileTree(include: ['*.jar'], dir: 'libs')
@@ -77,5 +81,6 @@ android {
         implementation project(':recyclerview-v7')
         implementation project(':cardview-v7')
         implementation project(':design')
+        implementation project(':tabbed-view-pager')
     }
 }
