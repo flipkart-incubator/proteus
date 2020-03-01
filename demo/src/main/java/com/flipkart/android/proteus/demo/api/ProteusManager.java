@@ -22,14 +22,12 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.android.tabbed_view_pager.TabLayoutModule;
 import com.flipkart.android.proteus.Proteus;
 import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.Styles;
 import com.flipkart.android.proteus.demo.CircleViewParser;
 import com.flipkart.android.proteus.gson.ProteusTypeAdapterFactory;
 import com.flipkart.android.proteus.support.design.DesignModule;
-import com.flipkart.android.proteus.support.v4.SupportV4Module;
 import com.flipkart.android.proteus.support.v7.CardViewModule;
 import com.flipkart.android.proteus.support.v7.RecyclerViewModule;
 import com.flipkart.android.proteus.value.Layout;
@@ -58,7 +56,8 @@ public class ProteusManager {
         proteus = new ProteusBuilder()
 //            .register(SupportV4Module.create())
             .register(RecyclerViewModule.create())
-            .register(CardViewModule.create()).register(DesignModule.create()).register(TabLayoutModule.create())
+            .register(CardViewModule.create()).register(DesignModule.create())
+//            .register(TabLayoutModule.create())
             .register(new CircleViewParser()).build();
 
         ProteusTypeAdapterFactory.PROTEUS_INSTANCE_HOLDER.setProteus(proteus);

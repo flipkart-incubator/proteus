@@ -68,7 +68,7 @@ android {
         implementation fileTree(include: ['*.jar'], dir: 'libs')
 
         implementation "androidx.appcompat:appcompat:${rootProject.ext.supportLibraryVersion}"
-        implementation "com.google.android.material:material:1.0.0"
+        implementation "com.google.android.material:material:1.1.0"
         implementation 'com.squareup.retrofit2:retrofit:2.5.0'
         implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
         implementation 'com.github.bumptech.glide:glide:4.9.0'
@@ -81,6 +81,5 @@ android {
         implementation project(':recyclerview-v7')
         implementation project(':cardview-v7')
         implementation project(':design')
-        implementation project(':tabbed-view-pager')
     }
 }

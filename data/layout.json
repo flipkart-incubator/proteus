@@ -7,7 +7,37 @@
         "type": "TabLayout",
         "layout_width": "match_parent",
         "layout_height": "wrap_content",
-        "tag": "tabLayout"
+        "tag": "tabLayout",
+        "tabMode": "fixed",
+        "backgroundColor": "#ffffff",
+        "selectedTabIndicatorColor": "#4d6cd9",
+        "tabTextColors": {
+            "type": "selector",
+            "android": "http://schemas.android.com/apk/res/android",
+            "children": [{
+                "type": "item",
+                "color": "#4d6cd9",
+                "state_selected": "true"
+            }, {
+                "type": "item",
+                "color": "#806f7f9f",
+                "state_focused": "false",
+                "state_pressed": "false",
+                "state_selected": "false"
+            }]
+        },
+        "tabPadding": "16dp",
+        "tabBackground": {
+            "type": "shape",
+            "shape": "rectangle",
+            "children": [{
+                "type": "solid",
+                "color": "#334d6cd9"
+            }, {
+                "type": "corners",
+                "radius": "8dp"
+            }]
+        }
     }, {
         "type": "ViewPager",
         "layout_width": "match_parent",
@@ -16,13 +46,13 @@
         "tag": "viewPager",
         "background": "#ffffff",
         "data": {
-            "items": "@{permissions}"
+            "items": "@{tabsData}"
         },
         "adapter": {
             "@": {
                 "type": "SectionsPagerAdapter",
-                "item-count": "@{items.$length}",
-                "item-layout": {
+                "children-count": "@{items.$length}",
+                "children": [{
                     "type": "LinearLayout",
                     "layout_width": "match_parent",
                     "layout_height": "match_parent",
@@ -50,7 +80,28 @@
                         "layout_marginTop": "10dp",
                         "text": "@{item.description}"
                     }]
-                }
+                }, {
+                    "type": "LinearLayout",
+                    "layout_width": "match_parent",
+                    "layout_height": "match_parent",
+                    "orientation": "vertical",
+                    "layout_marginTop": "35dp",
+                    "paddingLeft": "18dp",
+                    "paddingRight": "18dp",
+                    "paddingTop": "15dp",
+                    "data": {
+                        "item": "@{items[$index]}"
+                    },
+                    "children": [{
+                        "type": "TextView",
+                        "layout_width": "match_parent",
+                        "layout_height": "wrap_content",
+                        "textColor": "#6f7f9f",
+                        "textSize": "14sp",
+                        "layout_marginTop": "10dp",
+                        "text": "@{item.description}"
+                    }]
+                }]
             }
         }
     }]

@@ -1,4 +1,4 @@
-package com.android.tabbed_view_pager.widget;
+package com.flipkart.android.proteus.support.design.widget;
 
 import android.content.Context;
 import android.view.View;

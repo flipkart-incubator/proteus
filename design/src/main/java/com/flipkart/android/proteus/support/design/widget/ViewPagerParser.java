@@ -1,4 +1,4 @@
-package com.android.tabbed_view_pager.widget;
+package com.flipkart.android.proteus.support.design.widget;
 
 import android.view.ViewGroup;
 
@@ -6,8 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
-import com.android.tabbed_view_pager.adapter.SectionsPagerAdapter;
-import com.android.tabbed_view_pager.adapter.ViewPagerAdapterFactory;
 import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ProteusContext;
@@ -15,6 +13,8 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.support.design.adapter.SectionsPagerAdapter;
+import com.flipkart.android.proteus.support.design.adapter.ViewPagerAdapterFactory;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Layout;
 import com.flipkart.android.proteus.value.ObjectValue;
@@ -29,7 +29,7 @@ import com.google.android.material.tabs.TabLayout;
 public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
     private static final String ATTRIBUTE_ADAPTER = "adapter";
 
-    public static final String ATTRIBUTE_TYPE = ProteusConstants.TYPE;
+    private static final String ATTRIBUTE_TYPE = ProteusConstants.TYPE;
 
     @NonNull
     private final ViewPagerAdapterFactory adapterFactory;
@@ -55,7 +55,9 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
     public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
         @Nullable ViewGroup parent, int dataIndex) {
         ProteusViewPager proteusViewPager = new ProteusViewPager(context);
-        ((TabLayout) parent.findViewWithTag("tabLayout")).setupWithViewPager(proteusViewPager);
+        if (parent != null) {
+            ((TabLayout) parent.findViewWithTag("tabLayout")).setupWithViewPager(proteusViewPager);
+        }
         return proteusViewPager;
     }
 

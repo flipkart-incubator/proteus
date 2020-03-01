@@ -16,12 +16,18 @@
 
 package com.flipkart.android.proteus.support.design;
 
+import androidx.annotation.NonNull;
+
 import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.support.design.adapter.SectionsPagerAdapter;
+import com.flipkart.android.proteus.support.design.adapter.ViewPagerAdapterFactory;
 import com.flipkart.android.proteus.support.design.widget.AppBarLayoutParser;
 import com.flipkart.android.proteus.support.design.widget.BottomNavigationViewParser;
 import com.flipkart.android.proteus.support.design.widget.CollapsingToolbarLayoutParser;
 import com.flipkart.android.proteus.support.design.widget.CoordinatorLayoutParser;
 import com.flipkart.android.proteus.support.design.widget.FloatingActionButtonParser;
+import com.flipkart.android.proteus.support.design.widget.TabLayoutParser;
+import com.flipkart.android.proteus.support.design.widget.ViewPagerParser;
 
 /**
  * DesignModule
@@ -31,21 +37,38 @@ import com.flipkart.android.proteus.support.design.widget.FloatingActionButtonPa
 
 public class DesignModule implements ProteusBuilder.Module {
 
-  private DesignModule() {
-  }
+    private static final String ADAPTER_SIMPLE_LIST = "SectionsPagerAdapter";
 
-  public static DesignModule create() {
-    return new DesignModule();
-  }
+    @NonNull
+    private ViewPagerAdapterFactory adapterFactory;
 
-  @Override
-  public void registerWith(ProteusBuilder builder) {
-    builder.register(new AppBarLayoutParser());
-    builder.register(new BottomNavigationViewParser());
-    builder.register(new CollapsingToolbarLayoutParser());
-    builder.register(new CoordinatorLayoutParser());
-    builder.register(new FloatingActionButtonParser());
-    DesignModuleAttributeHelper.register(builder);
-  }
+    private DesignModule(@NonNull ViewPagerAdapterFactory adapterFactory) {
+        this.adapterFactory = adapterFactory;
+    }
 
+    public static DesignModule create() {
+        return new Builder().build();
+    }
+
+    @Override
+    public void registerWith(ProteusBuilder builder) {
+        builder.register(new ViewPagerParser(adapterFactory));
+        builder.register(new TabLayoutParser());
+        builder.register(new AppBarLayoutParser());
+        builder.register(new BottomNavigationViewParser());
+        builder.register(new CollapsingToolbarLayoutParser());
+        builder.register(new CoordinatorLayoutParser());
+        builder.register(new FloatingActionButtonParser());
+        DesignModuleAttributeHelper.register(builder);
+    }
+
+    public static class Builder {
+        @NonNull
+        private final ViewPagerAdapterFactory adapterFactory = new ViewPagerAdapterFactory();
+
+        DesignModule build() {
+            adapterFactory.register(DesignModule.ADAPTER_SIMPLE_LIST, SectionsPagerAdapter.BUILDER);
+            return new DesignModule(adapterFactory);
+        }
+    }
 }
