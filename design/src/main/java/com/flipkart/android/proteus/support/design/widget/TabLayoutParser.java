@@ -99,8 +99,8 @@ public class TabLayoutParser<V extends TabLayout> extends ViewTypeParser<V> {
             @Override
             public void setColor(V view, ColorStateList colors) {
                 view.setSelectedTabIndicatorColor(colors.getDefaultColor());
-
             }
         });
+
     }
 }
