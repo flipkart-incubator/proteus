@@ -39,7 +39,7 @@ allprojects {
 }
 
 ext {
-    groupName = 'com.github.flipkart-incubator.proteus'
+    groupName = 'com.github.prasadrao-teela.proteus'
     versionName = '6.0.0'
     versionCode = 60000
     compileSdkVersion = 29
