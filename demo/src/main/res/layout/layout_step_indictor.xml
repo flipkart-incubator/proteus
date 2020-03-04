@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <LinearLayout
+        android:id="@+id/layout_paid_emi_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <View
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:background="#4d6cd9"
+            android:padding="6dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/rubik_medium"
+            android:padding="4dp"
+            android:text="03"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_paid_emi_indicator"
+        android:fontFamily="@font/rubik_medium"
+        android:text="PAID"
+        android:textColor="#99a1c5"
+        android:textSize="12sp" />
+
+
+    <LinearLayout
+        android:id="@+id/layout_pending_emi_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="32dp"
+        android:layout_toRightOf="@id/layout_paid_emi_indicator"
+        android:gravity="center_vertical">
+
+        <View
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:background="#dfe6f4"
+            android:padding="6dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/rubik_medium"
+            android:padding="4dp"
+            android:text="06"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_pending_emi_indicator"
+        android:layout_alignLeft="@id/layout_pending_emi_indicator"
+        android:fontFamily="@font/rubik_medium"
+        android:text="PENDING"
+        android:textColor="#99a1c5"
+        android:textSize="12sp" />
+
+
+    <TextView
+        android:id="@+id/text_total_emi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:fontFamily="@font/rubik_medium"
+        android:padding="4dp"
+        android:text="09"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_total_emi"
+        android:layout_alignRight="@id/text_total_emi"
+        android:fontFamily="@font/rubik_medium"
+        android:text="TOTAL EMI"
+        android:textColor="#99a1c5"
+        android:textSize="12sp" />
+
+</RelativeLayout>

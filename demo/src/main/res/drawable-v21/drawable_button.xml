@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#1f37ca">
+    <item>
+        <selector>
+            <item
+                android:drawable="@drawable/button_shape_normal"
+                android:state_checked="false" />
+            <item
+                android:drawable="@drawable/button_shape_selected"
+                android:state_checked="true" />
+            <item android:drawable="@drawable/button_shape_normal" />
+
+        </selector>
+    </item>
+</ripple>

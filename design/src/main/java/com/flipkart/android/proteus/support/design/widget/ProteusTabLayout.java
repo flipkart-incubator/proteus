@@ -1,10 +1,10 @@
 package com.flipkart.android.proteus.support.design.widget;
 
+import android.content.Context;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.google.android.material.tabs.TabLayout;
 
@@ -15,7 +15,7 @@ public class ProteusTabLayout extends TabLayout implements ProteusView {
 
     private Manager manager;
 
-    public ProteusTabLayout(ProteusContext context) {
+    public ProteusTabLayout(@NonNull Context context) {
         super(context);
     }
 

@@ -29,9 +29,9 @@ public class StepProgressView extends View {
     private int currentProgress = 30;
     private float markerWidth = pxValue(1f);
     private float rectRadius = pxValue(3f);
-    private float textMargin = pxValue(10f);
-    private float progressBarHeight = pxValue(15f);
-    private float markerTextSize = pxValue(12f);
+    private float textMargin = pxValue(0f);
+    private float progressBarHeight = pxValue(14f);
+    private float markerTextSize = pxValue(0f);
     private int markerColor = Color.WHITE;
     private int progressColor = Color.GREEN;
     private int progressBackgroundColor = Color.parseColor("#334d6cd9");
@@ -47,6 +47,7 @@ public class StepProgressView extends View {
     private int textHeight = 0;
     private float textVerticalCenter = 0f;
     private float extraWidthLeftText = 0f;
+    private boolean showMarkerText = false;
 
     public StepProgressView(Context context) {
         super(context);
@@ -103,6 +104,7 @@ public class StepProgressView extends View {
 
     public void setMarkerTextSize(float markerTextSize) {
         this.markerTextSize = markerTextSize;
+        this.paintText.setTextSize(markerTextSize);
         requestLayout();
     }
 
@@ -138,6 +140,11 @@ public class StepProgressView extends View {
         invalidate();
     }
 
+    public void setShowMarkerText(boolean showMarkerText) {
+        this.showMarkerText = showMarkerText;
+        invalidate();
+    }
+
     public void setMarkers(String markers) {
         this.markers.clear();
 
@@ -149,6 +156,19 @@ public class StepProgressView extends View {
                 this.markers.add(step);
             }
         }
+        requestLayout();
+    }
+
+    public void addMarkersWithStepSize(int stepSize) {
+        this.markers.clear();
+        for (int step = stepSize; step < totalProgress; step = step + stepSize) {
+            this.markers.add(step);
+        }
+        requestLayout();
+    }
+
+    public void setProgressBarHeight(float progressBarHeight) {
+        this.progressBarHeight = progressBarHeight;
         requestLayout();
     }
 
@@ -224,10 +244,12 @@ public class StepProgressView extends View {
 
         // using one more for loop instead of saving & restoring canvas for text since,
         // that would be more precious
-        for (Integer marker : markers) {
-            if (marker >= 1 && marker <= totalProgress) {
-                float left = (marker / (float) totalProgress) * (rBar.right - rBar.left) + extraWidthLeftText;
-                canvas.drawText(marker.toString(), left, textVerticalCenter, paintText);
+        if (showMarkerText) {
+            for (Integer marker : markers) {
+                if (marker >= 1 && marker <= totalProgress) {
+                    float left = (marker / (float) totalProgress) * (rBar.right - rBar.left) + extraWidthLeftText;
+                    canvas.drawText(marker.toString(), left, textVerticalCenter, paintText);
+                }
             }
         }
     }

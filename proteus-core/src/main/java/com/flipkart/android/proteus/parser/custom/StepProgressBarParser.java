@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.flipkart.android.proteus.ProteusContext;
 import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
+import com.flipkart.android.proteus.processor.BooleanAttributeProcessor;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
@@ -153,6 +154,27 @@ public class StepProgressBarParser<T extends StepProgressView> extends ViewTypeP
             @Override
             public void setDimension(T view, float dimension) {
                 view.setEdgeRadius(dimension);
+            }
+        });
+
+        addAttributeProcessor("progressBarHeight", new DimensionAttributeProcessor<T>() {
+            @Override
+            public void setDimension(T view, float dimension) {
+                view.setProgressBarHeight(dimension);
+            }
+        });
+
+        addAttributeProcessor("showMarkerText", new BooleanAttributeProcessor<T>() {
+            @Override
+            public void setBoolean(T view, boolean value) {
+                view.setShowMarkerText(value);
+            }
+        });
+
+        addAttributeProcessor("stepSize", new NumberAttributeProcessor<T>() {
+            @Override
+            public void setNumber(T view, @NonNull Number value) {
+                view.addMarkersWithStepSize(value.intValue());
             }
         });
     }
