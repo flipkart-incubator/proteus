@@ -13,3 +13,5 @@ out/
 *.iml
 /captures
 npm-debug.log
+/demo/
+/data/
