@@ -13,6 +13,7 @@ import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.processor.ColorResourceProcessor;
 import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.processor.DrawableResourceProcessor;
+import com.flipkart.android.proteus.processor.NumberAttributeProcessor;
 import com.flipkart.android.proteus.processor.StringAttributeProcessor;
 import com.flipkart.android.proteus.support.design.parser.TabsAttributeParser;
 import com.flipkart.android.proteus.value.Layout;
@@ -75,6 +76,13 @@ public class TabLayoutParser<V extends TabLayout> extends ViewTypeParser<V> {
             @Override
             public void setString(V view, String value) {
                 view.setTabMode(TabsAttributeParser.getTabMode(value));
+            }
+        });
+
+        addAttributeProcessor("tabModeInt", new NumberAttributeProcessor<V>() {
+            @Override
+            public void setNumber(V view, @NonNull Number value) {
+                view.setTabMode(value.intValue());
             }
         });
 

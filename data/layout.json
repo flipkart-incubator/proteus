@@ -2,23 +2,267 @@
     "type": "LinearLayout",
     "layout_width": "match_parent",
     "layout_height": "match_parent",
-    "padding":"32dp",
     "orientation": "vertical",
     "children": [{
-        "type": "StepProgressView",
-        "layout_width":"match_parent",
+        "type": "TabLayout",
+        "layout_width": "match_parent",
         "layout_height": "wrap_content",
-        "markerColor": "#ffffff",
-        "markerTextColor": "#4d6cd9",
-        "progressBackgroundColor": "#334d6cd9",
-        "progressColor": "#4d6cd9",
-        "totalProgress": 9,
-        "markerTextSize": "12sp",
-        "textMargin": "12dp",
-        "markerWidth": "2dp",
-        "textFont": "fonts/rubik_medium.ttf",
-        "currentProgress":3,
-        "edgeRadius": "8dp",
-        "markers": "1,2,3,4,5,6,7,8,9"
+        "tag": "tabLayout",
+        "tabMode": "fixed",
+        "backgroundColor": "#ffffff",
+        "selectedTabIndicatorColor": "#4d6cd9",
+        "tabTextColors": {
+            "type": "selector",
+            "android": "http://schemas.android.com/apk/res/android",
+            "children": [{
+                "type": "item",
+                "color": "#4d6cd9",
+                "state_selected": "true"
+            }, {
+                "type": "item",
+                "color": "#806f7f9f",
+                "state_focused": "false",
+                "state_pressed": "false",
+                "state_selected": "false"
+            }]
+        },
+        "tabPadding": "16dp",
+        "tabBackground": {
+            "type": "shape",
+            "shape": "rectangle",
+            "children": [{
+                "type": "solid",
+                "color": "#334d6cd9"
+            }, {
+                "type": "corners",
+                "radius": "8dp"
+            }]
+        }
+    }, {
+        "type": "ViewPager",
+        "layout_width": "match_parent",
+        "layout_height": "match_parent",
+        "id": "viewPager",
+        "tag": "viewPager",
+        "background": "#ffffff",
+        "data": {
+            "items": "@{tabsData}"
+        },
+        "adapter": {
+            "@": {
+                "type": "SectionsPagerAdapter",
+                "children-count": "@{items.$length}",
+                "children": [{
+                    "type": "RecyclerView",
+                    "layout_width": "match_parent",
+                    "layout_height": "match_parent",
+                    "background": "#ffffff",
+                    "layout_marginTop": "10dp",
+                    "data": {
+                        "item": "@{items[$index]}",
+                        "items": "@{item.emis}"
+                    },
+                    "layout_manager": {
+                        "type": "LinearLayoutManager"
+                    },
+                    "adapter": {
+                        "@": {
+                            "type": "SimpleListAdapter",
+                            "item-count": "@{items.$length}",
+                            "item-layout": {
+                                "type": "RelativeLayout",
+                                "id": "emiLayout",
+                                "layout_width": "match_parent",
+                                "layout_height": "80dp",
+                                "data": {
+                                    "item": "@{items[$index]}"
+                                },
+                                "children": [{
+                                    "type": "LinearLayout",
+                                    "id": "layoutEmiStatus",
+                                    "layout_width": "wrap_content",
+                                    "layout_height": "match_parent",
+                                    "layout_marginLeft": "32dp",
+                                    "gravity": "center_horizontal",
+                                    "orientation": "vertical",
+                                    "children": [{
+                                        "type": "View",
+                                        "id": "lineTop",
+                                        "layout_width": "1dp",
+                                        "layout_height": "0dp",
+                                        "layout_weight": "1",
+                                        "background": "#334d6cd9",
+                                        "visibility": "@{item.topLineVisibility}"
+                                    }, {
+                                        "type": "ImageView",
+                                        "id": "imageEmiStatus",
+                                        "layout_width": "28dp",
+                                        "layout_height": "28dp",
+                                        "src": "@{item.emiStatusImage}"
+                                    }, {
+                                        "type": "View",
+                                        "id": "lineBottom",
+                                        "layout_width": "1dp",
+                                        "layout_height": "0dp",
+                                        "layout_weight": "1",
+                                        "background": "#334d6cd9",
+                                        "visibility": "@{item.bottomLineVisibility}"
+                                    }]
+                                }, {
+                                    "type": "TextView",
+                                    "id": "textEmiAmount",
+                                    "layout_width": "wrap_content",
+                                    "layout_height": "wrap_content",
+                                    "layout_alignParentEnd": "true",
+                                    "layout_centerVertical": "true",
+                                    "layout_marginLeft": "24dp",
+                                    "layout_marginRight": "32dp",
+                                    "text": "₹ 5,500",
+                                    "fontFamily": "fonts/rubik_medium.ttf",
+                                    "textColor": "#233a8c",
+                                    "textSize": "16sp"
+                                }, {
+                                    "type": "LinearLayout",
+                                    "layout_width": "wrap_content",
+                                    "layout_height": "wrap_content",
+                                    "layout_centerVertical": "true",
+                                    "layout_marginLeft": "24dp",
+                                    "layout_toStartOf": "textEmiAmount",
+                                    "layout_toEndOf": "layoutEmiStatus",
+                                    "orientation": "vertical",
+                                    "children": [{
+                                        "type": "TextView",
+                                        "id": "textEmiDueDate",
+                                        "layout_width": "wrap_content",
+                                        "layout_height": "wrap_content",
+                                        "text": "@{item.emiDueDate}",
+                                        "fontFamily": "fonts/rubik_medium.ttf",
+                                        "textColor": "#233a8c",
+                                        "textSize": "16sp"
+                                    }, {
+                                        "type": "TextView",
+                                        "id": "textEmiPaidDate",
+                                        "layout_width": "wrap_content",
+                                        "layout_height": "wrap_content",
+                                        "text": "@{item.emiStatus}",
+                                        "fontFamily": "fonts/rubik_medium.ttf",
+                                        "textColor": "@{item.emiStatusTextColor}",
+                                        "textSize": "12sp"
+                                    }]
+                                }]
+                            }
+                        }
+                    }
+                }, {
+                    "type": "RelativeLayout",
+                    "layout_width": "match_parent",
+                    "layout_height": "wrap_content",
+                    "android": "http://schemas.android.com/apk/res/android",
+                    "paddingStart": "24dp",
+                    "paddingLeft": "24dp",
+                    "paddingTop": "16dp",
+                    "paddingEnd": "24dp",
+                    "paddingRight": "24dp",
+                    "children": [{
+                        "type": "TextView",
+                        "id": "label_loan_platform",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "layout_below": "text_loan_status",
+                        "text": "LOAN ACCOUNT NO.",
+                        "textColor": "#99a1c5",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "textSize": "12sp"
+                    }, {
+                        "type": "TextView",
+                        "id": "text_loan_platform",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "layout_below": "label_loan_platform",
+                        "layout_marginTop": "8dp",
+                        "text": "10804823048230",
+                        "textAllCaps": "true",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "textColor": "#233a8c",
+                        "textSize": "18sp"
+                    }, {
+                        "type": "TextView",
+                        "id": "label_lender",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "layout_below": "text_loan_status",
+                        "layout_alignParentEnd": "true",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "text": "DISBURSED DATE",
+                        "textColor": "#99a1c5",
+                        "textSize": "12sp"
+                    }, {
+                        "type": "TextView",
+                        "id": "text_lender",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "layout_below": "label_lender",
+                        "layout_alignParentEnd": "true",
+                        "layout_marginTop": "8dp",
+                        "text": "1st Aug 2019",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "textColor": "#233a8c",
+                        "textSize": "18sp"
+                    }, {
+                        "type": "TextView",
+                        "id": "label_emi_overdue_amount",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "layout_below": "text_loan_platform",
+                        "layout_marginTop": "24dp",
+                        "text": "SANCTIONED AMOUNT",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "textColor": "#99a1c5",
+                        "textSize": "12sp",
+                        "textStyle": "bold"
+                    }, {
+                        "type": "TextView",
+                        "id": "text_emi_overdue_amount",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "layout_below": "label_emi_overdue_amount",
+                        "layout_marginTop": "8dp",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "text": "₹ 70,000",
+                        "textAllCaps": "true",
+                        "textColor": "#233a8c",
+                        "textSize": "18sp",
+                        "textStyle": "bold"
+                    }, {
+                        "type": "TextView",
+                        "id": "label_emi_date",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "layout_below": "text_loan_platform",
+                        "layout_alignParentEnd": "true",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "layout_marginTop": "24dp",
+                        "text": "DISBURSED AMOUNT",
+                        "textColor": "#99a1c5",
+                        "textSize": "12sp",
+                        "textStyle": "bold"
+                    }, {
+                        "type": "TextView",
+                        "id": "text_emi_date",
+                        "layout_width": "wrap_content",
+                        "layout_height": "wrap_content",
+                        "layout_below": "label_emi_date",
+                        "layout_alignParentEnd": "true",
+                        "fontFamily": "fonts/rubik_medium.ttf",
+                        "layout_marginTop": "8dp",
+                        "text": "₹ 68,000",
+                        "textAllCaps": "true",
+                        "textColor": "#233a8c",
+                        "textSize": "18sp",
+                        "textStyle": "bold"
+                    }]
+                }]
+            }
+        }
     }]
 }
