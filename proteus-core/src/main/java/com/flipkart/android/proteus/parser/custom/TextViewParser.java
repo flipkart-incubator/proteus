@@ -23,6 +23,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -280,6 +281,26 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
                 typeface = Typeface.createFromAsset(view.getContext().getAssets(), value);
                 if (typeface != null) {
                     view.setTypeface(typeface);
+                }
+            }
+        });
+
+        addAttributeProcessor("autoLink", new StringAttributeProcessor<T>() {
+            @Override
+            public void setString(T view, String value) {
+                switch (value) {
+                    case "email":
+                        view.setAutoLinkMask(Linkify.EMAIL_ADDRESSES);
+                        break;
+                    case "phone":
+                        view.setAutoLinkMask(Linkify.PHONE_NUMBERS);
+                        break;
+                    case "web":
+                        view.setAutoLinkMask(Linkify.WEB_URLS);
+                        break;
+                    case "all":
+                        view.setAutoLinkMask(Linkify.ALL);
+                        break;
                 }
             }
         });
