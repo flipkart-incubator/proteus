@@ -18,6 +18,10 @@ package com.flipkart.android.proteus.support.v7.widget;
 
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.flipkart.android.proteus.DataContext;
 import com.flipkart.android.proteus.ProteusConstants;
 import com.flipkart.android.proteus.ProteusContext;
@@ -25,8 +29,10 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.ViewTypeParser;
 import com.flipkart.android.proteus.managers.AdapterBasedViewManager;
 import com.flipkart.android.proteus.processor.AttributeProcessor;
+import com.flipkart.android.proteus.processor.DimensionAttributeProcessor;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
+import com.flipkart.android.proteus.support.v7.decorator.MarginItemDecoration;
 import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerFactory;
 import com.flipkart.android.proteus.value.AttributeResource;
 import com.flipkart.android.proteus.value.Layout;
@@ -34,10 +40,6 @@ import com.flipkart.android.proteus.value.ObjectValue;
 import com.flipkart.android.proteus.value.Resource;
 import com.flipkart.android.proteus.value.StyleResource;
 import com.flipkart.android.proteus.value.Value;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * RecyclerViewParser
@@ -47,109 +49,124 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerViewParser<V extends RecyclerView> extends ViewTypeParser<V> {
 
-  public static final String ATTRIBUTE_ADAPTER = "adapter";
-  public static final String ATTRIBUTE_LAYOUT_MANAGER = "layout_manager";
+    public static final String ATTRIBUTE_ADAPTER = "adapter";
+    public static final String ATTRIBUTE_LAYOUT_MANAGER = "layout_manager";
 
-  public static final String ATTRIBUTE_TYPE = ProteusConstants.TYPE;
+    public static final String ATTRIBUTE_TYPE = ProteusConstants.TYPE;
 
-  @NonNull
-  private final RecyclerViewAdapterFactory adapterFactory;
+    @NonNull
+    private final RecyclerViewAdapterFactory adapterFactory;
 
-  @NonNull
-  private final LayoutManagerFactory layoutManagerFactory;
+    @NonNull
+    private final LayoutManagerFactory layoutManagerFactory;
 
-  public RecyclerViewParser(@NonNull RecyclerViewAdapterFactory adapterFactory, @NonNull LayoutManagerFactory layoutManagerFactory) {
-    this.adapterFactory = adapterFactory;
-    this.layoutManagerFactory = layoutManagerFactory;
-  }
+    public RecyclerViewParser(@NonNull RecyclerViewAdapterFactory adapterFactory,
+        @NonNull LayoutManagerFactory layoutManagerFactory) {
+        this.adapterFactory = adapterFactory;
+        this.layoutManagerFactory = layoutManagerFactory;
+    }
 
-  @NonNull
-  @Override
-  public String getType() {
-    return "RecyclerView";
-  }
+    @NonNull
+    @Override
+    public String getType() {
+        return "RecyclerView";
+    }
 
-  @Nullable
-  @Override
-  public String getParentType() {
-    return "ViewGroup";
-  }
+    @Nullable
+    @Override
+    public String getParentType() {
+        return "ViewGroup";
+    }
 
-  @NonNull
-  @Override
-  public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
-    return new ProteusRecyclerView(context);
-  }
+    @NonNull
+    @Override
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
+        @Nullable ViewGroup parent, int dataIndex) {
+        return new ProteusRecyclerView(context);
+    }
 
-  @NonNull
-  @Override
-  public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view, @NonNull Layout layout,
-                                               @NonNull ObjectValue data, @Nullable ViewTypeParser caller, @Nullable ViewGroup parent,
-                                               int dataIndex) {
-    DataContext dataContext = createDataContext(context, layout, data, parent, dataIndex);
-    return new AdapterBasedViewManager(context, null != caller ? caller : this, view.getAsView(), layout, dataContext);
-  }
+    @NonNull
+    @Override
+    public ProteusView.Manager createViewManager(@NonNull ProteusContext context, @NonNull ProteusView view,
+        @NonNull Layout layout, @NonNull ObjectValue data, @Nullable ViewTypeParser caller, @Nullable ViewGroup parent,
+        int dataIndex) {
+        DataContext dataContext = createDataContext(context, layout, data, parent, dataIndex);
+        return new AdapterBasedViewManager(context,
+            null != caller ? caller : this,
+            view.getAsView(),
+            layout,
+            dataContext
+        );
+    }
 
-  @Override
-  protected void addAttributeProcessors() {
+    @Override
+    protected void addAttributeProcessors() {
 
-    addAttributeProcessor(ATTRIBUTE_ADAPTER, new AttributeProcessor<V>() {
+        addAttributeProcessor(ATTRIBUTE_ADAPTER, new AttributeProcessor<V>() {
 
-      @Override
-      public void handleValue(V view, Value value) {
-        if (value.isObject()) {
-          String type = value.getAsObject().getAsString(ATTRIBUTE_TYPE);
-          if (type != null) {
-            ProteusRecyclerViewAdapter adapter = adapterFactory.create(type, (ProteusRecyclerView) view, value.getAsObject());
-            view.setAdapter(adapter);
-          }
-        }
-      }
+            @Override
+            public void handleValue(V view, Value value) {
+                if (value.isObject()) {
+                    String type = value.getAsObject().getAsString(ATTRIBUTE_TYPE);
+                    if (type != null) {
+                        ProteusRecyclerViewAdapter adapter =
+                            adapterFactory.create(type, (ProteusRecyclerView) view, value.getAsObject());
+                        view.setAdapter(adapter);
+                    }
+                }
+            }
 
-      @Override
-      public void handleResource(V view, Resource resource) {
-        throw new IllegalArgumentException("Recycler View 'adapter' expects only object values");
-      }
+            @Override
+            public void handleResource(V view, Resource resource) {
+                throw new IllegalArgumentException("Recycler View 'adapter' expects only object values");
+            }
 
-      @Override
-      public void handleAttributeResource(V view, AttributeResource attribute) {
-        throw new IllegalArgumentException("Recycler View 'adapter' expects only object values");
-      }
+            @Override
+            public void handleAttributeResource(V view, AttributeResource attribute) {
+                throw new IllegalArgumentException("Recycler View 'adapter' expects only object values");
+            }
 
-      @Override
-      public void handleStyleResource(V view, StyleResource style) {
-        throw new IllegalArgumentException("Recycler View 'adapter' expects only object values");
-      }
-    });
+            @Override
+            public void handleStyleResource(V view, StyleResource style) {
+                throw new IllegalArgumentException("Recycler View 'adapter' expects only object values");
+            }
+        });
 
-    addAttributeProcessor(ATTRIBUTE_LAYOUT_MANAGER, new AttributeProcessor<V>() {
+        addAttributeProcessor(ATTRIBUTE_LAYOUT_MANAGER, new AttributeProcessor<V>() {
 
-      @Override
-      public void handleValue(V view, Value value) {
-        if (value.isObject()) {
-          String type = value.getAsObject().getAsString(ATTRIBUTE_TYPE);
-          if (type != null) {
-            RecyclerView.LayoutManager layoutManager = layoutManagerFactory.create(type, (ProteusRecyclerView) view, value.getAsObject());
-            view.setLayoutManager(layoutManager);
-          }
-        }
-      }
+            @Override
+            public void handleValue(V view, Value value) {
+                if (value.isObject()) {
+                    String type = value.getAsObject().getAsString(ATTRIBUTE_TYPE);
+                    if (type != null) {
+                        RecyclerView.LayoutManager layoutManager =
+                            layoutManagerFactory.create(type, (ProteusRecyclerView) view, value.getAsObject());
+                        view.setLayoutManager(layoutManager);
+                    }
+                }
+            }
 
-      @Override
-      public void handleResource(V view, Resource resource) {
-        throw new IllegalArgumentException("Recycler View 'layout_manager' expects only object values");
-      }
+            @Override
+            public void handleResource(V view, Resource resource) {
+                throw new IllegalArgumentException("Recycler View 'layout_manager' expects only object values");
+            }
 
-      @Override
-      public void handleAttributeResource(V view, AttributeResource attribute) {
-        throw new IllegalArgumentException("Recycler View 'layout_manager' expects only object values");
-      }
+            @Override
+            public void handleAttributeResource(V view, AttributeResource attribute) {
+                throw new IllegalArgumentException("Recycler View 'layout_manager' expects only object values");
+            }
 
-      @Override
-      public void handleStyleResource(V view, StyleResource style) {
-        throw new IllegalArgumentException("Recycler View 'layout_manager' expects only object values");
-      }
-    });
+            @Override
+            public void handleStyleResource(V view, StyleResource style) {
+                throw new IllegalArgumentException("Recycler View 'layout_manager' expects only object values");
+            }
+        });
 
-  }
+        addAttributeProcessor("itemMargin", new DimensionAttributeProcessor<V>() {
+            @Override
+            public void setDimension(V view, float dimension) {
+                view.addItemDecoration(new MarginItemDecoration((int) dimension));
+            }
+        });
+    }
 }
