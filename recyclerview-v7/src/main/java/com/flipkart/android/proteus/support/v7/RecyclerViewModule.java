@@ -19,6 +19,7 @@ package com.flipkart.android.proteus.support.v7;
 import androidx.annotation.NonNull;
 
 import com.flipkart.android.proteus.ProteusBuilder;
+import com.flipkart.android.proteus.support.v7.adapter.CustomRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.MultiSelectionListAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.ProteusRecyclerViewAdapter;
 import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactory;
@@ -45,6 +46,7 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
     static final String ADAPTER_SIMPLE_LIST = "SimpleListAdapter";
     static final String ADAPTER_SINGLE_SELECTION_LIST = "SingleSelectionListAdapter";
     static final String ADAPTER_MULTI_SELECTION_LIST = "MultiSelectionListAdapter";
+    static final String CUSTOM_RECYCLER_VIEW_ADAPTER = "CustomRecyclerViewAdapter";
 
     static final String LAYOUT_MANAGER_LINEAR = "LinearLayoutManager";
     static final String LAYOUT_MANAGER_GRID = "GridLayoutManager";
@@ -197,6 +199,7 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
             register(ADAPTER_SIMPLE_LIST, SimpleListAdapter.BUILDER);
             register(ADAPTER_SINGLE_SELECTION_LIST, SingleSelectionListAdapter.BUILDER);
             register(ADAPTER_MULTI_SELECTION_LIST, MultiSelectionListAdapter.BUILDER);
+            register(CUSTOM_RECYCLER_VIEW_ADAPTER, CustomRecyclerViewAdapter.BUILDER);
         }
 
         private void registerDefaultLayoutManagers() {

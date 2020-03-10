@@ -77,7 +77,9 @@ public class Attributes {
     public static final String Margin = "layout_margin";
     public static final String MarginBottom = "layout_marginBottom";
     public static final String MarginLeft = "layout_marginLeft";
+    public static final String MarginStart = "layout_marginStart";
     public static final String MarginRight = "layout_marginRight";
+    public static final String MarginEnd = "layout_marginEnd";
     public static final String MarginTop = "layout_marginTop";
     public static final String MinHeight = "minHeight";
     public static final String MinWidth = "minWidth";
@@ -171,6 +173,11 @@ public class Attributes {
   }
 
   public static class CheckBox {
+    public static final String Checked = "checked";
+    public static final String Button = "button";
+  }
+
+  public static class RadioButton {
     public static final String Checked = "checked";
     public static final String Button = "button";
   }
