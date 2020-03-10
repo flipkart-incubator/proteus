@@ -106,35 +106,5 @@ public class ViewPagerParser<V extends ViewPager> extends ViewTypeParser<V> {
                 throw new IllegalArgumentException("View pager 'adapter' expects only object values");
             }
         });
-
-        addAttributeProcessor(ATTRIBUTE_ADAPTER, new AttributeProcessor<V>() {
-
-            @Override
-            public void handleValue(V view, Value value) {
-                if (value.isObject()) {
-                    String type = value.getAsObject().getAsString(ATTRIBUTE_TYPE);
-                    if (type != null) {
-                        SectionsPagerAdapter adapter =
-                            adapterFactory.create(type, (ProteusViewPager) view, value.getAsObject());
-                        view.setAdapter(adapter);
-                    }
-                }
-            }
-
-            @Override
-            public void handleResource(V view, Resource resource) {
-                throw new IllegalArgumentException("View pager 'adapter' expects only object values");
-            }
-
-            @Override
-            public void handleAttributeResource(V view, AttributeResource attribute) {
-                throw new IllegalArgumentException("View pager 'adapter' expects only object values");
-            }
-
-            @Override
-            public void handleStyleResource(V view, StyleResource style) {
-                throw new IllegalArgumentException("View pager 'adapter' expects only object values");
-            }
-        });
     }
 }
