@@ -62,6 +62,7 @@ public abstract class Binding extends Value {
 
   public static final Pattern BINDING_PATTERN = Pattern.compile("@\\{fn:(\\S+?)\\(((?:(?<!\\\\)'.*?(?<!\\\\)'|.?)+)\\)\\}|@\\{(.+)\\}");
   public static final Pattern FUNCTION_ARGS_DELIMITER = Pattern.compile(",(?=(?:[^']*'[^']*')*[^']*$)");
+  public static final String NESTED_FUNCTION_DELIMITER = "::";
 
   public static final String DATA_PATH_DELIMITERS = ".]";
 
@@ -456,7 +457,7 @@ public abstract class Binding extends Value {
           token = token.substring(1, token.length() - 1);
           resolved = new Primitive(token);
         } else {
-          resolved = AttributeProcessor.staticPreCompile(new Primitive(token), context, manager);
+          resolved = AttributeProcessor.staticPreCompile(new Primitive(token.replace(NESTED_FUNCTION_DELIMITER,",")), context, manager);
         }
         arguments[i] = resolved != null ? resolved : new Primitive(token);
       }
