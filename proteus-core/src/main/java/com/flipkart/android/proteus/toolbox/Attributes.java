@@ -166,6 +166,8 @@ public class Attributes {
     public static final String SingleLine = "singleLine";
     public static final String TextAllCaps = "textAllCaps";
     public static final String Hint = "hint";
+    public static final String lineSpacingExtra = "lineSpacingExtra";
+    public static final String maxLength = "maxLength";
   }
 
   public static class CheckBox {

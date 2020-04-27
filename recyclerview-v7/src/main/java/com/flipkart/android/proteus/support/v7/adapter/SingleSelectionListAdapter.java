@@ -1,19 +1,3 @@
-/*
- * Copyright 2019 Flipkart Internet Pvt. Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.flipkart.android.proteus.support.v7.adapter;
 
 import android.view.ViewGroup;
@@ -32,22 +16,24 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * SimpleListAdapter.
- *
- * @author adityasharat
- */
-public class SimpleListAdapter extends ProteusRecyclerViewAdapter<ProteusViewHolder> {
+ * Created by Prasad Rao on 23-04-2020 17:25
+ **/
+public class SingleSelectionListAdapter extends ProteusRecyclerViewAdapter<ProteusViewHolder> {
 
     private static final String ATTRIBUTE_ITEM_LAYOUT = "item-layout";
     private static final String ATTRIBUTE_ITEM_COUNT = "item-count";
+    private static final String ATTRIBUTE_ITEMS = "items";
 
-    public static final Builder<SimpleListAdapter> BUILDER = (view, config) -> {
+    private int checkedPosition = -1;
+
+    public static final Builder<SingleSelectionListAdapter> BUILDER = (view, config) -> {
         Layout layout = config.getAsObject().getAsLayout(ATTRIBUTE_ITEM_LAYOUT);
         Integer count = config.getAsObject().getAsInteger(ATTRIBUTE_ITEM_COUNT);
         ObjectValue data = view.getViewManager().getDataContext().getData();
         ProteusContext context = (ProteusContext) view.getContext();
 
-        return new SimpleListAdapter(context.getInflater(), data, Objects.requireNonNull(layout),
+        return new SingleSelectionListAdapter(context.getInflater(), data,
+            Objects.requireNonNull(layout),
             count != null ? count : 0);
     };
 
@@ -58,8 +44,8 @@ public class SimpleListAdapter extends ProteusRecyclerViewAdapter<ProteusViewHol
     private Layout layout;
     private Map<String, Value> scope;
 
-    private SimpleListAdapter(ProteusLayoutInflater inflater, ObjectValue data, Layout layout,
-        int count) {
+    private SingleSelectionListAdapter(ProteusLayoutInflater inflater, ObjectValue data,
+        Layout layout, int count) {
         this.inflater = inflater;
         this.data = data;
         this.count = count;
@@ -78,10 +64,22 @@ public class SimpleListAdapter extends ProteusRecyclerViewAdapter<ProteusViewHol
     public void onBindViewHolder(ProteusViewHolder holder, int position) {
         DataContext context = DataContext.create(holder.context, data, position, scope);
         holder.view.getViewManager().update(context.getData());
+        holder.view.getAsView().setSelected(checkedPosition == position);
+        holder.view.getAsView().setOnClickListener(v -> {
+            if (checkedPosition != position) {
+                notifyDataSetChanged();
+                checkedPosition = position;
+                System.out.println("============> "+getSelectedItem());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return count;
+    }
+
+    public String getSelectedItem() {
+        return data.get(ATTRIBUTE_ITEMS).getAsArray().get(checkedPosition).getAsString();
     }
 }

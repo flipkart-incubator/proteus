@@ -15,12 +15,18 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
     <color name="white">#FFFFFF</color>
     <color name="green">#4488ff27</color>
 
-    <color name="colorButtonBackground">#1a4d6cd9</color>
+    <color name="colorPrimary">#4d6cd9</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#1f37ca</color>
+
+    <color name="colorSelected">#4d6cd9</color>
+    <color name="colorUnselected">#c8cde3</color>
+    <color name="colorUnselectedDark">#99a1c5</color>
+
+    <color name="colorButtonBackground">#2b4d6cd9</color>
     <color name="colorButtonTextColor">#4d6cd9</color>
+    <color name="colorThemeBlue">#4d6cd9</color>
 </resources>

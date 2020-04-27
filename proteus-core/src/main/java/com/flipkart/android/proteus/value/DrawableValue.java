@@ -384,10 +384,6 @@ public abstract class DrawableValue extends Value {
       return new StateListValue(states, values);
     }
 
-    public static StateListValue valueOf(Array states, Context context) {
-      return new StateListValue(states, context);
-    }
-
     @NonNull
     private static Pair<int[], Value> parseState(ObjectValue value, Context context) {
       Value drawable = DrawableResourceProcessor.staticCompile(value.get(DRAWABLE_STR), context);
@@ -404,6 +400,10 @@ public abstract class DrawableValue extends Value {
         }
       }
       return new Pair<>(states, drawable);
+    }
+
+    public static StateListValue valueOf(Array states, Context context) {
+      return new StateListValue(states, context);
     }
 
     @Override

@@ -38,6 +38,7 @@ import com.flipkart.android.proteus.ProteusView;
 import com.flipkart.android.proteus.StyleManager;
 import com.flipkart.android.proteus.Styles;
 import com.flipkart.android.proteus.demo.api.ProteusManager;
+import com.flipkart.android.proteus.demo.events.EventHandler;
 import com.flipkart.android.proteus.demo.utils.GlideApp;
 import com.flipkart.android.proteus.demo.utils.ImageLoaderTarget;
 import com.flipkart.android.proteus.exceptions.ProteusInflateException;
@@ -82,9 +83,13 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
      */
     private ProteusLayoutInflater.ImageLoader loader = new ProteusLayoutInflater.ImageLoader() {
         @Override
-        public void getBitmap(ProteusView view, String url, final DrawableValue.AsyncCallback callback) {
-            GlideApp.with(ProteusActivity.this).load(url).placeholder(R.drawable.placeholder)
-                .error(R.drawable.image_broken).into(new ImageLoaderTarget(callback));
+        public void getBitmap(ProteusView view, String url,
+            final DrawableValue.AsyncCallback callback) {
+            GlideApp.with(ProteusActivity.this)
+                .load(url)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.image_broken)
+                .into(new ImageLoaderTarget(callback));
         }
     };
 
@@ -96,15 +101,25 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
 
         @NonNull
         @Override
-        public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout, ObjectValue data,
-            int index) {
+        public ProteusView onUnknownViewType(ProteusContext context, String type, Layout layout,
+            ObjectValue data, int index) {
             // TODO: instead return some implementation of an unknown view
-            throw new ProteusInflateException("Unknown view type '" + type + "' cannot be inflated");
+            throw new ProteusInflateException(
+                "Unknown view type '" + type + "' cannot be inflated");
         }
 
         @Override
         public void onEvent(String event, Value value, ProteusView view) {
             Log.i("ProteusEvent", value.toString());
+            String[] events = value.toString().split("->");
+            for (String eventHandlers : events) {
+                EventHandler eventHandler = EventHandler.getEventHandler(eventHandlers);
+                boolean result = eventHandler.handle((ProteusView) view.getAsView().getParent());
+                if (!result) {
+                    System.out.println("============> "+eventHandlers + " failed!");
+                    break;
+                }
+            }
         }
     };
 
@@ -135,9 +150,13 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
         DemoApplication application = (DemoApplication) getApplication();
         proteusManager = application.getProteusManager();
 
-        ProteusContext context =
-            proteusManager.getProteus().createContextBuilder(this).setLayoutManager(layoutManager).setCallback(callback)
-                .setImageLoader(loader).setStyleManager(styleManager).build();
+        ProteusContext context = proteusManager.getProteus()
+            .createContextBuilder(this)
+            .setLayoutManager(layoutManager)
+            .setCallback(callback)
+            .setImageLoader(loader)
+            .setStyleManager(styleManager)
+            .build();
 
         layoutInflater = context.getInflater();
     }
@@ -195,7 +214,8 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
                 }
-            }).show();
+            })
+            .show();
     }
 
     void render() {

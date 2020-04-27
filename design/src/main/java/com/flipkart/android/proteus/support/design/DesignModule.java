@@ -21,6 +21,9 @@ import androidx.annotation.NonNull;
 import com.flipkart.android.proteus.ProteusBuilder;
 import com.flipkart.android.proteus.support.design.adapter.SectionsPagerAdapter;
 import com.flipkart.android.proteus.support.design.adapter.ViewPagerAdapterFactory;
+import com.flipkart.android.proteus.support.design.parser.AppCompatEditTextParser;
+import com.flipkart.android.proteus.support.design.parser.TextInputEditTextParser;
+import com.flipkart.android.proteus.support.design.parser.TextInputLayoutParser;
 import com.flipkart.android.proteus.support.design.widget.AppBarLayoutParser;
 import com.flipkart.android.proteus.support.design.widget.BottomNavigationViewParser;
 import com.flipkart.android.proteus.support.design.widget.CollapsingToolbarLayoutParser;
@@ -39,8 +42,7 @@ public class DesignModule implements ProteusBuilder.Module {
 
     private static final String ADAPTER_SIMPLE_LIST = "SectionsPagerAdapter";
 
-    @NonNull
-    private ViewPagerAdapterFactory adapterFactory;
+    @NonNull private ViewPagerAdapterFactory adapterFactory;
 
     private DesignModule(@NonNull ViewPagerAdapterFactory adapterFactory) {
         this.adapterFactory = adapterFactory;
@@ -52,19 +54,22 @@ public class DesignModule implements ProteusBuilder.Module {
 
     @Override
     public void registerWith(ProteusBuilder builder) {
-        builder.register(new ViewPagerParser(adapterFactory));
-        builder.register(new TabLayoutParser());
-        builder.register(new AppBarLayoutParser());
-        builder.register(new BottomNavigationViewParser());
-        builder.register(new CollapsingToolbarLayoutParser());
-        builder.register(new CoordinatorLayoutParser());
-        builder.register(new FloatingActionButtonParser());
+        builder.register(new ViewPagerParser(adapterFactory))
+            .register(new TabLayoutParser())
+            .register(new AppBarLayoutParser())
+            .register(new BottomNavigationViewParser())
+            .register(new CollapsingToolbarLayoutParser())
+            .register(new CoordinatorLayoutParser())
+            .register(new FloatingActionButtonParser())
+            .register(new AppCompatEditTextParser())
+            .register(new TextInputEditTextParser())
+            .register(new TextInputLayoutParser());
         DesignModuleAttributeHelper.register(builder);
     }
 
     public static class Builder {
-        @NonNull
-        private final ViewPagerAdapterFactory adapterFactory = new ViewPagerAdapterFactory();
+        @NonNull private final ViewPagerAdapterFactory adapterFactory =
+            new ViewPagerAdapterFactory();
 
         DesignModule build() {
             adapterFactory.register(DesignModule.ADAPTER_SIMPLE_LIST, SectionsPagerAdapter.BUILDER);

@@ -18,27 +18,29 @@ package com.flipkart.android.proteus.support.v7.layoutmanager;
 
 import android.content.Context;
 
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 /**
  * @author adityasharat
  */
-public class ProteusLinearLayoutManager extends LinearLayoutManager {
+public class ProteusGridLayoutManager extends GridLayoutManager {
 
     private static final String ATTRIBUTE_ORIENTATION = "orientation";
     private static final String ATTRIBUTE_REVERSE_LAYOUT = "reverse";
+    private static final String ATTRIBUTE_SPAN_COUNT = "spanCount";
 
-    public static final LayoutManagerBuilder<ProteusLinearLayoutManager> BUILDER =
-        (view, config) -> {
+    public static final LayoutManagerBuilder<ProteusGridLayoutManager> BUILDER = (view, config) -> {
+        int orientation = config.getAsInteger(ATTRIBUTE_ORIENTATION, LinearLayoutManager.VERTICAL);
+        int spanCount = config.getAsInteger(ATTRIBUTE_SPAN_COUNT, 2);
+        boolean reverseLayout = config.getAsBoolean(ATTRIBUTE_REVERSE_LAYOUT, false);
 
-            int orientation =
-                config.getAsInteger(ATTRIBUTE_ORIENTATION, LinearLayoutManager.VERTICAL);
-            boolean reverseLayout = config.getAsBoolean(ATTRIBUTE_REVERSE_LAYOUT, false);
+        return new ProteusGridLayoutManager(view.getContext(), spanCount, orientation,
+            reverseLayout);
+    };
 
-            return new ProteusLinearLayoutManager(view.getContext(), orientation, reverseLayout);
-        };
-
-    private ProteusLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
-        super(context, orientation, reverseLayout);
+    private ProteusGridLayoutManager(Context context, int spanCount, int orientation,
+        boolean reverseLayout) {
+        super(context, spanCount, orientation, reverseLayout);
     }
 }

@@ -67,8 +67,8 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
 
     @NonNull
     @Override
-    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout, @NonNull ObjectValue data,
-        @Nullable ViewGroup parent, int dataIndex) {
+    public ProteusView createView(@NonNull ProteusContext context, @NonNull Layout layout,
+        @NonNull ObjectValue data, @Nullable ViewGroup parent, int dataIndex) {
         return new ProteusTextView(context);
     }
 
@@ -93,7 +93,8 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
             }
         });
 
-        addAttributeProcessor(Attributes.TextView.DrawablePadding, new DimensionAttributeProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawablePadding,
+            new DimensionAttributeProcessor<T>() {
             @Override
             public void setDimension(T view, float dimension) {
                 view.setCompoundDrawablePadding((int) dimension);
@@ -152,7 +153,8 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
             }
         });
 
-        addAttributeProcessor(Attributes.TextView.TextColorHighLight, new ColorResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.TextColorHighLight,
+            new ColorResourceProcessor<T>() {
 
             @Override
             public void setColor(T view, int color) {
@@ -169,44 +171,34 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
-                view.setCompoundDrawablesWithIntrinsicBounds(drawable,
-                    compoundDrawables[1],
-                    compoundDrawables[2],
-                    compoundDrawables[3]
-                );
+                view.setCompoundDrawablesWithIntrinsicBounds(drawable, compoundDrawables[1],
+                    compoundDrawables[2], compoundDrawables[3]);
             }
         });
         addAttributeProcessor(Attributes.TextView.DrawableTop, new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
-                view.setCompoundDrawablesWithIntrinsicBounds(compoundDrawables[0],
-                    drawable,
-                    compoundDrawables[2],
-                    compoundDrawables[3]
-                );
+                view.setCompoundDrawablesWithIntrinsicBounds(compoundDrawables[0], drawable,
+                    compoundDrawables[2], compoundDrawables[3]);
             }
         });
-        addAttributeProcessor(Attributes.TextView.DrawableRight, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawableRight,
+            new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(compoundDrawables[0],
-                    compoundDrawables[1],
-                    drawable,
-                    compoundDrawables[3]
-                );
+                    compoundDrawables[1], drawable, compoundDrawables[3]);
             }
         });
-        addAttributeProcessor(Attributes.TextView.DrawableBottom, new DrawableResourceProcessor<T>() {
+        addAttributeProcessor(Attributes.TextView.DrawableBottom,
+            new DrawableResourceProcessor<T>() {
             @Override
             public void setDrawable(T view, Drawable drawable) {
                 Drawable[] compoundDrawables = view.getCompoundDrawables();
                 view.setCompoundDrawablesWithIntrinsicBounds(compoundDrawables[0],
-                    compoundDrawables[1],
-                    compoundDrawables[2],
-                    drawable
-                );
+                    compoundDrawables[1], compoundDrawables[2], drawable);
             }
         });
 
@@ -228,7 +220,9 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
         addAttributeProcessor(Attributes.TextView.PaintFlags, new StringAttributeProcessor<T>() {
             @Override
             public void setString(T view, String value) {
-                if (value.equals("strike")) view.setPaintFlags(view.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                if (value.equals("strike")) {
+                    view.setPaintFlags(view.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+                }
             }
         });
 
@@ -304,6 +298,15 @@ public class TextViewParser<T extends TextView> extends ViewTypeParser<T> {
                 }
             }
         });
+
+        addAttributeProcessor(Attributes.TextView.lineSpacingExtra,
+            new DimensionAttributeProcessor<T>() {
+            @Override
+            public void setDimension(T view, float dimension) {
+                view.setLineSpacing(dimension, 1.0f);
+            }
+        });
+
     }
 
 }

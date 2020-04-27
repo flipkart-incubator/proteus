@@ -16,13 +16,13 @@
 
 package com.flipkart.android.proteus.support.design.widget;
 
+import android.content.Context;
 import android.view.View;
 
-import com.flipkart.android.proteus.ProteusContext;
+import androidx.annotation.NonNull;
+
 import com.flipkart.android.proteus.ProteusView;
 import com.google.android.material.textfield.TextInputLayout;
-
-import androidx.annotation.NonNull;
 
 /**
  * ProteusTextInputLayout
@@ -32,25 +32,27 @@ import androidx.annotation.NonNull;
 
 public class ProteusTextInputLayout extends TextInputLayout implements ProteusView {
 
-  private Manager manager;
+    private Manager manager;
 
-  public ProteusTextInputLayout(ProteusContext context) {
-    super(context);
-  }
+    public ProteusTextInputLayout(@NonNull Context context) {
+        super(context, null,
+            com.google.android.material.R.style.Widget_MaterialComponents_TextInputLayout_OutlinedBox);
+    }
 
-  @Override
-  public Manager getViewManager() {
-    return manager;
-  }
+    @Override
+    public Manager getViewManager() {
+        return manager;
+    }
 
-  @Override
-  public void setViewManager(@NonNull Manager manager) {
-    this.manager = manager;
-  }
+    @Override
+    public void setViewManager(@NonNull Manager manager) {
+        this.manager = manager;
+    }
 
-  @NonNull
-  @Override
-  public View getAsView() {
-    return this;
-  }
+    @NonNull
+    @Override
+    public View getAsView() {
+        setBoxBackgroundMode(BOX_BACKGROUND_OUTLINE);
+        return this;
+    }
 }

@@ -1,122 +1,145 @@
 {
-    "type": "LinearLayout",
+    "type": "ScrollView",
     "layout_width": "match_parent",
     "layout_height": "match_parent",
-    "orientation": "vertical",
     "children": [{
         "type": "LinearLayout",
         "layout_width": "match_parent",
         "layout_height": "wrap_content",
-        "orientation": "horizontal",
-        "gravity": "center",
-        "paddingLeft": "32dp",
-        "paddingRight": "32dp",
-        "paddingTop": "16dp",
-        "paddingBottom": "16dp",
-        "weightSum": "3",
+        "orientation": "vertical",
+        "padding": "16dp",
         "children": [{
             "type": "TextView",
-            "layout_width": "0dp",
+            "layout_width": "wrap_content",
             "layout_height": "wrap_content",
-            "layout_weight": "1",
-            "fontFamily": "fonts/rubik_medium.ttf",
-            "text": "Date",
-            "textColor": "#5e6aa0",
-            "textSize": "14sp"
+            "fontFamily": "fonts/rubik_regular.ttf",
+            "lineSpacingExtra": "3.3sp",
+            "text": "Source(s) of Income",
+            "textColor": "#000759",
+            "textSize": "18.3sp"
         }, {
             "type": "TextView",
-            "layout_width": "0dp",
+            "layout_width": "wrap_content",
             "layout_height": "wrap_content",
-            "layout_weight": "1",
-            "fontFamily": "fonts/rubik_medium.ttf",
-            "gravity": "center",
-            "lineSpacingExtra": "3sp",
-            "text": "Details",
-            "textColor": "#5e6aa0",
-            "textSize": "14sp"
+            "layout_marginTop": "8dp",
+            "fontFamily": "fonts/rubik_regular.ttf",
+            "lineSpacingExtra": "6.7sp",
+            "text": "Please select one or more following source of income category(s)",
+            "textColor": "#6f7f9f",
+            "textSize": "13.3sp"
         }, {
-            "type": "TextView",
-            "layout_width": "0dp",
-            "layout_height": "wrap_content",
-            "layout_weight": "1",
-            "fontFamily": "fonts/rubik_medium.ttf",
-            "gravity": "right",
-            "text": "Amount",
-            "textColor": "#5e6aa0",
-            "textSize": "14sp"
-        }]
-    }, {
-        "type": "View",
-        "layout_width": "match_parent",
-        "layout_height": "1dp",
-        "background": "#233a8c",
-        "layout_marginLeft": "18dp",
-        "layout_marginRight": "18dp"
-    }, {
-        "type": "RecyclerView",
-        "layout_width": "match_parent",
-        "layout_height": "match_parent",
-        "itemMargin": "16dp",
-        "background": "#ffffff",
-        "layout_marginTop": "10dp",
-        "data": {
-            "items": "@{payments}"
-        },
-        "layout_manager": {
-            "type": "LinearLayoutManager"
-        },
-        "adapter": {
-            "@": {
-                "type": "SimpleListAdapter",
-                "item-count": "@{items.$length}",
-                "item-layout": {
-                    "type": "CardView",
-                    "layout_width": "match_parent",
-                    "layout_height": "wrap_content",
-                    "cardCornerRadius": "8dp",
-                    "cardElevation": "6dp",
-                    "children": [{
+            "type": "RecyclerView",
+            "layout_width": "match_parent",
+            "layout_height": "match_parent",
+            "layout_marginTop": "10dp",
+            "id": "listViewIncomeSelection",
+            "itemMargin": "8dp",
+            "validationRequired": true,
+            "data": {
+                "items": "@{incomeSources}"
+            },
+            "layout_manager": {
+                "type": "GridLayoutManager",
+                "spanCount": 2
+            },
+            "adapter": {
+                "@": {
+                    "type": "MultiSelectionListAdapter",
+                    "item-count": "@{items.$length}",
+                    "item-layout": {
                         "type": "LinearLayout",
                         "layout_width": "match_parent",
                         "layout_height": "wrap_content",
-                        "orientation": "horizontal",
-                        "gravity": "center_vertical",
-                        "padding": "16dp",
-                        "weightSum": "3",
+                        "data": {
+                            "item": "@{items[$index]}"
+                        },
+                        "background": "@drawable/bg_income_source",
+                        "gravity": "center_horizontal",
+                        "orientation": "vertical",
                         "children": [{
                             "type": "TextView",
-                            "layout_width": "0dp",
+                            "layout_width": "wrap_content",
                             "layout_height": "wrap_content",
-                            "layout_weight": "1",
-                            "fontFamily": "fonts/rubik_regular.ttf",
-                            "text": "05 Aug 2019",
-                            "textColor": "#5e6aa0",
-                            "textSize": "12sp"
-                        }, {
-                            "type": "TextView",
-                            "layout_width": "0dp",
-                            "layout_height": "wrap_content",
-                            "layout_weight": "1",
-                            "fontFamily": "fonts/rubik_regular.ttf",
-                            "gravity": "center_horizontal",
-                            "lineSpacingExtra": "3sp",
-                            "text": "Auto Debit\nTxn 89765654",
-                            "textColor": "#5e6aa0",
-                            "textSize": "12sp"
-                        }, {
-                            "type": "TextView",
-                            "layout_width": "0dp",
-                            "layout_height": "wrap_content",
-                            "layout_weight": "1",
+                            "id": "labelIncomeSource",
                             "fontFamily": "fonts/rubik_medium.ttf",
-                            "gravity": "right",
-                            "text": "3,500.00",
-                            "textColor": "#5e6aa0",
+                            "gravity": "center_horizontal",
+                            "lineSpacingExtra": "2.3sp",
+                            "padding": "24dp",
+                            "text": "@{item.label}",
+                            "textColor": "@color/color_income_source",
                             "textSize": "12sp"
+                        }, {
+                            "type": "ImageView",
+                            "layout_width": "wrap_content",
+                            "layout_height": "wrap_content",
+                            "id": "imageIncomeSource",
+                            "src": "@{item.icon}"
                         }]
-                    }]
+                    }
                 }
             }
-        }
+        }, {
+            "type": "TextView",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "textSize": "12sp",
+            "textColor": "#99a1c5",
+            "layout_marginLeft": "8dp",
+            "layout_marginRight": "8dp",
+            "lineSpacingExtra": "9sp",
+            "layout_marginTop": "24dp",
+            "fontFamily": "fonts/rubik_medium.ttf",
+            "text": "OTHERS"
+        }, {
+            "type": "AppCompatEditText",
+            "layout_width": "match_parent",
+            "layout_height": "wrap_content",
+            "textSize": "16sp",
+            "textColor": "#99a1c5",
+            "lineSpacingExtra": "9sp",
+            "layout_marginLeft": "8dp",
+            "layout_marginRight": "8dp",
+            "fontFamily": "fonts/rubik_medium.ttf",
+            "background": "@drawable/bg_edit_text_bordered",
+            "textColorHint": "#c8cde3",
+            "paddingLeft": "12dp",
+            "paddingRight": "12dp",
+            "paddingTop": "16dp",
+            "paddingBottom": "16dp",
+            "textColor": "@color/colorSelected",
+            "maxLength": "50",
+            "layout_marginTop": "4dp",
+            "hint": "Please type here…"
+        }, {
+            "type": "TextView",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "textSize": "12sp",
+            "textColor": "#99a1c5",
+            "layout_marginLeft": "8dp",
+            "layout_marginRight": "8dp",
+            "lineSpacingExtra": "9sp",
+            "layout_marginTop": "4dp",
+            "fontFamily": "fonts/rubik_medium.ttf",
+            "text": "0-50 Characters"
+        }, {
+            "type": "TextView",
+            "id": "buttonProceed",
+            "layout_width": "wrap_content",
+            "layout_height": "wrap_content",
+            "layout_gravity": "center_horizontal",
+            "layout_marginTop": "24dp",
+            "background": "@drawable/drawable_button",
+            "clickable": "true",
+            "focusable": "true",
+            "fontFamily": "fonts/rubik_medium.ttf",
+            "paddingLeft": "64dp",
+            "paddingTop": "16dp",
+            "paddingRight": "64dp",
+            "paddingBottom": "16dp",
+            "onClick": "validateForm->nextScreen",
+            "text": "PROCEED",
+            "textColor": "@color/colorSelected"
+        }]
     }]
 }
