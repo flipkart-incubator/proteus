@@ -26,9 +26,10 @@ public class ProteusGridLayoutManager extends GridLayoutManager {
              boolean reverseLayout = config.getAsBoolean(ATTRIBUTE_REVERSE_LAYOUT, false);
 
              //todo get column from config attribute
-           // int col = config.getAsInteger(ATTRIBUTE_COL);
+            int col = config.getAsInteger(ATTRIBUTE_COL, 1);
+            
 
-            return new ProteusGridLayoutManager(view.getContext(), 2, orientation, reverseLayout);
+            return new ProteusGridLayoutManager(view.getContext(), col, orientation, reverseLayout);
         }
     };
     
