@@ -130,6 +130,14 @@
           "padding": "16dp",
           "paddingBottom": "0dp"
         },
+
+        {
+          "type": "include",
+          "layout": "ViewPagerExample",
+          "padding": "16dp",
+          "paddingBottom": "0dp"
+        },
+
         {
           "type": "include",
           "layout": "SimpleDataBindingExample",

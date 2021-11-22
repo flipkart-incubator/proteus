@@ -1,6 +1,7 @@
 package com.flipkart.android.proteus.support.v7.layoutmanager;
 
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -25,9 +26,9 @@ public class ProteusGridLayoutManager extends GridLayoutManager {
              int orientation = config.getAsInteger(ATTRIBUTE_ORIENTATION, GridLayoutManager.VERTICAL);
              boolean reverseLayout = config.getAsBoolean(ATTRIBUTE_REVERSE_LAYOUT, false);
 
-             //todo get column from config attribute
             int col = config.getAsInteger(ATTRIBUTE_COL, 1);
-            
+
+
 
             return new ProteusGridLayoutManager(view.getContext(), col, orientation, reverseLayout);
         }

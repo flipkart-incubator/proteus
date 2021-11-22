@@ -253,7 +253,7 @@
           "items": "@{data.achievements}"
         },
         "layout_manager": {
-          "type": "LinearLayoutManager"
+          "type": "GridLayoutManager"
         },
         "adapter": {
           "@": {
@@ -270,13 +270,61 @@
               "gravity": "center",
               "text": "@{item}",
               "textSize": "14sp",
-              "textColor": "#323232"
+              "textColor": "#323232",
+              "onClick":"@{item}"
             }
           }
         }
       }
     ]
   },
+
+  "ViewPagerExample": {
+    "type": "FrameLayout",
+    "layout_width": "match_parent",
+    "layout_height": "wrap_content",
+    "padding": "16dp",
+    "paddingBottom": "0dp",
+    "children": [
+      {
+        "type": "RecyclerView",
+        "id" : "rc_view",
+        "layout_width": "match_parent",
+        "layout_height": "148dp",
+        "background": "#ffffff",
+        "data": {
+          "items": "@{data.achievements}"
+        },
+        "layout_manager": {
+          "type": "GridLayoutManager",
+          "orientation" : 1,
+          "numCols" : 2
+        },
+        "adapter": {
+          "@": {
+            "type": "SimpleListAdapter",
+            "item-count": "@{items.$length}",
+            "item-layout": {
+              "type": "TextView",
+              "data": {
+                "item": "@{items[$index]}"
+              },
+              "layout_width": "match_parent",
+              "layout_height": "match_parent",
+              "padding": "12dp",
+              "layout_marginBottom": "4dp",
+              "gravity": "center",
+              "text": "@{item}",
+              "textSize": "44sp",
+              "textColor": "#323232",
+              "onClick":"@{item}"
+            }
+          }
+        }
+      }
+    ]
+  },
+
   "AlertDialogLayout": {
     "type": "LinearLayout",
     "orientation": "vertical",
