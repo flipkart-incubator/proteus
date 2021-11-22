@@ -22,6 +22,7 @@ import com.flipkart.android.proteus.support.v7.adapter.RecyclerViewAdapterFactor
 import com.flipkart.android.proteus.support.v7.adapter.SimpleListAdapter;
 import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerBuilder;
 import com.flipkart.android.proteus.support.v7.layoutmanager.LayoutManagerFactory;
+import com.flipkart.android.proteus.support.v7.layoutmanager.ProteusGridLayoutManager;
 import com.flipkart.android.proteus.support.v7.layoutmanager.ProteusLinearLayoutManager;
 import com.flipkart.android.proteus.support.v7.widget.RecyclerViewParser;
 
@@ -42,6 +43,8 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
   static final String ADAPTER_SIMPLE_LIST = "SimpleListAdapter";
 
   static final String LAYOUT_MANAGER_LINEAR = "LinearLayoutManager";
+  static final String LAYOUT_MANAGER_GRID = "GridLayoutManager";
+
 
   @NonNull
   private final RecyclerViewAdapterFactory adapterFactory;
@@ -175,7 +178,7 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
       }
 
       if (includeDefaultLayoutManagers) {
-        registerDefaultLayoutManagers();
+        registerGridLayoutManagers();
       }
 
       return new RecyclerViewModule(adapterFactory, layoutManagerFactory);
@@ -187,6 +190,10 @@ public class RecyclerViewModule implements ProteusBuilder.Module {
 
     private void registerDefaultLayoutManagers() {
       register(LAYOUT_MANAGER_LINEAR, ProteusLinearLayoutManager.BUILDER);
+    }
+
+    private void registerGridLayoutManagers() {
+      register(LAYOUT_MANAGER_GRID, ProteusGridLayoutManager.BUILDER);
     }
   }
 }
