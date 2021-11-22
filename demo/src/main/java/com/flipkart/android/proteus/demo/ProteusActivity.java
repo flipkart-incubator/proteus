@@ -255,7 +255,6 @@ public class ProteusActivity extends AppCompatActivity implements ProteusManager
     };
     
     View recyclerView = view.getViewManager().findViewById("rc_view");
-
     snapHelper.attachToRecyclerView((RecyclerView) recyclerView);
 
   }
